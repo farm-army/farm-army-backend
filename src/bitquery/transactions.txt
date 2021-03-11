@@ -1,0 +1,48 @@
+{
+  ethereum(network: bsc) {
+    out: transfers(
+      currency: {is: "%lp_address%"}
+      sender: {is: "%contract%"}
+      receiver: {is: "%address%"}
+      amount: {gt: 0}
+      options: {asc: "block.timestamp.unixtime", limit: 150},
+    ) {
+      amount
+      currency {
+        symbol
+        address
+      }
+      transaction {
+        hash
+      }
+      block {
+        timestamp {unixtime}
+      }
+        date {
+        date
+      }
+    },
+    in: transfers(
+      currency: {is: "%lp_address%"}
+      sender: {is: "%address%"}
+      receiver: {is: "%contract%"}
+      amount: {gt: 0}
+      options: {asc: "block.timestamp.unixtime", limit: 150}
+    ) {
+      amount
+      currency {
+        symbol
+        address
+      }
+      transaction {
+        hash
+      }
+      block {
+        timestamp {unixtime}
+      }
+        date {
+        date
+      }
+    }
+  }
+}

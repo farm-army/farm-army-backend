@@ -1,0 +1,340 @@
+[
+  {
+    "pid": 0,
+    "lpSymbol": "KEBAB",
+    "lpAddresses": {
+      "56": "0x7979F6C54ebA05E18Ded44C4F986F49a5De551c2",
+      "97": "0x52a4f96f1df18a48c77e311edfec59b4cdc92a0a"
+    },
+    "tokenSymbol": "KETCH",
+    "tokenAddresses": {
+      "56": "0x7979F6C54ebA05E18Ded44C4F986F49a5De551c2",
+      "97": "0xf369077bf442fc9dbfd0cc80159c3d507e359654"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    }
+  },
+  {
+    "pid": 15,
+    "lpSymbol": "KEBAB-BTCB LP",
+    "lpAddresses": {
+      "56": "0x45d8d5d9bd425efc26e3259848bcfefa16f927f0",
+      "97": "0xe70b7523f4bffa1f2e88d2ba709afd026030f412"
+    },
+    "tokenSymbol": "KEBAB",
+    "tokenAddresses": {
+      "56": "0x7979F6C54ebA05E18Ded44C4F986F49a5De551c2",
+      "97": "0x52a4f96f1df18a48c77e311edfec59b4cdc92a0a"
+    },
+    "risk": 5,
+    "quoteTokenSymbol": "BTCB",
+    "quoteTokenAdresses": {
+      "56": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+      "97": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c"
+    },
+    "multiplier": "25X"
+  },
+  {
+    "pid": 1,
+    "lpSymbol": "KEBAB-BUSD LP",
+    "lpAddresses": {
+      "56": "0xd51bee2e0a3886289f6d229b6f30c0c2b34fc0ec",
+      "97": "0xe70b7523f4bffa1f2e88d2ba709afd026030f412"
+    },
+    "tokenSymbol": "KEBAB",
+    "tokenAddresses": {
+      "56": "0x7979F6C54ebA05E18Ded44C4F986F49a5De551c2",
+      "97": "0x52a4f96f1df18a48c77e311edfec59b4cdc92a0a"
+    },
+    "risk": 5,
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "20X"
+  },
+  {
+    "pid": 5,
+    "lpSymbol": "KEBAB-BNB LP",
+    "lpAddresses": {
+      "56": "0x25fd42d82d5c238ee7aa277261aa6ca5bdfe5cd4",
+      "97": "0xe70b7523f4bffa1f2e88d2ba709afd026030f412"
+    },
+    "tokenSymbol": "KEBAB",
+    "tokenAddresses": {
+      "56": "0x7979F6C54ebA05E18Ded44C4F986F49a5De551c2",
+      "97": "0x52a4f96f1df18a48c77e311edfec59b4cdc92a0a"
+    },
+    "risk": 5,
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    },
+    "multiplier": "12X"
+  },
+  {
+    "pid": 4,
+    "lpSymbol": "BTCB-BUSD LP",
+    "lpAddresses": {
+      "56": "0xb8875e207ee8096a929d543c9981c9586992eacb",
+      "97": "0xe70b7523f4bffa1f2e88d2ba709afd026030f412"
+    },
+    "tokenSymbol": "BTCB",
+    "tokenAddresses": {
+      "56": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+      "97": "0x52a4f96f1df18a48c77e311edfec59b4cdc92a0a"
+    },
+    "risk": 4,
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "5X"
+  },
+  {
+    "pid": 16,
+    "lpSymbol": "ETH-BTCB LP",
+    "lpAddresses": {
+      "56": "0x7380e10f5c5f9dff4857de3cf9c39bb16f4c6dcf",
+      "97": "0xe70b7523f4bffa1f2e88d2ba709afd026030f412"
+    },
+    "tokenSymbol": "ETH",
+    "tokenAddresses": {
+      "56": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+      "97": "0x52a4f96f1df18a48c77e311edfec59b4cdc92a0a"
+    },
+    "risk": 2,
+    "quoteTokenSymbol": "BTCB",
+    "quoteTokenAdresses": {
+      "56": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+      "97": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c"
+    },
+    "multiplier": "3X"
+  },
+  {
+    "pid": 2,
+    "lpSymbol": "BNB-BUSD LP",
+    "lpAddresses": {
+      "56": "0x1b96b92314c44b159149f7e0303511fb2fc4774f",
+      "97": "0x2f7682b64b88149ba3250aee32db712964de5fa9"
+    },
+    "tokenSymbol": "BNB",
+    "tokenAddresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "3X",
+    "risk": 3
+  },
+  {
+    "pid": 13,
+    "lpSymbol": "ETH-BUSD LP",
+    "lpAddresses": {
+      "56": "0xd9a0d1f5e02de2403f68bb71a15f8847a854b494",
+      "97": "0x2f7682b64b88149ba3250aee32db712964de5fa9"
+    },
+    "tokenSymbol": "ETH",
+    "tokenAddresses": {
+      "56": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "2X",
+    "risk": 4
+  },
+  {
+    "pid": 7,
+    "lpSymbol": "DOT-BUSD LP",
+    "lpAddresses": {
+      "56": "0x54c1ec2f543966953f2f7564692606ea7d5a184e",
+      "97": "0x2f7682b64b88149ba3250aee32db712964de5fa9"
+    },
+    "tokenSymbol": "DOT",
+    "tokenAddresses": {
+      "56": "0x7083609fce4d1d8dc0c979aab8c869ea2c873402",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "2X",
+    "risk": 3
+  },
+  {
+    "pid": 11,
+    "lpSymbol": "TWT-BUSD LP",
+    "lpAddresses": {
+      "56": "0x65f898950e1759d95b5aae15f452e37c5bbe641e",
+      "97": "0x2f7682b64b88149ba3250aee32db712964de5fa9"
+    },
+    "tokenSymbol": "TWT",
+    "tokenAddresses": {
+      "56": "0x4b0f1812e5df2a09796481ff14017e6005508003",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "2X",
+    "risk": 3
+  },
+  {
+    "pid": 14,
+    "lpSymbol": "DOGE-BUSD LP",
+    "lpAddresses": {
+      "56": "0x1efcb446bfa553a2eb2fff99c9f76962be6ecac3",
+      "97": "0x2f7682b64b88149ba3250aee32db712964de5fa9"
+    },
+    "tokenSymbol": "DOGE",
+    "tokenAddresses": {
+      "56": "0xba2ae424d960c26247dd6c32edc70b295c744c43",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "1X",
+    "risk": 4
+  },
+  {
+    "pid": 10,
+    "lpSymbol": "SXP-BUSD LP",
+    "lpAddresses": {
+      "56": "0x2f82286c2178e9144f2a7b8d27d5b3203253cba4",
+      "97": "0x2f7682b64b88149ba3250aee32db712964de5fa9"
+    },
+    "tokenSymbol": "SXP",
+    "tokenAddresses": {
+      "56": "0x47bead2563dcbf3bf2c9407fea4dc236faba485a",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "1X",
+    "risk": 4
+  },
+  {
+    "pid": 6,
+    "lpSymbol": "CAKE-BUSD LP",
+    "lpAddresses": {
+      "56": "0x0ed8e0a2d99643e1e65cca22ed4424090b8b7458",
+      "97": "0x2f7682b64b88149ba3250aee32db712964de5fa9"
+    },
+    "tokenSymbol": "CAKE",
+    "tokenAddresses": {
+      "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "1X",
+    "risk": 4
+  },
+  {
+    "pid": 12,
+    "lpSymbol": "BIFI-BUSD LP",
+    "lpAddresses": {
+      "56": "0xd3f004e303114423f122c78afded4acfe97675b1",
+      "97": "0x2f7682b64b88149ba3250aee32db712964de5fa9"
+    },
+    "tokenSymbol": "BIFI",
+    "tokenAddresses": {
+      "56": "0xCa3F508B8e4Dd382eE878A314789373D80A5190A",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "1X",
+    "risk": 4
+  },
+  {
+    "pid": 3,
+    "lpSymbol": "USDT-BUSD LP",
+    "lpAddresses": {
+      "56": "0xc15fa3e22c912a276550f3e5fe3b0deb87b55acd",
+      "97": "0x2f7682b64b88149ba3250aee32db712964de5fa9"
+    },
+    "tokenSymbol": "USDT",
+    "tokenAddresses": {
+      "56": "0x55d398326f99059ff775485246999027b3197955",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "1X",
+    "risk": 1
+  },
+  {
+    "pid": 8,
+    "lpSymbol": "DAI-BUSD LP",
+    "lpAddresses": {
+      "56": "0x3ab77e40340ab084c3e23be8e5a6f7afed9d41dc",
+      "97": "0x2f7682b64b88149ba3250aee32db712964de5fa9"
+    },
+    "tokenSymbol": "DOT",
+    "tokenAddresses": {
+      "56": "0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "1X",
+    "risk": 1
+  },
+  {
+    "pid": 9,
+    "lpSymbol": "USDC-BUSD LP",
+    "lpAddresses": {
+      "56": "0x680dd100e4b394bda26a59dd5c119a391e747d18",
+      "97": "0x2f7682b64b88149ba3250aee32db712964de5fa9"
+    },
+    "tokenSymbol": "USDC",
+    "tokenAddresses": {
+      "56": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "multiplier": "1X",
+    "risk": 1
+  }
+]
