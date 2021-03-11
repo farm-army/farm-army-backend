@@ -12,11 +12,29 @@ module.exports = class pancakebunny {
     this.priceOracle = priceOracle;
   }
 
+  /**
+   * "new boost" vaults are hard coded :(
+   */
+  static BUNNY_CHEF_ADDRESSES = [
+    '0xb037581cF0cE10b04C4735443d95e0C93db5d940',
+    '0x69FF781Cf86d42af9Bf93c06B8bE0F16a2905cBC'
+  ]
+
   static ABI = JSON.parse(
     fs.readFileSync(
       path.resolve(
         __dirname,
         "abi/0xe375a12a556e954ccd48c0e0d3943f160d45ac2e.json"
+      ),
+      "utf8"
+    )
+  )
+
+  static BUNNY_CHEF_ABI = JSON.parse(
+    fs.readFileSync(
+      path.resolve(
+        __dirname,
+        "abi/bunnyChef.json"
       ),
       "utf8"
     )
@@ -265,22 +283,46 @@ module.exports = class pancakebunny {
     const cakePrice = this.priceOracle.findPrice("cake");
     const bnbPrice = this.priceOracle.findPrice("bnb");
 
-    const infoOfPool = farms.map(myPool => {
-      return {
-        reference: myPool.id.toString(),
-        contractAddress: "0xe375a12a556e954ccd48c0e0d3943f160d45ac2e",
-        abi: abi,
-        calls: [
-          {
-            reference: "infoOfPool",
-            method: "infoOfPool",
-            parameters: [myPool.raw.address, address]
-          }
-        ]
-      };
-    });
+    const infoOfPool = farms
+      .filter(farm => !pancakebunny.BUNNY_CHEF_ADDRESSES.includes(farm.raw.address))
+      .map(myPool => {
+        return {
+          reference: myPool.id.toString(),
+          contractAddress: "0xe375a12a556e954ccd48c0e0d3943f160d45ac2e",
+          abi: abi,
+          calls: [
+            {
+              reference: "infoOfPool",
+              method: "infoOfPool",
+              parameters: [myPool.raw.address, address]
+            }
+          ]
+        };
+      });
 
-    const calls = await Utils.multiCallRpcIndex(infoOfPool);
+    const infoOfPoolBoost = farms
+      .filter(farm => pancakebunny.BUNNY_CHEF_ADDRESSES.includes(farm.raw.address))
+      .map(myPool => {
+        return {
+          reference: myPool.id.toString(),
+          contractAddress: '0x40e31876c4322bd033BAb028474665B12c4d04CE',
+          abi: pancakebunny.BUNNY_CHEF_ABI,
+          calls: [
+            {
+              reference: "vaultUserInfoOf",
+              method: "vaultUserInfoOf",
+              parameters: [myPool.raw.address, address]
+            },
+            {
+              reference: "pendingBunny",
+              method: "pendingBunny",
+              parameters: [myPool.raw.address, address]
+            }
+          ]
+        };
+      });
+
+    const calls = await Utils.multiCallRpcIndex([...infoOfPool, ...infoOfPoolBoost]);
 
     const results = [];
 
@@ -291,12 +333,15 @@ module.exports = class pancakebunny {
 
       result.farm = farm;
 
-      if (
-        calls[farm.id].infoOfPool.balance &&
-        calls[farm.id].infoOfPool.balance.gt(0)
-      ) {
-        const balance = calls[farm.id].infoOfPool.balance.toString();
+      let balance
 
+      if (calls[farm.id] && calls[farm.id].infoOfPool && calls[farm.id].infoOfPool.balance && calls[farm.id].infoOfPool.balance.gt(0)) {
+        balance = calls[farm.id].infoOfPool.balance.toString();
+      } else if(calls[farm.id] && calls[farm.id].vaultUserInfoOf && calls[farm.id].vaultUserInfoOf.balance && calls[farm.id].vaultUserInfoOf.balance.gt(0)) {
+        balance = calls[farm.id].vaultUserInfoOf.balance.toString();
+      }
+
+      if (balance) {
         result.deposit = {
           symbol: "?",
           amount: balance / 1e18
@@ -307,15 +352,33 @@ module.exports = class pancakebunny {
         result.deposit.usd = (result.deposit.amount * farm.extra.tokenPrice) / 1e18;
       }
 
+      let pendingUSD
+      let pendingBNB
+      let pendingBUNNY
+      let pendingCAKE
+
+      // old ones
       if (calls[farm.id].infoOfPool) {
+        let { pUSD, pBNB, pBUNNY, pCAKE } = calls[farm.id].infoOfPool;
+
+        pendingUSD = pUSD;
+        pendingBNB = pBNB;
+        pendingBUNNY = pBUNNY;
+        pendingCAKE = pCAKE;
+      }
+
+      // new boost vaults
+      if (calls[farm.id] && calls[farm.id].pendingBunny && calls[farm.id].pendingBunny.gt(0)) {
+        pendingBUNNY = calls[farm.id].pendingBunny
+      }
+
+      if (pendingUSD || pendingBNB || pendingBUNNY || pendingCAKE) {
         result.rewards = [];
 
-        const { pUSD, pBNB, pBUNNY, pCAKE } = calls[farm.id].infoOfPool;
-
-        if (pBUNNY && pBUNNY.gt(0) > 0) {
+        if (pendingBUNNY && pendingBUNNY.gt(0) > 0) {
           const item = {
             symbol: "bunny",
-            amount: pBUNNY.toString() / 1e18
+            amount: pendingBUNNY.toString() / 1e18
           };
 
           if (bunnyPrice) {
@@ -325,10 +388,10 @@ module.exports = class pancakebunny {
           result.rewards.push(item);
         }
 
-        if (pBNB && pBNB.gt(0) > 0) {
+        if (pendingBNB && pendingBNB.gt(0) > 0) {
           const item = {
             symbol: "bnb",
-            amount: pBNB.toString() / 1e18
+            amount: pendingBNB.toString() / 1e18
           };
 
           if (bnbPrice) {
@@ -338,10 +401,10 @@ module.exports = class pancakebunny {
           result.rewards.push(item);
         }
 
-        if (pCAKE > 0) {
+        if (pendingCAKE > 0) {
           const item = {
             symbol: "cake",
-            amount: pCAKE.toString() / 1e18
+            amount: pendingCAKE.toString() / 1e18
           };
 
           if (cakePrice) {
