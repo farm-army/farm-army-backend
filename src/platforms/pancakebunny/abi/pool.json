@@ -1,0 +1,217 @@
+[{"inputs": [], "stateMutability": "nonpayable", "type": "constructor"}, {
+    "anonymous": false,
+    "inputs": [{
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+    }, {"indexed": true, "internalType": "address", "name": "newOwner", "type": "address"}],
+    "name": "OwnershipTransferred",
+    "type": "event"
+}, {
+    "inputs": [],
+    "name": "apy",
+    "outputs": [{"internalType": "uint256", "name": "_usd", "type": "uint256"}, {
+        "internalType": "uint256",
+        "name": "_bunny",
+        "type": "uint256"
+    }, {"internalType": "uint256", "name": "_bnb", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "balance",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
+    "name": "balanceOf",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "uint256", "name": "_amount", "type": "uint256"}],
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "depositAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}, {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+    }, {"internalType": "address", "name": "_to", "type": "address"}],
+    "name": "depositTo",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+    "name": "depositedAt",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "getReward",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {"inputs": [], "name": "harvest", "outputs": [], "stateMutability": "nonpayable", "type": "function"}, {
+    "inputs": [],
+    "name": "helper",
+    "outputs": [{"internalType": "contract IStrategyHelper", "name": "", "type": "address"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
+    "name": "info",
+    "outputs": [{
+        "components": [{
+            "internalType": "uint256",
+            "name": "balance",
+            "type": "uint256"
+        }, {"internalType": "uint256", "name": "principal", "type": "uint256"}, {
+            "internalType": "uint256",
+            "name": "available",
+            "type": "uint256"
+        }, {
+            "components": [{"internalType": "uint256", "name": "usd", "type": "uint256"}, {
+                "internalType": "uint256",
+                "name": "bunny",
+                "type": "uint256"
+            }, {"internalType": "uint256", "name": "bnb", "type": "uint256"}],
+            "internalType": "struct Profit",
+            "name": "profit",
+            "type": "tuple"
+        }, {
+            "internalType": "uint256",
+            "name": "poolTVL",
+            "type": "uint256"
+        }, {
+            "components": [{"internalType": "uint256", "name": "usd", "type": "uint256"}, {
+                "internalType": "uint256",
+                "name": "bunny",
+                "type": "uint256"
+            }, {"internalType": "uint256", "name": "bnb", "type": "uint256"}],
+            "internalType": "struct APY",
+            "name": "poolAPY",
+            "type": "tuple"
+        }], "internalType": "struct UserInfo", "name": "", "type": "tuple"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "minter",
+    "outputs": [{"internalType": "contract IBunnyMinter", "name": "", "type": "address"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "priceShare",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
+    "name": "principalOf",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
+    "name": "profitOf",
+    "outputs": [{"internalType": "uint256", "name": "_usd", "type": "uint256"}, {
+        "internalType": "uint256",
+        "name": "_bunny",
+        "type": "uint256"
+    }, {"internalType": "uint256", "name": "_bnb", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "address", "name": "_token", "type": "address"}],
+    "name": "setFlipToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "contract IStrategyHelper", "name": "_helper", "type": "address"}],
+    "name": "setHelper",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "contract IBunnyMinter", "name": "_minter", "type": "address"}],
+    "name": "setMinter",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
+    "name": "sharesOf",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "token",
+    "outputs": [{"internalType": "contract IBEP20", "name": "", "type": "address"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "totalShares",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "address", "name": "newOwner", "type": "address"}],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "tvl",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [],
+    "name": "withdrawAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
+    "name": "withdrawableBalanceOf",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+}]

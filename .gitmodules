@@ -1,0 +1,9 @@
+[submodule "remotes/pancake-frontend"]
+	path = remotes/pancake-frontend
+	url = https://github.com/pancakeswap/pancake-frontend.git
+[submodule "remotes/beefy-app"]
+	path = remotes/beefy-app
+	url = https://github.com/beefyfinance/beefy-app
+[submodule "remotes/goose-frontend-farms"]
+	path = remotes/goose-frontend-farms
+	url = https://github.com/goosedefi/goose-frontend-farms.git
