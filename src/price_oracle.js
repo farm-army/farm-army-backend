@@ -98,7 +98,10 @@ module.exports = class PriceOracle {
   findPrice(...addressOrTokens) {
     for (let addressOrToken of addressOrTokens) {
       if (addressOrToken.startsWith("0x")) {
-        return this.getAddressPrice(addressOrToken);
+        const price = this.getAddressPrice(addressOrToken)
+        if (price) {
+          return this.getAddressPrice(addressOrToken);
+        }
       }
 
       let tokenLowerCase = addressOrToken.toLowerCase();
@@ -109,7 +112,11 @@ module.exports = class PriceOracle {
       // flip token0 and token1
       if (tokenLowerCase.includes('-') && tokenLowerCase.split('-').length === 2) {
         const [t0, t1] = tokenLowerCase.split("-");
-        return allPrices[`${t1}-${t0}`] || undefined;
+
+        const price = allPrices[`${t1}-${t0}`];
+        if (price) {
+          return allPrices[`${t1}-${t0}`];
+        }
       }
     }
 
