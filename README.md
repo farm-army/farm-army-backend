@@ -13,11 +13,12 @@ Track your farming and pool performance on the Binance Chain
 | bearn | :x:  |  :white_check_mark: | staking missing  |  
 | beefy | :heavy_check_mark:  | :white_check_mark: | boost vaults missing  |  
 | goose | :white_check_mark:  | :white_check_mark: | pools  |  
-| hyperjump |  |   |   |  
+| hyperjump | :x: |  :white_check_mark: | staking missing |  
 | jetfuel | :x:  | :white_check_mark:  |  staking missing  |  
 | kebab | :x:  | :white_check_mark:  |  pools |  
 | pancake | :white_check_mark: | :heavy_check_mark: |   |  
 | pancakebunny | :x: | :heavy_check_mark:  |   |  
+| saltswap | :x: | :white_check_mark:  | "oceans farms" missing; auto update via github possible  |
 | valuedefi | :heavy_check_mark: | :white_check_mark:  | staking missing |
 
  - `Auto Fetch`

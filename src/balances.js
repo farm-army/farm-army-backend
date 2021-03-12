@@ -74,6 +74,18 @@ module.exports = class Balances {
       {
         token: "vbswap",
         contract: "0x4f0ed527e8A95ecAA132Af214dFd41F30b361600"
+      },
+      {
+        token: "salt",
+        contract: "0x2849b1aE7E04A3D9Bc288673A92477CF63F28aF4"
+      },
+      {
+        token: "alloy",
+        contract: "0x5ef5994fa33ff4eb6c82d51ee1dc145c546065bd"
+      },
+      {
+        token: "hypr",
+        contract: "0x03d6bd3d48f956d783456695698c407a46ecd54d"
       }
     ];
 

@@ -49,7 +49,9 @@ const tokenMaps = {
   "0xf952fc3ca7325cc27d15885d37117676d25bfda6": "egg",
   "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82": "cake",
   "0x250632378E573c6Be1AC2f97Fcdf00515d0Aa91B": "beth",
-  "0xc1edcc306e6faab9da629efca48670be4678779d": "mdg"
+  "0xc1edcc306e6faab9da629efca48670be4678779d": "mdg",
+  "0x2849b1aE7E04A3D9Bc288673A92477CF63F28aF4": "salt",
+  "0x5ef5994fa33ff4eb6c82d51ee1dc145c546065bd": "alloy",
 };
 
 module.exports = class PriceOracle {
@@ -254,7 +256,8 @@ module.exports = class PriceOracle {
 
     await Promise.all([
       this.updateTokensVswap(),
-      this.updateTokensBakery()
+      this.updateTokensBakery(),
+      this.updateHyperswap()
     ]);
   }
 
@@ -508,6 +511,50 @@ module.exports = class PriceOracle {
         }
       }
     });
+
+    return tokens;
+  }
+
+  async updateHyperswap() {
+    const foo = await fetch("https://subgraph.hyperswap.fi/subgraphs/name/theothug/swap-subgraph", {
+      "headers": {
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "content-type": "application/json",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site"
+      },
+      "referrer": "https://info.hyperjump.fi/",
+      "referrerPolicy": "strict-origin-when-cross-origin",
+      "body": "{\"operationName\":\"tokens\",\"variables\":{},\"query\":\"fragment TokenFields on Token {\\n  id\\n  name\\n  symbol\\n  derivedBNB\\n  tradeVolume\\n  tradeVolumeUSD\\n  untrackedVolumeUSD\\n  totalLiquidity\\n  txCount\\n  __typename\\n}\\n\\nquery tokens {\\n  tokens(first: 200, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    ...TokenFields\\n    __typename\\n  }\\n}\\n\"}",
+      "method": "POST",
+      "mode": "cors"
+    });
+
+    const result = await foo.json();
+
+    const tokens = {};
+    result.data.tokens
+      .filter(t => ['alloy', 'drugs', 'hypr', 'thugs', 'guns', 'smoke', 'cred', 'dvt'].includes(t.symbol.toLowerCase()))
+      .forEach(t => {
+        const symbol = t.symbol.toLowerCase();
+        tokens[t.id.toLowerCase()] = symbol;
+        tokenMaps[t.id.toLowerCase()] = symbol;
+
+        // risky price catch; only what we really need: BHC token is really crazy!
+        if (t.derivedBNB && allPrices['bnb']) {
+          const priceUSD = t.derivedBNB * allPrices['bnb'];
+
+          if (!pricesAddress[t.id.toLowerCase()]) {
+            pricesAddress[t.id.toLowerCase()] = priceUSD;
+          }
+
+          if (!allPrices[t.symbol.toLowerCase()]) {
+            allPrices[t.symbol.toLowerCase()] = priceUSD;
+          }
+        }
+      });
 
     return tokens;
   }

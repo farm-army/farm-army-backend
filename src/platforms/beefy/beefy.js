@@ -36,11 +36,11 @@ module.exports = class beefy {
     }
 
     const poolsResponse = await request(
-      "https://raw.githubusercontent.com/beefyfinance/beefy-app/master/src/features/configure/pools.js"
+      "https://github.com/beefyfinance/beefy-app/raw/master/src/features/configure/bsc_pools.js"
     );
     const pools = Object.freeze(
       eval(
-        poolsResponse.body.replace(/export\s+const\s+pools\s+=\s+/, "")
+        poolsResponse.body.replace(/export\s+const\s+bscPools\s+=\s+/, "")
       ).filter(p => {
         return p.status === "active" || p.depositsPaused !== false;
       })
