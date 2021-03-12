@@ -2,6 +2,7 @@
   {
     "sousId": 0,
     "tokenName": "CAKE",
+    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -17,8 +18,99 @@
     "tokenDecimals": 18
   },
   {
+    "sousId": 69,
+    "tokenName": "BUX",
+    "tokenAddress": "0x211ffbe424b90e25a15531ca322adf1559779e45",
+    "stakingTokenName": "CAKE",
+    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "contractAddress": {
+      "56": "0x07F8217c68ed9b838b0b8B58C19c79bACE746e9A",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://getbux.com/bux-crypto/",
+    "harvest": true,
+    "tokenPerBlock": "0.5787",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 68,
+    "tokenName": "NULS",
+    "tokenAddress": "0x8cd6e29d3686d24d3c2018cee54621ea0f89313b",
+    "stakingTokenName": "CAKE",
+    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "contractAddress": {
+      "56": "0x580DC9bB9260A922E3A4355b9119dB990F09410d",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://www.nuls.io/",
+    "harvest": true,
+    "tokenPerBlock": "0.0868",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 8
+  },
+  {
+    "sousId": 67,
+    "tokenName": "BELT",
+    "tokenAddress": "0xE0e514c71282b6f4e823703a39374Cf58dc3eA4f",
+    "stakingTokenName": "CAKE",
+    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "contractAddress": {
+      "56": "0x6f0037d158eD1AeE395e1c12d21aE8583842F472",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://beta.belt.fi/",
+    "harvest": true,
+    "tokenPerBlock": "0.00868",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 66,
+    "tokenName": "RAMP",
+    "tokenAddress": "0x8519ea49c997f50ceffa444d240fb655e89248aa",
+    "stakingTokenName": "CAKE",
+    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "contractAddress": {
+      "56": "0x423382f989C6C289c8D441000e1045e231bd7d90",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://rampdefi.com/",
+    "harvest": true,
+    "tokenPerBlock": "0.4861",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 65,
+    "tokenName": "BFI",
+    "tokenAddress": "0x81859801b01764d4f0fa5e64729f5a6c3b91435b",
+    "stakingTokenName": "CAKE",
+    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "contractAddress": {
+      "56": "0x0A595623b58dFDe6eB468b613C11A7A8E84F09b9",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://bearn.fi/",
+    "harvest": true,
+    "tokenPerBlock": "0.0001157",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
     "sousId": 64,
     "tokenName": "DEXE",
+    "tokenAddress": "0x039cb485212f996a9dbb85a9a75d898f94d38da6",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -36,6 +128,7 @@
   {
     "sousId": 63,
     "tokenName": "BEL",
+    "tokenAddress": "0x8443f091997f06a61670b735ed92734f5628692f",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -52,8 +145,8 @@
   },
   {
     "sousId": 62,
-    "image": "CAKETPT",
     "tokenName": "CAKE",
+    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "stakingTokenName": "TPT",
     "stakingTokenAddress": "0xeca41281c24451168a37211f0bc2b8645af45092",
     "stakingTokenDecimals": 4,
@@ -67,13 +160,13 @@
     "harvest": true,
     "tokenPerBlock": "0.0462",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18
   },
   {
     "sousId": 61,
-    "image": "TPTCAKE",
     "tokenName": "TPT",
+    "tokenAddress": "0xeca41281c24451168a37211f0bc2b8645af45092",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -91,6 +184,7 @@
   {
     "sousId": 60,
     "tokenName": "WATCH",
+    "tokenAddress": "0x7a9f28eb62c791422aa23ceae1da9c847cbec9b0",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -108,6 +202,7 @@
   {
     "sousId": 59,
     "tokenName": "xMARK",
+    "tokenAddress": "0x26a5dfab467d4f58fb266648cae769503cec9580",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -125,6 +220,7 @@
   {
     "sousId": 58,
     "tokenName": "bMXX",
+    "tokenAddress": "0x4131b87f74415190425ccd873048c708f8005823",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -142,6 +238,7 @@
   {
     "sousId": 57,
     "tokenName": "IOTX",
+    "tokenAddress": "0x9678e42cebeb63f23197d726b29b1cb20d0064e5",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -159,6 +256,7 @@
   {
     "sousId": 56,
     "tokenName": "BOR",
+    "tokenAddress": "0x92d7756c60dcfd4c689290e8a9f4d263b3b32241",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -176,6 +274,7 @@
   {
     "sousId": 55,
     "tokenName": "bOPEN",
+    "tokenAddress": "0xf35262a9d427f96d2437379ef090db986eae5d42",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -192,8 +291,8 @@
   },
   {
     "sousId": 54,
-    "image": "CAKESUSHI",
     "tokenName": "CAKE",
+    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "stakingTokenName": "SUSHI",
     "stakingTokenAddress": "0x947950bcc74888a40ffa2593c5798f11fc9124c4",
     "stakingLimit": 50,
@@ -206,12 +305,13 @@
     "harvest": true,
     "tokenPerBlock": "0.0367",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18
   },
   {
     "sousId": 53,
     "tokenName": "DODO",
+    "tokenAddress": "0x67ee3cb086f8a16f34bee3ca72fad36f7db929e2",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -229,6 +329,7 @@
   {
     "sousId": 52,
     "tokenName": "SWINGBY",
+    "tokenAddress": "0x71de20e0c4616e7fcbfdd3f875d568492cbe4739",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -246,6 +347,7 @@
   {
     "sousId": 51,
     "tokenName": "BRY",
+    "tokenAddress": "0xf859bf77cbe8699013d6dbc7c2b926aaf307f830",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -263,6 +365,7 @@
   {
     "sousId": 50,
     "tokenName": "ZEE",
+    "tokenAddress": "0x44754455564474a89358b2c2265883df993b12f0",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -280,6 +383,7 @@
   {
     "sousId": 49,
     "tokenName": "SWGb",
+    "tokenAddress": "0xe40255c5d7fa7ceec5120408c78c787cecb4cfdb",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -296,8 +400,8 @@
   },
   {
     "sousId": 48,
-    "image": "CAKECOMP",
     "tokenName": "CAKE",
+    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "stakingTokenName": "COMP",
     "stakingTokenAddress": "0x52ce071bd9b1c4b00a0b92d298c512478cad67e8",
     "stakingLimit": 1,
@@ -310,13 +414,13 @@
     "harvest": true,
     "tokenPerBlock": "0.055",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18
   },
   {
     "sousId": 47,
-    "image": "CAKECOMP",
     "tokenName": "CAKE",
+    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "stakingTokenName": "COMP",
     "stakingTokenAddress": "0x52ce071bd9b1c4b00a0b92d298c512478cad67e8",
     "stakingLimit": 1,
@@ -335,6 +439,7 @@
   {
     "sousId": 46,
     "tokenName": "SFP",
+    "tokenAddress": "0xd41fdb03ba84762dd66a0af1a6c8540ff1ba5dfb",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -352,6 +457,7 @@
   {
     "sousId": 45,
     "tokenName": "LINA",
+    "tokenAddress": "0x762539b45a1dcce3d36d080f74d1aed37844b878",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -363,12 +469,13 @@
     "harvest": true,
     "tokenPerBlock": "0.983",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18
   },
   {
     "sousId": 44,
     "tokenName": "LINA",
+    "tokenAddress": "0x762539b45a1dcce3d36d080f74d1aed37844b878",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -386,6 +493,7 @@
   {
     "sousId": 43,
     "tokenName": "LIT",
+    "tokenAddress": "0xb59490ab09a0f526cc7305822ac65f2ab12f9723",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -403,6 +511,7 @@
   {
     "sousId": 42,
     "tokenName": "HGET",
+    "tokenAddress": "0xc7d8d35eba58a0935ff2d5a33df105dd9f071731",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -414,12 +523,13 @@
     "harvest": true,
     "tokenPerBlock": "0.0138",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 6
   },
   {
     "sousId": 41,
     "tokenName": "BDO",
+    "tokenAddress": "0x190b589cf9fb8ddeabbfeae36a813ffb2a702454",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -431,12 +541,13 @@
     "harvest": true,
     "tokenPerBlock": "0.075",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18
   },
   {
     "sousId": 40,
     "tokenName": "EGLD",
+    "tokenAddress": "0xbf7c81fff98bbe61b40ed186e4afd6ddd01337fe",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -448,12 +559,13 @@
     "harvest": true,
     "tokenPerBlock": "0.001215",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18
   },
   {
     "sousId": 39,
     "tokenName": "UST",
+    "tokenAddress": "0x23396cf899ca06c4472205fc903bdb4de249d6fc",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -465,12 +577,13 @@
     "harvest": true,
     "tokenPerBlock": "0.1157",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18
   },
   {
     "sousId": 38,
     "tokenName": "wSOTE",
+    "tokenAddress": "0x541e619858737031a1244a5d0cd47e5ef480342c",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -482,12 +595,13 @@
     "harvest": true,
     "tokenPerBlock": "0.23",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18
   },
   {
     "sousId": 37,
     "tokenName": "FRONT",
+    "tokenAddress": "0x928e55dab735aa8260af3cedada18b5f70c72f1b",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -499,12 +613,13 @@
     "harvest": true,
     "tokenPerBlock": "0.2546",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18
   },
   {
     "sousId": 36,
     "tokenName": "Helmet",
+    "tokenAddress": "0x948d2a81086a075b3130bac19e4c6dee1d2e3fe8",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -516,12 +631,13 @@
     "harvest": true,
     "tokenPerBlock": "0.81",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18
   },
   {
     "sousId": 35,
     "tokenName": "BTCST",
+    "tokenAddress": "0x78650b139471520656b9e7aa7a5e9276814a38e9",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -533,12 +649,13 @@
     "harvest": true,
     "tokenPerBlock": "0.011574",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18
   },
   {
     "sousId": 34,
     "tokenName": "BSCX",
+    "tokenAddress": "0x5ac52ee5b2a633895292ff6d8a89bb9190451587",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -556,6 +673,7 @@
   {
     "sousId": 33,
     "tokenName": "TEN",
+    "tokenAddress": "0xdff8cb622790b7f92686c722b02cab55592f152c",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -573,6 +691,7 @@
   {
     "sousId": 32,
     "tokenName": "bALBT",
+    "tokenAddress": "0x72faa679e1008ad8382959ff48e392042a8b06f7",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -590,6 +709,7 @@
   {
     "sousId": 31,
     "tokenName": "ASR",
+    "tokenAddress": "0x80d5f92c2c8c682070c95495313ddb680b267320",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -607,6 +727,7 @@
   {
     "sousId": 30,
     "tokenName": "ATM",
+    "tokenAddress": "0x25e9d05365c867e59c1904e7463af9f312296f9e",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -624,6 +745,7 @@
   {
     "sousId": 29,
     "tokenName": "OG",
+    "tokenAddress": "0xf05e45ad22150677a017fbd94b84fbb63dc9b44c",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -641,6 +763,7 @@
   {
     "sousId": 28,
     "tokenName": "REEF",
+    "tokenAddress": "0xf21768ccbc73ea5b6fd3c687208a7c2def2d966e",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -658,6 +781,7 @@
   {
     "sousId": 27,
     "tokenName": "DITTO",
+    "tokenAddress": "0x233d91a0713155003fc4dce0afa871b508b3b715",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -674,8 +798,8 @@
   },
   {
     "sousId": 26,
-    "image": "CAKETWT",
     "tokenName": "CAKE",
+    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "stakingTokenName": "TWT",
     "stakingTokenAddress": "0x4b0f1812e5df2a09796481ff14017e6005508003",
     "stakingLimit": 1000,
@@ -694,6 +818,7 @@
   {
     "sousId": 24,
     "tokenName": "JUV",
+    "tokenAddress": "0xc40c9a843e1c6d01b7578284a9028854f6683b1b",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -711,6 +836,7 @@
   {
     "sousId": 25,
     "tokenName": "PSG",
+    "tokenAddress": "0xbc5609612b7c44bef426de600b5fd1379db2ecf1",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -728,6 +854,7 @@
   {
     "sousId": 22,
     "tokenName": "JUV",
+    "tokenAddress": "0xc40c9a843e1c6d01b7578284a9028854f6683b1b",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -745,6 +872,7 @@
   {
     "sousId": 23,
     "tokenName": "PSG",
+    "tokenAddress": "0xbc5609612b7c44bef426de600b5fd1379db2ecf1",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -762,6 +890,7 @@
   {
     "sousId": 21,
     "tokenName": "VAI",
+    "tokenAddress": "0x4bd17003473389a42daf6a0a729f6fdb328bbbd7",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -778,8 +907,8 @@
   },
   {
     "sousId": 20,
-    "image": "CAKEBNB",
     "tokenName": "CAKE",
+    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "stakingTokenName": "BNB",
     "stakingLimit": 10,
     "contractAddress": {
@@ -797,6 +926,7 @@
   {
     "sousId": 19,
     "tokenName": "BNB",
+    "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -814,6 +944,7 @@
   {
     "sousId": 18,
     "tokenName": "BLK",
+    "tokenAddress": "0x63870a18b6e42b01ef1ad8a2302ef50b7132054f",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -831,6 +962,7 @@
   {
     "sousId": 17,
     "tokenName": "BLK",
+    "tokenAddress": "0x63870a18b6e42b01ef1ad8a2302ef50b7132054f",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -848,6 +980,7 @@
   {
     "sousId": 16,
     "tokenName": "UNFI",
+    "tokenAddress": "0x728c5bac3c3e370e372fc4671f9ef6916b814d8b",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -865,6 +998,7 @@
   {
     "sousId": 15,
     "tokenName": "TWT",
+    "tokenAddress": "0x4b0f1812e5df2a09796481ff14017e6005508003",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -876,12 +1010,13 @@
     "harvest": true,
     "tokenPerBlock": "5",
     "sortOrder": 999,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18
   },
   {
     "sousId": 14,
     "tokenName": "HARD",
+    "tokenAddress": "0xf79037f6f6be66832de4e7516be52826bc3cbcc4",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -899,6 +1034,7 @@
   {
     "sousId": 13,
     "tokenName": "bROOBEE",
+    "tokenAddress": "0xe64f5cb844946c1f102bd25bbd87a5ab4ae89fbe",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -916,6 +1052,7 @@
   {
     "sousId": 12,
     "tokenName": "STAX",
+    "tokenAddress": "0x0da6ed8b13214ff28e9ca979dd37439e8a88f6c4",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -933,6 +1070,7 @@
   {
     "sousId": 11,
     "tokenName": "NAR",
+    "tokenAddress": "0xa1303e6199b319a891b79685f0537d289af1fc83",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -950,6 +1088,7 @@
   {
     "sousId": 10,
     "tokenName": "NYA",
+    "tokenAddress": "0xbfa0841f7a90c4ce6643f651756ee340991f99d5",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -967,6 +1106,7 @@
   {
     "sousId": 9,
     "tokenName": "CTK",
+    "tokenAddress": "0xa8c2b8eec3d368c0253ad3dae65a5f2bbb89c929",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -984,6 +1124,7 @@
   {
     "sousId": 8,
     "tokenName": "TWT",
+    "tokenAddress": "0x4b0f1812e5df2a09796481ff14017e6005508003",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -1001,6 +1142,7 @@
   {
     "sousId": 7,
     "tokenName": "INJ",
+    "tokenAddress": "0xa2b726b1145a4773f68593cf171187d8ebe4d495",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -1018,6 +1160,7 @@
   {
     "sousId": 6,
     "tokenName": "CTK",
+    "tokenAddress": "0xa8c2b8eec3d368c0253ad3dae65a5f2bbb89c929",
     "stakingTokenName": "SYRUP",
     "stakingTokenAddress": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
     "contractAddress": {
@@ -1035,6 +1178,7 @@
   {
     "sousId": 5,
     "tokenName": "CTK",
+    "tokenAddress": "0xa8c2b8eec3d368c0253ad3dae65a5f2bbb89c929",
     "stakingTokenName": "SYRUP",
     "stakingTokenAddress": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
     "contractAddress": {
@@ -1051,6 +1195,7 @@
   {
     "sousId": 4,
     "tokenName": "SXP",
+    "tokenAddress": "0x47bead2563dcbf3bf2c9407fea4dc236faba485a",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -1068,6 +1213,7 @@
   {
     "sousId": 3,
     "tokenName": "INJ",
+    "tokenAddress": "0xa2b726b1145a4773f68593cf171187d8ebe4d495",
     "stakingTokenName": "SYRUP",
     "stakingTokenAddress": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
     "contractAddress": {
@@ -1085,6 +1231,7 @@
   {
     "sousId": 2,
     "tokenName": "ALPHA",
+    "tokenAddress": "0xa1faa113cbe53436df28ff0aee54275c13b40975",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {
@@ -1102,6 +1249,7 @@
   {
     "sousId": 1,
     "tokenName": "TWT",
+    "tokenAddress": "0x4b0f1812e5df2a09796481ff14017e6005508003",
     "stakingTokenName": "SYRUP",
     "stakingTokenAddress": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
     "contractAddress": {
@@ -1119,6 +1267,7 @@
   {
     "sousId": -1,
     "tokenName": "XVS",
+    "tokenAddress": "0xcf6bb5389c92bdda8a3747ddb454cb7a64626c63",
     "stakingTokenName": "CAKE",
     "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
     "contractAddress": {

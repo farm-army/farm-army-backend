@@ -36,6 +36,120 @@
     }
   },
   {
+    "pid": 93,
+    "lpSymbol": "BUX-BNB LP",
+    "lpAddresses": {
+      "56": "0x0F556f4E47513d1a19Be456a9aF778d7e1A226B9",
+      "97": ""
+    },
+    "tokenSymbol": "BUX",
+    "tokenAddresses": {
+      "56": "0x211ffbe424b90e25a15531ca322adf1559779e45",
+      "97": ""
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    },
+    "isCommunity": false
+  },
+  {
+    "pid": 92,
+    "lpSymbol": "NULS-BUSD LP",
+    "lpAddresses": {
+      "56": "0xCA01F5D89d5b1d24ca5D6Ecc856D21e8a61DAFCc",
+      "97": ""
+    },
+    "tokenSymbol": "NULS",
+    "tokenAddresses": {
+      "56": "0x8cd6e29d3686d24d3c2018cee54621ea0f89313b",
+      "97": ""
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": ""
+    },
+    "isCommunity": false
+  },
+  {
+    "pid": 91,
+    "lpSymbol": "NULS-BNB LP",
+    "lpAddresses": {
+      "56": "0xad7e515409e5a7d516411a85acc88c5e993f570a",
+      "97": ""
+    },
+    "tokenSymbol": "NULS",
+    "tokenAddresses": {
+      "56": "0x8cd6e29d3686d24d3c2018cee54621ea0f89313b",
+      "97": ""
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    },
+    "isCommunity": false
+  },
+  {
+    "pid": 90,
+    "lpSymbol": "BELT-BNB LP",
+    "lpAddresses": {
+      "56": "0x83B92D283cd279fF2e057BD86a95BdEfffED6faa",
+      "97": ""
+    },
+    "tokenSymbol": "BELT",
+    "tokenAddresses": {
+      "56": "0xE0e514c71282b6f4e823703a39374Cf58dc3eA4f",
+      "97": ""
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    },
+    "isCommunity": false
+  },
+  {
+    "pid": 89,
+    "lpSymbol": "RAMP-BUSD LP",
+    "lpAddresses": {
+      "56": "0xbF36959939982D0D34B37Fb3f3425da9676C13a3",
+      "97": ""
+    },
+    "tokenSymbol": "RAMP",
+    "tokenAddresses": {
+      "56": "0x8519ea49c997f50ceffa444d240fb655e89248aa",
+      "97": ""
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": ""
+    },
+    "isCommunity": false
+  },
+  {
+    "pid": 88,
+    "lpSymbol": "BFI-BNB LP",
+    "lpAddresses": {
+      "56": "0x45a9e8d48bc560416008d122c9437927fed50e7d",
+      "97": ""
+    },
+    "tokenSymbol": "BFI",
+    "tokenAddresses": {
+      "56": "0x81859801b01764D4f0Fa5E64729f5a6C3b91435b",
+      "97": ""
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    },
+    "isCommunity": false
+  },
+  {
     "pid": 87,
     "lpSymbol": "DEXE-BUSD LP",
     "lpAddresses": {
