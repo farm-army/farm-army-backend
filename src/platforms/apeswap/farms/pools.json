@@ -1,0 +1,131 @@
+[
+  {
+    "sousId": 0,
+    "tokenName": "BANANA",
+    "stakingTokenName": "BANANA",
+    "stakingTokenAddress": {
+      "56": "0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
+      "97": "0x4Fb99590cA95fc3255D9fA66a1cA46c43C34b09a"
+    },
+    "contractAddress": {
+      "56": "0x5c8D727b265DBAfaba67E050f2f739cAeEB4A6F9",
+      "97": "0xbbC5e1cD3BA8ED639b00927115e5f0e0040aA613"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://apeswap.finance/",
+    "harvest": true,
+    "tokenPerBlock": "2.5",
+    "sortOrder": 1,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 1,
+    "tokenName": "BNB",
+    "stakingTokenName": "BANANA",
+    "stakingTokenAddress": {
+      "56": "0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
+      "97": "0x4Fb99590cA95fc3255D9fA66a1cA46c43C34b09a"
+    },
+    "contractAddress": {
+      "56": "0x0245c697a96045183048cdf18e9abae5b2237ff6",
+      "97": "0x88777a814946cd8eb80e7029eedf05cc6cf34168"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://research.binance.com/en/projects/bnb",
+    "harvest": true,
+    "tokenPerBlock": "0.00069444",
+    "sortOrder": 999,
+    "isFinished": true,
+    "tokenDecimals": 18,
+    "displayDecimals": 5
+  },
+  {
+    "sousId": 2,
+    "tokenName": "SOUL",
+    "stakingTokenName": "BANANA-SOUL",
+    "image": "SOUL.png",
+    "stakingTokenAddress": {
+      "56": "0xa48271ff51900007d3b21cecf30fdc8ccb63fee6",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0xf5Cb9F954D3Ea26Bb503A6996a4b2B0aAdC8c969",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://apoyield.com",
+    "harvest": true,
+    "tokenPerBlock": "1384",
+    "sortOrder": 2,
+    "isFinished": true,
+    "tokenDecimals": 8,
+    "lpStaking": true
+  },
+  {
+    "sousId": 3,
+    "tokenName": "SOUL",
+    "stakingTokenName": "BANANA-SOUL",
+    "image": "SOUL.png",
+    "stakingTokenAddress": {
+      "56": "0xa48271ff51900007d3b21cecf30fdc8ccb63fee6",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x82576dB7685418CBDD5A9f4721D605C125E4569c",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://apoyield.com",
+    "harvest": true,
+    "tokenPerBlock": "396",
+    "sortOrder": 3,
+    "isFinished": false,
+    "tokenDecimals": 8,
+    "lpStaking": true
+  },
+  {
+    "sousId": 4,
+    "tokenName": "NUTS",
+    "stakingTokenName": "BANANA-NUTS",
+    "image": "NUTS.svg",
+    "stakingTokenAddress": {
+      "56": "0x44baf117d79d5313bea1fbba416e4067436e4bbe",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x3523cE00C9f82FfafC850C0Acccb78341239028b",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://squirrel.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.08680555556",
+    "sortOrder": 2,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "lpStaking": true
+  },
+  {
+    "sousId": 5,
+    "tokenName": "BANANA",
+    "stakingTokenName": "BANANA-NUTS",
+    "image": "BANANA.svg",
+    "stakingTokenAddress": {
+      "56": "0x44baf117d79d5313bea1fbba416e4067436e4bbe",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0xdb28A11Fe950C9979A8050E6cBA76D187D5C3b70",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://squirrel.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.1446527778",
+    "sortOrder": 3,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "lpStaking": true
+  }
+]

@@ -7,6 +7,7 @@ Track your farming and pool performance on the Binance Chain
 | Platform  | Auto Fetch | Done | Notes |  
 |---|---|---|---|  
 | acryptos  | :x:  | :heavy_check_mark:  |  |  
+| apeswap | :x: | :heavy_check_mark:  |  |
 | autofarm | :heavy_check_mark:  | :heavy_check_mark:  |   |  
 | bakery | :white_check_mark: | :white_check_mark:  | farm config inconsistent for non so called "supportedPools"  |  
 | bdollar | :x:  |  :white_check_mark: | staking missing  |  

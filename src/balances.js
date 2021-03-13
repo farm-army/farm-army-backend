@@ -86,7 +86,11 @@ module.exports = class Balances {
       {
         token: "hypr",
         contract: "0x03d6bd3d48f956d783456695698c407a46ecd54d"
-      }
+      },
+      {
+        token: "banana",
+        contract: "0x603c7f932ed1fc6575303d8fb018fdcbb0f39a95"
+      },
     ];
 
     const vaultCalls = pools.map(pool => {
