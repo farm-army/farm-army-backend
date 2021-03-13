@@ -16,18 +16,28 @@ module.exports = class saltswap {
     fs.readFileSync(path.resolve(__dirname, "abi/masterchef.json"), "utf8")
   )
 
+  static SOUS_ABI = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, "abi/souschef.json"), "utf8")
+  )
+
   static MASTER_ADDRESS = "0xB4405445fFAcF2B86BC2bD7D1C874AC739265658"
 
   async getLbAddresses() {
-    return this.getRawPools()
+    return this.getRawFarms()
       .filter(f => f.lpAddresses && f.lpAddresses[56])
       .map(farm => farm.lpAddresses[56]);
   }
 
-  getRawPools() {
+  getRawFarms() {
     return JSON.parse(
       fs.readFileSync(path.resolve(__dirname, "farms/farms.json"), "utf8")
-    );
+    ).filter(i => i.ended !== true);
+  }
+
+  getRawPools() {
+    return JSON.parse(
+      fs.readFileSync(path.resolve(__dirname, "farms/pools.json"), "utf8")
+    ).filter(p => p.isFinished !== true);
   }
 
   async getAddressFarms(address) {
@@ -36,25 +46,42 @@ module.exports = class saltswap {
       return cacheItem;
     }
 
-    const vaultCalls = (await this.getFarms())
+    let farmings = await this.getFarms();
+
+    const vaultCalls = farmings
+      .filter(p => p.id.startsWith('saltswap_farm_'))
       .filter(f => f.raw.lpAddresses && f.raw.lpAddresses[56])
       .map(farm => {
         const vault = new Web3EthContract(saltswap.MASTER_ABI, saltswap.MASTER_ADDRESS);
         return {
-          poolUserInfoMap: vault.methods.userInfo(farm.raw.pid, address),
-          pendingSalt: vault.methods.pendingSalt(farm.raw.pid, address),
+          userInfo: vault.methods.userInfo(farm.raw.pid, address),
+          pendingReward: vault.methods.pendingSalt(farm.raw.pid, address),
           id: farm.id.toString()
         };
       });
 
-    const farmCalls = await Utils.multiCall(vaultCalls);
+    const poolCalls = farmings
+      .filter(p => p.id.startsWith('saltswap_sous_'))
+      .map(farm => {
+        const contract = new Web3EthContract(saltswap.SOUS_ABI, farm.raw.contractAddress[56]);
+        return {
+          userInfo: contract.methods.userInfo(address),
+          pendingReward: contract.methods.pendingReward(address),
+          id: farm.id.toString()
+        };
+      });
 
-    const result = farmCalls
+    const [farms, pools] = await Promise.all([
+      Utils.multiCall(vaultCalls),
+      Utils.multiCall(poolCalls)
+    ]);
+
+    const result = [...farms, ...pools]
       .filter(
         v =>
-          new BigNumber(v.poolUserInfoMap[0] || 0).isGreaterThan(0) ||
-          new BigNumber(v.poolUserInfoMap[1] || 0).isGreaterThan(0) ||
-          new BigNumber(v.pendingSalt || 0).isGreaterThan(0)
+          new BigNumber(v.userInfo[0] || 0).isGreaterThan(0) ||
+          new BigNumber(v.userInfo[1] || 0).isGreaterThan(0) ||
+          new BigNumber(v.pendingReward || 0).isGreaterThan(0)
       )
       .map(v => v.id);
 
@@ -73,25 +100,9 @@ module.exports = class saltswap {
       }
     }
 
-    const rawPools = this.getRawPools().filter(i => i.ended !== true);
-
-    // TVL USD
-    const farmTvls = {};
-    (
-      await Utils.multiCall(
-        rawPools.map(farm => {
-          return {
-            lpAddress: farm.lpAddresses[56]
-          };
-        })
-      )
-    ).forEach(call => {
-      farmTvls[call.lpAddress] = call.totalSupply;
-    });
-
-    const result = rawPools.map(farm => {
+    const farms = this.getRawFarms().map(farm => {
       const item = {
-        id: `saltswap_${farm.pid}`,
+        id: `saltswap_farm_${farm.pid}`,
         name: farm.lpSymbol,
         provider: "saltswap",
         raw: Object.freeze(farm),
@@ -115,19 +126,29 @@ module.exports = class saltswap {
 
       item.extra.transactionAddress = saltswap.MASTER_ADDRESS;
 
-      if (farmTvls[farm.lpAddresses[56]]) {
-        item.tvl = {
-          amount: farmTvls[farm.lpAddresses[56]] / 1e18
-        };
+      return Object.freeze(item);
+    });
 
-        const addressPrice = this.priceOracle.getAddressPrice(farm.lpAddresses[56]);
-        if (addressPrice) {
-          item.tvl.usd = item.tvl.amount * addressPrice;
-        }
-      }
+    const souses = this.getRawPools().map(farm => {
+      const item = {
+        id: `saltswap_sous_${farm.sousId}`,
+        name: `${farm.tokenName} Pool`,
+        token: farm.stakingTokenName.toLowerCase(),
+        provider: "saltswap",
+        raw: Object.freeze(farm),
+        link: "https://www.saltswap.finance/oceans",
+        has_details: true,
+        extra: {}
+      };
+
+      item.earns = [farm.tokenName.toLowerCase()];
+      item.extra.transactionAddress = farm.contractAddress[56];
+      item.extra.transactionToken = farm.stakingTokenAddress[56];
 
       return Object.freeze(item);
     });
+
+    const result = [...farms, ...souses]
 
     this.cache.put(cacheKey, result, { ttl: 1000 * 60 * 30 });
 
@@ -135,7 +156,7 @@ module.exports = class saltswap {
 
     return result;
   }
-
+  
   async getYields(address) {
     const addressFarms = await this.getAddressFarms(address);
     if (addressFarms.length === 0) {
@@ -152,31 +173,42 @@ module.exports = class saltswap {
 
     const farms = await this.getFarms();
 
-    const vaultCalls = addresses.map(id => {
-      const farm = farms.find(f => f.id === id);
+    const farmCalls = addresses
+      .filter(address => address.startsWith('saltswap_farm_'))
+      .map(id => {
+        const farm = farms.find(f => f.id === id);
+        const contract = new Web3EthContract(saltswap.MASTER_ABI, saltswap.MASTER_ADDRESS);
 
-      const vault = new Web3EthContract(saltswap.MASTER_ABI, saltswap.MASTER_ADDRESS);
+        return {
+          userInfo: contract.methods.userInfo(farm.raw.pid, address),
+          pendingReward: contract.methods.pendingSalt(farm.raw.pid, address),
+          id: farm.id.toString()
+        };
+      });
 
-      return {
-        poolUserInfoMap: vault.methods.userInfo(farm.raw.pid, address),
-        pendingSalt: vault.methods.pendingSalt(farm.raw.pid, address),
-        id: farm.id.toString()
-      };
-    });
+    const sousCalls = addresses
+      .filter(address => address.startsWith('saltswap_sous_'))
+      .map(id => {
+        const farm = farms.find(f => f.id === id);
+        const contract = new Web3EthContract(saltswap.SOUS_ABI, farm.raw.contractAddress[56]);
 
-    const calls = await Utils.multiCall(vaultCalls);
+        return {
+          userInfo: contract.methods.userInfo(address),
+          pendingReward: contract.methods.pendingReward(address),
+          id: farm.id.toString()
+        };
+      });
 
-    const resultFarms = calls
-      .filter(
-        v =>
-          new BigNumber(v.poolUserInfoMap[0] || 0).isGreaterThan(0) ||
-          new BigNumber(v.poolUserInfoMap[1] || 0).isGreaterThan(0)
-      )
-      .map(call => {
+    const [farmResults, sousResults] = await Promise.all([
+      Utils.multiCall(farmCalls),
+      Utils.multiCall(sousCalls),
+    ]);
+
+    const resultFarms = [...farmResults, ...sousResults].map(call => {
         const farm = farms.find(f => f.id === call.id);
 
-        const amount = call.poolUserInfoMap[0] || 0;
-        const rewards = call.pendingSalt || 0;
+        const amount = call.userInfo[0] || 0;
+        const rewards = call.pendingReward || 0;
 
         const result = {};
 
@@ -191,18 +223,20 @@ module.exports = class saltswap {
         }
 
         if (price) {
-          result.deposit.usd = (amount / 1e18) * price;
+          result.deposit.usd = result.deposit.amount * price;
         }
 
         if (rewards > 0) {
           const reward = {
-            symbol: "salt",
+            symbol: farm.earns[0] ? farm.earns[0] : '?',
             amount: rewards / 1e18
           };
 
-          const priceReward = this.priceOracle.findPrice("salt");
-          if (priceReward) {
-            reward.usd = reward.amount * priceReward;
+          if (farm.earns[0]) {
+            const priceReward = this.priceOracle.findPrice(farm.earns[0]);
+            if (priceReward) {
+              reward.usd = reward.amount * priceReward;
+            }
           }
 
           result.rewards = [reward];

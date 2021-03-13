@@ -8,17 +8,17 @@ Track your farming and pool performance on the Binance Chain
 |---|---|---|---|  
 | acryptos  | :x:  | :heavy_check_mark:  |  |  
 | autofarm | :heavy_check_mark:  | :heavy_check_mark:  |   |  
-| bakery | :heavy_check_mark: | :white_check_mark:  | farm config inconsistent for non so called "supportedPools"  |  
+| bakery | :white_check_mark: | :white_check_mark:  | farm config inconsistent for non so called "supportedPools"  |  
 | bdollar | :x:  |  :white_check_mark: | staking missing  |  
 | bearn | :x:  |  :white_check_mark: | staking missing  |  
 | beefy | :heavy_check_mark:  | :white_check_mark: | boost vaults missing  |  
 | goose | :white_check_mark:  | :white_check_mark: | pools  |  
-| hyperjump | :x: |  :white_check_mark: | staking missing |  
+| hyperjump | :x: |  :heavy_check_mark: | |  
 | jetfuel | :x:  | :white_check_mark:  |  staking missing  |  
 | kebab | :x:  | :white_check_mark:  |  pools |  
 | pancake | :white_check_mark: | :heavy_check_mark: |   |  
 | pancakebunny | :x: | :heavy_check_mark:  |   |  
-| saltswap | :x: | :white_check_mark:  | "oceans farms" missing; auto update via github possible  |
+| saltswap | :x: | :heavy_check_mark:  |  |
 | valuedefi | :heavy_check_mark: | :white_check_mark:  | staking missing |
 
  - `Auto Fetch`
