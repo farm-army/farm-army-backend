@@ -1,0 +1,155 @@
+[
+  {
+    "sousId": 0,
+    "tokenName": "ALLOY",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+    "contractAddress": {
+      "56": "0x4F1818Ff649498a2441aE1AD29ccF55a8E1C6250",
+      "97": "0xc605158c53dac91E8650849690881F77f182442c"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://hyperjump.fi/",
+    "harvest": true,
+    "tokenPerBlock": "10",
+    "sortOrder": 1,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 76,
+    "tokenName": "HPS",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0xa389fAa5396a3ec8eAA91B874135569480366798",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://billionhappiness.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.023149",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 75,
+    "tokenName": "DITTO",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0x00886Ffc995DadDd4aD888AB251bF594Fff3BAA6",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://ditto.money/",
+    "harvest": true,
+    "tokenPerBlock": "0.03473",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 9
+  },
+  {
+    "sousId": 74,
+    "tokenName": "CROW",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0xdDC66b82BFeac163f096C5dd91faB099F382470A",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://www.crowfinance.net/",
+    "harvest": true,
+    "tokenPerBlock": "0.000072917",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 73,
+    "tokenName": "BTD",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0x8498eD98E95a833CCd246C4f0e29b64352707007",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://boltdollar.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.03472",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 72,
+    "tokenName": "DVT",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0xf4DD1c9676E0eFf4Dbd3179D28Bd84d42A0Ea7EA",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://devault.cc/",
+    "harvest": true,
+    "tokenPerBlock": "4.20",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 71,
+    "tokenName": "SOAK",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0x573e7021733315a866BcBb449553cE320E7285bD",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://www.sponge.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.012400794",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 70,
+    "tokenName": "SUPRA",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0x9Fc01bBF65b405F6aec3f3AbaE20C14517b5260A",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://www.supra.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.000104167",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 69,
+    "tokenName": "JGN",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0x1b04a6Cdd6422f44Eeea2dbe9bf1127A1AE82F4b",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://jgndefi.com/",
+    "harvest": true,
+    "tokenPerBlock": "0.043402778",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  }
+]
