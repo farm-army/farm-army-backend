@@ -1,0 +1,331 @@
+"use strict";
+
+const fs = require("fs");
+const Web3EthContract = require("web3-eth-contract");
+const BigNumber = require("bignumber.js");
+const Utils = require("../utils");
+
+module.exports = {
+  PancakePlatformFork: class PancakePlatformFork {
+    constructor(cache, priceOracle) {
+      this.cache = cache;
+      this.priceOracle = priceOracle;
+    }
+
+    getRawFarms() {
+      throw new Error('not implemented');
+    }
+
+    getRawPools() {
+      throw new Error('not implemented');
+    }
+
+    getName() {
+      throw new Error('not implemented');
+    }
+
+    getFarmLink(farm) {
+      throw new Error('not implemented');
+    }
+
+    getFarmEarns(farm) {
+      throw new Error('not implemented');
+    }
+
+    getPendingRewardContractMethod() {
+      throw new Error('not implemented');
+    }
+
+    getSousAbi() {
+      throw new Error('not implemented');
+    }
+
+    getMasterChefAbi() {
+      throw new Error('not implemented');
+    }
+
+    getMasterChefAddress() {
+      throw new Error('not implemented');
+    }
+
+    async getLbAddresses() {
+      return this.getRawFarms()
+        .filter(f => f.lpAddresses && this.getAddress(f.lpAddresses))
+        .map(farm => this.getAddress(farm.lpAddresses));
+    }
+
+    async getAddressFarms(address) {
+      const cacheItem = this.cache.get(`getAddressFarms-${this.getName()}-${address}`);
+      if (cacheItem) {
+        return cacheItem;
+      }
+
+      let farmings = await this.getFarms();
+
+      const vaultCalls = farmings
+        .filter(p => p.id.startsWith(`${this.getName()}_farm_`))
+        .filter(f => f.raw.lpAddresses && this.getAddress(f.raw.lpAddresses))
+        .map(farm => {
+          const vault = new Web3EthContract(this.getMasterChefAbi(), this.getMasterChefAddress());
+          return {
+            userInfo: vault.methods.userInfo(farm.raw.pid, address),
+            pendingReward: vault.methods[this.getPendingRewardContractMethod()](farm.raw.pid, address),
+            id: farm.id.toString()
+          };
+        });
+
+      const poolCalls = farmings
+        .filter(p => p.id.startsWith(`${this.getName()}_sous_`))
+        .map(farm => {
+          const contract = new Web3EthContract(this.getSousAbi(), this.getAddress(farm.raw.contractAddress));
+          return {
+            userInfo: contract.methods.userInfo(address),
+            pendingReward: contract.methods.pendingReward(address),
+            id: farm.id.toString()
+          };
+        });
+
+      const [farms, pools] = await Promise.all([
+        Utils.multiCall(vaultCalls),
+        Utils.multiCall(poolCalls)
+      ]);
+
+      const result = [...farms, ...pools]
+        .filter(
+          v =>
+            new BigNumber((v.userInfo && v.userInfo[0]) ? v.userInfo[0] : 0).isGreaterThan(0) ||
+            new BigNumber((v.userInfo && v.userInfo[1]) ? v.userInfo[0] : 0).isGreaterThan(0) ||
+            new BigNumber(v.pendingReward || 0).isGreaterThan(0)
+        )
+        .map(v => v.id);
+
+      this.cache.put(`getAddressFarms-${this.getName()}-${address}`, result, { ttl: 300 * 1000 });
+
+      return result;
+    }
+
+    async getFarms(refresh = false) {
+      const cacheKey = `getFarms-${this.getName()}`;
+
+      if (!refresh) {
+        const cacheItem = this.cache.get(cacheKey);
+        if (cacheItem) {
+          return cacheItem;
+        }
+      }
+
+      const farms = this.getRawFarms().map(farm => {
+        const item = {
+          id: `${this.getName()}_farm_${farm.pid}`,
+          name: farm.lpSymbol,
+          provider: this.getName(),
+          raw: Object.freeze(farm),
+          has_details: true,
+          extra: {}
+        };
+
+        if (farm.isTokenOnly !== true) {
+          item.extra.lpAddress = this.getAddress(farm.lpAddresses);
+          item.extra.transactionToken = this.getAddress(farm.lpAddresses);
+        } else {
+          item.extra.transactionToken = this.getAddress(farm.tokenAddresses);
+        }
+
+        const farmEarns = this.getFarmEarns(item);
+        if (farmEarns && farmEarns.length > 0) {
+          item.earns = farmEarns;
+        }
+
+        item.extra.transactionAddress = this.getMasterChefAddress();
+
+        const link = this.getFarmLink(item);
+        if (link) {
+          item.link = link;
+        }
+
+        return Object.freeze(item);
+      });
+
+      const souses = this.getRawPools().map(farm => {
+        const item = {
+          id: `${this.getName()}_sous_${farm.sousId}`,
+          name: `${farm.tokenName} Pool`,
+          token: farm.stakingTokenName.toLowerCase(),
+          provider: this.getName(),
+          raw: Object.freeze(farm),
+          has_details: true,
+          extra: {}
+        };
+
+        item.earns = [farm.tokenName.toLowerCase()];
+        item.extra.transactionAddress = this.getAddress(farm.contractAddress);
+        item.extra.transactionToken = this.getAddress(farm.stakingTokenAddress);
+
+        const link = this.getFarmLink(item);
+        if (link) {
+          item.link = link;
+        }
+
+        return Object.freeze(item);
+      });
+
+      const result = [...farms, ...souses]
+
+      this.cache.put(cacheKey, result, { ttl: 1000 * 60 * 30 });
+
+      console.log(`${this.getName()} updated`);
+
+      return result;
+    }
+
+    async getYields(address) {
+      const addressFarms = await this.getAddressFarms(address);
+      if (addressFarms.length === 0) {
+        return [];
+      }
+
+      return await this.getYieldsInner(address, addressFarms);
+    }
+
+    async getYieldsInner(address, addresses) {
+      if (addresses.length === 0) {
+        return [];
+      }
+
+      const farms = await this.getFarms();
+
+      const farmCalls = addresses
+        .filter(address => address.startsWith(`${this.getName()}_farm_`))
+        .map(id => {
+          const farm = farms.find(f => f.id === id);
+          const contract = new Web3EthContract(this.getMasterChefAbi(), this.getMasterChefAddress());
+
+          return {
+            userInfo: contract.methods.userInfo(farm.raw.pid, address),
+            pendingReward: contract.methods[this.getPendingRewardContractMethod()](farm.raw.pid, address),
+            id: farm.id.toString()
+          };
+        });
+
+      const sousCalls = addresses
+        .filter(address => address.startsWith(`${this.getName()}_sous_`))
+        .map(id => {
+          const farm = farms.find(f => f.id === id);
+          const contract = new Web3EthContract(this.getSousAbi(), this.getAddress(farm.raw.contractAddress));
+
+          return {
+            userInfo: contract.methods.userInfo(address),
+            pendingReward: contract.methods.pendingReward(address),
+            id: farm.id.toString()
+          };
+        });
+
+      const [farmResults, sousResults] = await Promise.all([
+        Utils.multiCall(farmCalls),
+        Utils.multiCall(sousCalls),
+      ]);
+
+      return [...farmResults, ...sousResults].map(call => {
+        const farm = farms.find(f => f.id === call.id);
+
+        const amount = call.userInfo[0] || 0;
+        const rewards = call.pendingReward || 0;
+
+        const result = {};
+
+        result.deposit = {
+          symbol: "?",
+          amount: amount / 1e18
+        };
+
+        let price;
+        if (farm.extra && farm.extra.transactionToken) {
+          price = this.priceOracle.getAddressPrice(farm.extra.transactionToken);
+        }
+
+        if (price) {
+          result.deposit.usd = result.deposit.amount * price;
+        }
+
+        if (rewards > 0) {
+          const reward = {
+            symbol: farm.earns[0] ? farm.earns[0] : '?',
+            amount: rewards / 1e18
+          };
+
+          if (farm.earns[0]) {
+            const priceReward = this.priceOracle.findPrice(farm.earns[0]);
+            if (priceReward) {
+              reward.usd = reward.amount * priceReward;
+            }
+          }
+
+          result.rewards = [reward];
+        }
+
+        result.farm = farm;
+
+        return result;
+      });
+    }
+
+    async getTransactions(address, id) {
+      const farm = (await this.getFarms()).find(f => f.id === id);
+      if (!farm) {
+        return {};
+      }
+
+      if (farm.extra.transactionAddress && farm.extra.transactionToken) {
+        return Utils.getTransactions(
+          farm.extra.transactionAddress,
+          farm.extra.transactionToken,
+          address
+        );
+      }
+
+      return [];
+    }
+
+    async getDetails(address, id) {
+      const farm = (await this.getFarms()).find(f => f.id === id);
+      if (!farm) {
+        return {};
+      }
+
+      const [yieldFarms, transactions] = await Promise.all([
+        this.getYieldsInner(address, [farm.id]),
+        this.getTransactions(address, id)
+      ]);
+
+      const result = {};
+
+      let lpTokens = [];
+      if (yieldFarms[0]) {
+        result.farm = yieldFarms[0];
+        lpTokens = this.priceOracle.getLpSplits(farm, yieldFarms[0]);
+      }
+
+      if (transactions && transactions.length > 0) {
+        result.transactions = transactions;
+      }
+
+      if (lpTokens && lpTokens.length > 0) {
+        result.lpTokens = lpTokens;
+      }
+
+      return result;
+    }
+
+    getAddress(address) {
+      if (typeof address === 'string' && address.startsWith('0x')) {
+        return address;
+      }
+
+      if (address[56]) {
+        return address[56];
+      }
+
+      return undefined;
+    }
+  }
+};
