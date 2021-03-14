@@ -3,6 +3,7 @@
 const ABI = require("./platforms/beefy/abi/abi");
 const utils = require("./utils");
 const Web3EthContract = require("web3-eth-contract");
+const _ = require("lodash");
 
 module.exports = class Balances {
   constructor(cache, priceOracle) {
@@ -10,15 +11,56 @@ module.exports = class Balances {
     this.priceOracle = priceOracle;
   }
 
-  async getBalances(address) {
-    const cacheKey = `balances-address-${address}`;
+  async getAllTokenBalances(address) {
+    const cacheKey = `allTokenBalances-address-${address}`;
 
     const cacheItem = this.cache.get(cacheKey);
     if (cacheItem) {
-      return JSON.parse(JSON.stringify(cacheItem));
+      return cacheItem;
     }
 
-    const pools = [
+    const tokenMap = this.priceOracle.getAddressSymbolMap();
+
+    const tokenAddress = (await this.getPlatformTokens()).map(p => p.contract);
+
+    const balancesCalls = _.uniq([...Object.keys(tokenMap), ...tokenAddress]).map(key => {
+      const vault = new Web3EthContract(ABI.erc20ABI, key);
+      return {
+        contract: key,
+        balance: vault.methods.balanceOf(address),
+      };
+    });
+
+    const balances = [];
+
+    (await utils.multiCall(balancesCalls)).filter(c => c.balance > 0).forEach(b => {
+      const item = {
+        token: b.contract,
+        amount: b.balance / 1e18,
+      };
+
+      const price = this.priceOracle.findPrice(b.contract)
+      if (price) {
+        item.usd = item.amount * price;
+      }
+
+      if (item.usd && item.usd < 0.006) {
+        return;
+      }
+
+      if (tokenMap[b.contract]) {
+        item.symbol = tokenMap[b.contract];
+      }
+
+      balances.push(item);
+    });
+
+    this.cache.put(cacheKey, balances, { ttl: 300 * 1000 });
+    return balances;
+  }
+
+  async getPlatformTokens() {
+    return [
       {
         token: "auto",
         contract: "0xa184088a740c695e156f91f5cc086a06bb78b827"
@@ -92,6 +134,16 @@ module.exports = class Balances {
         contract: "0x603c7f932ed1fc6575303d8fb018fdcbb0f39a95"
       },
     ];
+  }
+  async getBalances(address) {
+    const cacheKey = `balances-address-${address}`;
+
+    const cacheItem = this.cache.get(cacheKey);
+    if (cacheItem) {
+      return cacheItem;
+    }
+
+    const pools = await this.getPlatformTokens()
 
     const vaultCalls = pools.map(pool => {
       const vault = new Web3EthContract(ABI.erc20ABI, pool.contract);
@@ -114,8 +166,10 @@ module.exports = class Balances {
       balance.balance /= 1e18;
     }
 
-    this.cache.put(cacheKey, balances, { ttl: 300 * 1000 });
+    const b = Object.freeze(balances);
 
-    return balances;
+    this.cache.put(cacheKey, b, { ttl: 300 * 1000 });
+
+    return b;
   }
 };

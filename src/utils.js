@@ -391,7 +391,8 @@ module.exports = {
 
         return {
           timestamp: parseInt(t.timeStamp),
-          amount: amount
+          amount: amount,
+          hash: t.hash,
         };
       });
 
@@ -467,14 +468,16 @@ module.exports = {
     data.data.ethereum.in.forEach(item => {
       transactions.push({
         timestamp: item.block.timestamp.unixtime,
-        amount: item.amount
+        amount: item.amount,
+        hash: item.transaction.hash,
       });
     });
 
     data.data.ethereum.out.forEach(item => {
       transactions.push({
         timestamp: item.block.timestamp.unixtime,
-        amount: -item.amount
+        amount: -item.amount,
+        hash: item.transaction.hash,
       });
     });
 
