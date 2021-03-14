@@ -1,9 +1,9 @@
 "use strict";
 
-const fs = require("fs");
 const Web3EthContract = require("web3-eth-contract");
 const BigNumber = require("bignumber.js");
 const Utils = require("../utils");
+const erc20Abi = require("../abi/erc20.json");
 
 module.exports = {
   PancakePlatformFork: class PancakePlatformFork {
@@ -114,6 +114,33 @@ module.exports = {
         }
       }
 
+      const farmBalanceCalls = this.getRawFarms().map(farm => {
+        let address = farm.isTokenOnly !== true
+          ? this.getAddress(farm.lpAddresses)
+          : this.getAddress(farm.tokenAddresses);
+
+        const token = new Web3EthContract(erc20Abi, address);
+        return {
+          address: address,
+          balance: token.methods.balanceOf(this.getMasterChefAddress()),
+        };
+      });
+
+      const poolBalanceCalls = this.getRawPools().map(farm => {
+        let address = this.getAddress(farm.stakingTokenAddress);
+
+        const token = new Web3EthContract(erc20Abi, address);
+        return {
+          address: this.getAddress(farm.contractAddress),
+          balance: token.methods.balanceOf(this.getAddress(farm.contractAddress)),
+        };
+      });
+
+      const [farmBalances, poolBalance] = await Promise.all([
+        Utils.multiCallIndexBy('address', farmBalanceCalls),
+        Utils.multiCallIndexBy('address', poolBalanceCalls),
+      ]);
+
       const farms = this.getRawFarms().map(farm => {
         const item = {
           id: `${this.getName()}_farm_${farm.pid}`,
@@ -143,6 +170,17 @@ module.exports = {
           item.link = link;
         }
 
+        if (item.extra.transactionToken && farmBalances[item.extra.transactionToken] && farmBalances[item.extra.transactionToken].balance) {
+          item.tvl = {
+            amount: farmBalances[item.extra.transactionToken].balance / 1e18
+          };
+
+          const addressPrice = this.priceOracle.findPrice(item.extra.transactionToken);
+          if (addressPrice) {
+            item.tvl.usd = item.tvl.amount * addressPrice;
+          }
+        }
+
         return Object.freeze(item);
       });
 
@@ -164,6 +202,17 @@ module.exports = {
         const link = this.getFarmLink(item);
         if (link) {
           item.link = link;
+        }
+
+        if (item.extra.transactionAddress && poolBalance[item.extra.transactionAddress] && poolBalance[item.extra.transactionAddress].balance) {
+          item.tvl = {
+            amount: poolBalance[item.extra.transactionAddress].balance / 1e18
+          };
+
+          const addressPrice = this.priceOracle.findPrice(item.extra.transactionToken);
+          if (addressPrice) {
+            item.tvl.usd = item.tvl.amount * addressPrice;
+          }
         }
 
         return Object.freeze(item);
