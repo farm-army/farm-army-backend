@@ -186,7 +186,7 @@ module.exports = class PriceOracle {
     }
 
     // extra some important one
-    const coingeckoTokens = await this.jsonRequest("https://api.coingecko.com/api/v3/simple/price?ids=julswap,burger-swap,pancakeswap-token,auto,bunny,bakerytoken,kebab-token,bearn-fi&vs_currencies=usd");
+    const coingeckoTokens = await this.jsonRequest("https://api.coingecko.com/api/v3/simple/price?ids=julswap,burger-swap,pancakeswap-token,auto,bunny,bakerytoken,kebab-token,bearn-fi,goose-finance&vs_currencies=usd");
     for (const [key, value] of Object.entries(coingeckoTokens)) {
       if (!value.usd) {
         continue;
@@ -210,7 +210,13 @@ module.exports = class PriceOracle {
         allPrices.burger = value.usd;
       } else if (key.toLowerCase() === "kebab-token") {
         allPrices.kebab = value.usd;
+      } else if (key.toLowerCase() === "goose-finance") {
+        allPrices.egg = value.usd;
       }
+    }
+
+    for (const [key, value] of Object.entries(await this.jsonRequest("https://api.beefy.finance/pancake/price"))) {
+      allPrices[key.toLowerCase()] = value;
     }
 
     // some remapping
@@ -251,7 +257,9 @@ module.exports = class PriceOracle {
       }
 
       for (const [key, value] of Object.entries(response)) {
-        allPrices[key.toLowerCase()] = value;
+        if (!allPrices[key.toLowerCase()]) {
+          allPrices[key.toLowerCase()] = value;
+        }
       }
     }
 
@@ -415,7 +423,13 @@ module.exports = class PriceOracle {
       }
     );
 
-    const result = await foo.json();
+    let result
+    try {
+      result = await foo.json();
+    } catch (e) {
+      console.error('pancake price error', e.message)
+      return [];
+    }
 
     const tokens = {};
     result.data.tokens.forEach(t => {

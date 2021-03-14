@@ -77,6 +77,7 @@ module.exports = class Http {
 
       const platformResults = await Promise.allSettled([
         this.balances.getBalances(address),
+        this.balances.getAllTokenBalances(address),
         ...this.platforms.getFunctionAwaits("getYields", [address])
       ]);
 
@@ -93,8 +94,12 @@ module.exports = class Http {
         response.balances = platformResults[0].value;
       }
 
+      if (platformResults[1].status === "fulfilled") {
+        response.wallet = platformResults[1].value;
+      }
+
       const platformsResult = {};
-      platformResults.slice(1).forEach(v => {
+      platformResults.slice(2).forEach(v => {
         if (v.value) {
           v.value.forEach(vault => {
             if (!platformsResult[vault.farm.provider]) {

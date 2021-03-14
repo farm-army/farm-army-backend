@@ -143,6 +143,36 @@
   },
   "vaults": [
     {
+      "id": "CakeLPBFIBNB-CAKE",
+      "pid": 25,
+      "symbol": "BFI/BNB",
+      "strategy": "PancakeSwap",
+      "platform": "PancakeSwap",
+      "strategyLink": "https://pancakeswap.finance/farms",
+      "defaultExpansion": false,
+      "lpAddress": "0x45a9e8d48bc560416008d122c9437927fed50e7d",
+      "strategyAddress": "0x30F63007a90F247C691615a72a97BEdFC9Aa0B13",
+      "earnTokens": [
+        "BFI",
+        "BDO"
+      ],
+      "earnTokenAddress": [
+        "",
+        ""
+      ],
+      "linkLP": "https://exchange.pancakeswap.finance/#/add/ETH/0x81859801b01764D4f0Fa5E64729f5a6C3b91435b",
+      "lpTokens": [
+        {
+          "symbol": "BFI",
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "decimals": 18
+        }
+      ]
+    },
+    {
       "id": "CakeLPBDOBUSD",
       "pid": 0,
       "symbol": "BDO-BUSD CAKE-LP",
@@ -464,7 +494,8 @@
           "symbol": "BNB",
           "decimals": 18
         }
-      ]
+      ],
+      "status": "FINISHED"
     },
     {
       "id": "vBSWAPBUSD-vBSWAP",
@@ -846,6 +877,66 @@
         },
         {
           "symbol": "IRON",
+          "decimals": 18
+        }
+      ]
+    },
+    {
+      "id": "vBSWAPWBNB_70-vBSWAP",
+      "pid": 24,
+      "symbol": "vBSWAP-WBNB 70/30 VLP",
+      "strategy": "ValueDeFi",
+      "platform": "ValueDeFi",
+      "strategyLink": "https://bsc.valuedefi.io/#/vfarm",
+      "defaultExpansion": false,
+      "lpAddress": "0x8275397136568949Ae499FbC02CB73b7b0Ef1A33",
+      "strategyAddress": "0x46785A0C8cbf91DD0aD8Aab9f9934B2d808D0857",
+      "earnTokens": [
+        "BFI",
+        "BDO"
+      ],
+      "earnTokenAddress": [
+        "",
+        ""
+      ],
+      "linkLP": "https://bsc.valuedefi.io/#/add/0x8275397136568949Ae499FbC02CB73b7b0Ef1A33",
+      "lpTokens": [
+        {
+          "symbol": "vBSWAP",
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "decimals": 18
+        }
+      ]
+    },
+    {
+      "id": "CakeLP_BELT_WBNB-BELT",
+      "pid": 26,
+      "symbol": "BELT/BNB",
+      "strategy": "Belt.Fi",
+      "platform": "Belt.Fi",
+      "strategyLink": "https://beta.belt.fi/",
+      "defaultExpansion": false,
+      "lpAddress": "0x83b92d283cd279ff2e057bd86a95bdefffed6faa",
+      "strategyAddress": "0xeA2ccaEc75466cb852f1d518f7f0650360669569",
+      "earnTokens": [
+        "BFI",
+        "BDO"
+      ],
+      "earnTokenAddress": [
+        "",
+        ""
+      ],
+      "linkLP": "https://exchange.pancakeswap.finance/#/add/ETH/0xE0e514c71282b6f4e823703a39374Cf58dc3eA4f",
+      "lpTokens": [
+        {
+          "symbol": "BELT",
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
           "decimals": 18
         }
       ]
