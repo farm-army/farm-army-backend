@@ -857,5 +857,121 @@
   "explorer": "https://bscscan.com",
   "explorerName": "BscScan",
   "defaultProvider": "https://bsc-dataseed.binance.org/",
-  "pools": []
+  "pools": [
+    {
+      "id": "BFIBNB",
+      "pid": 0,
+      "active": true,
+      "type": "pancake",
+      "liquidId": "0x81859801b01764D4f0Fa5E64729f5a6C3b91435b/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      "lpAddress": "0x45a9e8D48BC560416008D122C9437927fEd50E7d",
+      "lpTokens": [
+        {
+          "symbol": "BFI",
+          "decimals": 18
+        },
+        {
+          "symbol": "BNB",
+          "decimals": 18
+        }
+      ],
+      "tokenAddress": "0x81859801b01764D4f0Fa5E64729f5a6C3b91435b",
+      "name": "Pancake BFI/BNB",
+      "symbol": "BFI/BNB PANCAKE LP",
+      "tokenSymbol": "BFI",
+      "icon": ""
+    },
+    {
+      "id": "BFIBDO",
+      "pid": 4,
+      "active": true,
+      "type": "pancake",
+      "liquidId": "0x81859801b01764D4f0Fa5E64729f5a6C3b91435b/0x190b589cf9Fb8DDEabBFeae36a813FFb2A702454",
+      "lpAddress": "0x6078f00B020bd22e6bc0883F70CD4574A477feDb",
+      "lpTokens": [
+        {
+          "symbol": "BDO",
+          "decimals": 18
+        },
+        {
+          "symbol": "BFI",
+          "decimals": 18
+        }
+      ],
+      "tokenAddress": "0x81859801b01764D4f0Fa5E64729f5a6C3b91435b",
+      "name": "Pancake BFI/BDO",
+      "symbol": "BFI/BDO PANCAKE LP",
+      "tokenSymbol": "BFI",
+      "icon": ""
+    },
+    {
+      "id": "BFIVALUE-B",
+      "pid": 3,
+      "active": true,
+      "type": "pancake",
+      "liquidId": "0x81859801b01764D4f0Fa5E64729f5a6C3b91435b/0xf8397E7c7eB51D1d417C23201E8e95238B791d8c",
+      "lpAddress": "0x753CbA9582657B7a37F7d19b9221db06808e8ee3",
+      "lpTokens": [
+        {
+          "symbol": "BFI",
+          "decimals": 18
+        },
+        {
+          "symbol": "VALUE-B",
+          "decimals": 18
+        }
+      ],
+      "tokenAddress": "0x81859801b01764D4f0Fa5E64729f5a6C3b91435b",
+      "name": "Pancake BFI/VALUE-B",
+      "symbol": "BFI/VALUE-B PANCAKE LP",
+      "tokenSymbol": "BFI",
+      "icon": ""
+    },
+    {
+      "id": "BDO",
+      "pid": 2,
+      "active": true,
+      "type": "seed",
+      "liquidId": "0x190b589cf9Fb8DDEabBFeae36a813FFb2A702454/BNB",
+      "lpAddress": "0x190b589cf9Fb8DDEabBFeae36a813FFb2A702454",
+      "lpTokens": [
+        {
+          "symbol": "BFI",
+          "decimals": 18
+        },
+        {
+          "symbol": "BDO",
+          "decimals": 18
+        }
+      ],
+      "tokenAddress": "0x190b589cf9Fb8DDEabBFeae36a813FFb2A702454",
+      "name": "bDollar",
+      "symbol": "BDO",
+      "tokenSymbol": "BDO",
+      "icon": ""
+    },
+    {
+      "id": "BFIBUSD",
+      "pid": 1,
+      "active": true,
+      "type": "seed",
+      "liquidId": "0xa08ebae1e303a61058f97ed02a621d75b9364f8b/BNB",
+      "lpAddress": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+      "lpTokens": [
+        {
+          "symbol": "BFI",
+          "decimals": 18
+        },
+        {
+          "symbol": "BUSD",
+          "decimals": 18
+        }
+      ],
+      "tokenAddress": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+      "name": "Binance USD",
+      "symbol": "BUSD",
+      "tokenSymbol": "BUSD",
+      "icon": ""
+    }
+  ]
 }
