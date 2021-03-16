@@ -192,7 +192,7 @@ module.exports = class pancakebunny {
         };
       }
 
-      if (overall[key] && overall[key].apyOfPool && overall[key].apyOfPool) {
+      if (overall[key] && overall[key].apyOfPool) {
         let apy = 0;
 
         const [apyPool, apyBunny] = Object.values(overall[key].apyOfPool);
