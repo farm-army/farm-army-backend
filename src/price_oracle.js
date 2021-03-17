@@ -53,6 +53,7 @@ const tokenMaps = {
   "0x2849b1aE7E04A3D9Bc288673A92477CF63F28aF4": "salt",
   "0x5ef5994fa33ff4eb6c82d51ee1dc145c546065bd": "alloy",
   "0x603c7f932ed1fc6575303d8fb018fdcbb0f39a95": "banana",
+  "0x4fcfa6cc8914ab455b5b33df916d90bfe70b6ab1": "slime",
 };
 
 module.exports = class PriceOracle {
@@ -180,9 +181,15 @@ module.exports = class PriceOracle {
     await this.tokenMaps();
 
     // most useful
-    const pancakeTokens = await this.jsonRequest("https://api.pancakeswap.finance/api/v1/price");
-    for (const [key, value] of Object.entries(pancakeTokens.prices)) {
-      allPrices[key.toLowerCase()] = value;
+    try {
+      const pancakeTokens = await this.jsonRequest("https://api.pancakeswap.com/api/v1/price", {
+        rejectUnauthorized: false,
+      });
+      for (const [key, value] of Object.entries(pancakeTokens.prices)) {
+        allPrices[key.toLowerCase()] = value;
+      }
+    } catch (e) {
+      console.log('error https://api.pancakeswap.com/api/v1/price', e.message)
     }
 
     // extra some important one
@@ -263,7 +270,7 @@ module.exports = class PriceOracle {
       }
     }
 
-    await Promise.all([
+    await Promise.allSettled([
       this.updateTokensVswap(),
       this.updateTokensBakery(),
       this.updateHyperswap()
@@ -376,8 +383,15 @@ module.exports = class PriceOracle {
         return;
       }
 
-      // TODO: decimals must be equal; eg see "10 ** (c.decimals - token0.decimals))"
+      let x0 = reserve0.toNumber() / (10 ** token0.decimals);
+      let x1 = reserve1.toNumber() / (10 ** token1.decimals);
 
+      let x0p = x0 * token0Price
+      let x1p = x1 * token1Price
+
+      let numberNew = (x0p + x1p) / c.totalSupply * (10 ** c.decimals)
+
+      // @TODO: can now be possible dropped be dropped
       const token0StakedInUsd = reserve0
         .div(token0.decimals)
         .times(token0Price);
@@ -390,7 +404,7 @@ module.exports = class PriceOracle {
         .dividedBy(c.totalSupply)
         .times(c.decimals);
 
-      const number = Number(lpTokenPrice);
+      const number = numberNew;
       if (number <= 0) {
         console.log(
           "Missing lp price:",

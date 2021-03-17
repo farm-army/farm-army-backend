@@ -20,6 +20,7 @@ Track your farming and pool performance on the Binance Chain
 | pancake | :white_check_mark: | :heavy_check_mark: |   |  
 | pancakebunny | :x: | :heavy_check_mark:  |   |  
 | saltswap | :x: | :heavy_check_mark:  |  |
+| slime | :x: | :heavy_check_mark:  |  |
 | valuedefi | :heavy_check_mark: | :white_check_mark:  | staking missing |
 
  - `Auto Fetch`

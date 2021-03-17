@@ -139,6 +139,11 @@ module.exports = {
 
   DUST_FILTER: 0.00000000001 * 1e18,
 
+
+  getWeb3: () => {
+    return ENDPOINTS_RPC_WRAPPER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER))[0]];
+  },
+
   multiCall: async vaultCalls => {
     if (vaultCalls.length === 0) {
       return [];
