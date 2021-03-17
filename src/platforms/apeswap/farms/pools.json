@@ -79,7 +79,7 @@
     "projectLink": "https://apoyield.com",
     "harvest": true,
     "tokenPerBlock": "396",
-    "sortOrder": 3,
+    "sortOrder": 4,
     "isFinished": false,
     "tokenDecimals": 8,
     "lpStaking": true
@@ -102,7 +102,7 @@
     "harvest": true,
     "tokenPerBlock": "0.08680555556",
     "sortOrder": 2,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18,
     "lpStaking": true
   },
@@ -126,6 +126,50 @@
     "sortOrder": 3,
     "isFinished": false,
     "tokenDecimals": 18,
+    "lpStaking": true
+  },
+  {
+    "sousId": 6,
+    "tokenName": "CRX",
+    "stakingTokenName": "BANANA-CRX",
+    "image": "CRX.svg",
+    "stakingTokenAddress": {
+      "56": "0xbd896f59baf9a624a7587de5d28b7ad3459342ba",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x084beaa501dB448869001BA49913c9aD009b1694",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://cryptexlock.me/",
+    "harvest": true,
+    "tokenPerBlock": "0.002604166666667000",
+    "sortOrder": 3,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "lpStaking": true
+  },
+  {
+    "sousId": 7,
+    "tokenName": "NAUT",
+    "stakingTokenName": "BNB-NAUT",
+    "image": "NAUT.png",
+    "stakingTokenAddress": {
+      "56": "0x288ea5437c7aad045a393cee2f41e548df24d1c8",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x114d54e18eb4A7Dc9bB8280e283E5799D4188E3f",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://astronaut.to",
+    "harvest": true,
+    "tokenPerBlock": "0.28935185",
+    "sortOrder": 2,
+    "isFinished": false,
+    "tokenDecimals": 8,
     "lpStaking": true
   }
 ]

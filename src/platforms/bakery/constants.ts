@@ -22,6 +22,7 @@ export const MINTTOKEN = Object.freeze({
     WEAPONNFT: 'WEAPONNFT',
     PETNFT: 'PETNFT',
     HELMETNFT: 'HELMETNFT',
+    HATNFT: 'HATNFT',
     ETH2MASTER: 'ETH2MASTER',
     AETHANDETH2: 'AETHANDETH2',
     AETHMASTER: 'AETHMASTER',
@@ -38,7 +39,9 @@ export const MINTTOKEN = Object.freeze({
     SEASCAPENFT: 'SEASCAPENFT',
     WAR: 'WAR',
     TKONFT: 'TKONFT',
-    WAR2: 'WAR2'
+    WAR2: 'WAR2',
+    DIESEL: 'DIESEL',
+    MX: 'MX'
 })
 
 export const SUBTRACT_GAS_LIMIT = 100000
@@ -61,9 +64,62 @@ export const INTEGERS = {
     INTEREST_RATE_BASE: new BigNumber('1e18')
 }
 
+
 export const deadAddress = '0x000000000000000000000000000000000000dead'
 
 export const contractAddresses = {
+    bakeBatBlp: {
+        [ChainId.BSC_TESTNET]: '0xF1785c979E822134b6D5A9B23Bd75126388B23Df',
+        [ChainId.BSC_MAINNET]: '0x675Ec26cF1c99A5cD227658f5d0e2fAcbbf3Dcf7'
+    },
+    oneInchBakeNFT: {
+        [ChainId.BSC_TESTNET]: '0xb4484CACd4cdA038B7d7b261502E5cdFBab9eb5B',
+        [ChainId.BSC_MAINNET]: '0x2B843942EdF0040012b12bE2b3C197Ef53cab7F9'
+    },
+    exchangeOneInchBakeNFT: {
+        [ChainId.BSC_TESTNET]: '0x1753091b502B797B8b545aE890AD2936A7588696',
+        [ChainId.BSC_MAINNET]: '0x961985030bC6cB35a8bf2bfeFf32FF0512f4D3b0'
+    },
+    bidOneInchBakeNFT: {
+        [ChainId.BSC_TESTNET]: '0xEF8806D4Ff16Cc555E2C693a1795CdC0d00B7727',
+        [ChainId.BSC_MAINNET]: '0xea8683ed461ED504F08078903C2C89ee5F40A8A7'
+    },
+    busd: {
+        [ChainId.BSC_TESTNET]: '0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee',
+        [ChainId.BSC_MAINNET]: '0xe9e7cea3dedca5984780bafc599bd69add087d56'
+    },
+    busdUsdcBlp: {
+        [ChainId.BSC_TESTNET]: '0xA29122631a683EeFe5696F678e9DDbFA5415a537',
+        [ChainId.BSC_MAINNET]: '0x56CDE265aaD310e623C8f8994a5143582659aBfC'
+    },
+    mx: {
+        [ChainId.BSC_TESTNET]: '0x54991a494a05C2435E73C34782b8cCF954c77099',
+        [ChainId.BSC_MAINNET]: '0x9F882567A62a5560d147d64871776EeA72Df41D3'
+    },
+    bakeMxBlp: {
+        [ChainId.BSC_TESTNET]: '0x22ca1a9ac0c9393b86f4097b7bd9d003cb12acf2',
+        [ChainId.BSC_MAINNET]: '0x0af49D51E2136af95646527263bACbA004eb4884'
+    },
+    mxMaster: {
+        [ChainId.BSC_TESTNET]: '0x7469A0B95FF8649bCcfa9d10F8D7e01DbEF9791f',
+        [ChainId.BSC_MAINNET]: '0xBF94CC0BbE177C6E0d2d581cA20dcF7CBd50B8f4'
+    },
+    diesel: {
+        [ChainId.BSC_TESTNET]: '0x398F3AC457a965493C7D9E35158Ab716A40Edd76',
+        [ChainId.BSC_MAINNET]: '0xe1eA2E1907d93F154234CE3b5A7418faf175fE11'
+    },
+    dieselMaster: {
+        [ChainId.BSC_TESTNET]: '0x5f44f198115E0e856440473620c44E5Ceb267306',
+        [ChainId.BSC_MAINNET]: '0xA3138cF6AA7ac5F6D27adFf863D92d5717a47402'
+    },
+    bnbDieselBlp: {
+        [ChainId.BSC_TESTNET]: '0xc09D61E531Acbc58c66F22Cf8265bD5061A0cEd8',
+        [ChainId.BSC_MAINNET]: '0x2077bB2BAbf6e78dE2825143a1C03AbFe974DbeA'
+    },
+    voteForNFT: {
+        [ChainId.BSC_TESTNET]: '0x87CAdb6185EcFb54E6bd46541581D727d497E0F5',
+        [ChainId.BSC_MAINNET]: '0xdCb42F9b544312aBdC9c6145a9F0Af590e4b535E'
+    },
     tokocryptoNft: {
         [ChainId.BSC_TESTNET]: '0x3A1c331Bb2cBA92F3F623068947bAbAE3ed99A36',
         [ChainId.BSC_MAINNET]: '0x3A1c331Bb2cBA92F3F623068947bAbAE3ed99A36'
@@ -143,6 +199,10 @@ export const contractAddresses = {
     BANANAMaster: {
         [ChainId.BSC_TESTNET]: '0x5b588A2061441832fF654b513Dd3a3fDc5dbB685',
         [ChainId.BSC_MAINNET]: '0x35dafafE18B65cEBA36350DCf4EeB618Ad2B8387'
+    },
+    crudeoilBakeBaseIDO: {
+        [ChainId.BSC_TESTNET]: '0x3deB2265C986d34532C699abb911AD0c3e837E49',
+        [ChainId.BSC_MAINNET]: '0xD2dbbE23baa58e3D56eBd388CfF6791B560F2347'
     },
     spartanBakeBaseIDO: {
         [ChainId.BSC_TESTNET]: '0x09C9177EAe955ccFC9dED783C5886086D30621c0',
@@ -381,7 +441,8 @@ export const contractAddresses = {
             '0x274Adf173DFA779a4684a5Febacaf6bc25121953',
             '0xEC02adD2E53ac17Cb9e8Af1Cf68F6Dc319E23304',
             '0x3A9e7266EF2c5F37AE906a4D4f4d9c96F32C2C0C',
-            '0x92Ce0850222f9eF7271b2fb64f62F705daA4b064'
+            '0x92Ce0850222f9eF7271b2fb64f62F705daA4b064',
+            '0xf3Ab6f5ccBb9C46e6ba6602cea91a4851Df4Fe29'
         ] // TODO
     },
     bakeryArtworkNFT: {
@@ -508,6 +569,38 @@ export const supportedPools = [
         symbol: 'BAKE',
         tokenSymbol: MINTTOKEN.BAKE,
         icon: 'bread'
+    },
+    {
+        pid: 23,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.bakeBatBlp[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.bakeBatBlp[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        name: 'BAT',
+        symbol: 'BAKE-BAT BLP',
+        tokenSymbol: MINTTOKEN.BAKE,
+        icon: 'bat',
+        stakeIcon: 'bakeBat'
+    },
+    {
+        pid: 21,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.bakeMxBlp[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.bakeMxBlp[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        name: 'MX',
+        symbol: 'BAKE-MX BLP',
+        tokenSymbol: MINTTOKEN.BAKE,
+        icon: 'mx',
+        stakeIcon: 'bakeMx'
     },
     {
         pid: 20,
@@ -713,6 +806,21 @@ export const supportedPools = [
         icon: 'latte'
     },
     {
+        pid: 22,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.busdUsdcBlp[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.busdUsdcBlp[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.busd[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.busd[ChainId.BSC_MAINNET]
+        },
+        name: 'BUSD-USDC BLP',
+        symbol: 'BUSD-USDC BLP',
+        tokenSymbol: MINTTOKEN.BAKE,
+        icon: 'busdUsdc'
+    },
+    {
         pid: 3,
         lpAddresses: {
             [ChainId.BSC_TESTNET]: '0x6f469DAE7F333EdfC98c6057F12E2A7521a9861c',
@@ -787,6 +895,36 @@ export const supportedPools = [
 // new Pools下的矿池必须在pet/bake矿池中有
 export const supportedNewPools = [
     {
+        pid: 23,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.bakeBatBlp[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.bakeBatBlp[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        name: 'BAT',
+        symbol: 'BAKE-BAT BLP',
+        tokenSymbol: MINTTOKEN.BAKE,
+        icon: 'bat'
+    },
+    {
+        pid: 21,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.bakeMxBlp[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.bakeMxBlp[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        name: 'MX',
+        symbol: 'BAKE-MX BLP',
+        tokenSymbol: MINTTOKEN.BAKE,
+        icon: 'mx'
+    },
+    {
         pid: 1,
         lpAddresses: {
             [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
@@ -796,12 +934,46 @@ export const supportedNewPools = [
             [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
             [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
         },
-        name: 'BUSD-WAR BLP',
-        symbol: 'BUSD-WAR BLP',
-        tokenSymbol: MINTTOKEN.WAR2,
-        icon: 'war',
+        name: 'BAKE to MX',
+        symbol: 'BAKE',
+        tokenSymbol: MINTTOKEN.MX,
+        icon: 'mx',
         stakeIcon: 'bake',
-        otherName: 'WAR'
+        otherName: 'MX'
+    },
+    {
+        pid: 2,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.bnbDieselBlp[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.bnbDieselBlp[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.diesel[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.diesel[ChainId.BSC_MAINNET]
+        },
+        name: 'BNB-DIESEL BLP',
+        symbol: 'BNB-DIESEL BLP',
+        tokenSymbol: MINTTOKEN.DIESEL,
+        icon: 'diesel',
+        stakeIcon: 'bnb_diesel',
+        otherName: 'DIESEL'
+    },
+    {
+        pid: 1,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        name: 'BAKE to DIESEL',
+        symbol: 'BAKE',
+        tokenSymbol: MINTTOKEN.DIESEL,
+        icon: 'diesel',
+        stakeIcon: 'bake',
+        otherName: 'DIESEL'
     },
     {
         pid: 1,
@@ -853,23 +1025,6 @@ export const supportedNewPools = [
         otherName: 'WAR'
     },
     {
-        pid: 1,
-        lpAddresses: {
-            [ChainId.BSC_TESTNET]: contractAddresses.pCWS[ChainId.BSC_TESTNET],
-            [ChainId.BSC_MAINNET]: contractAddresses.pCWS[ChainId.BSC_MAINNET]
-        },
-        tokenAddresses: {
-            [ChainId.BSC_TESTNET]: contractAddresses.pCWS[ChainId.BSC_TESTNET],
-            [ChainId.BSC_MAINNET]: contractAddresses.pCWS[ChainId.BSC_MAINNET]
-        },
-        name: 'CWS NFT Pool',
-        symbol: 'pCWS',
-        tokenSymbol: MINTTOKEN.SEASCAPENFT,
-        icon: 'seascapenft',
-        stakeIcon: 'seascapenft',
-        otherName: 'SEASCAPE NFT'
-    },
-    {
         pid: 2,
         lpAddresses: {
             [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
@@ -902,23 +1057,6 @@ export const supportedNewPools = [
         icon: 'pcws'
     },
     {
-        pid: 2,
-        lpAddresses: {
-            [ChainId.BSC_TESTNET]: contractAddresses.bakeBananaBlp[ChainId.BSC_TESTNET],
-            [ChainId.BSC_MAINNET]: contractAddresses.bakeBananaBlp[ChainId.BSC_MAINNET]
-        },
-        tokenAddresses: {
-            [ChainId.BSC_TESTNET]: contractAddresses.BANANA[ChainId.BSC_TESTNET],
-            [ChainId.BSC_MAINNET]: contractAddresses.BANANA[ChainId.BSC_MAINNET]
-        },
-        name: 'BANANA',
-        symbol: 'BAKE BANANA BLP',
-        tokenSymbol: MINTTOKEN.BANANA,
-        icon: 'banana',
-        stakeIcon: 'banana',
-        otherName: 'BANANA'
-    },
-    {
         pid: 18,
         lpAddresses: {
             [ChainId.BSC_TESTNET]: contractAddresses.DEFI100BakeBLP[ChainId.BSC_TESTNET], // use bake bnb
@@ -947,23 +1085,6 @@ export const supportedNewPools = [
         symbol: 'BAKE-BRY BLP',
         tokenSymbol: MINTTOKEN.BAKE,
         icon: 'bry'
-    },
-    {
-        pid: 1,
-        lpAddresses: {
-            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
-            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
-        },
-        tokenAddresses: {
-            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
-            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
-        },
-        name: 'BAKE to BRY',
-        symbol: 'BAKE',
-        tokenSymbol: MINTTOKEN.BRY,
-        icon: 'bry',
-        stakeIcon: 'bake',
-        otherName: 'BRY'
     },
     {
         pid: 16,
@@ -1086,6 +1207,74 @@ export const supportedPetPools = [
 
 export const endedPools = [
     {
+        pid: 1,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        name: 'BUSD-WAR BLP',
+        symbol: 'BUSD-WAR BLP',
+        tokenSymbol: MINTTOKEN.WAR2,
+        icon: 'war',
+        stakeIcon: 'bake',
+        otherName: 'WAR'
+    },
+    {
+        pid: 1,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.pCWS[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.pCWS[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.pCWS[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.pCWS[ChainId.BSC_MAINNET]
+        },
+        name: 'CWS NFT Pool',
+        symbol: 'pCWS',
+        tokenSymbol: MINTTOKEN.SEASCAPENFT,
+        icon: 'seascapenft',
+        stakeIcon: 'helmetnft',
+        otherName: 'SEASCAPE NFT'
+    },
+    {
+        pid: 2,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.bakeBananaBlp[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.bakeBananaBlp[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.BANANA[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.BANANA[ChainId.BSC_MAINNET]
+        },
+        name: 'BANANA',
+        symbol: 'BAKE BANANA BLP',
+        tokenSymbol: MINTTOKEN.BANANA,
+        icon: 'banana',
+        stakeIcon: 'banana',
+        otherName: 'BANANA'
+    },
+    {
+        pid: 1,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        name: 'BAKE to BRY',
+        symbol: 'BAKE',
+        tokenSymbol: MINTTOKEN.BRY,
+        icon: 'bry',
+        stakeIcon: 'bake',
+        otherName: 'BRY'
+    },
+    {
         pid: 100,
         lpAddresses: {
             [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
@@ -1201,7 +1390,7 @@ export const endedPools = [
         },
         name: 'NFT Christmas Hat',
         symbol: 'BAKE',
-        tokenSymbol: MINTTOKEN.HELMETNFT,
+        tokenSymbol: MINTTOKEN.HATNFT,
         icon: 'helmetnft',
         stakeIcon: 'helmetnft',
         otherName: 'NFT Xmas Hat'
@@ -1479,24 +1668,63 @@ export const helmetNftPools = [
         icon: 'tkonft',
         stakeIcon: 'bake',
         otherName: 'TKO NFT'
-    },
-    {
-        pid: 1,
-        lpAddresses: {
-            [ChainId.BSC_TESTNET]: contractAddresses.pCWS[ChainId.BSC_TESTNET],
-            [ChainId.BSC_MAINNET]: contractAddresses.pCWS[ChainId.BSC_MAINNET]
-        },
-        tokenAddresses: {
-            [ChainId.BSC_TESTNET]: contractAddresses.pCWS[ChainId.BSC_TESTNET],
-            [ChainId.BSC_MAINNET]: contractAddresses.pCWS[ChainId.BSC_MAINNET]
-        },
-        name: 'CWS NFT Pool',
-        symbol: 'pCWS',
-        tokenSymbol: MINTTOKEN.SEASCAPENFT,
-        icon: 'seascapenft',
-        stakeIcon: 'helmetnft',
-        otherName: 'SEASCAPE NFT'
-    },
+    }
+    // {
+    //   pid: 1,
+    //   lpAddresses: {
+    //     [ChainId.BSC_TESTNET]: contractAddresses.pCWS[ChainId.BSC_TESTNET],
+    //     [ChainId.BSC_MAINNET]: contractAddresses.pCWS[ChainId.BSC_MAINNET]
+    //   },
+    //   tokenAddresses: {
+    //     [ChainId.BSC_TESTNET]: contractAddresses.pCWS[ChainId.BSC_TESTNET],
+    //     [ChainId.BSC_MAINNET]: contractAddresses.pCWS[ChainId.BSC_MAINNET]
+    //   },
+    //   name: 'CWS NFT Pool',
+    //   symbol: 'pCWS',
+    //   tokenSymbol: MINTTOKEN.SEASCAPENFT,
+    //   icon: 'seascapenft',
+    //   stakeIcon: 'helmetnft',
+    //   otherName: 'SEASCAPE NFT'
+    // },
+    // {
+    //   pid: 1,
+    //   lpAddresses: {
+    //     [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+    //     [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+    //   },
+    //   tokenAddresses: {
+    //     [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+    //     [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+    //   },
+    //   name: 'NFT Christmas Hat',
+    //   symbol: 'BAKE',
+    //   tokenSymbol: MINTTOKEN.HATNFT,
+    //   icon: 'helmetnft',
+    //   stakeIcon: 'helmetnft',
+    //   otherName: 'Xmas hats NFT'
+    // },
+    // {
+    //   pid: 2,
+    //   lpAddresses: {
+    //     [ChainId.BSC_TESTNET]: contractAddresses.ten[ChainId.BSC_TESTNET],
+    //     [ChainId.BSC_MAINNET]: contractAddresses.ten[ChainId.BSC_MAINNET]
+    //   },
+    //   tokenAddresses: {
+    //     [ChainId.BSC_TESTNET]: contractAddresses.ten[ChainId.BSC_TESTNET],
+    //     [ChainId.BSC_MAINNET]: contractAddresses.ten[ChainId.BSC_MAINNET]
+    //   },
+    //   name: 'Ten to PET NFT',
+    //   symbol: 'TEN',
+    //   tokenSymbol: MINTTOKEN.TEN,
+    //   icon: 'ten2',
+    //   stakeIcon: 'helmetnft',
+    //   otherName: 'PET NFT',
+    //   amountUnit: 'PET NFT',
+    //   amountDay: '100'
+    // }
+]
+
+export const hatNftPools = [
     {
         pid: 1,
         lpAddresses: {
@@ -1509,29 +1737,10 @@ export const helmetNftPools = [
         },
         name: 'NFT Christmas Hat',
         symbol: 'BAKE',
-        tokenSymbol: MINTTOKEN.HELMETNFT,
+        tokenSymbol: MINTTOKEN.HATNFT,
         icon: 'helmetnft',
         stakeIcon: 'helmetnft',
         otherName: 'Xmas hats NFT'
-    },
-    {
-        pid: 2,
-        lpAddresses: {
-            [ChainId.BSC_TESTNET]: contractAddresses.ten[ChainId.BSC_TESTNET],
-            [ChainId.BSC_MAINNET]: contractAddresses.ten[ChainId.BSC_MAINNET]
-        },
-        tokenAddresses: {
-            [ChainId.BSC_TESTNET]: contractAddresses.ten[ChainId.BSC_TESTNET],
-            [ChainId.BSC_MAINNET]: contractAddresses.ten[ChainId.BSC_MAINNET]
-        },
-        name: 'Ten to PET NFT',
-        symbol: 'TEN',
-        tokenSymbol: MINTTOKEN.TEN,
-        icon: 'ten2',
-        stakeIcon: 'helmetnft',
-        otherName: 'PET NFT',
-        amountUnit: 'PET NFT',
-        amountDay: '100'
     }
 ]
 
@@ -1949,6 +2158,40 @@ export const supportedBakeStakingPools = [
         icon: 'bread'
     },
     {
+        pid: 1,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        name: 'BAKE to MX',
+        symbol: 'BAKE',
+        tokenSymbol: MINTTOKEN.MX,
+        icon: 'mx',
+        stakeIcon: 'bake',
+        otherName: 'MX'
+    },
+    {
+        pid: 1,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        name: 'BAKE to DIESEL',
+        symbol: 'BAKE',
+        tokenSymbol: MINTTOKEN.DIESEL,
+        icon: 'diesel',
+        stakeIcon: 'bake',
+        otherName: 'DIESEL'
+    },
+    {
         pid: 2,
         lpAddresses: {
             [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
@@ -1981,23 +2224,6 @@ export const supportedBakeStakingPools = [
         icon: 'pcws',
         stakeIcon: 'bake',
         otherName: 'pCWS'
-    },
-    {
-        pid: 1,
-        lpAddresses: {
-            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
-            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
-        },
-        tokenAddresses: {
-            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
-            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
-        },
-        name: 'BAKE to BRY',
-        symbol: 'BAKE',
-        tokenSymbol: MINTTOKEN.BRY,
-        icon: 'bry',
-        stakeIcon: 'bake',
-        otherName: 'BRY'
     },
     {
         pid: 1,
@@ -2192,5 +2418,62 @@ export const tokocryptoNftPools = [
         icon: 'tkonft',
         stakeIcon: 'bake',
         otherName: 'TKO NFT'
+    }
+]
+
+export const dieselPools = [
+    {
+        pid: 1,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        name: 'BAKE to DIESEL',
+        symbol: 'BAKE',
+        tokenSymbol: MINTTOKEN.DIESEL,
+        icon: 'diesel',
+        stakeIcon: 'bake',
+        otherName: 'DIESEL'
+    },
+    {
+        pid: 2,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.bnbDieselBlp[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.bnbDieselBlp[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.diesel[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.diesel[ChainId.BSC_MAINNET]
+        },
+        name: 'BNB-DIESEL BLP',
+        symbol: 'BNB-DIESEL BLP',
+        tokenSymbol: MINTTOKEN.DIESEL,
+        icon: 'diesel',
+        stakeIcon: 'bnb_diesel',
+        otherName: 'DIESEL'
+    }
+]
+
+export const mxMasterPools = [
+    {
+        pid: 1,
+        lpAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        tokenAddresses: {
+            [ChainId.BSC_TESTNET]: contractAddresses.sushi[ChainId.BSC_TESTNET],
+            [ChainId.BSC_MAINNET]: contractAddresses.sushi[ChainId.BSC_MAINNET]
+        },
+        name: 'BAKE to MX',
+        symbol: 'BAKE',
+        tokenSymbol: MINTTOKEN.MX,
+        icon: 'mx',
+        stakeIcon: 'bake',
+        otherName: 'MX'
     }
 ]

@@ -33,7 +33,28 @@ module.exports = class Balances {
 
     const balances = [];
 
-    (await utils.multiCall(balancesCalls)).filter(c => c.balance > 0).forEach(b => {
+    let [bnbBalance, allBalances] = await Promise.all([
+      utils.getWeb3().eth.getBalance(address),
+      utils.multiCall(balancesCalls),
+    ]);
+
+    if (bnbBalance > 0) {
+      const bnbPrice = this.priceOracle.findPrice('bnb');
+
+      let item = {
+        token: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+        symbol: 'bnb',
+        amount: bnbBalance / 1e18
+      };
+
+      if (bnbPrice) {
+        item.usd = item.amount * bnbPrice
+      }
+
+      balances.push(item);
+    }
+
+    allBalances.filter(c => c.balance > 0).forEach(b => {
       const item = {
         token: b.contract,
         amount: b.balance / 1e18,

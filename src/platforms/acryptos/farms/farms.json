@@ -28,6 +28,56 @@
   },
   {
     "vault": {
+      "address": "0x49C4b95dc2198F2c4c9516834a8AcBFc4b3e4429",
+      "token": "0xF570d6e751976D0d10aa64ACfa829A5ea4a51727",
+      "tokenSymbol": "sSXP-BUSD",
+      "tokenImage": "sxp.svg",
+      "harvesterRewardSymbol": "SXP",
+      "strategy": "0x1F44Ae08A59De577087F63947fd3e5dADC901a86",
+      "walletInfo": "<a class=\"wallet-info\" href=\"https://swap.swipe.org/add-liquidity?type=add&inputCurrency=0x47bead2563dcbf3bf2c9407fea4dc236faba485a&outputCurrency=0xe9e7cea3dedca5984780bafc599bd69add087d56\" target=\"_blank\"><span data-i18n=\"get\">Get</span> sSXP-BUSD</a>",
+      "fromBlock": 5728888,
+      "defaultRoiDay": 0.002432876712328767
+    },
+    "farm": {
+      "master": "0xb1fa5d3c0111d8E9ac43A19ef17b281D5D4b474E",
+      "token": "0x49C4b95dc2198F2c4c9516834a8AcBFc4b3e4429",
+      "tokenSymbol": "acs.sSXP-BUSD",
+      "transactionInfo": "<a class=\"wallet-info\" href=\"https://docs.acryptos.com/fees#acs-farms-v2\" target=\"_blank\">Harvest fee: 0.03 ACS</a>"
+    },
+    "tags": [
+      "acs",
+      "swipe",
+      "v2",
+      "new"
+    ]
+  },
+  {
+    "vault": {
+      "address": "0x2C39de04688D71Cd7d502297dEf53E4be0c420B3",
+      "token": "0x70b31Abf9Be826eDc188A15fC35cc6037103a58F",
+      "tokenSymbol": "sSXP-BTC",
+      "tokenImage": "sxp.svg",
+      "harvesterRewardSymbol": "SXP",
+      "strategy": "0x70b494be824159AeD8708EFA10E01A75517AB972",
+      "walletInfo": "<a class=\"wallet-info\" href=\"https://swap.swipe.org/add-liquidity?type=add&inputCurrency=0x47bead2563dcbf3bf2c9407fea4dc236faba485a&outputCurrency=0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c\" target=\"_blank\"><span data-i18n=\"get\">Get</span> sSXP-BTC</a>",
+      "fromBlock": 5728888,
+      "defaultRoiDay": 0.0016109589041095889
+    },
+    "farm": {
+      "master": "0xb1fa5d3c0111d8E9ac43A19ef17b281D5D4b474E",
+      "token": "0x2C39de04688D71Cd7d502297dEf53E4be0c420B3",
+      "tokenSymbol": "acs.sSXP-BTC",
+      "transactionInfo": "<a class=\"wallet-info\" href=\"https://docs.acryptos.com/fees#acs-farms-v2\" target=\"_blank\">Harvest fee: 0.03 ACS</a>"
+    },
+    "tags": [
+      "acs",
+      "swipe",
+      "v2",
+      "new"
+    ]
+  },
+  {
+    "vault": {
       "address": "0x6Fe6762E9314ad80803fef083c8bB16Af435a628",
       "token": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "tokenSymbol": "BNB",
@@ -785,7 +835,6 @@
       "walletInfo": "<a class=\"wallet-info\" href=\"https://exchange.pancakeswap.finance/#/add/ETH/0x728C5baC3C3e370E372Fc4671f9ef6916b814d8B\" target=\"_blank\"><span data-i18n=\"get\">Get</span> UNFI-BNB</a>"
     },
     "farm": {
-      "alert": "<div class=\"p-3 pb-0\"><div class=\"alert alert-info\" role=\"alert\">UNFI-BNB Farm has been migrated to V2. Please <a href=\"/deprecated/\" class=\"\">unstake from V1</a> and stake here to continue receiving ACS rewards. You <strong>do not</strong> need to withdraw from the Vault. <a target=\"_blank\" href=\"https://medium.com/acryptos/acryptos-farms-v2-migration-phase-1-3cd7a18dd526\" class=\"\">Details</a></div></div>",
       "master": "0xb1fa5d3c0111d8E9ac43A19ef17b281D5D4b474E",
       "token": "0xDB335c7c4AD429A1F53971fd4644b599DC631306",
       "tokenSymbol": "acsUNFI-BNB",
@@ -886,6 +935,30 @@
       "acs",
       "pancake",
       "v2"
+    ]
+  },
+  {
+    "vault": {
+      "address": "0xa1125B756e0ac05ff5d07Cde4D511E1837aADc88",
+      "token": "0xe022baa3E5E87658f789c9132B10d7425Fd3a389",
+      "tokenSymbol": "ALICE-BNB",
+      "harvesterRewardSymbol": "CAKE",
+      "strategy": "0x8AE66a4Dd15019B925092645351f689d374c3C26",
+      "walletInfo": "<a class=\"wallet-info\" href=\"https://exchange.pancakeswap.finance/#/add/ETH/0xAC51066d7bEC65Dc4589368da368b212745d63E8\" target=\"_blank\"><span data-i18n=\"get\">Get</span> ALICE-BNB</a>",
+      "fromBlock": 5703888,
+      "defaultRoiDay": 0.010654246575342466
+    },
+    "farm": {
+      "master": "0xb1fa5d3c0111d8E9ac43A19ef17b281D5D4b474E",
+      "token": "0xa1125B756e0ac05ff5d07Cde4D511E1837aADc88",
+      "tokenSymbol": "acsALICE-BNB",
+      "transactionInfo": "<a class=\"wallet-info\" href=\"https://docs.acryptos.com/fees#acs-farms-v2\" target=\"_blank\">Harvest fee: 0.03 ACS</a>"
+    },
+    "tags": [
+      "acs",
+      "pancake",
+      "v2",
+      "new"
     ]
   },
   {

@@ -16,6 +16,38 @@
     "icon": "bread"
   },
   {
+    "pid": 23,
+    "lpAddresses": {
+      "56": "0x675Ec26cF1c99A5cD227658f5d0e2fAcbbf3Dcf7",
+      "97": "0xF1785c979E822134b6D5A9B23Bd75126388B23Df"
+    },
+    "tokenAddresses": {
+      "56": "0xe02df9e3e622debdd69fb838bb799e3f168902c5",
+      "97": "0xe02df9e3e622debdd69fb838bb799e3f168902c5"
+    },
+    "name": "BAT",
+    "symbol": "BAKE-BAT BLP",
+    "tokenSymbol": "BAKE",
+    "icon": "bat",
+    "stakeIcon": "bakeBat"
+  },
+  {
+    "pid": 21,
+    "lpAddresses": {
+      "56": "0x0af49D51E2136af95646527263bACbA004eb4884",
+      "97": "0x22ca1a9ac0c9393b86f4097b7bd9d003cb12acf2"
+    },
+    "tokenAddresses": {
+      "56": "0xe02df9e3e622debdd69fb838bb799e3f168902c5",
+      "97": "0xe02df9e3e622debdd69fb838bb799e3f168902c5"
+    },
+    "name": "MX",
+    "symbol": "BAKE-MX BLP",
+    "tokenSymbol": "BAKE",
+    "icon": "mx",
+    "stakeIcon": "bakeMx"
+  },
+  {
     "pid": 20,
     "lpAddresses": {
       "56": "0x8B4Fa3e7F29924b6A60C4abaC0db9dEA0DF594ba",
@@ -217,6 +249,21 @@
     "symbol": "USDT-BUSD BLP",
     "tokenSymbol": "BAKE",
     "icon": "latte"
+  },
+  {
+    "pid": 22,
+    "lpAddresses": {
+      "56": "0x56CDE265aaD310e623C8f8994a5143582659aBfC",
+      "97": "0xA29122631a683EeFe5696F678e9DDbFA5415a537"
+    },
+    "tokenAddresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "name": "BUSD-USDC BLP",
+    "symbol": "BUSD-USDC BLP",
+    "tokenSymbol": "BAKE",
+    "icon": "busdUsdc"
   },
   {
     "pid": 3,
