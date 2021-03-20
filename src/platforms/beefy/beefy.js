@@ -36,7 +36,7 @@ module.exports = class beefy {
     }
 
     const poolsResponse = await request(
-      "https://github.com/beefyfinance/beefy-app/raw/master/src/features/configure/bsc_pools.js"
+      "https://raw.githubusercontent.com/beefyfinance/beefy-app/master/src/features/configure/vault/bsc_pools.js"
     );
     const pools = Object.freeze(
       eval(

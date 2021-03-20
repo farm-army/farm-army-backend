@@ -36,6 +36,96 @@
     }
   },
   {
+    "pid": 99,
+    "lpSymbol": "BIFI-BNB LP",
+    "lpAddresses": {
+      "56": "0xd132D2C24F29EE8ABb64a66559d1b7aa627Bd7fD",
+      "97": ""
+    },
+    "tokenSymbol": "BIFI",
+    "tokenAddresses": {
+      "56": "0xca3f508b8e4dd382ee878a314789373d80a5190a",
+      "97": ""
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 98,
+    "lpSymbol": "TXL-BUSD LP",
+    "lpAddresses": {
+      "56": "0xD20E0BcCa8B29409bf5726CB24DD779Fe337020e",
+      "97": ""
+    },
+    "tokenSymbol": "TXL",
+    "tokenAddresses": {
+      "56": "0x1ffd0b47127fdd4097e54521c9e2c7f0d66aafc5",
+      "97": ""
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": ""
+    }
+  },
+  {
+    "pid": 97,
+    "lpSymbol": "COS-BNB LP",
+    "lpAddresses": {
+      "56": "0x7b1e440240B220244761C9D9A3B07fbA1995BD84",
+      "97": ""
+    },
+    "tokenSymbol": "COS",
+    "tokenAddresses": {
+      "56": "0x96Dd399F9c3AFda1F194182F71600F1B65946501",
+      "97": ""
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 96,
+    "lpSymbol": "BUNNY-BNB LP",
+    "lpAddresses": {
+      "56": "0x7Bb89460599Dbf32ee3Aa50798BBcEae2A5F7f6a",
+      "97": ""
+    },
+    "tokenSymbol": "BUNNY",
+    "tokenAddresses": {
+      "56": "0xc9849e6fdb743d08faee3e34dd2d1bc69ea11a51",
+      "97": ""
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 95,
+    "lpSymbol": "ALICE-BNB LP",
+    "lpAddresses": {
+      "56": "0xe022baa3E5E87658f789c9132B10d7425Fd3a389",
+      "97": ""
+    },
+    "tokenSymbol": "ALICE",
+    "tokenAddresses": {
+      "56": "0xac51066d7bec65dc4589368da368b212745d63e8",
+      "97": ""
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
     "pid": 94,
     "lpSymbol": "FOR-BUSD LP",
     "lpAddresses": {
@@ -51,8 +141,7 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 93,
@@ -70,8 +159,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 92,
@@ -89,8 +177,7 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 91,
@@ -108,8 +195,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 90,
@@ -127,8 +213,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 89,
@@ -146,8 +231,7 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 88,
@@ -165,8 +249,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 87,
@@ -184,8 +267,7 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 86,
@@ -203,8 +285,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 85,
@@ -222,8 +303,7 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 84,
@@ -241,8 +321,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 83,
@@ -260,8 +339,7 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 82,
@@ -279,8 +357,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 81,
@@ -298,8 +375,7 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 80,
@@ -317,8 +393,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 79,
@@ -336,8 +411,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 78,
@@ -355,8 +429,7 @@
     "quoteTokenAdresses": {
       "56": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 77,
@@ -374,8 +447,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 76,
@@ -393,8 +465,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 75,
@@ -412,8 +483,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 74,
@@ -431,8 +501,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 73,
@@ -450,8 +519,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 72,
@@ -469,8 +537,7 @@
     "quoteTokenAdresses": {
       "56": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 71,
@@ -488,8 +555,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 70,
@@ -507,8 +573,7 @@
     "quoteTokenAdresses": {
       "56": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 69,
@@ -526,8 +591,7 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 68,
@@ -545,8 +609,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 67,
@@ -564,8 +627,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 66,
@@ -583,8 +645,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 65,
@@ -602,8 +663,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 63,
@@ -621,8 +681,7 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 62,
@@ -640,8 +699,7 @@
     "quoteTokenAdresses": {
       "56": "0x23396cF899Ca06c4472205fC903bDB4de249D6fC",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 61,
@@ -659,8 +717,7 @@
     "quoteTokenAdresses": {
       "56": "0x23396cF899Ca06c4472205fC903bDB4de249D6fC",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 60,
@@ -678,8 +735,7 @@
     "quoteTokenAdresses": {
       "56": "0x23396cF899Ca06c4472205fC903bDB4de249D6fC",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 59,
@@ -697,8 +753,7 @@
     "quoteTokenAdresses": {
       "56": "0x23396cF899Ca06c4472205fC903bDB4de249D6fC",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 58,
@@ -716,8 +771,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 57,
@@ -735,8 +789,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 56,
@@ -754,8 +807,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 55,
@@ -773,8 +825,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 54,
@@ -792,8 +843,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 53,
@@ -811,8 +861,7 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 52,
@@ -830,8 +879,7 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 51,
@@ -849,8 +897,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 50,
@@ -868,8 +915,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 49,
@@ -887,8 +933,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 46,
@@ -906,8 +951,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 47,
@@ -925,8 +969,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 48,
@@ -944,8 +987,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 45,
@@ -963,8 +1005,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 44,
@@ -982,8 +1023,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 43,
@@ -1001,8 +1041,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 42,
@@ -1020,8 +1059,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 39,
@@ -1040,8 +1078,7 @@
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
     },
-    "multiplier": "1X",
-    "isCommunity": false
+    "multiplier": "1X"
   },
   {
     "pid": 41,
@@ -1059,8 +1096,7 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 40,
@@ -1078,8 +1114,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 37,
@@ -1097,8 +1132,7 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    },
-    "isCommunity": false
+    }
   },
   {
     "pid": 2,
