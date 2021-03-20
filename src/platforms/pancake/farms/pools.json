@@ -18,6 +18,96 @@
     "tokenDecimals": 18
   },
   {
+    "sousId": 75,
+    "tokenName": "BIFI",
+    "tokenAddress": "0xca3f508b8e4dd382ee878a314789373d80a5190a",
+    "stakingTokenName": "CAKE",
+    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "contractAddress": {
+      "56": "0xB4C68A1C565298834360BbFF1652284275120D47",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://beefy.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.00007234",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 74,
+    "tokenName": "TXL",
+    "tokenAddress": "0x1ffd0b47127fdd4097e54521c9e2c7f0d66aafc5",
+    "stakingTokenName": "CAKE",
+    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "contractAddress": {
+      "56": "0x153e62257F1AAe05d5d253a670Ca7585c8D3F94F",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://tixl.org/",
+    "harvest": true,
+    "tokenPerBlock": "0.434027",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 73,
+    "tokenName": "COS",
+    "tokenAddress": "0x96Dd399F9c3AFda1F194182F71600F1B65946501",
+    "stakingTokenName": "CAKE",
+    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "contractAddress": {
+      "56": "0xF682D186168b4114ffDbF1291F19429310727151",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://www.contentos.io/",
+    "harvest": true,
+    "tokenPerBlock": "5.787",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 72,
+    "tokenName": "BUNNY",
+    "tokenAddress": "0xc9849e6fdb743d08faee3e34dd2d1bc69ea11a51",
+    "stakingTokenName": "CAKE",
+    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "contractAddress": {
+      "56": "0xaDdAE5f4dB84847ac9d947AED1304A8e7D19f7cA",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://pancakebunny.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.00289",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 71,
+    "tokenName": "ALICE",
+    "tokenAddress": "0xac51066d7bec65dc4589368da368b212745d63e8",
+    "stakingTokenName": "CAKE",
+    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "contractAddress": {
+      "56": "0x4C32048628D0d32d4D6c52662FB4A92747782B56",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://www.myneighboralice.com/",
+    "harvest": true,
+    "tokenPerBlock": "0.14467",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 6
+  },
+  {
     "sousId": 70,
     "tokenName": "FOR",
     "tokenAddress": "0x658A109C5900BC6d2357c87549B651670E5b0539",
@@ -668,7 +758,7 @@
     "tokenPerBlock": "0.011574",
     "sortOrder": 999,
     "isFinished": true,
-    "tokenDecimals": 18
+    "tokenDecimals": 17
   },
   {
     "sousId": 34,
