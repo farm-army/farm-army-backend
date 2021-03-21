@@ -60,11 +60,11 @@ module.exports = class pancake {
     });
 
     const poolCallsContract = this.getRawPools()
-      .filter(p => p.stakingTokenAddress && p.contractAddress["56"])
+      .filter(pool => pool.stakingToken && pool.stakingToken.address[56] && pool.stakingToken.address[56])
       .map(pool => {
         const contract = new Web3EthContract(
           erc20ABI,
-          pool.stakingTokenAddress
+          pool.stakingToken.address[56]
         );
         return {
           allowance: contract.methods.allowance(
@@ -127,7 +127,7 @@ module.exports = class pancake {
     });
 
     const resultFarms = farms.map(farm => {
-      const symbol = `${farm.tokenSymbol}-${farm.quoteTokenSymbol}`.toLowerCase();
+      const symbol = `${farm.token.symbol}-${farm.quoteToken.symbol}`.toLowerCase();
 
       const item = {
         id: `pancake_farm_${farm.pid}`,
@@ -176,10 +176,10 @@ module.exports = class pancake {
       rawPools
         .filter(pool => pool.contractAddress && pool.contractAddress[56])
         .map(pool => {
-          const vault = new Web3EthContract(erc20ABI, pool.stakingTokenAddress);
+          const vault = new Web3EthContract(erc20ABI, pool.stakingToken.address[56]);
           return {
             sousId: pool.sousId.toString(),
-            token: pool.stakingTokenAddress,
+            token: pool.stakingToken.address[56],
             balance: vault.methods.balanceOf(pool.contractAddress[56])
           };
         })
@@ -188,19 +188,19 @@ module.exports = class pancake {
     const resultPools = rawPools.map(pool => {
       const item = {
         id: `pancake_pool_${pool.sousId}`,
-        name: `${pool.tokenName} Pool`,
-        token: pool.tokenName.toLowerCase(),
+        name: `${pool.earningToken.symbol} Pool`,
+        token: pool.earningToken.symbol.toLowerCase(),
         platform: "pancake",
         raw: Object.freeze(pool),
         provider: "pancake",
-        earns: [pool.tokenName.toLowerCase()],
+        earns: [pool.earningToken.symbol.toLowerCase()],
         link: "https://pancakeswap.finance/pools",
         has_details: true,
         extra: {}
       };
 
       if (pool.contractAddress && pool.contractAddress[56]) {
-        item.extra.transactionToken = pool.stakingTokenAddress;
+        item.extra.transactionToken = pool.stakingToken.address[56];
         item.extra.transactionAddress = pool.contractAddress[56];
       }
 
@@ -290,7 +290,7 @@ module.exports = class pancake {
       .map(call => {
         const farm = farms.find(f => f.id === call.id);
 
-        const symbol = `${farm.raw.tokenSymbol}-${farm.raw.quoteTokenSymbol}`.toLowerCase();
+        const symbol = `${farm.raw.token.symbol}-${farm.raw.quoteToken.symbol}`.toLowerCase();
 
         const result = {};
         result.deposit = {
@@ -317,7 +317,7 @@ module.exports = class pancake {
             amount: ethers.utils.formatUnits(call.pendingCake, 18)
           };
 
-          const price = this.priceOracle.findPrice("cake");
+          const price = this.priceOracle.findPrice(reward.symbol);
           if (price) {
             reward.usd = (call.pendingCake / 1e18) * price;
           }
@@ -343,22 +343,22 @@ module.exports = class pancake {
 
         const result = {};
         result.deposit = {
-          symbol: farm.raw.stakingTokenName.toLowerCase(),
+          symbol: farm.raw.stakingToken.symbol.toLowerCase(),
           amount: ethers.utils.formatUnits(call.userInfo[0].toString(), 18)
         };
 
-        const price = this.priceOracle.findPrice(farm.raw.stakingTokenName.toLowerCase());
+        const price = this.priceOracle.findPrice(result.deposit.symbol);
         if (price) {
           result.deposit.usd = (call.userInfo[0] / 1e18) * price;
         }
 
         if (new BigNumber(call.pendingReward).isGreaterThan(0)) {
           const reward = {
-            symbol: farm.raw.tokenName.toLowerCase(),
+            symbol: farm.raw.earningToken.symbol.toLowerCase(),
             amount: call.pendingReward / 1e18
           };
 
-          const price = this.priceOracle.findPrice(farm.raw.tokenName.toLowerCase());
+          const price = this.priceOracle.findPrice(reward.symbol);
           if (price) {
             reward.usd = reward.amount * price;
           }

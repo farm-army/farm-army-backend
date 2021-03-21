@@ -43,6 +43,7 @@ const myManagedLp = [];
 //   const lpTokenPrice = totalStakedInUsd.dividedBy(totalSupply).times(lpToken.decimals);
 //
 //   return Number(lpTokenPrice);
+//   also:https://github.com/npty/lp-inspector
 
 const tokenMaps = {
   "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c": "bnb",
@@ -54,6 +55,7 @@ const tokenMaps = {
   "0x5ef5994fa33ff4eb6c82d51ee1dc145c546065bd": "alloy",
   "0x603c7f932ed1fc6575303d8fb018fdcbb0f39a95": "banana",
   "0x4fcfa6cc8914ab455b5b33df916d90bfe70b6ab1": "slime",
+  "0x5A41F637C3f7553dBa6dDC2D3cA92641096577ea": "juld",
 };
 
 module.exports = class PriceOracle {
@@ -419,6 +421,16 @@ module.exports = class PriceOracle {
   }
 
   async tokenMaps() {
+    const tokens = {};
+
+    Object.values(await this.jsonRequest('https://tokens.1inch.exchange/v1.1/chain-56')).forEach(t => {
+      if (t.symbol && t.address) {
+        const symbol = t.symbol.toLowerCase();
+        tokens[t.address.toLowerCase()] = symbol;
+        tokenMaps[t.address.toLowerCase()] = symbol;
+      }
+    })
+
     const foo = await fetch(
       "https://api.bscgraph.org/subgraphs/name/cakeswap",
       {
@@ -445,7 +457,6 @@ module.exports = class PriceOracle {
       return [];
     }
 
-    const tokens = {};
     result.data.tokens.forEach(t => {
       const symbol = t.symbol.toLowerCase();
       tokens[t.id.toLowerCase()] = symbol;
@@ -454,6 +465,24 @@ module.exports = class PriceOracle {
     });
 
     return tokens;
+  }
+
+  async inchPricesAsBnb() {
+    let [tokens, prices] = await Promise.all([
+      this.jsonRequest('https://tokens.1inch.exchange/v1.1/chain-56'),
+      this.jsonRequest('https://token-prices.1inch.exchange/v1.1/56'),
+    ]);
+
+    for (const [key, value] of Object.entries(prices)) {
+      if (tokens[key] && tokens[key].decimals) {
+        let price = value / 10 ** tokens[key].decimals;
+        // pricesAddress[key.toLowerCase()] = price;
+
+        if (tokens[key].symbol) {
+          // allPrices[tokens[key].symbol] = price;
+        }
+      }
+    }
   }
 
   async updateTokensVswap() {

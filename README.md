@@ -16,6 +16,7 @@ Track your farming and pool performance on the Binance Chain
 | goose | :white_check_mark:  | :white_check_mark: | pools  |  
 | hyperjump | :x: |  :heavy_check_mark: | |  
 | jetfuel | :x:  | :white_check_mark:  |  staking missing  |  
+| slime | :x: | :heavy_check_mark:  |  |
 | kebab | :x:  | :white_check_mark:  |  pools |  
 | pancake | :white_check_mark: | :heavy_check_mark: |   |  
 | pancakebunny | :x: | :heavy_check_mark:  |   |  

@@ -277,7 +277,7 @@ module.exports = {
       return [...farmResults, ...sousResults].map(call => {
         const farm = farms.find(f => f.id === call.id);
 
-        const amount = call.userInfo[0] || 0;
+        const amount = (call.userInfo && call.userInfo[0]) ? call.userInfo[0] : 0;
         const rewards = call.pendingReward || 0;
 
         const result = {};
