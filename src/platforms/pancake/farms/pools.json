@@ -1,1392 +1,2366 @@
 [
   {
     "sousId": 0,
-    "tokenName": "CAKE",
-    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
     "contractAddress": {
       "56": "0x73feaa1eE314F8c655E354234017bE2193C9E24E",
       "97": "0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a"
     },
     "poolCategory": "Core",
-    "projectLink": "https://pancakeswap.finance/",
     "harvest": true,
     "tokenPerBlock": "10",
     "sortOrder": 1,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
+  },
+  {
+    "sousId": 77,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "TRADE",
+      "address": {
+        "56": "0x7af173f350d916358af3e218bdf2178494beb748",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://unitrade.app/"
+    },
+    "contractAddress": {
+      "56": "0x509C99D73FB54b2c20689708b3F824147292D38e",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "tokenPerBlock": "0.4484",
+    "sortOrder": 999,
+    "isFinished": false
+  },
+  {
+    "sousId": 76,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "DUSK",
+      "address": {
+        "56": "0xb2bd0749dbe21f623d9baba856d3b0f0e1bfec9c",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://dusk.network/"
+    },
+    "contractAddress": {
+      "56": "0xF1bd5673Ea4a1C415ec84fa3E402F2F7788E7717",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "tokenPerBlock": "0.4629",
+    "sortOrder": 999,
+    "isFinished": false
   },
   {
     "sousId": 75,
-    "tokenName": "BIFI",
-    "tokenAddress": "0xca3f508b8e4dd382ee878a314789373d80a5190a",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BIFI",
+      "address": {
+        "56": "0xca3f508b8e4dd382ee878a314789373d80a5190a",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://beefy.finance/"
+    },
     "contractAddress": {
       "56": "0xB4C68A1C565298834360BbFF1652284275120D47",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://beefy.finance/",
     "harvest": true,
     "tokenPerBlock": "0.00007234",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 74,
-    "tokenName": "TXL",
-    "tokenAddress": "0x1ffd0b47127fdd4097e54521c9e2c7f0d66aafc5",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "TXL",
+      "address": {
+        "56": "0x1ffd0b47127fdd4097e54521c9e2c7f0d66aafc5",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://tixl.org/"
+    },
     "contractAddress": {
       "56": "0x153e62257F1AAe05d5d253a670Ca7585c8D3F94F",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://tixl.org/",
     "harvest": true,
     "tokenPerBlock": "0.434027",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 73,
-    "tokenName": "COS",
-    "tokenAddress": "0x96Dd399F9c3AFda1F194182F71600F1B65946501",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "COS",
+      "address": {
+        "56": "0x96Dd399F9c3AFda1F194182F71600F1B65946501",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.contentos.io/"
+    },
     "contractAddress": {
       "56": "0xF682D186168b4114ffDbF1291F19429310727151",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.contentos.io/",
     "harvest": true,
     "tokenPerBlock": "5.787",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 72,
-    "tokenName": "BUNNY",
-    "tokenAddress": "0xc9849e6fdb743d08faee3e34dd2d1bc69ea11a51",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BUNNY",
+      "address": {
+        "56": "0xc9849e6fdb743d08faee3e34dd2d1bc69ea11a51",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakebunny.finance/"
+    },
     "contractAddress": {
       "56": "0xaDdAE5f4dB84847ac9d947AED1304A8e7D19f7cA",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://pancakebunny.finance/",
     "harvest": true,
     "tokenPerBlock": "0.00289",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 71,
-    "tokenName": "ALICE",
-    "tokenAddress": "0xac51066d7bec65dc4589368da368b212745d63e8",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "ALICE",
+      "address": {
+        "56": "0xac51066d7bec65dc4589368da368b212745d63e8",
+        "97": ""
+      },
+      "decimals": 6,
+      "projectLink": "https://www.myneighboralice.com/"
+    },
     "contractAddress": {
       "56": "0x4C32048628D0d32d4D6c52662FB4A92747782B56",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.myneighboralice.com/",
     "harvest": true,
     "tokenPerBlock": "0.14467",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 6
+    "isFinished": false
   },
   {
     "sousId": 70,
-    "tokenName": "FOR",
-    "tokenAddress": "0x658A109C5900BC6d2357c87549B651670E5b0539",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "FOR",
+      "address": {
+        "56": "0x658A109C5900BC6d2357c87549B651670E5b0539",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.for.tube/home"
+    },
     "contractAddress": {
       "56": "0x47642101e8D8578C42765d7AbcFd0bA31868c523",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.for.tube/home",
     "harvest": true,
     "tokenPerBlock": "2.8935",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 69,
-    "tokenName": "BUX",
-    "tokenAddress": "0x211ffbe424b90e25a15531ca322adf1559779e45",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BUX",
+      "address": {
+        "56": "0x211ffbe424b90e25a15531ca322adf1559779e45",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://getbux.com/bux-crypto/"
+    },
     "contractAddress": {
       "56": "0x07F8217c68ed9b838b0b8B58C19c79bACE746e9A",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://getbux.com/bux-crypto/",
     "harvest": true,
     "tokenPerBlock": "0.5787",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 68,
-    "tokenName": "NULS",
-    "tokenAddress": "0x8cd6e29d3686d24d3c2018cee54621ea0f89313b",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "NULS",
+      "address": {
+        "56": "0x8cd6e29d3686d24d3c2018cee54621ea0f89313b",
+        "97": ""
+      },
+      "decimals": 8,
+      "projectLink": "https://www.nuls.io/"
+    },
     "contractAddress": {
       "56": "0x580DC9bB9260A922E3A4355b9119dB990F09410d",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.nuls.io/",
     "harvest": true,
     "tokenPerBlock": "0.0868",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 8
+    "isFinished": false
   },
   {
     "sousId": 67,
-    "tokenName": "BELT",
-    "tokenAddress": "0xE0e514c71282b6f4e823703a39374Cf58dc3eA4f",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BELT",
+      "address": {
+        "56": "0xE0e514c71282b6f4e823703a39374Cf58dc3eA4f",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://beta.belt.fi/"
+    },
     "contractAddress": {
       "56": "0x6f0037d158eD1AeE395e1c12d21aE8583842F472",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://beta.belt.fi/",
     "harvest": true,
     "tokenPerBlock": "0.00868",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 66,
-    "tokenName": "RAMP",
-    "tokenAddress": "0x8519ea49c997f50ceffa444d240fb655e89248aa",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "RAMP",
+      "address": {
+        "56": "0x8519ea49c997f50ceffa444d240fb655e89248aa",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://rampdefi.com/"
+    },
     "contractAddress": {
       "56": "0x423382f989C6C289c8D441000e1045e231bd7d90",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://rampdefi.com/",
     "harvest": true,
     "tokenPerBlock": "0.4861",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 65,
-    "tokenName": "BFI",
-    "tokenAddress": "0x81859801b01764d4f0fa5e64729f5a6c3b91435b",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BFI",
+      "address": {
+        "56": "0x81859801b01764d4f0fa5e64729f5a6c3b91435b",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://bearn.fi/"
+    },
     "contractAddress": {
       "56": "0x0A595623b58dFDe6eB468b613C11A7A8E84F09b9",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://bearn.fi/",
     "harvest": true,
     "tokenPerBlock": "0.0001157",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 64,
-    "tokenName": "DEXE",
-    "tokenAddress": "0x039cb485212f996a9dbb85a9a75d898f94d38da6",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "DEXE",
+      "address": {
+        "56": "0x039cb485212f996a9dbb85a9a75d898f94d38da6",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://dexe.network/"
+    },
     "contractAddress": {
       "56": "0x9E6dA246d369a41DC44673ce658966cAf487f7b2",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://dexe.network/",
     "harvest": true,
     "tokenPerBlock": "0.009837",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 63,
-    "tokenName": "BEL",
-    "tokenAddress": "0x8443f091997f06a61670b735ed92734f5628692f",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BEL",
+      "address": {
+        "56": "0x8443f091997f06a61670b735ed92734f5628692f",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://bella.fi/"
+    },
     "contractAddress": {
       "56": "0x2C0f449387b15793B9da27c2d945dBed83ab1B07",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://bella.fi/",
     "harvest": true,
     "tokenPerBlock": "0.0549",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 62,
-    "tokenName": "CAKE",
-    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
-    "stakingTokenName": "TPT",
-    "stakingTokenAddress": "0xeca41281c24451168a37211f0bc2b8645af45092",
-    "stakingTokenDecimals": 4,
+    "stakingToken": {
+      "symbol": "TPT",
+      "address": {
+        "56": "0xeca41281c24451168a37211f0bc2b8645af45092",
+        "97": ""
+      },
+      "decimals": 4,
+      "projectLink": "https://www.tokenpocket.pro/"
+    },
+    "earningToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
     "stakingLimit": 25000,
     "contractAddress": {
       "56": "0x0c3D6892aa3b23811Af3bd1bbeA8b0740E8e4528",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.tokenpocket.pro/",
     "harvest": true,
     "tokenPerBlock": "0.0462",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 61,
-    "tokenName": "TPT",
-    "tokenAddress": "0xeca41281c24451168a37211f0bc2b8645af45092",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "TPT",
+      "address": {
+        "56": "0xeca41281c24451168a37211f0bc2b8645af45092",
+        "97": ""
+      },
+      "decimals": 4,
+      "projectLink": "https://www.tokenpocket.pro/"
+    },
     "contractAddress": {
       "56": "0x75C91844c5383A68b7d3A427A44C32E3ba66Fe45",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.tokenpocket.pro/",
     "harvest": true,
     "tokenPerBlock": "3.616",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 4
+    "isFinished": false
   },
   {
     "sousId": 60,
-    "tokenName": "WATCH",
-    "tokenAddress": "0x7a9f28eb62c791422aa23ceae1da9c847cbec9b0",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "WATCH",
+      "address": {
+        "56": "0x7a9f28eb62c791422aa23ceae1da9c847cbec9b0",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://yieldwatch.net/"
+    },
     "contractAddress": {
       "56": "0xC58954199E268505fa3D3Cb0A00b7207af8C2D1d",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://yieldwatch.net/",
     "harvest": true,
     "tokenPerBlock": "0.3472",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 59,
-    "tokenName": "xMARK",
-    "tokenAddress": "0x26a5dfab467d4f58fb266648cae769503cec9580",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "xMARK",
+      "address": {
+        "56": "0x26a5dfab467d4f58fb266648cae769503cec9580",
+        "97": ""
+      },
+      "decimals": 9,
+      "projectLink": "https://benchmarkprotocol.finance/"
+    },
     "contractAddress": {
       "56": "0xA5137e08C48167E363Be8Ec42A68f4F54330964E",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://benchmarkprotocol.finance/",
     "harvest": true,
     "tokenPerBlock": "0.0413",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 9
+    "isFinished": false
   },
   {
     "sousId": 58,
-    "tokenName": "bMXX",
-    "tokenAddress": "0x4131b87f74415190425ccd873048c708f8005823",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "bMXX",
+      "address": {
+        "56": "0x4131b87f74415190425ccd873048c708f8005823",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://multiplier.finance/"
+    },
     "contractAddress": {
       "56": "0x6F31B87f51654424Ce57E9F8243E27ed13846CDB",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://multiplier.finance/",
     "harvest": true,
     "tokenPerBlock": "0.00248",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 57,
-    "tokenName": "IOTX",
-    "tokenAddress": "0x9678e42cebeb63f23197d726b29b1cb20d0064e5",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "IOTX",
+      "address": {
+        "56": "0x9678e42cebeb63f23197d726b29b1cb20d0064e5",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://iotex.io/"
+    },
     "contractAddress": {
       "56": "0xCE54BA909d23B9d4BE0Ff0d84e5aE83F0ADD8D9a",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://iotex.io/",
     "harvest": true,
     "tokenPerBlock": "6.365",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 56,
-    "tokenName": "BOR",
-    "tokenAddress": "0x92d7756c60dcfd4c689290e8a9f4d263b3b32241",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BOR",
+      "address": {
+        "56": "0x92d7756c60dcfd4c689290e8a9f4d263b3b32241",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.boringdao.com/"
+    },
     "contractAddress": {
       "56": "0x3e677dC00668d69c2A7724b9AFA7363e8A56994e",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.boringdao.com/",
     "harvest": true,
     "tokenPerBlock": "0.000395",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 55,
-    "tokenName": "bOPEN",
-    "tokenAddress": "0xf35262a9d427f96d2437379ef090db986eae5d42",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "bOPEN",
+      "address": {
+        "56": "0xf35262a9d427f96d2437379ef090db986eae5d42",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://opendao.io/"
+    },
     "contractAddress": {
       "56": "0x5Ac8406498dC1921735d559CeC271bEd23B294A7",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://opendao.io/",
     "harvest": true,
     "tokenPerBlock": "0.0723",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 54,
-    "tokenName": "CAKE",
-    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
-    "stakingTokenName": "SUSHI",
-    "stakingTokenAddress": "0x947950bcc74888a40ffa2593c5798f11fc9124c4",
+    "stakingToken": {
+      "symbol": "SUSHI",
+      "address": {
+        "56": "0x947950bcc74888a40ffa2593c5798f11fc9124c4",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://sushi.com/"
+    },
+    "earningToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
     "stakingLimit": 50,
     "contractAddress": {
       "56": "0xb69b6e390cba1F68442A886bC89E955048DAe7E3",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.sushi.com/",
     "harvest": true,
     "tokenPerBlock": "0.0367",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 53,
-    "tokenName": "DODO",
-    "tokenAddress": "0x67ee3cb086f8a16f34bee3ca72fad36f7db929e2",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "DODO",
+      "address": {
+        "56": "0x67ee3cb086f8a16f34bee3ca72fad36f7db929e2",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://dodoex.io/"
+    },
     "contractAddress": {
       "56": "0xae3001ddb18A6A57BEC2C19D71680437CA87bA1D",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://dodoex.io/",
     "harvest": true,
     "tokenPerBlock": "0.0578",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 52,
-    "tokenName": "SWINGBY",
-    "tokenAddress": "0x71de20e0c4616e7fcbfdd3f875d568492cbe4739",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "SWINGBY",
+      "address": {
+        "56": "0x71de20e0c4616e7fcbfdd3f875d568492cbe4739",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://swingby.network/"
+    },
     "contractAddress": {
       "56": "0x02aa767e855b8e80506fb47176202aA58A95315a",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://swingby.network/",
     "harvest": true,
     "tokenPerBlock": "0.13",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 51,
-    "tokenName": "BRY",
-    "tokenAddress": "0xf859bf77cbe8699013d6dbc7c2b926aaf307f830",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BRY",
+      "address": {
+        "56": "0xf859bf77cbe8699013d6dbc7c2b926aaf307f830",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://berrydata.co/"
+    },
     "contractAddress": {
       "56": "0x1c736F4FB20C7742Ee83a4099fE92abA61dFca41",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://berrydata.co/",
     "harvest": true,
     "tokenPerBlock": "0.1157",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 50,
-    "tokenName": "ZEE",
-    "tokenAddress": "0x44754455564474a89358b2c2265883df993b12f0",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "ZEE",
+      "address": {
+        "56": "0x44754455564474a89358b2c2265883df993b12f0",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://zeroswap.io/"
+    },
     "contractAddress": {
       "56": "0x02861B607a5E87daf3FD6ec19DFB715F1b371379",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://zeroswap.io/",
     "harvest": true,
     "tokenPerBlock": "0.1736",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 49,
-    "tokenName": "SWGb",
-    "tokenAddress": "0xe40255c5d7fa7ceec5120408c78c787cecb4cfdb",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "SWGb",
+      "address": {
+        "56": "0xe40255c5d7fa7ceec5120408c78c787cecb4cfdb",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://swirgepay.com/"
+    },
     "contractAddress": {
       "56": "0x73e4E8d010289267dEe3d1Fc48974B60363963CE",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://swirgepay.com/",
     "harvest": true,
     "tokenPerBlock": "0.899",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 48,
-    "tokenName": "CAKE",
-    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
-    "stakingTokenName": "COMP",
-    "stakingTokenAddress": "0x52ce071bd9b1c4b00a0b92d298c512478cad67e8",
+    "stakingToken": {
+      "symbol": "COMP",
+      "address": {
+        "56": "0x52ce071bd9b1c4b00a0b92d298c512478cad67e8",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://compound.finance/"
+    },
+    "earningToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
     "stakingLimit": 1,
     "contractAddress": {
       "56": "0xE0565fBb109A3f3f8097D8A9D931277bfd795072",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://compound.finance/",
     "harvest": true,
     "tokenPerBlock": "0.055",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 47,
-    "tokenName": "CAKE",
-    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
-    "stakingTokenName": "COMP",
-    "stakingTokenAddress": "0x52ce071bd9b1c4b00a0b92d298c512478cad67e8",
+    "stakingToken": {
+      "symbol": "COMP",
+      "address": {
+        "56": "0x52ce071bd9b1c4b00a0b92d298c512478cad67e8",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://compound.finance/"
+    },
+    "earningToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
     "stakingLimit": 1,
     "contractAddress": {
       "56": "0xc3693e3cbc3514d5d07EA5b27A721F184F617900",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://compound.finance/",
     "harvest": true,
     "tokenPerBlock": "0.55",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 46,
-    "tokenName": "SFP",
-    "tokenAddress": "0xd41fdb03ba84762dd66a0af1a6c8540ff1ba5dfb",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "SFP",
+      "address": {
+        "56": "0xd41fdb03ba84762dd66a0af1a6c8540ff1ba5dfb",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.safepal.io/"
+    },
     "contractAddress": {
       "56": "0x2B02d43967765b18E31a9621da640588f3550EFD",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.safepal.io/",
     "harvest": true,
     "tokenPerBlock": "0.6",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 45,
-    "tokenName": "LINA",
-    "tokenAddress": "0x762539b45a1dcce3d36d080f74d1aed37844b878",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "LINA",
+      "address": {
+        "56": "0x762539b45a1dcce3d36d080f74d1aed37844b878",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://linear.finance/"
+    },
     "contractAddress": {
       "56": "0x212bb602418C399c29D52C55100fD6bBa12bea05",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://linear.finance/",
     "harvest": true,
     "tokenPerBlock": "0.983",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 44,
-    "tokenName": "LINA",
-    "tokenAddress": "0x762539b45a1dcce3d36d080f74d1aed37844b878",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "LINA",
+      "address": {
+        "56": "0x762539b45a1dcce3d36d080f74d1aed37844b878",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://linear.finance/"
+    },
     "contractAddress": {
       "56": "0x04aE8ca68A116278026fB721c06dCe709eD7013C",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://linear.finance/",
     "harvest": true,
     "tokenPerBlock": "0.0983",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 43,
-    "tokenName": "LIT",
-    "tokenAddress": "0xb59490ab09a0f526cc7305822ac65f2ab12f9723",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "LIT",
+      "address": {
+        "56": "0xb59490ab09a0f526cc7305822ac65f2ab12f9723",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.litentry.com/"
+    },
     "contractAddress": {
       "56": "0x1714bAAE9DD4738CDEA07756427FA8d4F08D9479",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.litentry.com/",
     "harvest": true,
     "tokenPerBlock": "0.231",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 18
+    "isFinished": false
   },
   {
     "sousId": 42,
-    "tokenName": "HGET",
-    "tokenAddress": "0xc7d8d35eba58a0935ff2d5a33df105dd9f071731",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "HGET",
+      "address": {
+        "56": "0xc7d8d35eba58a0935ff2d5a33df105dd9f071731",
+        "97": ""
+      },
+      "decimals": 6,
+      "projectLink": "https://www.hedget.com/"
+    },
     "contractAddress": {
       "56": "0xcCD0b93cC6ce3dC6dFaA9DB68f70e5C8455aC5bd",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.hedget.com/",
     "harvest": true,
     "tokenPerBlock": "0.0138",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 6
+    "isFinished": true
   },
   {
     "sousId": 41,
-    "tokenName": "BDO",
-    "tokenAddress": "0x190b589cf9fb8ddeabbfeae36a813ffb2a702454",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BDO",
+      "address": {
+        "56": "0x190b589cf9fb8ddeabbfeae36a813ffb2a702454",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://bdollar.fi/"
+    },
     "contractAddress": {
       "56": "0x9cB24e9460351bC51d4066BC6AEd1F3809b02B78",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://bdollar.fi/",
     "harvest": true,
     "tokenPerBlock": "0.075",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 40,
-    "tokenName": "EGLD",
-    "tokenAddress": "0xbf7c81fff98bbe61b40ed186e4afd6ddd01337fe",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "EGLD",
+      "address": {
+        "56": "0xbf7c81fff98bbe61b40ed186e4afd6ddd01337fe",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://elrond.com/"
+    },
     "contractAddress": {
       "56": "0x2dcf4cDFf4Dd954683Fe0a6123077f8a025b66cF",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://elrond.com/",
     "harvest": true,
     "tokenPerBlock": "0.001215",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 39,
-    "tokenName": "UST",
-    "tokenAddress": "0x23396cf899ca06c4472205fc903bdb4de249d6fc",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "UST",
+      "address": {
+        "56": "0x23396cf899ca06c4472205fc903bdb4de249d6fc",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://mirror.finance/"
+    },
     "contractAddress": {
       "56": "0x6EFa207ACdE6e1caB77c1322CbdE9628929ba88F",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://mirror.finance/",
     "harvest": true,
     "tokenPerBlock": "0.1157",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 38,
-    "tokenName": "wSOTE",
-    "tokenAddress": "0x541e619858737031a1244a5d0cd47e5ef480342c",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "wSOTE",
+      "address": {
+        "56": "0x541e619858737031a1244a5d0cd47e5ef480342c",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://soteria.finance/#/"
+    },
     "contractAddress": {
       "56": "0xD0b738eC507571176D40f28bd56a0120E375f73a",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://soteria.finance/#/",
     "harvest": true,
     "tokenPerBlock": "0.23",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 37,
-    "tokenName": "FRONT",
-    "tokenAddress": "0x928e55dab735aa8260af3cedada18b5f70c72f1b",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "FRONT",
+      "address": {
+        "56": "0x928e55dab735aa8260af3cedada18b5f70c72f1b",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://frontier.xyz/"
+    },
     "contractAddress": {
       "56": "0xf7a31366732F08E8e6B88519dC3E827e04616Fc9",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://frontier.xyz/",
     "harvest": true,
     "tokenPerBlock": "0.2546",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 36,
-    "tokenName": "Helmet",
-    "tokenAddress": "0x948d2a81086a075b3130bac19e4c6dee1d2e3fe8",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "Helmet",
+      "address": {
+        "56": "0x948d2a81086a075b3130bac19e4c6dee1d2e3fe8",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.helmet.insure/"
+    },
     "contractAddress": {
       "56": "0x9F23658D5f4CEd69282395089B0f8E4dB85C6e79",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.helmet.insure/",
     "harvest": true,
     "tokenPerBlock": "0.81",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 35,
-    "tokenName": "BTCST",
-    "tokenAddress": "0x78650b139471520656b9e7aa7a5e9276814a38e9",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BTCST",
+      "address": {
+        "56": "0x78650b139471520656b9e7aa7a5e9276814a38e9",
+        "97": ""
+      },
+      "decimals": 17,
+      "projectLink": "https://www.1-b.tc/"
+    },
     "contractAddress": {
       "56": "0xB6fd2724cc9c90DD31DA35DbDf0300009dceF97d",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.1-b.tc/",
     "harvest": true,
     "tokenPerBlock": "0.011574",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 17
+    "isFinished": true
   },
   {
     "sousId": 34,
-    "tokenName": "BSCX",
-    "tokenAddress": "0x5ac52ee5b2a633895292ff6d8a89bb9190451587",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BSCX",
+      "address": {
+        "56": "0x5ac52ee5b2a633895292ff6d8a89bb9190451587",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://bscex.org/"
+    },
     "contractAddress": {
       "56": "0x108BFE84Ca8BCe0741998cb0F60d313823cEC143",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://bscex.org/",
     "harvest": true,
     "tokenPerBlock": "0.17361",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 33,
-    "tokenName": "TEN",
-    "tokenAddress": "0xdff8cb622790b7f92686c722b02cab55592f152c",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "TEN",
+      "address": {
+        "56": "0xdff8cb622790b7f92686c722b02cab55592f152c",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.tenet.farm/"
+    },
     "contractAddress": {
       "56": "0x4A26b082B432B060B1b00A84eE4E823F04a6f69a",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.tenet.farm/",
     "harvest": true,
     "tokenPerBlock": "0.05787",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 32,
-    "tokenName": "bALBT",
-    "tokenAddress": "0x72faa679e1008ad8382959ff48e392042a8b06f7",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "bALBT",
+      "address": {
+        "56": "0x72faa679e1008ad8382959ff48e392042a8b06f7",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://allianceblock.io/"
+    },
     "contractAddress": {
       "56": "0x3cc08B7C6A31739CfEd9d8d38b484FDb245C79c8",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://allianceblock.io/",
     "harvest": true,
     "tokenPerBlock": "0.4166",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 31,
-    "tokenName": "ASR",
-    "tokenAddress": "0x80d5f92c2c8c682070c95495313ddb680b267320",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "ASR",
+      "address": {
+        "56": "0x80d5f92c2c8c682070c95495313ddb680b267320",
+        "97": ""
+      },
+      "decimals": 2,
+      "projectLink": "https://www.chiliz.com"
+    },
     "contractAddress": {
       "56": "0xd18E1AEb349ef0a6727eCe54597D98D263e05CAB",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.chiliz.com",
     "harvest": true,
     "tokenPerBlock": "0.01",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 2
+    "isFinished": true
   },
   {
     "sousId": 30,
-    "tokenName": "ATM",
-    "tokenAddress": "0x25e9d05365c867e59c1904e7463af9f312296f9e",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "ATM",
+      "address": {
+        "56": "0x25e9d05365c867e59c1904e7463af9f312296f9e",
+        "97": ""
+      },
+      "decimals": 2,
+      "projectLink": "https://www.chiliz.com"
+    },
     "contractAddress": {
       "56": "0x68C7d180bD8F7086D91E65A422c59514e4aFD638",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.chiliz.com",
     "harvest": true,
     "tokenPerBlock": "0.01",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 2
+    "isFinished": true
   },
   {
     "sousId": 29,
-    "tokenName": "OG",
-    "tokenAddress": "0xf05e45ad22150677a017fbd94b84fbb63dc9b44c",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "OG",
+      "address": {
+        "56": "0xf05e45ad22150677a017fbd94b84fbb63dc9b44c",
+        "97": ""
+      },
+      "decimals": 2,
+      "projectLink": "https://www.chiliz.com"
+    },
     "contractAddress": {
       "56": "0xbE65d7e42E05aD2c4ad28769dc9c5b4b6EAff2C7",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.chiliz.com",
     "harvest": true,
     "tokenPerBlock": "0.01",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 2
+    "isFinished": true
   },
   {
     "sousId": 28,
-    "tokenName": "REEF",
-    "tokenAddress": "0xf21768ccbc73ea5b6fd3c687208a7c2def2d966e",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "REEF",
+      "address": {
+        "56": "0xf21768ccbc73ea5b6fd3c687208a7c2def2d966e",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://reef.finance/"
+    },
     "contractAddress": {
       "56": "0x1500fa1afbfe4f4277ed0345cdf12b2c9ca7e139",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://reef.finance/",
     "harvest": true,
     "tokenPerBlock": "115.74",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 27,
-    "tokenName": "DITTO",
-    "tokenAddress": "0x233d91a0713155003fc4dce0afa871b508b3b715",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "DITTO",
+      "address": {
+        "56": "0x233d91a0713155003fc4dce0afa871b508b3b715",
+        "97": ""
+      },
+      "decimals": 9,
+      "projectLink": "https://ditto.money/"
+    },
     "contractAddress": {
       "56": "0x624ef5C2C6080Af188AF96ee5B3160Bb28bb3E02",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://ditto.money/",
     "harvest": true,
     "tokenPerBlock": "0.01157",
     "sortOrder": 999,
-    "isFinished": false,
-    "tokenDecimals": 9
+    "isFinished": false
   },
   {
     "sousId": 26,
-    "tokenName": "CAKE",
-    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
-    "stakingTokenName": "TWT",
-    "stakingTokenAddress": "0x4b0f1812e5df2a09796481ff14017e6005508003",
+    "stakingToken": {
+      "symbol": "TWT",
+      "address": {
+        "56": "0x4b0f1812e5df2a09796481ff14017e6005508003",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://trustwallet.com/"
+    },
+    "earningToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
     "stakingLimit": 1000,
     "contractAddress": {
       "56": "0x0554a5D083Abf2f056ae3F6029e1714B9A655174",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://trustwallet.com/",
     "harvest": true,
     "tokenPerBlock": "0.248",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 24,
-    "tokenName": "JUV",
-    "tokenAddress": "0xc40c9a843e1c6d01b7578284a9028854f6683b1b",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "JUV",
+      "address": {
+        "56": "0xc40c9a843e1c6d01b7578284a9028854f6683b1b",
+        "97": ""
+      },
+      "decimals": 2,
+      "projectLink": "https://www.chiliz.com"
+    },
     "contractAddress": {
       "56": "0x543467B17cA5De50c8BF7285107A36785Ab57E56",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.chiliz.com",
     "harvest": true,
     "tokenPerBlock": "0.02",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 2
+    "isFinished": true
   },
   {
     "sousId": 25,
-    "tokenName": "PSG",
-    "tokenAddress": "0xbc5609612b7c44bef426de600b5fd1379db2ecf1",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "PSG",
+      "address": {
+        "56": "0xbc5609612b7c44bef426de600b5fd1379db2ecf1",
+        "97": ""
+      },
+      "decimals": 2,
+      "projectLink": "https://www.chiliz.com"
+    },
     "contractAddress": {
       "56": "0x65aFEAFaec49F23159e897EFBDCe19D94A86A1B6",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.chiliz.com",
     "harvest": true,
     "tokenPerBlock": "0.02",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 2
+    "isFinished": true
   },
   {
     "sousId": 22,
-    "tokenName": "JUV",
-    "tokenAddress": "0xc40c9a843e1c6d01b7578284a9028854f6683b1b",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "JUV",
+      "address": {
+        "56": "0xc40c9a843e1c6d01b7578284a9028854f6683b1b",
+        "97": ""
+      },
+      "decimals": 2,
+      "projectLink": "https://www.chiliz.com"
+    },
     "contractAddress": {
       "56": "0x27Bd41E77cab966a57232915292410ACfD2761Ac",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.chiliz.com",
     "harvest": true,
     "tokenPerBlock": "0.02",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 2
+    "isFinished": true
   },
   {
     "sousId": 23,
-    "tokenName": "PSG",
-    "tokenAddress": "0xbc5609612b7c44bef426de600b5fd1379db2ecf1",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "PSG",
+      "address": {
+        "56": "0xbc5609612b7c44bef426de600b5fd1379db2ecf1",
+        "97": ""
+      },
+      "decimals": 2,
+      "projectLink": "https://www.chiliz.com"
+    },
     "contractAddress": {
       "56": "0x1DA236Ec18D80ADd7740baD2A74cdA2ADb9E17bE",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.chiliz.com",
     "harvest": true,
     "tokenPerBlock": "0.02",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 2
+    "isFinished": true
   },
   {
     "sousId": 21,
-    "tokenName": "VAI",
-    "tokenAddress": "0x4bd17003473389a42daf6a0a729f6fdb328bbbd7",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "VAI",
+      "address": {
+        "56": "0x4bd17003473389a42daf6a0a729f6fdb328bbbd7",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://venus.io/"
+    },
     "contractAddress": {
       "56": "0x1AD34D8d4D79ddE88c9B6b8490F8fC67831f2CAe",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://venus.io/",
     "harvest": true,
     "tokenPerBlock": "0.104",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 20,
-    "tokenName": "CAKE",
-    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
-    "stakingTokenName": "BNB",
+    "stakingToken": {
+      "symbol": "BNB",
+      "projectLink": "https://www.binance.com/"
+    },
+    "earningToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
     "stakingLimit": 10,
     "contractAddress": {
       "56": "0x555Ea72d7347E82C614C16f005fA91cAf06DCB5a",
       "97": ""
     },
     "poolCategory": "Binance",
-    "projectLink": "https://pancakeswap.finance/",
     "harvest": true,
     "tokenPerBlock": "0.5",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 19,
-    "tokenName": "BNB",
-    "tokenAddress": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BNB",
+      "projectLink": "https://www.binance.com/"
+    },
     "contractAddress": {
       "56": "0x326D754c64329aD7cb35744770D56D0E1f3B3124",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://pancakeswap.finance/",
     "harvest": true,
     "tokenPerBlock": "0.0041",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 18,
-    "tokenName": "BLK",
-    "tokenAddress": "0x63870a18b6e42b01ef1ad8a2302ef50b7132054f",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BLK",
+      "address": {
+        "56": "0x63870a18b6e42b01ef1ad8a2302ef50b7132054f",
+        "97": ""
+      },
+      "decimals": 6,
+      "projectLink": "https://blink.wink.org"
+    },
     "contractAddress": {
       "56": "0x42Afc29b2dEa792974d1e9420696870f1Ca6d18b",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://blink.wink.org",
     "harvest": true,
     "tokenPerBlock": "23.14",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 6
+    "isFinished": true
   },
   {
     "sousId": 17,
-    "tokenName": "BLK",
-    "tokenAddress": "0x63870a18b6e42b01ef1ad8a2302ef50b7132054f",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BLK",
+      "address": {
+        "56": "0x63870a18b6e42b01ef1ad8a2302ef50b7132054f",
+        "97": ""
+      },
+      "decimals": 6,
+      "projectLink": "https://blink.wink.org"
+    },
     "contractAddress": {
       "56": "0xBb2B66a2c7C2fFFB06EA60BeaD69741b3f5BF831",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://blink.wink.org",
     "harvest": true,
     "tokenPerBlock": "23.14",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 16,
-    "tokenName": "UNFI",
-    "tokenAddress": "0x728c5bac3c3e370e372fc4671f9ef6916b814d8b",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "UNFI",
+      "address": {
+        "56": "0x728c5bac3c3e370e372fc4671f9ef6916b814d8b",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://unifiprotocol.com"
+    },
     "contractAddress": {
       "56": "0xFb1088Dae0f03C5123587d2babb3F307831E6367",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://unifiprotocol.com",
     "harvest": true,
     "tokenPerBlock": "0.02893",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 15,
-    "tokenName": "TWT",
-    "tokenAddress": "0x4b0f1812e5df2a09796481ff14017e6005508003",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "TWT",
+      "address": {
+        "56": "0x4b0f1812e5df2a09796481ff14017e6005508003",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://trustwallet.com/"
+    },
     "contractAddress": {
       "56": "0x9c4EBADa591FFeC4124A7785CAbCfb7068fED2fb",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://trustwallet.com/",
     "harvest": true,
     "tokenPerBlock": "5",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 14,
-    "tokenName": "HARD",
-    "tokenAddress": "0xf79037f6f6be66832de4e7516be52826bc3cbcc4",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "HARD",
+      "address": {
+        "56": "0xf79037f6f6be66832de4e7516be52826bc3cbcc4",
+        "97": ""
+      },
+      "decimals": 6,
+      "projectLink": "https://hard.kava.io"
+    },
     "contractAddress": {
       "56": "0x90F995b9d46b32c4a1908A8c6D0122e392B3Be97",
       "97": ""
     },
     "poolCategory": "Core",
-    "projectLink": "https://hard.kava.io",
     "harvest": true,
     "tokenPerBlock": "0.346",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 6
+    "isFinished": true
   },
   {
     "sousId": 13,
-    "tokenName": "bROOBEE",
-    "tokenAddress": "0xe64f5cb844946c1f102bd25bbd87a5ab4ae89fbe",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "bROOBEE",
+      "address": {
+        "56": "0xe64f5cb844946c1f102bd25bbd87a5ab4ae89fbe",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://roobee.io/"
+    },
     "contractAddress": {
       "56": "0xdc8c45b7F3747Ca9CaAEB3fa5e0b5FCE9430646b",
       "97": ""
     },
     "poolCategory": "Community",
-    "projectLink": "https://roobee.io/",
     "harvest": true,
     "tokenPerBlock": "12.5",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 12,
-    "tokenName": "STAX",
-    "tokenAddress": "0x0da6ed8b13214ff28e9ca979dd37439e8a88f6c4",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "STAX",
+      "address": {
+        "56": "0x0da6ed8b13214ff28e9ca979dd37439e8a88f6c4",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "http://stablexswap.com/"
+    },
     "contractAddress": {
       "56": "0xFF02241a2A1d2a7088A344309400E9fE74772815",
       "97": "0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a"
     },
     "poolCategory": "Community",
-    "projectLink": "http://stablexswap.com/",
     "harvest": true,
     "tokenPerBlock": "0.2",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 11,
-    "tokenName": "NAR",
-    "tokenAddress": "0xa1303e6199b319a891b79685f0537d289af1fc83",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "NAR",
+      "address": {
+        "56": "0xa1303e6199b319a891b79685f0537d289af1fc83",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://narwhalswap.org/"
+    },
     "contractAddress": {
       "56": "0xDc938BA1967b06d666dA79A7B1E31a8697D1565E",
       "97": "0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a"
     },
     "poolCategory": "Community",
-    "projectLink": "https://narwhalswap.org/",
     "harvest": true,
     "tokenPerBlock": "1",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 10,
-    "tokenName": "NYA",
-    "tokenAddress": "0xbfa0841f7a90c4ce6643f651756ee340991f99d5",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "NYA",
+      "address": {
+        "56": "0xbfa0841f7a90c4ce6643f651756ee340991f99d5",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://nyanswop.org/"
+    },
     "contractAddress": {
       "56": "0x07a0A5B67136d40F4d7d95Bc8e0583bafD7A81b9",
       "97": "0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a"
     },
     "poolCategory": "Community",
-    "projectLink": "https://nyanswop.org/",
     "harvest": true,
     "sortOrder": 999,
     "tokenPerBlock": "10",
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 9,
-    "tokenName": "CTK",
-    "tokenAddress": "0xa8c2b8eec3d368c0253ad3dae65a5f2bbb89c929",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "CTK",
+      "address": {
+        "56": "0xa8c2b8eec3d368c0253ad3dae65a5f2bbb89c929",
+        "97": ""
+      },
+      "decimals": 6,
+      "projectLink": "https://www.certik.foundation/"
+    },
     "contractAddress": {
       "56": "0x21A9A53936E812Da06B7623802DEc9A1f94ED23a",
       "97": "0xAfd61Dc94f11A70Ae110dC0E0F2061Af5633061A"
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.certik.foundation/",
     "harvest": true,
     "tokenPerBlock": "0.5",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 6
+    "isFinished": true
   },
   {
     "sousId": 8,
-    "tokenName": "TWT",
-    "tokenAddress": "0x4b0f1812e5df2a09796481ff14017e6005508003",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "TWT",
+      "address": {
+        "56": "0x4b0f1812e5df2a09796481ff14017e6005508003",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://trustwallet.com/"
+    },
     "contractAddress": {
       "56": "0xe7f9A439Aa7292719aC817798DDd1c4D35934aAF",
       "97": "0xAfd61Dc94f11A70Ae110dC0E0F2061Af5633061A"
     },
     "poolCategory": "Core",
-    "projectLink": "https://trustwallet.com/",
     "harvest": true,
     "tokenPerBlock": "20",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 7,
-    "tokenName": "INJ",
-    "tokenAddress": "0xa2b726b1145a4773f68593cf171187d8ebe4d495",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "INJ",
+      "address": {
+        "56": "0xa2b726b1145a4773f68593cf171187d8ebe4d495",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://injectiveprotocol.com/"
+    },
     "contractAddress": {
       "56": "0xcec2671C81a0Ecf7F8Ee796EFa6DBDc5Cb062693",
       "97": "0xAfd61Dc94f11A70Ae110dC0E0F2061Af5633061A"
     },
     "poolCategory": "Core",
-    "projectLink": "https://injectiveprotocol.com/",
     "harvest": true,
     "tokenPerBlock": "0.25",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 6,
-    "tokenName": "CTK",
-    "tokenAddress": "0xa8c2b8eec3d368c0253ad3dae65a5f2bbb89c929",
-    "stakingTokenName": "SYRUP",
-    "stakingTokenAddress": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
+    "stakingToken": {
+      "symbol": "SYRUP",
+      "address": {
+        "56": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
+        "97": "0xfE1e507CeB712BDe086f3579d2c03248b2dB77f9"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "CTK",
+      "address": {
+        "56": "0xa8c2b8eec3d368c0253ad3dae65a5f2bbb89c929",
+        "97": ""
+      },
+      "decimals": 6,
+      "projectLink": "https://www.certik.foundation/"
+    },
     "contractAddress": {
       "56": "0xF35d63Df93f32e025bce4A1B98dcEC1fe07AD892",
       "97": "0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a"
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.certik.foundation/",
     "harvest": true,
     "tokenPerBlock": "0.5",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 5,
-    "tokenName": "CTK",
-    "tokenAddress": "0xa8c2b8eec3d368c0253ad3dae65a5f2bbb89c929",
-    "stakingTokenName": "SYRUP",
-    "stakingTokenAddress": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
+    "stakingToken": {
+      "symbol": "SYRUP",
+      "address": {
+        "56": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
+        "97": "0xfE1e507CeB712BDe086f3579d2c03248b2dB77f9"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "CTK",
+      "address": {
+        "56": "0xa8c2b8eec3d368c0253ad3dae65a5f2bbb89c929",
+        "97": ""
+      },
+      "decimals": 6,
+      "projectLink": "https://www.certik.foundation/"
+    },
     "contractAddress": {
       "56": "0x3B9B74f48E89Ebd8b45a53444327013a2308A9BC",
       "97": "0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a"
     },
     "poolCategory": "Core",
-    "projectLink": "https://www.certik.foundation/",
     "tokenPerBlock": "0.5",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 6
+    "isFinished": true
   },
   {
     "sousId": 4,
-    "tokenName": "SXP",
-    "tokenAddress": "0x47bead2563dcbf3bf2c9407fea4dc236faba485a",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "SYRUP",
+      "address": {
+        "56": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
+        "97": "0xfE1e507CeB712BDe086f3579d2c03248b2dB77f9"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "SXP",
+      "address": {
+        "56": "0x47bead2563dcbf3bf2c9407fea4dc236faba485a",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://swipe.io/"
+    },
     "contractAddress": {
       "56": "0xD32B30b151a6aDB2e0Fa573a37510C097DaBD2F3",
       "97": "0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a"
     },
     "poolCategory": "Core",
-    "projectLink": "https://swipe.io/",
     "harvest": true,
     "tokenPerBlock": "0.5",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 3,
-    "tokenName": "INJ",
-    "tokenAddress": "0xa2b726b1145a4773f68593cf171187d8ebe4d495",
-    "stakingTokenName": "SYRUP",
-    "stakingTokenAddress": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
+    "stakingToken": {
+      "symbol": "SYRUP",
+      "address": {
+        "56": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
+        "97": "0xfE1e507CeB712BDe086f3579d2c03248b2dB77f9"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "INJ",
+      "address": {
+        "56": "0xa2b726b1145a4773f68593cf171187d8ebe4d495",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://injectiveprotocol.com/"
+    },
     "contractAddress": {
       "56": "0x92E8CeB7eAeD69fB6E4d9dA43F605D2610214E68",
       "97": "0xAfd61Dc94f11A70Ae110dC0E0F2061Af5633061A"
     },
     "poolCategory": "Core",
-    "projectLink": "https://injectiveprotocol.com/",
     "harvest": true,
     "tokenPerBlock": "0.25",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 2,
-    "tokenName": "ALPHA",
-    "tokenAddress": "0xa1faa113cbe53436df28ff0aee54275c13b40975",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "ALPHA",
+      "address": {
+        "56": "0xa1faa113cbe53436df28ff0aee54275c13b40975",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://alphafinance.io/"
+    },
     "contractAddress": {
       "56": "0x73c83bd1646991cBca3e6b83ca905542FE07C57A",
       "97": "0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a"
     },
     "poolCategory": "Core",
-    "projectLink": "https://alphafinance.io/",
     "harvest": true,
     "tokenPerBlock": "20",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": 1,
-    "tokenName": "TWT",
-    "tokenAddress": "0x4b0f1812e5df2a09796481ff14017e6005508003",
-    "stakingTokenName": "SYRUP",
-    "stakingTokenAddress": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
+    "stakingToken": {
+      "symbol": "SYRUP",
+      "address": {
+        "56": "0x009cF7bC57584b7998236eff51b98A168DceA9B0",
+        "97": "0xfE1e507CeB712BDe086f3579d2c03248b2dB77f9"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "TWT",
+      "address": {
+        "56": "0x4b0f1812e5df2a09796481ff14017e6005508003",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://trustwallet.com/"
+    },
     "contractAddress": {
       "56": "0xAfd61Dc94f11A70Ae110dC0E0F2061Af5633061A",
       "97": "0xAfd61Dc94f11A70Ae110dC0E0F2061Af5633061A"
     },
     "poolCategory": "Core",
-    "projectLink": "https://trustwallet.com/",
     "harvest": true,
     "tokenPerBlock": "20",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   },
   {
     "sousId": -1,
-    "tokenName": "XVS",
-    "tokenAddress": "0xcf6bb5389c92bdda8a3747ddb454cb7a64626c63",
-    "stakingTokenName": "CAKE",
-    "stakingTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "XVS",
+      "address": {
+        "56": "0xcf6bb5389c92bdda8a3747ddb454cb7a64626c63",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://venus.io/"
+    },
     "contractAddress": {
       "56": "0x6ab8463a4185b80905e05a9ff80a2d6b714b9e95",
       "97": "0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a"
     },
     "tokenPerBlock": "0",
     "poolCategory": "Core",
-    "projectLink": "https://venus.io/",
     "sortOrder": 999,
-    "isFinished": true,
-    "tokenDecimals": 18
+    "isFinished": true
   }
 ]

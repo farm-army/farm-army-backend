@@ -11,6 +11,50 @@ module.exports = class Balances {
     this.priceOracle = priceOracle;
   }
 
+  async getAllLpTokenBalances(address) {
+    const cacheKey = `allLpTokenBalances-address-${address}`;
+
+    const cacheItem = this.cache.get(cacheKey);
+    if (cacheItem) {
+      return cacheItem;
+    }
+
+    const tokenMap = this.priceOracle.getAllLpAddressInfo();
+
+    const balancesCalls = Object.keys(tokenMap).map(key => {
+      const vault = new Web3EthContract(ABI.erc20ABI, key);
+      return {
+        contract: key,
+        balance: vault.methods.balanceOf(address),
+      };
+    });
+
+    const balances = [];
+    (await utils.multiCall(balancesCalls))
+      .filter(c => c.balance > utils.DUST_FILTER)
+      .forEach(c => {
+        const item = {
+          token: c.contract,
+          symbol: tokenMap[c.contract].map(i => i.symbol).join('-'),
+          amount: c.balance / 1e18
+        };
+
+        const price = this.priceOracle.findPrice(c.contract);
+        if (price) {
+          item.usd = item.amount * price;
+        }
+
+        if (item.usd && item.usd < 0.006) {
+          return;
+        }
+
+        balances.push(item)
+      });
+
+    this.cache.put(cacheKey, balances, { ttl: 300 * 1000 });
+    return balances;
+  }
+
   async getAllTokenBalances(address) {
     const cacheKey = `allTokenBalances-address-${address}`;
 
@@ -21,9 +65,9 @@ module.exports = class Balances {
 
     const tokenMap = this.priceOracle.getAddressSymbolMap();
 
-    const tokenAddress = (await this.getPlatformTokens()).map(p => p.contract);
+    const tokenAddress = (await this.getPlatformTokens()).map(p => p.contract.toLowerCase());
 
-    const balancesCalls = _.uniq([...Object.keys(tokenMap), ...tokenAddress]).map(key => {
+    const balancesCalls = _.uniq([...Object.keys(tokenMap).map(t => t.toLowerCase()), ...tokenAddress]).map(key => {
       const vault = new Web3EthContract(ABI.erc20ABI, key);
       return {
         contract: key,
@@ -69,8 +113,8 @@ module.exports = class Balances {
         return;
       }
 
-      if (tokenMap[b.contract]) {
-        item.symbol = tokenMap[b.contract];
+      if (tokenMap[b.contract.toLowerCase()]) {
+        item.symbol = tokenMap[b.contract.toLowerCase()];
       }
 
       balances.push(item);

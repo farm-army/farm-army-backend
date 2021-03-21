@@ -283,7 +283,8 @@ module.exports = class pancakebunny {
     const cakePrice = this.priceOracle.findPrice("cake");
     const bnbPrice = this.priceOracle.findPrice("bnb");
 
-    const infoOfPool = farms
+    const infoOfPool = addressFarms
+      .map(farmId => farms.find(f => f.id === farmId))
       .filter(farm => !pancakebunny.BUNNY_CHEF_ADDRESSES.includes(farm.raw.address))
       .map(myPool => {
         return {
@@ -300,22 +301,18 @@ module.exports = class pancakebunny {
         };
       });
 
-    const infoOfPoolBoost = farms
+    const infoOfPoolBoost = addressFarms
+      .map(farmId => farms.find(f => f.id === farmId))
       .filter(farm => pancakebunny.BUNNY_CHEF_ADDRESSES.includes(farm.raw.address))
       .map(myPool => {
         return {
           reference: myPool.id.toString(),
-          contractAddress: '0x40e31876c4322bd033BAb028474665B12c4d04CE',
+          contractAddress: '0xb10bfe5b40f814b4c21a0ce601005dcc1eda0d48',
           abi: pancakebunny.BUNNY_CHEF_ABI,
           calls: [
             {
-              reference: "vaultUserInfoOf",
-              method: "vaultUserInfoOf",
-              parameters: [myPool.raw.address, address]
-            },
-            {
-              reference: "pendingBunny",
-              method: "pendingBunny",
+              reference: "infoOfPool",
+              method: "infoOfPool",
               parameters: [myPool.raw.address, address]
             }
           ]
@@ -337,8 +334,6 @@ module.exports = class pancakebunny {
 
       if (calls[farm.id] && calls[farm.id].infoOfPool && calls[farm.id].infoOfPool.balance && calls[farm.id].infoOfPool.balance.gt(0)) {
         balance = calls[farm.id].infoOfPool.balance.toString();
-      } else if(calls[farm.id] && calls[farm.id].vaultUserInfoOf && calls[farm.id].vaultUserInfoOf.balance && calls[farm.id].vaultUserInfoOf.balance.gt(0)) {
-        balance = calls[farm.id].vaultUserInfoOf.balance.toString();
       }
 
       if (balance) {
@@ -365,11 +360,6 @@ module.exports = class pancakebunny {
         pendingBNB = pBNB;
         pendingBUNNY = pBUNNY;
         pendingCAKE = pCAKE;
-      }
-
-      // new boost vaults
-      if (calls[farm.id] && calls[farm.id].pendingBunny && calls[farm.id].pendingBunny.gt(0)) {
-        pendingBUNNY = calls[farm.id].pendingBunny
       }
 
       if (pendingUSD || pendingBNB || pendingBUNNY || pendingCAKE) {
