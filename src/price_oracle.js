@@ -59,8 +59,9 @@ const tokenMaps = {
 };
 
 module.exports = class PriceOracle {
-  constructor(services) {
+  constructor(services, tokenCollector) {
     this.services = services;
+    this.tokenCollector = tokenCollector;
   }
 
   async update() {
@@ -182,51 +183,18 @@ module.exports = class PriceOracle {
   async updateTokens() {
     await this.tokenMaps();
 
-    // most useful
-    try {
-      const pancakeTokens = await this.jsonRequest("https://api.pancakeswap.com/api/v1/price", {
-        rejectUnauthorized: false,
-      });
-      for (const [key, value] of Object.entries(pancakeTokens.prices)) {
+    const bPrices = await Promise.allSettled([
+      this.getPancakeswapPrices(),
+      this.getCoingeckoPrices(),
+      this.jsonRequest('https://api.beefy.finance/prices'),
+      this.jsonRequest('https://api.beefy.finance/lps'),
+    ])
+
+    bPrices.filter(p => p.status === 'fulfilled').forEach(p => {
+      for (const [key, value] of Object.entries(p.value)) {
         allPrices[key.toLowerCase()] = value;
       }
-    } catch (e) {
-      console.log('error https://api.pancakeswap.com/api/v1/price', e.message)
-    }
-
-    // extra some important one
-    const coingeckoTokens = await this.jsonRequest("https://api.coingecko.com/api/v3/simple/price?ids=julswap,burger-swap,pancakeswap-token,auto,bunny,bakerytoken,kebab-token,bearn-fi,goose-finance&vs_currencies=usd");
-    for (const [key, value] of Object.entries(coingeckoTokens)) {
-      if (!value.usd) {
-        continue;
-      }
-
-      if (key.toLowerCase() === "bearn-fi") {
-        allPrices.bfi = value.usd;
-      } else if (key.toLowerCase() === "auto") {
-        allPrices[key.toLowerCase()] = value.usd;
-      } else if (key.toLowerCase() === "pancakeswap-token") {
-        allPrices.cake = value.usd;
-      } else if (key.toLowerCase() === "julswap") {
-        allPrices.jul = value.usd;
-      } else if (key.toLowerCase() === "bearn-fi") {
-        allPrices.bfi = value.usd;
-      } else if (key.toLowerCase() === "auto") {
-        allPrices.auto = value.usd;
-      } else if (key.toLowerCase() === "bakerytoken") {
-        allPrices.bake = value.usd;
-      } else if (key.toLowerCase() === "burger-swap") {
-        allPrices.burger = value.usd;
-      } else if (key.toLowerCase() === "kebab-token") {
-        allPrices.kebab = value.usd;
-      } else if (key.toLowerCase() === "goose-finance") {
-        allPrices.egg = value.usd;
-      }
-    }
-
-    for (const [key, value] of Object.entries(await this.jsonRequest("https://api.beefy.finance/pancake/price"))) {
-      allPrices[key.toLowerCase()] = value;
-    }
+    })
 
     // some remapping
     if (allPrices.eth) {
@@ -237,46 +205,66 @@ module.exports = class PriceOracle {
       allPrices.bnb = allPrices.wbnb;
     }
 
-    // basically for lp prices; as fallback
-    const urls = Object.values({
-      bakery: "https://api.beefy.finance/bakery/price",
-      bakeryLp: "https://api.beefy.finance/bakery/lps",
-      bdollarLp: "https://api.beefy.finance/bdollar/lps",
-      jetfuelLp: "https://api.beefy.finance/jetfuel/lps",
-      kebabLp: "https://api.beefy.finance/kebab/lps",
-      monsterLp: "https://api.beefy.finance/monster/lps",
-      narwhalLp: "https://api.beefy.finance/narwhal/lps",
-      nyanswopLp: "https://api.beefy.finance/nyanswop/lps",
-      pancakeLp: "https://api.beefy.finance/pancake/lps",
-      thugsLp: "https://api.beefy.finance/thugs/lps",
-      spongeLp: "https://api.beefy.finance/sponge/lps",
-      ramenLp: "https://api.beefy.finance/ramen/lps",
-      boltLp: "https://api.beefy.finance/bolt/lps",
-      cafeLp: "https://api.beefy.finance/cafe/lps"
-    });
-
-    for (const url of urls) {
-      let response;
-
-      try {
-        response = await this.jsonRequest(url);
-      } catch (e) {
-        console.error(`skip price url: ${url}`, e.message);
-        continue;
-      }
-
-      for (const [key, value] of Object.entries(response)) {
-        if (!allPrices[key.toLowerCase()]) {
-          allPrices[key.toLowerCase()] = value;
-        }
-      }
-    }
-
     await Promise.allSettled([
       this.updateTokensVswap(),
       this.updateTokensBakery(),
-      this.updateHyperswap()
+      this.updateHyperswap(),
     ]);
+
+    await this.tokenCollector.save();
+  }
+
+  async getPancakeswapPrices() {
+    const prices = {};
+
+    // most useful
+    try {
+      const pancakeTokens = await this.jsonRequest("https://api.pancakeswap.com/api/v1/price", {
+        rejectUnauthorized: false,
+      });
+      for (const [key, value] of Object.entries(pancakeTokens.prices)) {
+        if (key.toLowerCase() === 'banana') {
+          continue
+        }
+
+        prices[key.toLowerCase()] = value;
+      }
+    } catch (e) {
+      console.log('error https://api.pancakeswap.com/api/v1/price', e.message)
+    }
+
+    return prices;
+  }
+
+  async getCoingeckoPrices() {
+    // extra some important one
+    const maps = {
+      'bearn-fi': 'bfi',
+      'auto': 'auto',
+      'pancakeswap-token': 'cake',
+      'julswap': 'jul',
+      'bakerytoken': 'bake',
+      'burger-swap': 'burger',
+      'kebab-token': 'kebab',
+      'goose-finance': 'egg',
+      'binancecoin': 'bnb',
+    };
+
+    const coingeckoTokens = await this.jsonRequest(`https://api.coingecko.com/api/v3/simple/price?ids=${Object.keys(maps).join(',')}&vs_currencies=usd`);
+
+    const prices = {};
+
+    for (const [key, value] of Object.entries(coingeckoTokens)) {
+      if (!value.usd) {
+        continue;
+      }
+
+      if (maps[key.toLowerCase()]) {
+        prices[maps[key.toLowerCase()]] = value.usd;
+      }
+    }
+
+    return prices;
   }
 
   async fetch(lpAddress) {
@@ -424,10 +412,16 @@ module.exports = class PriceOracle {
     const tokens = {};
 
     Object.values(await this.jsonRequest('https://tokens.1inch.exchange/v1.1/chain-56')).forEach(t => {
-      if (t.symbol && t.address) {
+      if (t.symbol && t.address && t.decimals) {
         const symbol = t.symbol.toLowerCase();
         tokens[t.address.toLowerCase()] = symbol;
         tokenMaps[t.address.toLowerCase()] = symbol;
+
+        this.tokenCollector.add({
+          symbol: t.symbol,
+          address: t.address,
+          decimals: parseInt(t.decimals),
+        })
       }
     })
 
@@ -443,7 +437,7 @@ module.exports = class PriceOracle {
           "Content-Type": "application/json"
         },
         body:
-          '{"query":"{\\n  tokens(first: 100, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    id,\\n    symbol,\\n    \\n  }\\n}\\n","variables":null,"operationName":null}',
+          '{"query":"{\\n  tokens(first: 100, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    id,\\n    symbol, decimals,\\n    \\n  }\\n}\\n","variables":null,"operationName":null}',
         method: "POST",
         mode: "cors"
       }
@@ -462,25 +456,40 @@ module.exports = class PriceOracle {
       tokens[t.id.toLowerCase()] = symbol;
 
       tokenMaps[t.id.toLowerCase()] = symbol;
+
+      this.tokenCollector.add({
+        symbol: t.symbol,
+        address: t.id,
+        decimals: parseInt(t.decimals),
+      })
     });
 
     return tokens;
   }
 
   async inchPricesAsBnb() {
+    const bnbPrice = allPrices['bnb'];
+    if (!bnbPrice) {
+      return;
+    }
+
     let [tokens, prices] = await Promise.all([
       this.jsonRequest('https://tokens.1inch.exchange/v1.1/chain-56'),
       this.jsonRequest('https://token-prices.1inch.exchange/v1.1/56'),
     ]);
 
     for (const [key, value] of Object.entries(prices)) {
-      if (tokens[key] && tokens[key].decimals) {
-        let price = value / 10 ** tokens[key].decimals;
-        // pricesAddress[key.toLowerCase()] = price;
+      if (tokens[key] && tokens[key].decimals && tokens[key].symbol && !['bnb', 'wbnb'].includes(tokens[key].symbol.toLowerCase())) {
+        const price = (value / 10 ** 18) * bnbPrice;
 
-        if (tokens[key].symbol) {
-          // allPrices[tokens[key].symbol] = price;
+        if (price > 1000000 || price < 0.0000000001) {
+          // skipping invalid prices
+          // console.log('1inch price issues:', tokens[key].symbol.toLowerCase(), price)
+          continue
         }
+
+        pricesAddress[key.toLowerCase()] = price;
+        allPrices[tokens[key].symbol.toLowerCase()] = price;
       }
     }
   }
@@ -498,7 +507,7 @@ module.exports = class PriceOracle {
           "sec-fetch-site": "cross-site"
         },
         body:
-          '{"operationName":"tokens","variables":{},"query":"fragment TokenFields on Token {\\n  id\\n  name\\n  symbol\\n  tradeVolume\\n  tradeVolumeUSD\\n  totalLiquidity\\n  txCount\\n  priceUSD\\n  __typename\\n}\\n\\nquery tokens {\\n  tokens(first: 200, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    ...TokenFields\\n    __typename\\n  }\\n}\\n"}',
+          '{"operationName":"tokens","variables":{},"query":"fragment TokenFields on Token {\\n  id\\n  name\\n  symbol\\n  decimals\\n  tradeVolume\\n  tradeVolumeUSD\\n  totalLiquidity\\n  txCount\\n  priceUSD\\n  __typename\\n}\\n\\nquery tokens {\\n  tokens(first: 200, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    ...TokenFields\\n    __typename\\n  }\\n}\\n"}',
         method: "POST",
         mode: "cors"
       }
@@ -512,6 +521,12 @@ module.exports = class PriceOracle {
       tokens[t.id.toLowerCase()] = symbol;
 
       tokenMaps[t.id.toLowerCase()] = symbol;
+
+      this.tokenCollector.add({
+        symbol: t.symbol,
+        address: t.id,
+        decimals: parseInt(t.decimals),
+      })
 
       if (t.priceUSD && !pricesAddress[t.id.toLowerCase()]) {
         pricesAddress[t.id.toLowerCase()] = t.priceUSD;
@@ -541,7 +556,7 @@ module.exports = class PriceOracle {
           "https://api.bscgraph.org/subgraphs/name/bakeryswap/graphql?query=%7B%0A%20%20tokens(where%3A%20%7BtradeVolumeUSD_gt%3A%200%7D%2C%20first%3A%20100%2C%20orderBy%3A%20tradeVolumeUSD%2C%20orderDirection%3A%20desc)%20%7B%0A%20%20%20%20symbol%0A%20%20%20%20id%0A%20%20%20%20tokenDayData(first%3A%201%2C%20orderBy%3A%20date%2C%20orderDirection%3A%20desc)%20%7B%0A%20%20%20%20%20%20priceUSD%0A%20%20%20%20%20%20date%0A%20%20%20%20%7D%0A%20%20%20%20tradeVolumeUSD%0A%20%20%7D%0A%7D%0A",
         referrerPolicy: "strict-origin-when-cross-origin",
         body:
-          '{"query":"{\\n  tokens(where: {tradeVolumeUSD_gt: 0}, first: 100, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    symbol\\n    id\\n    tokenDayData(first: 1, orderBy: date, orderDirection: desc) {\\n      priceUSD\\n      date\\n    }\\n    tradeVolumeUSD\\n  }\\n}\\n","variables":null,"operationName":null}',
+          '{"query":"{\\n  tokens(where: {tradeVolumeUSD_gt: 0}, first: 100, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    symbol\\n  decimals\\n    id\\n    tokenDayData(first: 1, orderBy: date, orderDirection: desc) {\\n      priceUSD\\n      date\\n    }\\n    tradeVolumeUSD\\n  }\\n}\\n","variables":null,"operationName":null}',
         method: "POST",
         mode: "cors",
         credentials: "omit"
@@ -556,6 +571,12 @@ module.exports = class PriceOracle {
       tokens[t.id.toLowerCase()] = symbol;
 
       tokenMaps[t.id.toLowerCase()] = symbol;
+
+      this.tokenCollector.add({
+        symbol: t.symbol,
+        address: t.id,
+        decimals: parseInt(t.decimals),
+      })
 
       if (t.tokenDayData && t.tokenDayData[0] && t.tokenDayData[0].priceUSD) {
         const { priceUSD } = t.tokenDayData[0];
@@ -585,7 +606,7 @@ module.exports = class PriceOracle {
       },
       "referrer": "https://info.hyperjump.fi/",
       "referrerPolicy": "strict-origin-when-cross-origin",
-      "body": "{\"operationName\":\"tokens\",\"variables\":{},\"query\":\"fragment TokenFields on Token {\\n  id\\n  name\\n  symbol\\n  derivedBNB\\n  tradeVolume\\n  tradeVolumeUSD\\n  untrackedVolumeUSD\\n  totalLiquidity\\n  txCount\\n  __typename\\n}\\n\\nquery tokens {\\n  tokens(first: 200, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    ...TokenFields\\n    __typename\\n  }\\n}\\n\"}",
+      "body": "{\"operationName\":\"tokens\",\"variables\":{},\"query\":\"fragment TokenFields on Token {\\n  id\\n  name\\n  symbol\\n decimals\\n derivedBNB\\n  tradeVolume\\n  tradeVolumeUSD\\n  untrackedVolumeUSD\\n  totalLiquidity\\n  txCount\\n  __typename\\n}\\n\\nquery tokens {\\n  tokens(first: 200, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    ...TokenFields\\n    __typename\\n  }\\n}\\n\"}",
       "method": "POST",
       "mode": "cors"
     });
@@ -599,6 +620,12 @@ module.exports = class PriceOracle {
         const symbol = t.symbol.toLowerCase();
         tokens[t.id.toLowerCase()] = symbol;
         tokenMaps[t.id.toLowerCase()] = symbol;
+
+        this.tokenCollector.add({
+          symbol: t.symbol,
+          address: t.id,
+          decimals: parseInt(t.decimals),
+        })
 
         // risky price catch; only what we really need: BHC token is really crazy!
         if (t.derivedBNB && allPrices['bnb']) {

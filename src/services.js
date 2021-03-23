@@ -2,11 +2,13 @@
 
 let balances;
 let cache;
+let cacheManager;
 let database;
 let db;
 let priceOracle;
 let platforms;
 let http;
+let tokenCollector;
 
 const Cache = require("timed-cache");
 const Sqlite = require("better-sqlite3");
@@ -15,6 +17,10 @@ const Db = require("./db");
 const Balances = require("./balances");
 const Platforms = require("./platforms/platforms");
 const PriceOracle = require("./price_oracle");
+const TokenCollector = require("./token/token_collector");
+const cacheManagerInstance = require('cache-manager');
+const fsStore = require('cache-manager-fs-hash');
+const path = require("path");
 
 module.exports = {
   Utils: require("./utils"),
@@ -37,7 +43,7 @@ module.exports = {
       return priceOracle;
     }
 
-    return (priceOracle = new PriceOracle(this));
+    return (priceOracle = new PriceOracle(this, this.getTokenCollector()));
   },
 
   getPlatforms() {
@@ -59,12 +65,40 @@ module.exports = {
     return (cache = new Cache());
   },
 
+  getCacheManager() {
+    if (cacheManager) {
+      return cacheManager;
+    }
+
+    const cacheDir = path.resolve(__dirname, '../var/cache')
+
+    const diskCache = cacheManagerInstance.caching({
+      store: fsStore,
+      options: {
+        path: cacheDir,
+        ttl: 60 * 24 * 30,
+        subdirs: true,
+        zip: false,
+      }
+    });
+
+    return cacheManager = diskCache;
+  },
+
   getBalances() {
     if (balances) {
       return balances;
     }
 
     return (balances = new Balances(this.getCache(), this.getPriceOracle()));
+  },
+
+  getTokenCollector() {
+    if (tokenCollector) {
+      return tokenCollector;
+    }
+
+    return (tokenCollector = new TokenCollector(this.getCacheManager()));
   },
 
   getDb() {

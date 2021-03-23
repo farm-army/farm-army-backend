@@ -1,0 +1,52 @@
+[
+  {
+    "symbol": "wbnb",
+    "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+    "decimals": 18
+  },
+  {
+    "symbol": "egg",
+    "address": "0xf952fc3ca7325cc27d15885d37117676d25bfda6",
+    "decimals": 18
+  },
+  {
+    "symbol": "cake",
+    "address": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "decimals": 18
+  },
+  {
+    "symbol": "beth",
+    "address": "0x250632378e573c6be1ac2f97fcdf00515d0aa91b",
+    "decimals": 18
+  },
+  {
+    "symbol": "mdg",
+    "address": "0xc1edcc306e6faab9da629efca48670be4678779d",
+    "decimals": 18
+  },
+  {
+    "symbol": "salt",
+    "address": "0x2849b1ae7e04a3d9bc288673a92477cf63f28af4",
+    "decimals": 18
+  },
+  {
+    "symbol": "alloy",
+    "address": "0x5ef5994fa33ff4eb6c82d51ee1dc145c546065bd",
+    "decimals": 18
+  },
+  {
+    "symbol": "banana",
+    "address": "0x603c7f932ed1fc6575303d8fb018fdcbb0f39a95",
+    "decimals": 18
+  },
+  {
+    "symbol": "slme",
+    "address": "0x4fcfa6cc8914ab455b5b33df916d90bfe70b6ab1",
+    "decimals": 18
+  },
+  {
+    "symbol": "juld",
+    "address": "0x5a41f637c3f7553dba6ddc2d3ca92641096577ea",
+    "decimals": 18
+  }
+]
