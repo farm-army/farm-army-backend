@@ -292,7 +292,7 @@
       "addLiquidityLink": "https://exchange.pancakeswap.finance/#/add/0xc4957a864245aa4373be1f33ae24e93876b7dfe1/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "infoLink": "https://pancakeswap.info/pair/0x24bC428812B5F382b6551716c51a75F71F612CC8",
       "otherAssetSymbol": "TTDX",
-      "weight": 200,
+      "weight": 0,
       "type": "lp",
       "provider": {
         "value": "pancake",
@@ -309,7 +309,9 @@
       "address": "0xD13BBDa5061c99F770B675e2E0B1380B332fe227",
       "type": "vault"
     },
-    "strategyAddress": "0xE4E38e2bC5Adda3B93790f31E146212672afb6cA"
+    "strategyAddress": "0xE4E38e2bC5Adda3B93790f31E146212672afb6cA",
+    "depositIssue": true,
+    "disabled": true
   },
   {
     "id": 10,
@@ -1193,7 +1195,7 @@
       "address": "0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
       "pid": 0,
       "type": "single",
-      "priceLpAsset": "BANANA-BNB-NON-FUEL",
+      "priceLpAsset": "BANANA-BNB",
       "addLiquidityLink": "https://dex.apeswap.finance/#/swap?inputCurrency=0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
       "infoLink": "https://info.apeswap.finance/pairs/0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
       "provider": {
@@ -1210,5 +1212,66 @@
       "type": "vault"
     },
     "strategyAddress": "0x7b9Ec0d578230f252F332B8B2c632f4467f7c2B8"
+  },
+  {
+    "id": 40,
+    "name": "GFCE-BNB",
+    "img": "asset",
+    "route": "/gfce-bnb",
+    "asset": {
+      "symbol": "GFCE-BNB-BANANA",
+      "label": "GFCE-BNB",
+      "decimals": 18,
+      "address": "0xD7903933B10504a7C67f191285a6A7E5A233fD3B",
+      "pid": 16,
+      "addLiquidityLink": "https://dex.apeswap.finance/#/add/ETH/0x94BaBBE728D9411612Ee41b20241a6FA251b26Ce",
+      "infoLink": "https://info.apeswap.finance/pair/0xD7903933B10504a7C67f191285a6A7E5A233fD3B",
+      "otherAssetSymbol": "GFCE",
+      "type": "lp",
+      "provider": {
+        "value": "apeswap",
+        "label": "Apeswap",
+        "masterAddress": "0x5c8D727b265DBAfaba67E050f2f739cAeEB4A6F9"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "GFCE-BNB-BANANA-VAULT",
+      "label": "GFCE-BNB-BANANA-VAULT",
+      "decimals": 18,
+      "address": "0xD4D4C2e8d4297D8a28693bb2F3a89989E524D3a1",
+      "type": "vault"
+    },
+    "strategyAddress": "0xD76eAf7EA4dd631eBF3e4269086DF9d0B024f5A0"
+  },
+  {
+    "id": 41,
+    "name": "GFCE-BANANA",
+    "img": "asset",
+    "route": "/gfce-banana",
+    "asset": {
+      "symbol": "GFCE-BANANA-BANANA",
+      "label": "GFCE-BANANA",
+      "decimals": 18,
+      "address": "0x9C87cae57f0962997d9bd66C24f3425d20543e3d",
+      "pid": 15,
+      "addLiquidityLink": "https://dex.apeswap.finance/#/add/ETH/0x94BaBBE728D9411612Ee41b20241a6FA251b26Ce",
+      "infoLink": "https://info.apeswap.finance/pair/0x9C87cae57f0962997d9bd66C24f3425d20543e3d",
+      "firstAssetSymbol": "BANANA",
+      "otherAssetSymbol": "GFCE",
+      "type": "lp",
+      "provider": {
+        "value": "apeswap",
+        "label": "Apeswap",
+        "masterAddress": "0x5c8D727b265DBAfaba67E050f2f739cAeEB4A6F9"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "GFCE-BANANA-BANANA-VAULT",
+      "label": "GFCE-BANANA-BANANA-VAULT",
+      "decimals": 18,
+      "address": "0xc3D6d27FF4F607C803Fd31cc31BbDcDd116773d9",
+      "type": "vault"
+    },
+    "strategyAddress": "0xbFb7c6DD4037285A387d021fDad9383A71871d96"
   }
 ]

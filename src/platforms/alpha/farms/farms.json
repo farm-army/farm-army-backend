@@ -1,0 +1,500 @@
+[
+  {
+    "tokenLogos": [
+      "/static/tokens/bnb.png",
+      "/static/tokens/cake.png"
+    ],
+    "exchange": {
+      "name": "Pancake",
+      "lpTokenPrefix": "PancakeSwap LP Token",
+      "logo": "/static/tokens/cake.png",
+      "reward": {
+        "tokenName": "CAKE",
+        "rewardPerPoolPerYear": "0",
+        "rewardTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "rewardBNBLpTokenAddress": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6"
+      },
+      "lpSymbol": "Cake-LPs"
+    },
+    "name": "BNB/CAKE",
+    "id": "1",
+    "leverages": [
+      1,
+      1.5,
+      2,
+      2.5
+    ],
+    "workFactor": "0.625",
+    "killFactor": "0.7",
+    "tokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+    "goblinAddress": "0xaa00f2b7dd0de46c6fc9655dbadd80ac91a66869",
+    "lpTokenAddress": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6",
+    "lpStakingAddress": "0x73feaa1ee314f8c655e354234017be2193c9e24e",
+    "strategies": {
+      "AllBNBOnly": "0x06a34a95b3e1064295e93e9c92c15a4ebfed7eef",
+      "TwoSided": "0x93db96377706693b0c4548efaddb73dce4a3f14b",
+      "Liquidate": "0x034c0d2b94a2b843c3cccae6be0f74f44b5dd3f9",
+      "WithdrawMinimizeTrading": "0xbd1c05cbe5f7c625bb7877caa23ba461abae4887"
+    },
+    "debtRatioThresholds": [
+      0,
+      60,
+      63.64,
+      66.74,
+      95
+    ],
+    "hasTradingFeeAPY": true,
+    "hasFarmingAPY": true,
+    "category": "YF",
+    "migratingToV2": false
+  },
+  {
+    "tokenLogos": [
+      "/static/tokens/bnb.png",
+      "/static/tokens/busd.png"
+    ],
+    "exchange": {
+      "name": "Pancake",
+      "lpTokenPrefix": "PancakeSwap LP Token",
+      "logo": "/static/tokens/cake.png",
+      "reward": {
+        "tokenName": "CAKE",
+        "rewardPerPoolPerYear": "0",
+        "rewardTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "rewardBNBLpTokenAddress": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6"
+      },
+      "lpSymbol": "Cake-LPs"
+    },
+    "name": "BNB/BUSD",
+    "id": "2",
+    "leverages": [
+      1,
+      1.5,
+      2,
+      2.5,
+      3
+    ],
+    "workFactor": "0.7",
+    "killFactor": "0.8",
+    "tokenAddress": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+    "goblinAddress": "0x08d871ddad70bd3aef3fecfbf4350debc57d8264",
+    "lpTokenAddress": "0x1b96b92314c44b159149f7e0303511fb2fc4774f",
+    "lpStakingAddress": "0x73feaa1ee314f8c655e354234017be2193c9e24e",
+    "strategies": {
+      "AllBNBOnly": "0x06a34a95b3e1064295e93e9c92c15a4ebfed7eef",
+      "TwoSided": "0x1805f590c13ec9c59a197400f56b4b0d1adec796",
+      "Liquidate": "0x034c0d2b94a2b843c3cccae6be0f74f44b5dd3f9",
+      "WithdrawMinimizeTrading": "0xbd1c05cbe5f7c625bb7877caa23ba461abae4887"
+    },
+    "debtRatioThresholds": [
+      0,
+      66.67,
+      72.73,
+      76.28,
+      95
+    ],
+    "hasTradingFeeAPY": true,
+    "hasFarmingAPY": true,
+    "category": "YF",
+    "migratingToV2": false
+  },
+  {
+    "tokenLogos": [
+      "/static/tokens/bnb.png",
+      "/static/tokens/btcb.png"
+    ],
+    "exchange": {
+      "name": "Pancake",
+      "lpTokenPrefix": "PancakeSwap LP Token",
+      "logo": "/static/tokens/cake.png",
+      "reward": {
+        "tokenName": "CAKE",
+        "rewardPerPoolPerYear": "0",
+        "rewardTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "rewardBNBLpTokenAddress": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6"
+      },
+      "lpSymbol": "Cake-LPs"
+    },
+    "name": "BNB/BTCB",
+    "id": "15",
+    "leverages": [
+      1,
+      1.5,
+      2,
+      2.5,
+      3
+    ],
+    "workFactor": "0.7",
+    "killFactor": "0.8",
+    "tokenAddress": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+    "goblinAddress": "0x549ef362657a3e3923793a494db3d89e3e5fda35",
+    "lpTokenAddress": "0x7561eee90e24f3b348e1087a005f78b4c8453524",
+    "lpStakingAddress": "0x73feaa1ee314f8c655e354234017be2193c9e24e",
+    "strategies": {
+      "AllBNBOnly": "0x06a34a95b3e1064295e93e9c92c15a4ebfed7eef",
+      "TwoSided": "0x8240600913c1a8b3d80b29245d94f2af09facac8",
+      "Liquidate": "0x034c0d2b94a2b843c3cccae6be0f74f44b5dd3f9",
+      "WithdrawMinimizeTrading": "0xbd1c05cbe5f7c625bb7877caa23ba461abae4887"
+    },
+    "debtRatioThresholds": [
+      0,
+      66.67,
+      72.73,
+      76.28,
+      95
+    ],
+    "hasTradingFeeAPY": true,
+    "hasFarmingAPY": true,
+    "category": "YF",
+    "migratingToV2": false
+  },
+  {
+    "tokenLogos": [
+      "/static/tokens/bnb.png",
+      "/static/tokens/eth.png"
+    ],
+    "exchange": {
+      "name": "Pancake",
+      "lpTokenPrefix": "PancakeSwap LP Token",
+      "logo": "/static/tokens/cake.png",
+      "reward": {
+        "tokenName": "CAKE",
+        "rewardPerPoolPerYear": "0",
+        "rewardTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "rewardBNBLpTokenAddress": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6"
+      },
+      "lpSymbol": "Cake-LPs"
+    },
+    "name": "BNB/ETH",
+    "id": "14",
+    "leverages": [
+      1,
+      1.5,
+      2,
+      2.5,
+      3
+    ],
+    "workFactor": "0.7",
+    "killFactor": "0.8",
+    "tokenAddress": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+    "goblinAddress": "0x2f050b64ede3b1d21184435974bb1d2fe02012b6",
+    "lpTokenAddress": "0x70d8929d04b60af4fb9b58713ebcf18765ade422",
+    "lpStakingAddress": "0x73feaa1ee314f8c655e354234017be2193c9e24e",
+    "strategies": {
+      "AllBNBOnly": "0x06a34a95b3e1064295e93e9c92c15a4ebfed7eef",
+      "TwoSided": "0x40bdfa199ef27143f0ce292a162450cf5512c390",
+      "Liquidate": "0x034c0d2b94a2b843c3cccae6be0f74f44b5dd3f9",
+      "WithdrawMinimizeTrading": "0xbd1c05cbe5f7c625bb7877caa23ba461abae4887"
+    },
+    "debtRatioThresholds": [
+      0,
+      66.67,
+      72.73,
+      76.28,
+      95
+    ],
+    "hasTradingFeeAPY": true,
+    "hasFarmingAPY": true,
+    "category": "YF",
+    "migratingToV2": false
+  },
+  {
+    "tokenLogos": [
+      "/static/tokens/bnb.png",
+      "/static/tokens/usdt.png"
+    ],
+    "exchange": {
+      "name": "Pancake",
+      "lpTokenPrefix": "PancakeSwap LP Token",
+      "logo": "/static/tokens/cake.png",
+      "reward": {
+        "tokenName": "CAKE",
+        "rewardPerPoolPerYear": "0",
+        "rewardTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "rewardBNBLpTokenAddress": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6"
+      },
+      "lpSymbol": "Cake-LPs"
+    },
+    "name": "BNB/USDT",
+    "id": "17",
+    "leverages": [
+      1,
+      1.5,
+      2,
+      2.5,
+      3
+    ],
+    "workFactor": "0.7",
+    "killFactor": "0.8",
+    "tokenAddress": "0x55d398326f99059ff775485246999027b3197955",
+    "goblinAddress": "0x3974071481dad49ac94ca1756f311c872ec3e26e",
+    "lpTokenAddress": "0x20bcc3b8a0091ddac2d0bc30f68e6cbb97de59cd",
+    "lpStakingAddress": "0x73feaa1ee314f8c655e354234017be2193c9e24e",
+    "strategies": {
+      "AllBNBOnly": "0x06a34a95b3e1064295e93e9c92c15a4ebfed7eef",
+      "TwoSided": "0x7fcae7fd3cb010c30751420a2553bc8232923eae",
+      "Liquidate": "0x034c0d2b94a2b843c3cccae6be0f74f44b5dd3f9",
+      "WithdrawMinimizeTrading": "0xbd1c05cbe5f7c625bb7877caa23ba461abae4887"
+    },
+    "debtRatioThresholds": [
+      0,
+      66.67,
+      72.73,
+      76.28,
+      95
+    ],
+    "hasTradingFeeAPY": true,
+    "hasFarmingAPY": true,
+    "category": "YF",
+    "migratingToV2": false
+  },
+  {
+    "tokenLogos": [
+      "/static/tokens/bnb.png",
+      "/static/tokens/uni.png"
+    ],
+    "exchange": {
+      "name": "Pancake",
+      "lpTokenPrefix": "PancakeSwap LP Token",
+      "logo": "/static/tokens/cake.png",
+      "reward": {
+        "tokenName": "CAKE",
+        "rewardPerPoolPerYear": "0",
+        "rewardTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "rewardBNBLpTokenAddress": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6"
+      },
+      "lpSymbol": "Cake-LPs"
+    },
+    "name": "BNB/UNI",
+    "id": "25",
+    "leverages": [
+      1,
+      1.5,
+      2,
+      2.5,
+      3
+    ],
+    "workFactor": "0.7",
+    "killFactor": "0.8",
+    "tokenAddress": "0xbf5140a22578168fd562dccf235e5d43a02ce9b1",
+    "goblinAddress": "0xfdcdf8d07db8c5b33fbf46f41eced421d9d32bee",
+    "lpTokenAddress": "0x4269e7f43a63cea1ad7707be565a94a9189967e9",
+    "lpStakingAddress": "0x73feaa1ee314f8c655e354234017be2193c9e24e",
+    "strategies": {
+      "AllBNBOnly": "0x06a34a95b3e1064295e93e9c92c15a4ebfed7eef",
+      "TwoSided": "0x397f4605b953134f2cf5f1176a25a7f5171c2925",
+      "Liquidate": "0x034c0d2b94a2b843c3cccae6be0f74f44b5dd3f9",
+      "WithdrawMinimizeTrading": "0xbd1c05cbe5f7c625bb7877caa23ba461abae4887"
+    },
+    "debtRatioThresholds": [
+      0,
+      66.67,
+      72.73,
+      76.28,
+      95
+    ],
+    "hasTradingFeeAPY": true,
+    "hasFarmingAPY": true,
+    "category": "YF",
+    "migratingToV2": false
+  },
+  {
+    "tokenLogos": [
+      "/static/tokens/bnb.png",
+      "/static/tokens/link.png"
+    ],
+    "exchange": {
+      "name": "Pancake",
+      "lpTokenPrefix": "PancakeSwap LP Token",
+      "logo": "/static/tokens/cake.png",
+      "reward": {
+        "tokenName": "CAKE",
+        "rewardPerPoolPerYear": "0",
+        "rewardTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "rewardBNBLpTokenAddress": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6"
+      },
+      "lpSymbol": "Cake-LPs"
+    },
+    "name": "BNB/LINK",
+    "id": "7",
+    "leverages": [
+      1,
+      1.5,
+      2,
+      2.5,
+      3
+    ],
+    "workFactor": "0.7",
+    "killFactor": "0.8",
+    "tokenAddress": "0xf8a0bf9cf54bb92f17374d9e9a321e6a111a51bd",
+    "goblinAddress": "0x047683a9a7958c02ca86b6eecea1f8acfbd54f4f",
+    "lpTokenAddress": "0xaebe45e3a03b734c68e5557ae04bfc76917b4686",
+    "lpStakingAddress": "0x73feaa1ee314f8c655e354234017be2193c9e24e",
+    "strategies": {
+      "AllBNBOnly": "0x06a34a95b3e1064295e93e9c92c15a4ebfed7eef",
+      "TwoSided": "0xbd6600922422fd84f02b47b40cd83a4f25d1b12d",
+      "Liquidate": "0x034c0d2b94a2b843c3cccae6be0f74f44b5dd3f9",
+      "WithdrawMinimizeTrading": "0xbd1c05cbe5f7c625bb7877caa23ba461abae4887"
+    },
+    "debtRatioThresholds": [
+      0,
+      66.67,
+      72.73,
+      76.28,
+      95
+    ],
+    "hasTradingFeeAPY": true,
+    "hasFarmingAPY": true,
+    "category": "YF",
+    "migratingToV2": false
+  },
+  {
+    "tokenLogos": [
+      "/static/tokens/bnb.png",
+      "/static/tokens/band.png"
+    ],
+    "exchange": {
+      "name": "Pancake",
+      "lpTokenPrefix": "PancakeSwap LP Token",
+      "logo": "/static/tokens/cake.png",
+      "reward": {
+        "tokenName": "CAKE",
+        "rewardPerPoolPerYear": "0",
+        "rewardTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "rewardBNBLpTokenAddress": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6"
+      },
+      "lpSymbol": "Cake-LPs"
+    },
+    "name": "BNB/BAND",
+    "id": "4",
+    "leverages": [
+      1,
+      1.5,
+      2,
+      2.5,
+      3
+    ],
+    "workFactor": "0.7",
+    "killFactor": "0.8",
+    "tokenAddress": "0xad6caeb32cd2c308980a548bd0bc5aa4306c6c18",
+    "goblinAddress": "0xc3c16508e77e99e67cfcd30b765e48a5a33d4c9d",
+    "lpTokenAddress": "0xc639187ef82271d8f517de6feae4faf5b517533c",
+    "lpStakingAddress": "0x73feaa1ee314f8c655e354234017be2193c9e24e",
+    "strategies": {
+      "AllBNBOnly": "0x06a34a95b3e1064295e93e9c92c15a4ebfed7eef",
+      "TwoSided": "0xdda8648fbfed2f2abd0dfca404c7d8f154ccb8b7",
+      "Liquidate": "0x034c0d2b94a2b843c3cccae6be0f74f44b5dd3f9",
+      "WithdrawMinimizeTrading": "0xbd1c05cbe5f7c625bb7877caa23ba461abae4887"
+    },
+    "debtRatioThresholds": [
+      0,
+      66.67,
+      72.73,
+      76.28,
+      95
+    ],
+    "hasTradingFeeAPY": true,
+    "hasFarmingAPY": true,
+    "category": "YF",
+    "migratingToV2": false
+  },
+  {
+    "tokenLogos": [
+      "/static/tokens/bnb.png",
+      "/static/tokens/yfi.png"
+    ],
+    "exchange": {
+      "name": "Pancake",
+      "lpTokenPrefix": "PancakeSwap LP Token",
+      "logo": "/static/tokens/cake.png",
+      "reward": {
+        "tokenName": "CAKE",
+        "rewardPerPoolPerYear": "0",
+        "rewardTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "rewardBNBLpTokenAddress": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6"
+      },
+      "lpSymbol": "Cake-LPs"
+    },
+    "name": "BNB/YFI",
+    "id": "24",
+    "leverages": [
+      1,
+      1.5,
+      2,
+      2.5,
+      3
+    ],
+    "workFactor": "0.7",
+    "killFactor": "0.8",
+    "tokenAddress": "0x88f1a5ae2a3bf98aeaf342d26b30a79438c9142e",
+    "goblinAddress": "0x3663aedebb70dcf0a64e2600233d6913dd3ecf2b",
+    "lpTokenAddress": "0x68ff2ca47d27db5ac0b5c46587645835dd51d3c1",
+    "lpStakingAddress": "0x73feaa1ee314f8c655e354234017be2193c9e24e",
+    "strategies": {
+      "AllBNBOnly": "0x06a34a95b3e1064295e93e9c92c15a4ebfed7eef",
+      "TwoSided": "0x44a819a0d93849bd6587cd6000e91bf8b302deaa",
+      "Liquidate": "0x034c0d2b94a2b843c3cccae6be0f74f44b5dd3f9",
+      "WithdrawMinimizeTrading": "0xbd1c05cbe5f7c625bb7877caa23ba461abae4887"
+    },
+    "debtRatioThresholds": [
+      0,
+      66.67,
+      72.73,
+      76.28,
+      95
+    ],
+    "hasTradingFeeAPY": true,
+    "hasFarmingAPY": true,
+    "category": "YF",
+    "migratingToV2": false
+  },
+  {
+    "tokenLogos": [
+      "/static/tokens/bnb.png",
+      "/static/tokens/alpha.png"
+    ],
+    "exchange": {
+      "name": "Pancake",
+      "lpTokenPrefix": "PancakeSwap LP Token",
+      "logo": "/static/tokens/cake.png",
+      "reward": {
+        "tokenName": "CAKE",
+        "rewardPerPoolPerYear": "0",
+        "rewardTokenAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "rewardBNBLpTokenAddress": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6"
+      },
+      "lpSymbol": "Cake-LPs"
+    },
+    "name": "BNB/ALPHA",
+    "id": "16",
+    "leverages": [
+      1,
+      1.5,
+      2,
+      2.5
+    ],
+    "workFactor": "0.625",
+    "killFactor": "0.7",
+    "tokenAddress": "0xa1faa113cbe53436df28ff0aee54275c13b40975",
+    "goblinAddress": "0xa0aa119e0324d864831c24b78e85927526e42d52",
+    "lpTokenAddress": "0x4e0f3385d932f7179dee045369286ffa6b03d887",
+    "lpStakingAddress": "0x73feaa1ee314f8c655e354234017be2193c9e24e",
+    "strategies": {
+      "AllBNBOnly": "0x06a34a95b3e1064295e93e9c92c15a4ebfed7eef",
+      "TwoSided": "0xb8bd068dd234d9cc06763cfbcea53ecd60e82b8d",
+      "Liquidate": "0x034c0d2b94a2b843c3cccae6be0f74f44b5dd3f9",
+      "WithdrawMinimizeTrading": "0xbd1c05cbe5f7c625bb7877caa23ba461abae4887"
+    },
+    "debtRatioThresholds": [
+      0,
+      60,
+      63.64,
+      66.74,
+      95
+    ],
+    "hasTradingFeeAPY": true,
+    "hasFarmingAPY": true,
+    "category": "YF",
+    "migratingToV2": false
+  }
+]
