@@ -17,6 +17,74 @@
     "tokenDecimals": 18
   },
   {
+    "sousId": 80,
+    "tokenName": "VOODOO",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0x0598E8180d8dF40318043fA5E349Eb40B6873c5d",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://voodoo.supra.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.010416667",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 79,
+    "tokenName": "BREW",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0x2fa41e8512372FeD85C101fda7700E1a2AfC0Fe4",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://cafeswap.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.004236111",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 78,
+    "tokenName": "RAMEN",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0xCC20695f08871466289A65673a818728E760A965",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://ramenswap.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.006944444",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 77,
+    "tokenName": "SLME",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0xBc14A31a76b8B49a6600dA33003a6dD2A90dA2C1",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://slime.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.004513889",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
     "sousId": 76,
     "tokenName": "HPS",
     "stakingTokenName": "ALLOY",
