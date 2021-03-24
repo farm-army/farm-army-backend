@@ -203,6 +203,36 @@
       ]
     },
     {
+      "id": "BDOLLAR_VLP_BDO_VDOLLAR-sBDO",
+      "pid": 33,
+      "symbol": "BDO/VDOLLAR VLP",
+      "strategy": "bDollar Banks",
+      "strategyLink": "https://bdollar.fi/shares",
+      "platform": "bDollar",
+      "defaultExpansion": false,
+      "lpAddress": "0x33979E0814Dc36942D92F5807F08a2819a38fd66",
+      "strategyAddress": "0xc6e22b0f925004259e2C05b9EbEffBC00B83e70F",
+      "earnTokens": [
+        "BFI",
+        "BDO"
+      ],
+      "earnTokenAddress": [
+        "",
+        ""
+      ],
+      "linkLP": "https://bsc.valuedefi.io/#/add/0x18a78291a4a903ee5e8d8ce5a5945ecd2388c0f8",
+      "lpTokens": [
+        {
+          "symbol": "BDO",
+          "decimals": 18
+        },
+        {
+          "symbol": "VDOLLAR",
+          "decimals": 18
+        }
+      ]
+    },
+    {
       "id": "CakeLPsBDOBUSD",
       "pid": 1,
       "symbol": "sBDO-BUSD CAKE-LP",
@@ -258,6 +288,36 @@
         },
         {
           "symbol": "BNB",
+          "decimals": 18
+        }
+      ]
+    },
+    {
+      "id": "WBNBBUSD-vBSWAP",
+      "pid": 30,
+      "symbol": "BNB/BUSD",
+      "strategy": "ValueDefi",
+      "platform": "ValueDefi",
+      "strategyLink": "https://bsc.valuedefi.io/#/vfarm",
+      "defaultExpansion": false,
+      "lpAddress": "0x522361C3aa0d81D1726Fa7d40aA14505d0e097C9",
+      "strategyAddress": "0x6e2878f15c00bB1B0487CE0aD6CaD20CfF52D961",
+      "earnTokens": [
+        "BFI",
+        "BDO"
+      ],
+      "earnTokenAddress": [
+        "",
+        ""
+      ],
+      "linkLP": "https://bsc.valuedefi.io/#/add/0x522361C3aa0d81D1726Fa7d40aA14505d0e097C9",
+      "lpTokens": [
+        {
+          "symbol": "BNB",
+          "decimals": 18
+        },
+        {
+          "symbol": "BUSD",
           "decimals": 18
         }
       ]
@@ -618,8 +678,8 @@
       "id": "MEEBETH-MES",
       "pid": 15,
       "symbol": "MEE/BETH",
-      "strategy": "WantanMee.finance",
-      "platform": "WantanMee.finance",
+      "strategy": "WantanMee",
+      "platform": "WantanMee",
       "strategyLink": "https://wantanmee.finance/details/vSwapMEE_BETH",
       "defaultExpansion": false,
       "lpAddress": "0x9e58888e164dbf758838c144ba2ac82114d31b65",
@@ -648,8 +708,8 @@
       "id": "MESWBNB-MES",
       "pid": 16,
       "symbol": "MES/WBNB",
-      "strategy": "WantanMee.finance",
-      "platform": "WantanMee.finance",
+      "strategy": "WantanMee",
+      "platform": "WantanMee",
       "strategyLink": "https://wantanmee.finance/details/vSwapMES_BNB",
       "defaultExpansion": false,
       "lpAddress": "0xF85cFcFDfc630815d106634257F38C23e71781B3",
@@ -678,8 +738,8 @@
       "id": "MDGMDO-MDG",
       "pid": 17,
       "symbol": "MDG/MDO",
-      "strategy": "MidasGold.network",
-      "platform": "MidasGold.network",
+      "strategy": "MidasGold",
+      "platform": "MidasGold",
       "strategyLink": "https://midasgold.network/farms",
       "defaultExpansion": false,
       "lpAddress": "0x1E1916B3FADcCB6c73FA938C91300c70A486276C",
@@ -708,8 +768,8 @@
       "id": "MDGWBNB-MDG",
       "pid": 18,
       "symbol": "MDG/WBNB",
-      "strategy": "MidasGold.network",
-      "platform": "MidasGold.network",
+      "strategy": "MidasGold",
+      "platform": "MidasGold",
       "strategyLink": "https://midasgold.network/farms",
       "defaultExpansion": false,
       "lpAddress": "0x5D69a0e5E91d1E66459A76Da2a4D8863E97cD90d",
@@ -738,8 +798,8 @@
       "id": "MDGBUSD-MDG",
       "pid": 19,
       "symbol": "MDG/BUSD",
-      "strategy": "MidasGold.network",
-      "platform": "MidasGold.network",
+      "strategy": "MidasGold",
+      "platform": "MidasGold",
       "strategyLink": "https://midasgold.network/farms",
       "defaultExpansion": false,
       "lpAddress": "0xB10C30f83eBb92F5BaEf377168C4bFc9740d903c",
@@ -819,7 +879,8 @@
           "symbol": "WBNB",
           "decimals": 18
         }
-      ]
+      ],
+      "status": "FINISHED"
     },
     {
       "id": "IRON_BUSD-SIL",
@@ -849,7 +910,8 @@
           "symbol": "BUSD",
           "decimals": 18
         }
-      ]
+      ],
+      "status": "FINISHED"
     },
     {
       "id": "SIL_IRON-SIL",
@@ -879,14 +941,15 @@
           "symbol": "IRON",
           "decimals": 18
         }
-      ]
+      ],
+      "status": "FINISHED"
     },
     {
       "id": "vBSWAPWBNB_70-vBSWAP",
       "pid": 24,
       "symbol": "vBSWAP-WBNB 70/30 VLP",
-      "strategy": "ValueDeFi",
-      "platform": "ValueDeFi",
+      "strategy": "ValueDefi",
+      "platform": "ValueDefi",
       "strategyLink": "https://bsc.valuedefi.io/#/vfarm",
       "defaultExpansion": false,
       "lpAddress": "0x8275397136568949Ae499FbC02CB73b7b0Ef1A33",
@@ -937,6 +1000,96 @@
         },
         {
           "symbol": "WBNB",
+          "decimals": 18
+        }
+      ]
+    },
+    {
+      "id": "CakeLP_CAKE_WBNB-CAKE",
+      "pid": 27,
+      "symbol": "CAKE/BNB",
+      "strategy": "PancakeSwap",
+      "platform": "PancakeSwap",
+      "strategyLink": "https://pancakeswap.finance/farms",
+      "defaultExpansion": false,
+      "lpAddress": "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6",
+      "strategyAddress": "0xD2aE88D0CAEaF08797822e268b25b90F5deA2651",
+      "earnTokens": [
+        "BFI",
+        "BDO"
+      ],
+      "earnTokenAddress": [
+        "",
+        ""
+      ],
+      "linkLP": "https://exchange.pancakeswap.finance/#/add/ETH/0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+      "lpTokens": [
+        {
+          "symbol": "CAKE",
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "decimals": 18
+        }
+      ]
+    },
+    {
+      "id": "MidasGold_VLP_MDG2_BUSD-MDG2",
+      "pid": 28,
+      "symbol": "MDG2/BUSD 70/30 VLP",
+      "strategy": "MidasGold",
+      "platform": "MidasGold",
+      "strategyLink": "https://midasgold.network/farms",
+      "defaultExpansion": false,
+      "lpAddress": "0x10ec5323f8ee8e19a684e4d5f7056ac96cbec372",
+      "strategyAddress": "0x472a49263ec0891dFB2D889827fA3A9C410F74Ae",
+      "earnTokens": [
+        "BFI",
+        "BDO"
+      ],
+      "earnTokenAddress": [
+        "",
+        ""
+      ],
+      "linkLP": "https://bsc.valuedefi.io/#/add/0x10ec5323f8ee8e19a684e4d5f7056ac96cbec372",
+      "lpTokens": [
+        {
+          "symbol": "MDG2",
+          "decimals": 18
+        },
+        {
+          "symbol": "BUSD",
+          "decimals": 18
+        }
+      ]
+    },
+    {
+      "id": "MidasGold_VLP_MDG2_WBNB-MDG2",
+      "pid": 29,
+      "symbol": "MDG2/WBNB 70/30 VLP",
+      "strategy": "MidasGold",
+      "platform": "MidasGold",
+      "strategyLink": "https://midasgold.network/farms",
+      "defaultExpansion": false,
+      "lpAddress": "0xdF89fA18936530a79f2e3CBf8aCD559ff8952F80",
+      "strategyAddress": "0xfF4618bE6E1754f451b12a147f564eac10F49459",
+      "earnTokens": [
+        "BFI",
+        "BDO"
+      ],
+      "earnTokenAddress": [
+        "",
+        ""
+      ],
+      "linkLP": "https://bsc.valuedefi.io/#/add/0xdF89fA18936530a79f2e3CBf8aCD559ff8952F80",
+      "lpTokens": [
+        {
+          "symbol": "MDG2",
+          "decimals": 18
+        },
+        {
+          "symbol": "BUSD",
           "decimals": 18
         }
       ]
