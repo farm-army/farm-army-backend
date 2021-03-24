@@ -41,14 +41,14 @@
       "label": "FUEL-BNB",
       "decimals": 18,
       "address": "0xd26092c6ce6fb359302a9453dc0c7f312794ef7e",
-      "addLiquidityLink": "https://streetswap.vip/#/add/0x2090c8295769791ab7a3cf1cc6e0aa19f35e441a/BNB",
-      "infoLink": "https://streetswap.info/pair/0xd26092c6ce6fb359302a9453dc0c7f312794ef7e",
+      "addLiquidityLink": "https://swap.hyperjump.fi/#/add/0x2090c8295769791ab7a3cf1cc6e0aa19f35e441a/BNB",
+      "infoLink": "https://info.hyperjump.fi/pair/0xd26092c6ce6fb359302a9453dc0c7f312794ef7e",
       "weight": 2925,
       "otherAssetSymbol": "FUEL",
       "type": "lp",
       "provider": {
-        "value": "streetswap",
-        "label": "StreetSwap"
+        "value": "hyperjump",
+        "label": "Hyperjump"
       },
       "inFuel": true
     },
@@ -323,14 +323,14 @@
       "label": "BHC-BNB",
       "decimals": 18,
       "address": "0xd46e7f33f8788f87d6017074dc4e4d781d3df91e",
-      "addLiquidityLink": "https://streetswap.vip/#/add/0x6fd7c98458a943f469e1cf4ea85b173f5cd342f4/BNB",
-      "infoLink": "https://streetswap.info/pair/0xd46e7f33f8788f87d6017074dc4e4d781d3df91e",
+      "addLiquidityLink": "https://swap.hyperjump.fi/#/add/0x6fd7c98458a943f469e1cf4ea85b173f5cd342f4/BNB",
+      "infoLink": "https://info.hyperjump.fi/pair/0xd46e7f33f8788f87d6017074dc4e4d781d3df91e",
       "weight": 149,
       "otherAssetSymbol": "BHC",
       "type": "lp",
       "provider": {
-        "value": "streetswap",
-        "label": "StreetSwap"
+        "value": "hyperjump",
+        "label": "Hyperjump"
       },
       "inFuel": true
     },
@@ -1273,5 +1273,35 @@
       "type": "vault"
     },
     "strategyAddress": "0xbFb7c6DD4037285A387d021fDad9383A71871d96"
+  },
+  {
+    "id": 42,
+    "name": "BEL-BNB",
+    "img": "asset",
+    "route": "/bel-bnb",
+    "asset": {
+      "symbol": "BEL-BNB-CAKE",
+      "label": "BEL-BNB",
+      "decimals": 18,
+      "address": "0xAB97952a2806D5c92b7046c7aB13a72A87e0097b",
+      "pid": 86,
+      "addLiquidityLink": "https://exchange.pancakeswap.finance/#/add/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c/0x8443f091997f06a61670b735ed92734f5628692f",
+      "infoLink": "https://pancakeswap.info/pair/0xAB97952a2806D5c92b7046c7aB13a72A87e0097b",
+      "type": "lp",
+      "otherAssetSymbol": "BEL",
+      "provider": {
+        "value": "pancake",
+        "label": "PancakeSwap",
+        "masterAddress": "0x73feaa1eE314F8c655E354234017bE2193C9E24E"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "BEL-BNB-CAKE-VAULT",
+      "label": "BEL-BNB-CAKE-VAULT",
+      "decimals": 18,
+      "address": "0x30C7FB75ffC22a2DC1b0ecbe2bdf69c7b6B619C2",
+      "type": "vault"
+    },
+    "strategyAddress": "0xF02E771df7AB0D127F566b2D494Fb3fEb2ff875E"
   }
 ]
