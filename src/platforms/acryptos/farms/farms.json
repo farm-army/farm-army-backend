@@ -514,8 +514,8 @@
     "tags": [
       "acs",
       "pancake",
-      "v2",
-      "boost"
+      null,
+      "v2"
     ]
   },
   {
@@ -536,6 +536,7 @@
     "tags": [
       "acs",
       "pancake",
+      null,
       "v2"
     ]
   },
@@ -557,6 +558,7 @@
     "tags": [
       "acs",
       "pancake",
+      null,
       "v2"
     ]
   },
@@ -578,6 +580,7 @@
     "tags": [
       "acs",
       "pancake",
+      null,
       "v2"
     ]
   },
@@ -598,6 +601,7 @@
     "tags": [
       "acs",
       "pancake",
+      null,
       "v2"
     ]
   },
@@ -666,6 +670,7 @@
     "tags": [
       "acs",
       "pancake",
+      null,
       "v2"
     ]
   },
@@ -686,6 +691,7 @@
     "tags": [
       "acs",
       "pancake",
+      null,
       "v2"
     ]
   },
@@ -956,30 +962,6 @@
       "acs",
       "pancake",
       "v2"
-    ]
-  },
-  {
-    "vault": {
-      "address": "0xC109d8B9F89Bd939B81Df4Fe47951f9683207102",
-      "token": "0xdC6C130299E53ACD2CC2D291fa10552CA2198a6b",
-      "tokenSymbol": "WATCH-BNB",
-      "harvesterRewardSymbol": "CAKE",
-      "strategy": "0x603CeEf3ef79E986a1B13A1861632Dc759Cf470f",
-      "walletInfo": "<a class=\"wallet-info\" href=\"https://exchange.pancakeswap.finance/#/add/BNB/0x7A9f28EB62C791422Aa23CeAE1dA9C847cBeC9b0\" target=\"_blank\"><span data-i18n=\"get\">Get</span> WATCH-BNB</a>",
-      "fromBlock": 5958888,
-      "defaultRoiDay": 0.0057229589041095895
-    },
-    "farm": {
-      "master": "0xb1fa5d3c0111d8E9ac43A19ef17b281D5D4b474E",
-      "token": "0xC109d8B9F89Bd939B81Df4Fe47951f9683207102",
-      "tokenSymbol": "acsWATCH-BNB",
-      "transactionInfo": "<a class=\"wallet-info\" href=\"https://docs.acryptos.com/fees#acs-farms-v2\" target=\"_blank\">Harvest fee: 0.03 ACS</a>"
-    },
-    "tags": [
-      "acs",
-      "pancake",
-      "v2",
-      "new"
     ]
   },
   {

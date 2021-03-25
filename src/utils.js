@@ -13,110 +13,51 @@ const fetch = require("node-fetch");
 const AbortController = require("abort-controller");
 const { MulticallProvider } = require("@0xsequence/multicall").providers;
 
-const ENDPOINTS_MULTICALL = {
-  // Recommend
-  "https://bsc-dataseed.binance.org/": new MulticallProvider(
-    new providers.JsonRpcProvider("https://bsc-dataseed.binance.org/"),
-    {
-      contract: module.exports.MULTI_CALL_CONTRACT,
-      timeWindow: "15"
-    }
-  ),
-  "https://bsc-dataseed1.defibit.io/": new MulticallProvider(
-    new providers.JsonRpcProvider("https://bsc-dataseed1.defibit.io/"),
-    {
-      contract: module.exports.MULTI_CALL_CONTRACT,
-      timeWindow: "15"
-    }
-  ),
-  "https://bsc-dataseed1.ninicoin.io/": new MulticallProvider(
-    new providers.JsonRpcProvider("https://bsc-dataseed1.ninicoin.io/"),
-    {
-      contract: module.exports.MULTI_CALL_CONTRACT,
-      timeWindow: "15"
-    }
-  ),
 
-  // Backups
-  "https://bsc-dataseed2.defibit.io/": new MulticallProvider(
-    new providers.JsonRpcProvider("https://bsc-dataseed2.defibit.io/"),
+const HOSTS = Object.freeze([
+  // Recommend
+  'https://bsc-dataseed.binance.org/',
+  'https://bsc-dataseed1.defibit.io/',
+  'https://bsc-dataseed1.ninicoin.io/',
+
+  // Backup
+  'https://bsc-dataseed2.defibit.io/',
+  'https://bsc-dataseed3.defibit.io/',
+  'https://bsc-dataseed4.defibit.io/',
+  'https://bsc-dataseed2.ninicoin.io/',
+  'https://bsc-dataseed3.ninicoin.io/',
+  'https://bsc-dataseed4.ninicoin.io/',
+  'https://bsc-dataseed1.binance.org/',
+  'https://bsc-dataseed2.binance.org/',
+  'https://bsc-dataseed3.binance.org/',
+  'https://bsc-dataseed4.binance.org/',
+]);
+
+const ENDPOINTS_MULTICALL = {};
+const ENDPOINTS_RPC_WRAPPER = {};
+
+HOSTS.forEach(url => {
+  ENDPOINTS_MULTICALL[url] = new MulticallProvider(
+    new providers.JsonRpcProvider({
+      url: url,
+      timeout: 10000,
+    }),
     {
-      contract: module.exports.MULTI_CALL_CONTRACT,
-      timeWindow: "15"
-    }
-  ),
-  "https://bsc-dataseed3.defibit.io/": new MulticallProvider(
-    new providers.JsonRpcProvider("https://bsc-dataseed3.defibit.io/"),
-    {
-      contract: module.exports.MULTI_CALL_CONTRACT,
-      timeWindow: "15"
-    }
-  ),
-  "https://bsc-dataseed4.defibit.io/": new MulticallProvider(
-    new providers.JsonRpcProvider("https://bsc-dataseed4.defibit.io/"),
-    {
-      contract: module.exports.MULTI_CALL_CONTRACT,
-      timeWindow: "15"
-    }
-  ),
-  "https://bsc-dataseed2.ninicoin.io/": new MulticallProvider(
-    new providers.JsonRpcProvider("https://bsc-dataseed2.ninicoin.io/"),
-    {
-      contract: module.exports.MULTI_CALL_CONTRACT,
-      timeWindow: "15"
-    }
-  ),
-  "https://bsc-dataseed3.ninicoin.io/": new MulticallProvider(
-    new providers.JsonRpcProvider("https://bsc-dataseed3.ninicoin.io/"),
-    {
-      contract: module.exports.MULTI_CALL_CONTRACT,
-      timeWindow: "15"
-    }
-  ),
-  "https://bsc-dataseed4.ninicoin.io/": new MulticallProvider(
-    new providers.JsonRpcProvider("https://bsc-dataseed4.ninicoin.io/"),
-    {
-      contract: module.exports.MULTI_CALL_CONTRACT,
-      timeWindow: "15"
+      contract: "0xB94858b0bB5437498F5453A16039337e5Fdc269C",
+      timeWindow: 300
     }
   )
-};
 
-const ENDPOINTS = Object.keys(ENDPOINTS_MULTICALL);
-
-const ENDPOINTS_RPC_WRAPPER = {
-  // Recommend
-  "https://bsc-dataseed.binance.org/": new Web3(
-    "https://bsc-dataseed.binance.org/"
-  ),
-  "https://bsc-dataseed1.defibit.io/": new Web3(
-    "https://bsc-dataseed1.defibit.io/"
-  ),
-  "https://bsc-dataseed1.ninicoin.io/": new Web3(
-    "https://bsc-dataseed1.ninicoin.io/"
-  ),
-
-  // Backups
-  "https://bsc-dataseed2.defibit.io/": new Web3(
-    "https://bsc-dataseed2.defibit.io/"
-  ),
-  "https://bsc-dataseed3.defibit.io/": new Web3(
-    "https://bsc-dataseed3.defibit.io/"
-  ),
-  "https://bsc-dataseed4.defibit.io/": new Web3(
-    "https://bsc-dataseed4.defibit.io/"
-  ),
-
-  "https://bsc-dataseed2.ninicoin.io/": new Web3(
-    "https://bsc-dataseed2.ninicoin.io/"
-  ),
-  "https://bsc-dataseed3.ninicoin.io/": new Web3(
-    "https://bsc-dataseed3.ninicoin.io/"
-  ),
-  "https://bsc-dataseed4.ninicoin.io/": new Web3(
-    "https://bsc-dataseed4.ninicoin.io/"
+  const f1 = new Web3.providers.HttpProvider(url, {
+      keepAlive: true,
+      timeout: 10000,
+    }
   )
-};
+
+  ENDPOINTS_RPC_WRAPPER[url] = new Web3(f1)
+});
+
+const ENDPOINTS = Object.freeze(Object.keys(ENDPOINTS_MULTICALL));
 
 let allApys = {};
 
@@ -153,7 +94,6 @@ module.exports = {
     const endpoints = _.shuffle(ENDPOINTS.slice());
 
     let i = 0;
-    const max = endpoints.length;
 
     const hash = crypto
       .createHash("md5")
@@ -172,7 +112,7 @@ module.exports = {
         const done = [];
 
         let throwIt;
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 2; i++) {
           if (i > 0) {
             existing = _.shuffle(
               existing.slice().filter(item => item !== endpointInner)
@@ -194,7 +134,7 @@ module.exports = {
             ).all([chunk]);
             return foo;
           } catch (e) {
-            console.error("failed", endpointInner, chunk.length);
+            console.error("failed", "multiCall", endpointInner, chunk.length, e.message);
             throwIt = e;
           }
         }
@@ -205,11 +145,6 @@ module.exports = {
           } ${JSON.stringify(done)} ${throwIt.message.substring(0, 100)}`
         );
       });
-
-      i += 1;
-      if (i > max - 1) {
-        i = 0;
-      }
     }
 
     return (await Promise.all(promises.map(fn => fn()))).flat(1);
@@ -255,7 +190,13 @@ module.exports = {
       });
     });
 
-    const results = await Promise.all([...promises]);
+    let results
+    try {
+      results = await Promise.all([...promises]);
+    } catch (e) {
+      console.error('failed', 'multiCallRpcIndex', e.message)
+      return [];
+    }
 
     const final = {};
     results.forEach(call => {

@@ -341,10 +341,10 @@ module.exports = class pancakebunny {
           symbol: "?",
           amount: balance / 1e18
         };
-      }
 
-      if (farm.extra && farm.extra.tokenPrice) {
-        result.deposit.usd = (result.deposit.amount * farm.extra.tokenPrice) / 1e18;
+        if (farm.extra && farm.extra.tokenPrice) {
+          result.deposit.usd = (result.deposit.amount * farm.extra.tokenPrice) / 1e18;
+        }
       }
 
       let pendingUSD
@@ -353,7 +353,7 @@ module.exports = class pancakebunny {
       let pendingCAKE
 
       // old ones
-      if (calls[farm.id].infoOfPool) {
+      if (calls[farm.id] && calls[farm.id].infoOfPool) {
         let { pUSD, pBNB, pBUNNY, pCAKE } = calls[farm.id].infoOfPool;
 
         pendingUSD = pUSD;
@@ -476,7 +476,12 @@ module.exports = class pancakebunny {
       });
     }
 
-    return await Utils.multiCallIndexBy("id", tokenCalls);
+    try {
+      return await Utils.multiCallIndexBy("id", tokenCalls);
+    } catch (e) {
+      console.log('pankebunny info fetch issue', e.message)
+      return {}
+    }
   }
 
   async getDetails(address, id) {

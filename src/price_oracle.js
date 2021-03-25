@@ -59,9 +59,10 @@ const tokenMaps = {
 };
 
 module.exports = class PriceOracle {
-  constructor(services, tokenCollector) {
+  constructor(services, tokenCollector, lpTokenCollector) {
     this.services = services;
     this.tokenCollector = tokenCollector;
+    this.lpTokenCollector = lpTokenCollector;
   }
 
   async update() {
@@ -347,65 +348,41 @@ module.exports = class PriceOracle {
       const token0Price = allPrices[token0.symbol.toLowerCase()];
       const token1Price = allPrices[token1.symbol.toLowerCase()];
 
-      pricesLpAddressMap[c.address.toLowerCase()] = [
+      pricesLpAddressMap[c.address.toLowerCase()] = Object.freeze([
         {
           address: c.token0.toLowerCase(),
           symbol: token0.symbol.toLowerCase(),
-          amount:
-            (c.reserve0 * 10 ** (c.decimals - token0.decimals)) / c.totalSupply
+          amount: (c.reserve0 * 10 ** (c.decimals - token0.decimals)) / c.totalSupply
         },
         {
           address: c.token1.toLowerCase(),
           symbol: token1.symbol.toLowerCase(),
-          amount:
-            (c.reserve1 * 10 ** (c.decimals - token1.decimals)) / c.totalSupply
+          amount: (c.reserve1 * 10 ** (c.decimals - token1.decimals)) / c.totalSupply
         }
-      ];
+      ]);
+
+      this.lpTokenCollector.add(c.address, pricesLpAddressMap[c.address.toLowerCase()]);
 
       if (!token0Price || !token1Price) {
-        console.log(
-          "Missing price:",
-          token0.symbol.toLowerCase(),
-          token0Price,
-          token1.symbol.toLowerCase(),
-          token1Price
-        );
+        console.log("Missing price:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+
         return;
       }
 
-      let x0 = reserve0.toNumber() / (10 ** token0.decimals);
-      let x1 = reserve1.toNumber() / (10 ** token1.decimals);
+      let x0p = (reserve0.toNumber() / (10 ** token0.decimals)) * token0Price
+      let x1p = (reserve1.toNumber() / (10 ** token1.decimals)) * token1Price
 
-      let x0p = x0 * token0Price
-      let x1p = x1 * token1Price
-
-      let numberNew = (x0p + x1p) / c.totalSupply * (10 ** c.decimals)
-
-      // @TODO: can now be possible dropped be dropped
-      const token0StakedInUsd = reserve0
-        .div(token0.decimals)
-        .times(token0Price);
-      const token1StakedInUsd = reserve1
-        .div(token1.decimals)
-        .times(token1Price);
-
-      const totalStakedInUsd = token0StakedInUsd.plus(token1StakedInUsd);
-      const lpTokenPrice = totalStakedInUsd
-        .dividedBy(c.totalSupply)
-        .times(c.decimals);
-
-      const number = numberNew;
+      const number = (x0p + x1p) / c.totalSupply * (10 ** c.decimals);
       if (number <= 0) {
-        console.log(
-          "Missing lp price:",
-          token0.symbol.toLowerCase(),
-          token1.symbol.toLowerCase()
-        );
+        console.log("Missing lp price:", token0.symbol.toLowerCase(), token1.symbol.toLowerCase());
+
         return;
       }
 
       pricesAddress[c.address.toLowerCase()] = number;
     });
+
+    this.lpTokenCollector.save();
   }
 
   async tokenMaps() {

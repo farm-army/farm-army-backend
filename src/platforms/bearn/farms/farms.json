@@ -203,6 +203,36 @@
       ]
     },
     {
+      "id": "BDOLLAR_VLP_BDOBUSD_8020-sBDO",
+      "pid": 34,
+      "symbol": "BDO/BUSD 80/20 VLP",
+      "strategy": "bDollar Banks",
+      "strategyLink": "https://bdollar.fi/shares",
+      "platform": "bDollar",
+      "defaultExpansion": false,
+      "lpAddress": "0x257Dd90481a39E3eD42B518fBA3bEb390D9137Df",
+      "strategyAddress": "0xD6045a5d10a6CEc0b42877eB42cbA5e622c4319C",
+      "earnTokens": [
+        "BFI",
+        "BDO"
+      ],
+      "earnTokenAddress": [
+        "",
+        ""
+      ],
+      "linkLP": "https://bsc.valuedefi.io/#/add/0x257Dd90481a39E3eD42B518fBA3bEb390D9137Df",
+      "lpTokens": [
+        {
+          "symbol": "BDO",
+          "decimals": 18
+        },
+        {
+          "symbol": "BUSD",
+          "decimals": 18
+        }
+      ]
+    },
+    {
       "id": "BDOLLAR_VLP_BDO_VDOLLAR-sBDO",
       "pid": 33,
       "symbol": "BDO/VDOLLAR VLP",
@@ -230,7 +260,8 @@
           "symbol": "VDOLLAR",
           "decimals": 18
         }
-      ]
+      ],
+      "status": "FINISHED"
     },
     {
       "id": "CakeLPsBDOBUSD",
