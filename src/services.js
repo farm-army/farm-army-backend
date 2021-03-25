@@ -9,6 +9,8 @@ let priceOracle;
 let platforms;
 let http;
 let tokenCollector;
+let addressTransactions;
+let liquidityTokenCollector;
 
 const Cache = require("timed-cache");
 const Sqlite = require("better-sqlite3");
@@ -21,9 +23,19 @@ const TokenCollector = require("./token/token_collector");
 const cacheManagerInstance = require('cache-manager');
 const fsStore = require('cache-manager-fs-hash');
 const path = require("path");
+const AddressTransactions = require("./token/address_transactions");
+const LiquidityTokenCollector = require("./token/liquidity_token_collector");
+
+const _ = require("lodash");
+const fs = require("fs");
 
 module.exports = {
   Utils: require("./utils"),
+
+  CONFIG: _.merge(
+    JSON.parse(fs.readFileSync(path.resolve(__dirname, "../config.json"), "utf8")),
+    fs.existsSync(path.resolve(__dirname, "../config.json.local")) ? JSON.parse(fs.readFileSync(path.resolve(__dirname, "../config.json.local"), "utf8")) : {}
+  ),
 
   getDatabase() {
     if (database) {
@@ -43,7 +55,11 @@ module.exports = {
       return priceOracle;
     }
 
-    return (priceOracle = new PriceOracle(this, this.getTokenCollector()));
+    return (priceOracle = new PriceOracle(
+      this,
+      this.getTokenCollector(),
+      this.getLiquidityTokenCollector()
+    ));
   },
 
   getPlatforms() {
@@ -65,6 +81,29 @@ module.exports = {
     return (cache = new Cache());
   },
 
+  getAddressTransactions() {
+    if (addressTransactions) {
+      return addressTransactions;
+    }
+
+    return (addressTransactions = new AddressTransactions(
+      this.getPlatforms(),
+      this.getUserCacheManager(),
+      module.exports.CONFIG['BSCSCAN_API_KEY'],
+      this.getLiquidityTokenCollector(),
+    ));
+  },
+
+  getLiquidityTokenCollector() {
+    if (liquidityTokenCollector) {
+      return liquidityTokenCollector;
+    }
+
+    return (liquidityTokenCollector = new LiquidityTokenCollector(
+      this.getCacheManager(),
+    ));
+  },
+
   getCacheManager() {
     if (cacheManager) {
       return cacheManager;
@@ -76,7 +115,27 @@ module.exports = {
       store: fsStore,
       options: {
         path: cacheDir,
-        ttl: 60 * 24 * 30,
+        ttl: 60 * 60 * 24 * 30,
+        subdirs: true,
+        zip: false,
+      }
+    });
+
+    return cacheManager = diskCache;
+  },
+
+  getUserCacheManager() {
+    if (cacheManager) {
+      return cacheManager;
+    }
+
+    const cacheDir = path.resolve(__dirname, '../var/cache')
+
+    const diskCache = cacheManagerInstance.caching({
+      store: fsStore,
+      options: {
+        path: cacheDir,
+        ttl: 60 * 60 * 3,
         subdirs: true,
         zip: false,
       }
@@ -121,7 +180,10 @@ module.exports = {
     return (http = new Http(
       this.getPriceOracle(),
       this.getPlatforms(),
-      this.getBalances()
+      this.getBalances(),
+      this.getAddressTransactions(),
+      this.getTokenCollector(),
+      this.getLiquidityTokenCollector(),
     ));
   }
 };
