@@ -45,7 +45,7 @@
     "harvest": true,
     "tokenPerBlock": "0.0001736111111",
     "sortOrder": 2,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18,
     "burnFee": 0
   },
@@ -243,9 +243,9 @@
     "poolCategory": "Core",
     "projectLink": "https://binance.com/",
     "harvest": true,
-    "tokenPerBlock": "0.3863194444",
+    "tokenPerBlock": "0.1736111111",
     "sortOrder": 10,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18,
     "burnFee": 10
   },
@@ -273,5 +273,155 @@
     "isFinished": false,
     "tokenDecimals": 8,
     "burnFee": 0
+  },
+  {
+    "sousId": 11,
+    "tokenName": "CAKE",
+    "stakingTokenName": "SALT",
+    "stakingTokenAddress": {
+      "56": "0x2849b1aE7E04A3D9Bc288673A92477CF63F28aF4",
+      "97": "0x85582d24455caaf44fc4f914bdca2a6cb73e6681"
+    },
+    "contractAddress": {
+      "56": "0x0A30d83b4396F34b25EB1956a79FabB5d3BaB931",
+      "97": "0x9FcA113B2D4E64462229E107A8F4Aa7359D055F5"
+    },
+    "rewardTokenAddress": {
+      "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://pancakeswap.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.003681388889",
+    "sortOrder": 12,
+    "isFinished": true,
+    "tokenDecimals": 18,
+    "burnFee": 15
+  },
+  {
+    "sousId": 12,
+    "tokenName": "WBNB",
+    "stakingTokenName": "SALT",
+    "stakingTokenAddress": {
+      "56": "0x2849b1aE7E04A3D9Bc288673A92477CF63F28aF4",
+      "97": "0x85582d24455caaf44fc4f914bdca2a6cb73e6681"
+    },
+    "contractAddress": {
+      "56": "0xA5e2C1ABc73F411180e0a2371a3A546B402A96F9",
+      "97": "0xF08d05d91426A63aB35Ef7f4bBC6E8717B59e838"
+    },
+    "rewardTokenAddress": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xec5dcb5dbf4b114c9d0f65bccab49ec54f6a0867"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://binance.com/",
+    "harvest": true,
+    "tokenPerBlock": "0.00005541666667",
+    "sortOrder": 13,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "burnFee": 15
+  },
+  {
+    "sousId": 13,
+    "tokenName": "BLUE",
+    "stakingTokenName": "SALT-BLUE",
+    "stakingTokenAddress": {
+      "56": "0xc7953f27b4b7049e41c3c10354e995870cb8e109",
+      "97": "0x85582d24455caaf44fc4f914bdca2a6cb73e6681"
+    },
+    "contractAddress": {
+      "56": "0xdF62141c12f54B17B7e6F158eD36629856E74C97",
+      "97": "0xF08d05d91426A63aB35Ef7f4bBC6E8717B59e838"
+    },
+    "rewardTokenAddress": {
+      "56": "0x36C0556c2B15aED79F842675Ff030782738eF9e8",
+      "97": "0xec5dcb5dbf4b114c9d0f65bccab49ec54f6a0867"
+    },
+    "poolCategory": "Community",
+    "projectLink": "https://blueswap.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.005787037037",
+    "sortOrder": 14,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "burnFee": 0
+  },
+  {
+    "sousId": 14,
+    "tokenName": "SLME",
+    "stakingTokenName": "SALT-SLME",
+    "stakingTokenAddress": {
+      "56": "0xbea4674a61cccc6b735999511ba9a8ba3aa26a85",
+      "97": "0x85582d24455caaf44fc4f914bdca2a6cb73e6681"
+    },
+    "contractAddress": {
+      "56": "0xD4A55D437Da5753da2f937518Fd797f5d2211E1c",
+      "97": "0xF08d05d91426A63aB35Ef7f4bBC6E8717B59e838"
+    },
+    "rewardTokenAddress": {
+      "56": "0x4fcfa6cc8914ab455b5b33df916d90bfe70b6ab1",
+      "97": "0xec5dcb5dbf4b114c9d0f65bccab49ec54f6a0867"
+    },
+    "poolCategory": "Community",
+    "projectLink": "https://slime.finance/",
+    "harvest": true,
+    "tokenPerBlock": ".002899305556",
+    "sortOrder": 15,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "burnFee": 30
+  },
+  {
+    "sousId": 15,
+    "tokenName": "BUSD",
+    "stakingTokenName": "SALT-BUSD",
+    "stakingTokenAddress": {
+      "56": "0x6596f770786915556C47E301cC8290aa14288d99",
+      "97": "0x85582d24455caaf44fc4f914bdca2a6cb73e6681"
+    },
+    "contractAddress": {
+      "56": "0x94fcecEdBe1050d079c60b1EDeb1D4D16B3BF76C",
+      "97": "0xF08d05d91426A63aB35Ef7f4bBC6E8717B59e838"
+    },
+    "rewardTokenAddress": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": "0xec5dcb5dbf4b114c9d0f65bccab49ec54f6a0867"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://binance.com/",
+    "harvest": true,
+    "tokenPerBlock": "0.01261865625",
+    "sortOrder": 16,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "burnFee": 100
+  },
+  {
+    "sousId": 16,
+    "tokenName": "MOMO",
+    "stakingTokenName": "SALT-MOMO",
+    "stakingTokenAddress": {
+      "56": "0x2e63a08ca1ab08a3f1eb0ca0d3f0a1a4278dfa8f",
+      "97": "0x85582d24455caaf44fc4f914bdca2a6cb73e6681"
+    },
+    "contractAddress": {
+      "56": "0xb72893D5ABFce5940F3f8F401eFCdb2A95E5f7c7",
+      "97": "0xF08d05d91426A63aB35Ef7f4bBC6E8717B59e838"
+    },
+    "rewardTokenAddress": {
+      "56": "0xafb2997fe9a99022e61c7e01b974e0e3d7704b02",
+      "97": "0xec5dcb5dbf4b114c9d0f65bccab49ec54f6a0867"
+    },
+    "poolCategory": "Community",
+    "projectLink": "https://momoprotocol.finance/#/",
+    "harvest": true,
+    "tokenPerBlock": "0.01157407407",
+    "sortOrder": 16,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "burnFee": 5
   }
 ]
