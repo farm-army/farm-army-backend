@@ -6,7 +6,7 @@ const Farms = require('./farms/farms.json');
 
 const PancakePlatformFork = require("../common").PancakePlatformFork;
 
-module.exports = class SpaceFarm extends PancakePlatformFork {
+module.exports = class space extends PancakePlatformFork {
   static MASTER_ADDRESS = "0xc8cf0767fB2258b23B90636A5e21cfaD113e8182"
 
   getRawFarms() {
@@ -18,7 +18,7 @@ module.exports = class SpaceFarm extends PancakePlatformFork {
   }
 
   getName() {
-    return 'farm.space';
+    return 'space';
   }
 
   getFarmLink() {
@@ -45,6 +45,6 @@ module.exports = class SpaceFarm extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return saltswap.MASTER_ADDRESS;
+    return space.MASTER_ADDRESS;
   }
 };

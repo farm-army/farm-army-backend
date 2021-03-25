@@ -56,6 +56,7 @@ const tokenMaps = {
   "0x603c7f932ed1fc6575303d8fb018fdcbb0f39a95": "banana",
   "0x4fcfa6cc8914ab455b5b33df916d90bfe70b6ab1": "slime",
   "0x5A41F637C3f7553dBa6dDC2D3cA92641096577ea": "juld",
+  "0x0abd3E3502c15ec252f90F64341cbA74a24fba06": "space",
 };
 
 module.exports = class PriceOracle {
