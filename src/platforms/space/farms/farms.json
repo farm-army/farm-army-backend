@@ -1,0 +1,227 @@
+[
+    {
+        "pid": 0,
+        "lpSymbol": "SPACE-WBNB LP",
+        "lpAddresses": {
+            "97": "",
+            "56": "0x78D9a0c50F6484291b4122f61888Bb9EE71879Ff"
+        },
+        "tokenSymbol": "SPACE",
+        "tokenAddresses": {
+            "56": "0x0abd3E3502c15ec252f90F64341cbA74a24fba06",
+            "97": ""
+        },
+        "quoteTokenSymbol": "BNB",
+        "quoteTokenAdresses": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": ""
+        }
+    },
+    {
+        "pid": 1,
+        "lpSymbol": "SPACE-BUSD LP",
+        "lpAddresses": {
+            "97": "",
+            "56": "0x6B936c5C1FD7De08E03684b0588A87DBD8ce6b63"
+        },
+        "tokenSymbol": "SPACE",
+        "tokenAddresses": {
+            "56": "0x0abd3E3502c15ec252f90F64341cbA74a24fba06",
+            "97": ""
+        },
+        "quoteTokenSymbol": "BUSD",
+        "quoteTokenAdresses": {
+            "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+            "97": ""
+        }
+    },
+    {
+        "pid": 2,
+        "lpSymbol": "WBNB-BUSD LP",
+        "lpAddresses": {
+            "97": "",
+            "56": "0x1b96b92314c44b159149f7e0303511fb2fc4774f"
+        },
+        "tokenSymbol": "BNB",
+        "tokenAddresses": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": ""
+        },
+        "quoteTokenSymbol": "BUSD",
+        "quoteTokenAdresses": {
+            "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+            "97": ""
+        }
+    },
+    {
+        "pid": 11,
+        "isTokenOnly": true,
+        "lpSymbol": "SPACE",
+        "lpAddresses": {
+            "97": "",
+            "56": "0x6B936c5C1FD7De08E03684b0588A87DBD8ce6b63"
+        },
+        "tokenSymbol": "SPACE",
+        "tokenAddresses": {
+            "56": "0x0abd3E3502c15ec252f90F64341cbA74a24fba06",
+            "97": ""
+        },
+        "quoteTokenSymbol": "BUSD",
+        "quoteTokenAdresses": {
+            "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+            "97": ""
+        }
+    },
+    {
+        "pid": 3,
+        "isTokenOnly": true,
+        "lpSymbol": "WBNB",
+        "lpAddresses": {
+            "97": "",
+            "56": "0x1b96b92314c44b159149f7e0303511fb2fc4774f"
+        },
+        "tokenSymbol": "BNB",
+        "tokenAddresses": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": ""
+        },
+        "quoteTokenSymbol": "BUSD",
+        "quoteTokenAdresses": {
+            "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+            "97": ""
+        }
+    },
+    {
+        "pid": 4,
+        "isTokenOnly": true,
+        "lpSymbol": "BUSD",
+        "lpAddresses": {
+            "97": "",
+            "56": "0x1b96b92314c44b159149f7e0303511fb2fc4774f"
+        },
+        "tokenSymbol": "BUSD",
+        "tokenAddresses": {
+            "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+            "97": ""
+        },
+        "quoteTokenSymbol": "BNB",
+        "quoteTokenAdresses": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": ""
+        }
+    },
+    {
+        "pid": 5,
+        "isTokenOnly": true,
+        "lpSymbol": "ETH",
+        "lpAddresses": {
+            "97": "",
+            "56": "0x70d8929d04b60af4fb9b58713ebcf18765ade422"
+        },
+        "tokenSymbol": "ETH",
+        "tokenAddresses": {
+            "97": "",
+            "56": "0x2170ed0880ac9a755fd29b2688956bd959f933f8"
+        },
+        "quoteTokenSymbol": "BNB",
+        "quoteTokenAdresses": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": ""
+        }
+    },
+    {
+        "pid": 6,
+        "isTokenOnly": true,
+        "lpSymbol": "BTC",
+        "lpAddresses": {
+            "97": "",
+            "56": "0x7561eee90e24f3b348e1087a005f78b4c8453524"
+        },
+        "tokenSymbol": "BTC",
+        "tokenAddresses": {
+            "97": "",
+            "56": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c"
+        },
+        "quoteTokenSymbol": "BNB",
+        "quoteTokenAdresses": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": ""
+        }
+    },
+    {
+        "pid": 7,
+        "isTokenOnly": true,
+        "lpSymbol": "CAKE",
+        "lpAddresses": {
+            "97": "",
+            "56": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6"
+        },
+        "tokenSymbol": "CAKE",
+        "tokenAddresses": {
+            "97": "",
+            "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82"
+        },
+        "quoteTokenSymbol": "BNB",
+        "quoteTokenAdresses": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": ""
+        }
+    },
+    {
+        "pid": 8,
+        "isTokenOnly": true,
+        "lpSymbol": "XVS",
+        "lpAddresses": {
+            "97": "",
+            "56": "0x41182c32f854dd97ba0e0b1816022e0acb2fc0bb"
+        },
+        "tokenSymbol": "XVS",
+        "tokenAddresses": {
+            "97": "",
+            "56": "0xcf6bb5389c92bdda8a3747ddb454cb7a64626c63"
+        },
+        "quoteTokenSymbol": "BNB",
+        "quoteTokenAdresses": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": ""
+        }
+    },
+    {
+        "pid": 9,
+        "isTokenOnly": true,
+        "lpSymbol": "DGN",
+        "lpAddresses": {
+            "97": "",
+            "56": "0x5f4F524e4462D9e0a96334adBa82AD4C85BE8a48"
+        },
+        "tokenSymbol": "DGN",
+        "tokenAddresses": {
+            "97": "",
+            "56": "0x72f28c09be1342447fa01Ebc76eF508473d08c5c"
+        },
+        "quoteTokenSymbol": "BNB",
+        "quoteTokenAdresses": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": ""
+        }
+    },
+    {
+        "pid": 10,
+        "isTokenOnly": true,
+        "lpSymbol": "CRX",
+        "lpAddresses": {
+            "97": "",
+            "56": "0x4Bbf3f2eef2485DAc831167dB92D77735946AaCC"
+        },
+        "tokenSymbol": "CRX",
+        "tokenAddresses": {
+            "97": "",
+            "56": "0x97a30C692eCe9C317235d48287d23d358170FC40"
+        },
+        "quoteTokenSymbol": "BNB",
+        "quoteTokenAdresses": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": ""
+        }
+    }
+]
