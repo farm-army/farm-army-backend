@@ -1,0 +1,50 @@
+[
+    {
+        "pid": 0,
+        "lpSymbol": "WAULT-0-Day",
+        "lpAddresses": {
+            "56": "0x6Ff2d9e5891a7a7c554b80e0D1B791483C78BcE9"
+        },
+        "tokenSymbol": "WAULT",
+        "tokenAddresses": {
+            "56": "0x6Ff2d9e5891a7a7c554b80e0D1B791483C78BcE9"
+        },
+        "quoteTokenSymbol": "BUSD",
+        "quoteTokenAdresses": {
+            "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+            "97": ""
+        }
+    },
+    {
+        "pid": 1,
+        "lpSymbol": "WAULT-7-Day",
+        "lpAddresses": {
+            "56": "0x6Ff2d9e5891a7a7c554b80e0D1B791483C78BcE9"
+        },
+        "tokenSymbol": "WAULT",
+        "tokenAddresses": {
+            "56": "0x6Ff2d9e5891a7a7c554b80e0D1B791483C78BcE9"
+        },
+        "quoteTokenSymbol": "BUSD",
+        "quoteTokenAdresses": {
+            "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+            "97": ""
+        }
+    },
+    {
+        "pid": 2,
+        "lpSymbol": "WAULT-30-Day",
+        "lpAddresses": {
+            "56": "0x6Ff2d9e5891a7a7c554b80e0D1B791483C78BcE9"
+        },
+        "tokenSymbol": "WAULT",
+        "tokenAddresses": {
+            "56": "0x6Ff2d9e5891a7a7c554b80e0D1B791483C78BcE9"
+        },
+        "quoteTokenSymbol": "BUSD",
+        "quoteTokenAdresses": {
+            "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+            "97": ""
+        }
+    }
+]
