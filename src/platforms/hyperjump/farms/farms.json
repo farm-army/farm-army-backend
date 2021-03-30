@@ -54,6 +54,24 @@
     }
   },
   {
+    "pid": 27,
+    "lpSymbol": "ALLOY-BUSD",
+    "lpAddresses": {
+      "56": "0x6e94fb9c08f7e651bf0ed732708e5f148db061c6",
+      "97": "0x6e94fb9c08f7e651bf0ed732708e5f148db061c6"
+    },
+    "tokenSymbol": "ALLOY",
+    "tokenAddresses": {
+      "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+      "97": "0xC5FD6F3eB1f63082Daee9e09E17D870005962309"
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": ""
+    }
+  },
+  {
     "pid": 3,
     "lpSymbol": "BUSD-BNB",
     "lpAddresses": {
@@ -123,6 +141,330 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 36,
+    "lpSymbol": "GFCE-BNB",
+    "lpAddresses": {
+      "56": "0x29d0cd756013a929415ecde5c21879a3df03ffc3",
+      "97": "0x29d0cd756013a929415ecde5c21879a3df03ffc3"
+    },
+    "tokenSymbol": "GFCE",
+    "tokenAddresses": {
+      "56": "0x94babbe728d9411612ee41b20241a6fa251b26ce",
+      "97": "0x94babbe728d9411612ee41b20241a6fa251b26ce"
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 37,
+    "lpSymbol": "GFCE-ALLOY",
+    "lpAddresses": {
+      "56": "0x5bc1540f6984020100b68b9ca5dcdf53771d28cb",
+      "97": "0x5bc1540f6984020100b68b9ca5dcdf53771d28cb"
+    },
+    "tokenSymbol": "GFCE",
+    "tokenAddresses": {
+      "56": "0x94babbe728d9411612ee41b20241a6fa251b26ce",
+      "97": "0x94babbe728d9411612ee41b20241a6fa251b26ce"
+    },
+    "quoteTokenSymbol": "ALLOY",
+    "quoteTokenAdresses": {
+      "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+      "97": "0xC5FD6F3eB1f63082Daee9e09E17D870005962309"
+    }
+  },
+  {
+    "pid": 34,
+    "lpSymbol": "NAR-BNB",
+    "lpAddresses": {
+      "56": "0x1389003bcb228586648721a4f6187004dae01c51",
+      "97": "0x1389003bcb228586648721a4f6187004dae01c51"
+    },
+    "tokenSymbol": "NAR",
+    "tokenAddresses": {
+      "56": "0xa1303e6199b319a891b79685f0537d289af1fc83",
+      "97": "0xa1303e6199b319a891b79685f0537d289af1fc83"
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 35,
+    "lpSymbol": "NAR-ALLOY",
+    "lpAddresses": {
+      "56": "0x4a2d3cc966676f6bd912ca72ef0b911f3bcd3bc0",
+      "97": "0x4a2d3cc966676f6bd912ca72ef0b911f3bcd3bc0"
+    },
+    "tokenSymbol": "NAR",
+    "tokenAddresses": {
+      "56": "0xa1303e6199b319a891b79685f0537d289af1fc83",
+      "97": "0xa1303e6199b319a891b79685f0537d289af1fc83"
+    },
+    "quoteTokenSymbol": "ALLOY",
+    "quoteTokenAdresses": {
+      "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+      "97": "0xC5FD6F3eB1f63082Daee9e09E17D870005962309"
+    }
+  },
+  {
+    "pid": 32,
+    "lpSymbol": "BELUGA-BNB",
+    "lpAddresses": {
+      "56": "0xe1752d820d2ab5a4027d486b82cf4af137fe525b",
+      "97": "0xe1752d820d2ab5a4027d486b82cf4af137fe525b"
+    },
+    "tokenSymbol": "BELUGA",
+    "tokenAddresses": {
+      "56": "0x181de8c57c4f25eba9fd27757bbd11cc66a55d31",
+      "97": "0x181de8c57c4f25eba9fd27757bbd11cc66a55d31"
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 33,
+    "lpSymbol": "BELUGA-ALLOY",
+    "lpAddresses": {
+      "56": "0x208063655593ebe16384881b073ad38282d794a0",
+      "97": "0x208063655593ebe16384881b073ad38282d794a0"
+    },
+    "tokenSymbol": "BELUGA",
+    "tokenAddresses": {
+      "56": "0x181de8c57c4f25eba9fd27757bbd11cc66a55d31",
+      "97": "0x181de8c57c4f25eba9fd27757bbd11cc66a55d31"
+    },
+    "quoteTokenSymbol": "ALLOY",
+    "quoteTokenAdresses": {
+      "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+      "97": "0xC5FD6F3eB1f63082Daee9e09E17D870005962309"
+    }
+  },
+  {
+    "pid": 30,
+    "lpSymbol": "INNBC-BNB",
+    "lpAddresses": {
+      "56": "0x3b7c817b4cd3e9ad16f89826737098cfef3d1cae",
+      "97": "0x3b7c817b4cd3e9ad16f89826737098cfef3d1cae"
+    },
+    "tokenSymbol": "INNBC",
+    "tokenAddresses": {
+      "56": "0xdf1f0026374d4bcc490be5e316963cf6df2fff19",
+      "97": "0xdf1f0026374d4bcc490be5e316963cf6df2fff19"
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 31,
+    "lpSymbol": "INNBC-ALLOY",
+    "lpAddresses": {
+      "56": "0xe235e8ef57c96b71e17814010546a7580f2ee34e",
+      "97": "0xe235e8ef57c96b71e17814010546a7580f2ee34e"
+    },
+    "tokenSymbol": "INNBC",
+    "tokenAddresses": {
+      "56": "0xdf1f0026374d4bcc490be5e316963cf6df2fff19",
+      "97": "0xdf1f0026374d4bcc490be5e316963cf6df2fff19"
+    },
+    "quoteTokenSymbol": "ALLOY",
+    "quoteTokenAdresses": {
+      "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+      "97": "0xC5FD6F3eB1f63082Daee9e09E17D870005962309"
+    }
+  },
+  {
+    "pid": 28,
+    "lpSymbol": "OIL-BNB",
+    "lpAddresses": {
+      "56": "0xb313143c448d5512a5ddb1635cac1a47755e6acf",
+      "97": "0xb313143c448d5512a5ddb1635cac1a47755e6acf"
+    },
+    "tokenSymbol": "OIL",
+    "tokenAddresses": {
+      "56": "0xb1b17dff66d75b29d34f0bf8622c406d8219b507",
+      "97": "0xb1b17dff66d75b29d34f0bf8622c406d8219b507"
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 29,
+    "lpSymbol": "OIL-ALLOY",
+    "lpAddresses": {
+      "56": "0xaae49c1fabe387a7d872eceb182e2dff2924477a",
+      "97": "0xaae49c1fabe387a7d872eceb182e2dff2924477a"
+    },
+    "tokenSymbol": "OIL",
+    "tokenAddresses": {
+      "56": "0xb1b17dff66d75b29d34f0bf8622c406d8219b507",
+      "97": "0xb1b17dff66d75b29d34f0bf8622c406d8219b507"
+    },
+    "quoteTokenSymbol": "ALLOY",
+    "quoteTokenAdresses": {
+      "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+      "97": "0xC5FD6F3eB1f63082Daee9e09E17D870005962309"
+    }
+  },
+  {
+    "pid": 25,
+    "lpSymbol": "VOODOO-BNB",
+    "lpAddresses": {
+      "56": "0xabf46dce113e0bdc4714c21137713b60ede74f12",
+      "97": "0xabf46dce113e0bdc4714c21137713b60ede74f12"
+    },
+    "tokenSymbol": "VOODOO",
+    "tokenAddresses": {
+      "56": "0x68a66a7c35e037192f6e38c766d6692d54219e6d",
+      "97": "0x68a66a7c35e037192f6e38c766d6692d54219e6d"
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 26,
+    "lpSymbol": "VOODOO-ALLOY",
+    "lpAddresses": {
+      "56": "0x35ba1bb563748cb7050b78cd82e789defdf7881f",
+      "97": "0x35ba1bb563748cb7050b78cd82e789defdf7881f"
+    },
+    "tokenSymbol": "VOODOO",
+    "tokenAddresses": {
+      "56": "0x68a66a7c35e037192f6e38c766d6692d54219e6d",
+      "97": "0x68a66a7c35e037192f6e38c766d6692d54219e6d"
+    },
+    "quoteTokenSymbol": "ALLOY",
+    "quoteTokenAdresses": {
+      "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+      "97": "0xC5FD6F3eB1f63082Daee9e09E17D870005962309"
+    }
+  },
+  {
+    "pid": 23,
+    "lpSymbol": "BREW-BNB",
+    "lpAddresses": {
+      "56": "0xfe2fe7dacbd26089be277fbae90107e0fbe0438f",
+      "97": "0xfe2fe7dacbd26089be277fbae90107e0fbe0438f"
+    },
+    "tokenSymbol": "BREW",
+    "tokenAddresses": {
+      "56": "0x790be81c3ca0e53974be2688cdb954732c9862e1",
+      "97": "0x790be81c3ca0e53974be2688cdb954732c9862e1"
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 24,
+    "lpSymbol": "BREW-ALLOY",
+    "lpAddresses": {
+      "56": "0x713f852d740c31476e5686a26db950ece60f436a",
+      "97": "0x713f852d740c31476e5686a26db950ece60f436a"
+    },
+    "tokenSymbol": "BREW",
+    "tokenAddresses": {
+      "56": "0x790be81c3ca0e53974be2688cdb954732c9862e1",
+      "97": "0x790be81c3ca0e53974be2688cdb954732c9862e1"
+    },
+    "quoteTokenSymbol": "ALLOY",
+    "quoteTokenAdresses": {
+      "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+      "97": "0xC5FD6F3eB1f63082Daee9e09E17D870005962309"
+    }
+  },
+  {
+    "pid": 21,
+    "lpSymbol": "RAMEN-BNB",
+    "lpAddresses": {
+      "56": "0x53ad0d1f829a91e09a0fd469b863379ee6644846",
+      "97": "0x53ad0d1f829a91e09a0fd469b863379ee6644846"
+    },
+    "tokenSymbol": "RAMEN",
+    "tokenAddresses": {
+      "56": "0x4f47a0d15c1e53f3d94c069c7d16977c29f9cb6b",
+      "97": "0x4f47a0d15c1e53f3d94c069c7d16977c29f9cb6b"
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 22,
+    "lpSymbol": "RAMEN-ALLOY",
+    "lpAddresses": {
+      "56": "0xc85f7878e191da6417a9b2810eed2df074fa9dfc",
+      "97": "0xc85f7878e191da6417a9b2810eed2df074fa9dfc"
+    },
+    "tokenSymbol": "RAMEN",
+    "tokenAddresses": {
+      "56": "0x4f47a0d15c1e53f3d94c069c7d16977c29f9cb6b",
+      "97": "0x4f47a0d15c1e53f3d94c069c7d16977c29f9cb6b"
+    },
+    "quoteTokenSymbol": "ALLOY",
+    "quoteTokenAdresses": {
+      "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+      "97": "0xC5FD6F3eB1f63082Daee9e09E17D870005962309"
+    }
+  },
+  {
+    "pid": 19,
+    "lpSymbol": "SLME-BNB",
+    "lpAddresses": {
+      "56": "0x4770e9de2126aacb40fc158734f72933ffd1a86f",
+      "97": "0x4770e9de2126aacb40fc158734f72933ffd1a86f"
+    },
+    "tokenSymbol": "SLME",
+    "tokenAddresses": {
+      "56": "0x4fcfa6cc8914ab455b5b33df916d90bfe70b6ab1",
+      "97": "0x4fcfa6cc8914ab455b5b33df916d90bfe70b6ab1"
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 20,
+    "lpSymbol": "SLME-ALLOY",
+    "lpAddresses": {
+      "56": "0xee4f967f1737a75d50a4d493611d376fc8668961",
+      "97": "0xee4f967f1737a75d50a4d493611d376fc8668961"
+    },
+    "tokenSymbol": "SLME",
+    "tokenAddresses": {
+      "56": "0x4fcfa6cc8914ab455b5b33df916d90bfe70b6ab1",
+      "97": "0x4fcfa6cc8914ab455b5b33df916d90bfe70b6ab1"
+    },
+    "quoteTokenSymbol": "ALLOY",
+    "quoteTokenAdresses": {
+      "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+      "97": "0xC5FD6F3eB1f63082Daee9e09E17D870005962309"
     }
   },
   {

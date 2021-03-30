@@ -52,6 +52,240 @@
     }
   },
   {
+    "pid": 111,
+    "lpSymbol": "DFT-BNB LP",
+    "lpAddresses": {
+      "56": "0x8FbCbD7e30b1733965a8980bf7Ae2ca1c0C456cc",
+      "97": ""
+    },
+    "token": {
+      "symbol": "DFT",
+      "address": {
+        "56": "0x42712dF5009c20fee340B245b510c0395896cF6e",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.dfuture.com/home"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 110,
+    "lpSymbol": "SWTH-BNB LP",
+    "lpAddresses": {
+      "56": "0x8c5cFfad6cddb96Ee33DA685D0d50a37e030E115",
+      "97": ""
+    },
+    "token": {
+      "symbol": "SWTH",
+      "address": {
+        "56": "0x250b211EE44459dAd5Cd3bCa803dD6a7EcB5d46C",
+        "97": ""
+      },
+      "decimals": 8,
+      "projectLink": "https://switcheo.network/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 109,
+    "lpSymbol": "LIEN-BNB LP",
+    "lpAddresses": {
+      "56": "0xcd14855150335AAE984aa6D281E090c27035C692",
+      "97": ""
+    },
+    "token": {
+      "symbol": "LIEN",
+      "address": {
+        "56": "0x5d684adaf3fcfe9cfb5cede3abf02f0cdd1012e3",
+        "97": ""
+      },
+      "decimals": 8,
+      "projectLink": "https://lien.finance/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 108,
+    "lpSymbol": "ZIL-BNB LP",
+    "lpAddresses": {
+      "56": "0xc746337b5f800a0e19ed4eb3bda03ff1401b8167",
+      "97": ""
+    },
+    "token": {
+      "symbol": "ZIL",
+      "address": {
+        "56": "0xb86abcb37c3a4b64f74f59301aff131a1becc787",
+        "97": ""
+      },
+      "decimals": 12,
+      "projectLink": "https://www.zilliqa.com/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 107,
+    "lpSymbol": "pCWS-BNB LP",
+    "lpAddresses": {
+      "56": "0x889e81d25bffba437b2a5d3e0e4fc58a0e2749c5",
+      "97": ""
+    },
+    "token": {
+      "symbol": "pCWS",
+      "address": {
+        "56": "0xbcf39f0edda668c58371e519af37ca705f2bfcbd",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://game.seascape.network/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 106,
+    "lpSymbol": "bBADGER-BTCB LP",
+    "lpAddresses": {
+      "56": "0x10F461CEAC7A17F59e249954Db0784d42EfF5DB5",
+      "97": ""
+    },
+    "token": {
+      "symbol": "bBadger",
+      "address": {
+        "56": "0x1f7216fdb338247512ec99715587bb97bbf96eae",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://badger.finance/"
+    },
+    "quoteToken": {
+      "symbol": "BTCB",
+      "address": {
+        "56": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+        "97": "0xE02dF9e3e622DeBdD69fb838bB799E3F168902c5"
+      },
+      "decimals": 18,
+      "projectLink": "https://bitcoin.org/"
+    }
+  },
+  {
+    "pid": 104,
+    "lpSymbol": "bDIGG-BTCB LP",
+    "lpAddresses": {
+      "56": "0xE1E33459505bB3763843a426F7Fd9933418184ae",
+      "97": ""
+    },
+    "token": {
+      "symbol": "bDIGG",
+      "address": {
+        "56": "0x5986d5c77c65e5801a5caa4fae80089f870a71da",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://badger.finance/"
+    },
+    "quoteToken": {
+      "symbol": "BTCB",
+      "address": {
+        "56": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+        "97": "0xE02dF9e3e622DeBdD69fb838bB799E3F168902c5"
+      },
+      "decimals": 18,
+      "projectLink": "https://bitcoin.org/"
+    }
+  },
+  {
+    "pid": 103,
+    "lpSymbol": "LTO-BNB LP",
+    "lpAddresses": {
+      "56": "0x85644fcd00c401e1a0a0a10d2ae6bbe04a73e4ab",
+      "97": ""
+    },
+    "token": {
+      "symbol": "LTO",
+      "address": {
+        "56": "0x857b222fc79e1cbbf8ca5f78cb133d1b7cf34bbd",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://ltonetwork.com/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 102,
+    "lpSymbol": "MIR-UST LP",
+    "lpAddresses": {
+      "56": "0xf64a269F0A06dA07D23F43c1Deb217101ee6Bee7",
+      "97": ""
+    },
+    "token": {
+      "symbol": "MIR",
+      "address": {
+        "56": "0x5b6dcf557e2abe2323c48445e8cc948910d8c2c9",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://mirror.finance/"
+    },
+    "quoteToken": {
+      "symbol": "UST",
+      "address": {
+        "56": "0x23396cf899ca06c4472205fc903bdb4de249d6fc",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://mirror.finance/"
+    }
+  },
+  {
     "pid": 101,
     "lpSymbol": "TRADE-BNB LP",
     "lpAddresses": {
@@ -1645,7 +1879,7 @@
       "97": ""
     },
     "token": {
-      "symbol": "BLK",
+      "symbol": "BLINK",
       "address": {
         "56": "0x63870a18b6e42b01ef1ad8a2302ef50b7132054f",
         "97": ""
@@ -1957,7 +2191,7 @@
       "97": "0xE66790075ad839978fEBa15D4d8bB2b415556a1D"
     },
     "token": {
-      "symbol": "BTC",
+      "symbol": "BTCB",
       "address": {
         "56": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
         "97": "0xE02dF9e3e622DeBdD69fb838bB799E3F168902c5"
