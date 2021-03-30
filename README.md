@@ -13,6 +13,7 @@ Track your farming and pool performance on the Binance Chain
 | bdollar | :x:  |  :white_check_mark: | staking missing  |  
 | bearn | :x:  |  :white_check_mark: | staking missing  |  
 | beefy | :heavy_check_mark:  | :white_check_mark: | boost vaults missing  |  
+| blizzard | :x: | :heavy_check_mark:  |  |
 | goose | :white_check_mark:  | :white_check_mark: | pools  |  
 | hyperjump | :x: |  :heavy_check_mark: | |  
 | jetfuel | :x:  | :white_check_mark:  |  staking missing  |  

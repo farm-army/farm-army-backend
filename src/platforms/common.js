@@ -127,7 +127,7 @@ module.exports = {
       });
 
       const poolBalanceCalls = this.getRawPools().map(farm => {
-        let address = this.getAddress(farm.stakingTokenAddress);
+        let address = this.guessValue(farm, 'stakingTokenAddress');
 
         const token = new Web3EthContract(erc20Abi, address);
         return {
@@ -185,19 +185,21 @@ module.exports = {
       });
 
       const souses = this.getRawPools().map(farm => {
+        const earningToken = this.guessValue(farm, 'earningToken');
+
         const item = {
           id: `${this.getName()}_sous_${farm.sousId}`,
-          name: `${farm.tokenName} Pool`,
-          token: farm.stakingTokenName.toLowerCase(),
+          name: `${earningToken} Pool`,
+          token: this.guessValue(farm, 'stakingTokenName').toLowerCase(),
           provider: this.getName(),
           raw: Object.freeze(farm),
           has_details: true,
           extra: {}
         };
 
-        item.earns = [farm.tokenName.toLowerCase()];
+        item.earns = [earningToken.toLowerCase()];
         item.extra.transactionAddress = this.getAddress(farm.contractAddress);
-        item.extra.transactionToken = this.getAddress(farm.stakingTokenAddress);
+        item.extra.transactionToken = this.guessValue(farm, 'stakingTokenAddress');
 
         const link = this.getFarmLink(item);
         if (link) {
@@ -375,6 +377,44 @@ module.exports = {
       }
 
       return undefined;
+    }
+
+    guessValue(object, findName) {
+      if (findName === 'earningToken') {
+        if (object.earningToken && object.earningToken.symbol) {
+          return object.earningToken.symbol;
+        }
+
+        if (object.tokenName) {
+          return object.tokenName;
+        }
+
+        throw new Error(`Invalid ${findName} ${JSON.stringify(object)}`);
+      }
+
+      if (findName === 'stakingTokenAddress') {
+        if (object.stakingTokenAddress) {
+          return this.getAddress(object.stakingTokenAddress);
+        }
+
+        if (object.stakingToken && object.stakingToken.address) {
+          return this.getAddress(object.stakingToken.address);
+        }
+
+        throw new Error(`Invalid ${findName} ${JSON.stringify(object)}`);
+      }
+
+      if (findName === 'stakingTokenName') {
+        if (object.stakingTokenName) {
+          return object.stakingTokenName;
+        }
+
+        if (object.stakingToken && object.stakingToken.symbol) {
+          return object.stakingToken.symbol;
+        }
+
+        throw new Error(`Invalid ${findName} ${JSON.stringify(object)}`);
+      }
     }
   }
 };

@@ -41,14 +41,14 @@
       "label": "FUEL-BNB",
       "decimals": 18,
       "address": "0xd26092c6ce6fb359302a9453dc0c7f312794ef7e",
-      "addLiquidityLink": "https://streetswap.vip/#/add/0x2090c8295769791ab7a3cf1cc6e0aa19f35e441a/BNB",
-      "infoLink": "https://streetswap.info/pair/0xd26092c6ce6fb359302a9453dc0c7f312794ef7e",
+      "addLiquidityLink": "https://swap.hyperjump.fi/#/add/0x2090c8295769791ab7a3cf1cc6e0aa19f35e441a/BNB",
+      "infoLink": "https://info.hyperjump.fi/pair/0xd26092c6ce6fb359302a9453dc0c7f312794ef7e",
       "weight": 2925,
       "otherAssetSymbol": "FUEL",
       "type": "lp",
       "provider": {
-        "value": "streetswap",
-        "label": "StreetSwap"
+        "value": "hyperjump",
+        "label": "Hyperjump"
       },
       "inFuel": true
     },
@@ -193,7 +193,7 @@
       "label": "CAKE-BNB",
       "decimals": 18,
       "address": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6",
-      "pid": 0,
+      "pid": 1,
       "addLiquidityLink": "https://exchange.pancakeswap.finance/?_gl=1*1sc8z1e*_ga*MTY0ODM3NTQ1MC4xNjA3MTk1OTc5*_ga_334KNG3DMQ*MTYwNzE5NTk3OS4xLjEuMTYwNzE5NjQzMS4w#/add/0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82/ETH",
       "infoLink": "https://pancakeswap.info/pair/0xa527a61703d82139f8a06bc30097cc9caa2df5a6",
       "otherAssetSymbol": "CAKE",
@@ -323,14 +323,14 @@
       "label": "BHC-BNB",
       "decimals": 18,
       "address": "0xd46e7f33f8788f87d6017074dc4e4d781d3df91e",
-      "addLiquidityLink": "https://streetswap.vip/#/add/0x6fd7c98458a943f469e1cf4ea85b173f5cd342f4/BNB",
-      "infoLink": "https://streetswap.info/pair/0xd46e7f33f8788f87d6017074dc4e4d781d3df91e",
+      "addLiquidityLink": "https://swap.hyperjump.fi/#/add/0x6fd7c98458a943f469e1cf4ea85b173f5cd342f4/BNB",
+      "infoLink": "https://info.hyperjump.fi/pair/0xd46e7f33f8788f87d6017074dc4e4d781d3df91e",
       "weight": 149,
       "otherAssetSymbol": "BHC",
       "type": "lp",
       "provider": {
-        "value": "streetswap",
-        "label": "StreetSwap"
+        "value": "hyperjump",
+        "label": "Hyperjump"
       },
       "inFuel": true
     },
@@ -1108,12 +1108,12 @@
   },
   {
     "id": 36,
-    "name": "BNB V2",
+    "name": "WBNB V2",
     "img": "asset",
     "route": "/bnb-venus-v2",
     "asset": {
       "symbol": "WBNB",
-      "label": "BNB",
+      "label": "WBNB",
       "decimals": 18,
       "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "venusAsset": "BNB-VENUS",
@@ -1273,5 +1273,96 @@
       "type": "vault"
     },
     "strategyAddress": "0xbFb7c6DD4037285A387d021fDad9383A71871d96"
+  },
+  {
+    "id": 42,
+    "name": "BEL-BNB",
+    "img": "asset",
+    "route": "/bel-bnb",
+    "asset": {
+      "symbol": "BEL-BNB-CAKE",
+      "label": "BEL-BNB",
+      "decimals": 18,
+      "address": "0xAB97952a2806D5c92b7046c7aB13a72A87e0097b",
+      "pid": 86,
+      "addLiquidityLink": "https://exchange.pancakeswap.finance/#/add/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c/0x8443f091997f06a61670b735ed92734f5628692f",
+      "infoLink": "https://pancakeswap.info/pair/0xAB97952a2806D5c92b7046c7aB13a72A87e0097b",
+      "type": "lp",
+      "otherAssetSymbol": "BEL",
+      "provider": {
+        "value": "pancake",
+        "label": "PancakeSwap",
+        "masterAddress": "0x73feaa1eE314F8c655E354234017bE2193C9E24E"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "BEL-BNB-CAKE-VAULT",
+      "label": "BEL-BNB-CAKE-VAULT",
+      "decimals": 18,
+      "address": "0x30C7FB75ffC22a2DC1b0ecbe2bdf69c7b6B619C2",
+      "type": "vault"
+    },
+    "strategyAddress": "0xF02E771df7AB0D127F566b2D494Fb3fEb2ff875E"
+  },
+  {
+    "id": 43,
+    "name": "BDIGG-BTCB",
+    "img": "asset",
+    "route": "/bdigg-btcb",
+    "asset": {
+      "symbol": "BDIGG-BTCB-CAKE",
+      "label": "BDIGG-BTCB",
+      "decimals": 18,
+      "address": "0xE1E33459505bB3763843a426F7Fd9933418184ae",
+      "pid": 104,
+      "addLiquidityLink": "https://exchange.pancakeswap.finance/#/add/0x5986d5c77c65e5801a5caa4fae80089f870a71da/0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+      "infoLink": "https://pancakeswap.info/pair/0xE1E33459505bB3763843a426F7Fd9933418184ae",
+      "type": "lp",
+      "firstAssetSymbol": "BTCB",
+      "otherAssetSymbol": "BDIGG",
+      "provider": {
+        "value": "pancake",
+        "label": "PancakeSwap",
+        "masterAddress": "0x73feaa1eE314F8c655E354234017bE2193C9E24E"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "BDIGG-BTCB-CAKE-VAULT",
+      "label": "BDIGG-BTCB-CAKE-VAULT",
+      "decimals": 18,
+      "address": "0xe4a3EDe011d13d1B24c0670952f9145CC56BFAe8",
+      "type": "vault"
+    },
+    "strategyAddress": "0x9AC3fE5da70211A7cE4536096f86b82F8c47CBa2"
+  },
+  {
+    "id": 44,
+    "name": "BTCB-BNB",
+    "img": "asset",
+    "route": "/btcb-bnb",
+    "asset": {
+      "symbol": "BTCB-BNB-CAKE",
+      "label": "BTCB-BNB",
+      "decimals": 18,
+      "address": "0x7561EEe90e24F3b348E1087A005F78B4c8453524",
+      "pid": 15,
+      "addLiquidityLink": "https://exchange.pancakeswap.finance/#/add/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c/0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+      "infoLink": "https://pancakeswap.info/pair/0x7561EEe90e24F3b348E1087A005F78B4c8453524",
+      "type": "lp",
+      "otherAssetSymbol": "BTCB",
+      "provider": {
+        "value": "pancake",
+        "label": "PancakeSwap",
+        "masterAddress": "0x73feaa1eE314F8c655E354234017bE2193C9E24E"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "BTCB-BNB-CAKE-VAULT",
+      "label": "BTCB-BNB-CAKE-VAULT",
+      "decimals": 18,
+      "address": "0x4f86643416395db376569FA4F09aEE29eA1d4aC9",
+      "type": "vault"
+    },
+    "strategyAddress": "0x867Af054bEfC5316D92E61Cd594aE87D464DB13c"
   }
 ]

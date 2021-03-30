@@ -18,7 +18,7 @@ module.exports = class autofarm {
 
   async getLbAddresses() {
     const text = await request(
-      "https://api.autofarm.network/bsc/get_farms_data"
+      "https://api2.autofarm.network/bsc/get_farms_data"
     );
     const response = JSON.parse(text.body);
 
@@ -84,7 +84,7 @@ module.exports = class autofarm {
     }
 
     const text = await request(
-      "https://api.autofarm.network/bsc/get_farms_data"
+      "https://api2.autofarm.network/bsc/get_farms_data"
     );
 
     const response = JSON.parse(text.body);
