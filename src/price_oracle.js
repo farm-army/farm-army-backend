@@ -58,6 +58,7 @@ const tokenMaps = {
   "0x5A41F637C3f7553dBa6dDC2D3cA92641096577ea": "juld",
   "0x0abd3E3502c15ec252f90F64341cbA74a24fba06": "space",
   "0x57067A6BD75c0E95a6A5f158455926e43E79BeB0": "blzd",
+  "0x3a5325f0e5ee4da06a285e988f052d4e45aa64b4": "polaris",
 };
 
 module.exports = class PriceOracle {
