@@ -7,6 +7,10 @@ const BigNumber = require("bignumber.js");
 const request = require("async-request");
 const Utils = require("../../utils");
 
+const ABI_0xcAB056427F99c9DB95e7fd39B16aC7f1AeBd0ce6 = require('./abi/0xcAB056427F99c9DB95e7fd39B16aC7f1AeBd0ce6.json')
+const ABI_0x7A4cFC24841c799832fFF4E5038BBA14c0e73ced = require('./abi/0x7A4cFC24841c799832fFF4E5038BBA14c0e73ced.json')
+const ABI_POOLINFO = require('./abi/poolinfo.json')
+
 module.exports = class bdollar {
   constructor(cache, priceOracle) {
     this.cache = cache;
@@ -35,7 +39,7 @@ module.exports = class bdollar {
       JSON.parse(
         fs.readFileSync(path.resolve(__dirname, "farms/farms.json"), "utf8")
       )
-    ).filter(f => f.type === "share");
+    ).filter(f => f.type === "share" || f.type === 'seed');
   }
 
   async getAddressFarms(address) {
@@ -44,18 +48,47 @@ module.exports = class bdollar {
       return cacheItem;
     }
 
-    const vaultCalls = (await this.getFarms()).map(farm => {
-      const vault = new Web3EthContract(bdollar.MASTER_ABI, bdollar.MASTER_ADDRESS);
+    let farms = await this.getFarms();
 
-      return {
-        userInfo: vault.methods.userInfo(farm.raw.pid, address),
-        id: farm.id.toString()
-      };
-    });
+    const vaultCalls = farms
+      .filter(farm => farm.id.startsWith('bdollar_share_'))
+      .map(farm => {
+        const vault = new Web3EthContract(bdollar.MASTER_ABI, bdollar.MASTER_ADDRESS);
 
-    const farmCalls = await Utils.multiCall(vaultCalls);
+        return {
+          userInfo: vault.methods.userInfo(farm.raw.pid, address),
+          id: farm.id.toString()
+        };
+      });
 
-    const result = farmCalls
+    const seedCalls = [];
+    farms.filter(farm => farm.id.startsWith('bdollar_seed_'))
+      .forEach(farm => {
+        if (farm.raw.address === '0xcAB056427F99c9DB95e7fd39B16aC7f1AeBd0ce6') {
+          const vault = new Web3EthContract(ABI_0xcAB056427F99c9DB95e7fd39B16aC7f1AeBd0ce6, farm.raw.address);
+
+          seedCalls.push({
+            userInfo: vault.methods.userInfo(farm.raw.pid, address),
+            id: farm.id.toString()
+          });
+        }
+
+        if (farm.raw.address === '0x7A4cFC24841c799832fFF4E5038BBA14c0e73ced') {
+          const vault = new Web3EthContract(ABI_0x7A4cFC24841c799832fFF4E5038BBA14c0e73ced, farm.raw.address);
+
+          seedCalls.push({
+            userInfo: vault.methods.userInfo(farm.raw.pid, address),
+            id: farm.id.toString()
+          });
+        }
+      });
+
+    const [farmCalls, seeds] = await Promise.all([
+      Utils.multiCall(vaultCalls),
+      Utils.multiCall(seedCalls),
+    ]);
+
+    const result = [...farmCalls, ...seeds]
       .filter(v =>
         new BigNumber(v.userInfo[0] || 0).isGreaterThan(Utils.DUST_FILTER)
       )
@@ -88,17 +121,41 @@ module.exports = class bdollar {
 
     const rawPools = this.getRawPools();
 
+    const poolInfosCalls = [];
+    rawPools
+      .filter(farm => farm.pid && ['0xcAB056427F99c9DB95e7fd39B16aC7f1AeBd0ce6', '0x7A4cFC24841c799832fFF4E5038BBA14c0e73ced'].includes(farm.address))
+      .forEach(farm => {
+        const contract = new Web3EthContract(ABI_POOLINFO, farm.address);
+
+        poolInfosCalls.push({
+          contract: farm.contract,
+          poolInfo: contract.methods.poolInfo(farm.pid),
+        })
+      })
+
+    const poolInfos = await Utils.multiCallIndexBy('contract', poolInfosCalls);
+
     const result = rawPools.map(farm => {
       const name = farm.name
-        .toLowerCase()
         .replace("pancake", "")
         .replace("/", "-")
         .trim();
 
+      let token = name.toLowerCase();
+      if (farm.depositTokenName) {
+        token = farm.depositTokenName
+          .toLowerCase()
+          .replace('vlp', '')
+          .replace('cakelp', '')
+          .replace('cake-lp', '')
+          .replace("/", "-")
+          .trim();
+      }
+
       const item = {
-        id: `bdollar_share_${farm.pid}`,
-        name: name.toUpperCase(),
-        token: name.toUpperCase(),
+        id: `bdollar_${farm.type}_${farm.contract.replace(/[^a-z0-9 -]/ig, '_').toLowerCase()}`,
+        name: name,
+        token: token,
         provider: "bdollar",
         raw: Object.freeze(farm),
         link: "https://bdollar.fi/shares",
@@ -106,16 +163,25 @@ module.exports = class bdollar {
         extra: {}
       };
 
-      if (bdollar.TOKENS[farm.depositTokenName]) {
-        item.extra.lpAddress = bdollar.TOKENS[farm.depositTokenName][0];
-        item.extra.transactionToken = item.extra.lpAddress;
+      if (farm.type === 'share') {
+        if (bdollar.TOKENS[farm.depositTokenName]) {
+          item.extra.lpAddress = bdollar.TOKENS[farm.depositTokenName][0];
+          item.extra.transactionToken = item.extra.lpAddress;
+        }
+
+        item.extra.transactionAddress = bdollar.MASTER_ADDRESS;
+      } else if(farm.type === 'seed') {
+        let poolInfo = poolInfos[farm.contract];
+        if (poolInfo && poolInfo.poolInfo && poolInfo.poolInfo[0]) {
+          item.extra.transactionToken = poolInfo.poolInfo[0]
+        }
       }
 
       if (farm.earnTokenName) {
         item.earns = [farm.earnTokenName.toLowerCase()];
       }
 
-      item.extra.transactionAddress = bdollar.MASTER_ADDRESS;
+      item.extra.transactionAddress = farm.address;
 
       if (data[farm.pid] && data[farm.pid].apy) {
         item.yield = {
@@ -155,21 +221,52 @@ module.exports = class bdollar {
 
     const farms = await this.getFarms();
 
-    const vaultCalls = addresses.map(id => {
-      const farm = farms.find(f => f.id === id);
+    const vaultCalls = addresses
+      .filter(id => id.startsWith('bdollar_share_'))
+      .map(id => {
+        const farm = farms.find(f => f.id === id);
+        const vault = new Web3EthContract(bdollar.MASTER_ABI, bdollar.MASTER_ADDRESS);
 
-      const vault = new Web3EthContract(bdollar.MASTER_ABI, bdollar.MASTER_ADDRESS);
+        return {
+          userInfo: vault.methods.userInfo(farm.raw.pid, address),
+          pendingShare: vault.methods.pendingShare(farm.raw.pid, address),
+          id: farm.id.toString()
+        };
+      });
 
-      return {
-        userInfo: vault.methods.userInfo(farm.raw.pid, address),
-        pendingShare: vault.methods.pendingShare(farm.raw.pid, address),
-        id: farm.id.toString()
-      };
-    });
+    const seedCalls = [];
+    addresses
+      .filter(id => id.startsWith('bdollar_seed_'))
+      .forEach(id => {
+        const farm = farms.find(f => f.id === id);
 
-    const calls = await Utils.multiCall(vaultCalls);
+        if (farm.raw.address === '0xcAB056427F99c9DB95e7fd39B16aC7f1AeBd0ce6') {
+          const vault = new Web3EthContract(ABI_0xcAB056427F99c9DB95e7fd39B16aC7f1AeBd0ce6, farm.raw.address);
 
-    const resultFarms = calls
+          seedCalls.push({
+            userInfo: vault.methods.userInfo(farm.raw.pid, address),
+            pendingShare: vault.methods.pendingReward(farm.raw.pid, address),
+            id: farm.id.toString()
+          });
+        }
+
+        if (farm.raw.address === '0x7A4cFC24841c799832fFF4E5038BBA14c0e73ced') {
+          const vault = new Web3EthContract(ABI_0x7A4cFC24841c799832fFF4E5038BBA14c0e73ced, farm.raw.address);
+
+          seedCalls.push({
+            userInfo: vault.methods.userInfo(farm.raw.pid, address),
+            pendingShare: vault.methods.pendingBDO(farm.raw.pid, address),
+            id: farm.id.toString()
+          });
+        }
+      });
+
+    const [calls, seeds] = await Promise.all([
+      Utils.multiCall(vaultCalls),
+      Utils.multiCall(seedCalls),
+    ]);
+
+    const resultFarms = [...calls, ...seeds]
       .filter(v => new BigNumber(v.userInfo[0] || 0).isGreaterThan(0))
       .map(call => {
         const farm = farms.find(f => f.id === call.id);
@@ -183,9 +280,11 @@ module.exports = class bdollar {
           amount: amount / 1e18
         };
 
-        const price = this.priceOracle.findPrice(farm.extra.lpAddress);
-        if (price) {
-          result.deposit.usd = result.deposit.amount * price;
+        if (farm.extra.transactionToken) {
+          const price = this.priceOracle.findPrice(farm.extra.transactionToken);
+          if (price) {
+            result.deposit.usd = result.deposit.amount * price;
+          }
         }
 
         if (call.pendingShare > 0 && farm.earns[0]) {
