@@ -7,9 +7,10 @@ const path = require("path");
 let platformInstances;
 
 module.exports = class Platforms {
-  constructor(cache, priceOracle) {
+  constructor(cache, priceOracle, tokenCollector) {
     this.cache = cache;
     this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector;
   }
 
   requirePlatforms() {
@@ -26,7 +27,7 @@ module.exports = class Platforms {
       .filter(x => fs.existsSync(x))
       .map(p => [
         path.basename(p).substr(0, path.basename(p).length - 3),
-        new (require(p))(me.cache, me.priceOracle) // TODO: init should be done from services.js
+        new (require(p))(me.cache, me.priceOracle, me.tokenCollector) // TODO: init should be done from services.js
       ]);
   }
 

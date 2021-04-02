@@ -9,9 +9,10 @@ const Farms = require('./farms/farms.json');
 const STAKING_ABI = require('./abi/staking.json');
 
 module.exports = class jul {
-  constructor(cache, priceOracle) {
+  constructor(cache, priceOracle, tokenCollector) {
     this.cache = cache;
     this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector;
   }
 
   async getLbAddresses() {
@@ -78,8 +79,6 @@ module.exports = class jul {
       }
     }
 
-    const tokenMap = this.priceOracle.getAddressSymbolMap()
-
     const calls = await Utils.multiCall(stakingCalls);
 
     const farms = [];
@@ -106,13 +105,14 @@ module.exports = class jul {
       item.extra.transactionToken = call.stakingToken;
       item.extra.transactionAddress = call.contract;
 
-      if (tokenMap[call.rewardsToken.toLowerCase()]) {
-        item.earns.push(tokenMap[call.rewardsToken.toLowerCase()])
+      const earnToken = this.tokenCollector.getTokenByAddress(call.rewardsToken)
+      if (earnToken) {
+        item.earns.push(earnToken.symbol)
       }
 
       if (call.totalSupply && call.totalSupply > 0) {
         item.tvl = {
-          amount: call.totalSupply / 1e18
+          amount: call.totalSupply / (10 ** this.tokenCollector.getDecimals(call.rewardsToken))
         };
 
         let price = this.priceOracle.findPrice(call.stakingToken);

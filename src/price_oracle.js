@@ -44,23 +44,6 @@ const myManagedLp = [];
 //   return Number(lpTokenPrice);
 //   also:https://github.com/npty/lp-inspector
 
-const tokenMaps = {
-  "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c": "bnb",
-  "0xf952fc3ca7325cc27d15885d37117676d25bfda6": "egg",
-  "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82": "cake",
-  "0x250632378E573c6Be1AC2f97Fcdf00515d0Aa91B": "beth",
-  "0xc1edcc306e6faab9da629efca48670be4678779d": "mdg",
-  "0x2849b1aE7E04A3D9Bc288673A92477CF63F28aF4": "salt",
-  "0x5ef5994fa33ff4eb6c82d51ee1dc145c546065bd": "alloy",
-  "0x603c7f932ed1fc6575303d8fb018fdcbb0f39a95": "banana",
-  "0x4fcfa6cc8914ab455b5b33df916d90bfe70b6ab1": "slime",
-  "0x5A41F637C3f7553dBa6dDC2D3cA92641096577ea": "juld",
-  "0x0abd3E3502c15ec252f90F64341cbA74a24fba06": "space",
-  "0x57067A6BD75c0E95a6A5f158455926e43E79BeB0": "blzd",
-  "0x9586b02B09bd68A7cD4aa9167a61B78F43092063": "bbdo",
-  "0x557b3aB377bbD68DFC6dADEFafA3CC4e4B6677c6": "bpdot",
-};
-
 module.exports = class PriceOracle {
   constructor(services, tokenCollector, lpTokenCollector, priceCollector) {
     this.services = services;
@@ -142,10 +125,6 @@ module.exports = class PriceOracle {
 
   getAllLpAddressInfo() {
     return pricesLpAddressMap;
-  }
-
-  getAddressSymbolMap() {
-    return tokenMaps;
   }
 
   getLpToken0Token1SplitAmount(address, amount) {
@@ -308,6 +287,8 @@ module.exports = class PriceOracle {
       this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=bBDO'),
       this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=sBDO'),
       this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=bpDOT'),
+      this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=sBFI'),
+      this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=BFI'),
     ])).filter(r => r.value && r.value.data).map(r => r.value);
 
     const prices = [];
@@ -464,7 +445,6 @@ module.exports = class PriceOracle {
       if (t.symbol && t.address && t.decimals) {
         const symbol = t.symbol.toLowerCase();
         tokens[t.address.toLowerCase()] = symbol;
-        tokenMaps[t.address.toLowerCase()] = symbol;
 
         this.tokenCollector.add({
           symbol: t.symbol,
@@ -503,8 +483,6 @@ module.exports = class PriceOracle {
     result.data.tokens.forEach(t => {
       const symbol = t.symbol.toLowerCase();
       tokens[t.id.toLowerCase()] = symbol;
-
-      tokenMaps[t.id.toLowerCase()] = symbol;
 
       this.tokenCollector.add({
         symbol: t.symbol,

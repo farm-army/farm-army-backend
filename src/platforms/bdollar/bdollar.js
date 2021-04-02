@@ -12,9 +12,10 @@ const ABI_0x7A4cFC24841c799832fFF4E5038BBA14c0e73ced = require('./abi/0x7A4cFC24
 const ABI_POOLINFO = require('./abi/poolinfo.json')
 
 module.exports = class bdollar {
-  constructor(cache, priceOracle) {
+  constructor(cache, priceOracle, tokenCollector) {
     this.cache = cache;
     this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector
   }
 
   static MASTER_ABI = JSON.parse(
@@ -165,8 +166,7 @@ module.exports = class bdollar {
 
       if (farm.type === 'share') {
         if (bdollar.TOKENS[farm.depositTokenName]) {
-          item.extra.lpAddress = bdollar.TOKENS[farm.depositTokenName][0];
-          item.extra.transactionToken = item.extra.lpAddress;
+          item.extra.transactionToken = bdollar.TOKENS[farm.depositTokenName][0];
         }
 
         item.extra.transactionAddress = bdollar.MASTER_ADDRESS;
@@ -174,11 +174,20 @@ module.exports = class bdollar {
         let poolInfo = poolInfos[farm.contract];
         if (poolInfo && poolInfo.poolInfo && poolInfo.poolInfo[0]) {
           item.extra.transactionToken = poolInfo.poolInfo[0]
+        } else if (bdollar.TOKENS[farm.depositTokenName]) {
+          item.extra.transactionToken = bdollar.TOKENS[farm.depositTokenName][0];
         }
       }
 
       if (farm.earnTokenName) {
         item.earns = [farm.earnTokenName.toLowerCase()];
+      }
+
+      if (!item.extra.transactionToken && farm.depositTokenName) {
+        const address = this.tokenCollector.getAddressBySymbol(farm.depositTokenName)
+        if (address) {
+          item.extra.transactionToken = address;
+        }
       }
 
       item.extra.transactionAddress = farm.address;

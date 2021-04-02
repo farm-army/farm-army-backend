@@ -49,6 +49,10 @@ module.exports = class TokenCollector {
     return Object.values(this.tokens);
   }
 
+  allAsAddressMap() {
+    return this.tokens;
+  }
+
   async save() {
     await this.cacheManager.set('token-collector-symbols', this.tokenSymbols, {ttl: 60 * 60 * 24 * 7});
     await this.cacheManager.set('token-collector-addresses', this.tokens, {ttl: 60 * 60 * 24 * 7});
