@@ -112,7 +112,7 @@ module.exports = class jul {
 
       if (call.totalSupply && call.totalSupply > 0) {
         item.tvl = {
-          amount: call.totalSupply / (10 ** this.tokenCollector.getDecimals(call.rewardsToken))
+          amount: call.totalSupply / (10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
         };
 
         let price = this.priceOracle.findPrice(call.stakingToken);
