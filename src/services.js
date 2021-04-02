@@ -72,7 +72,8 @@ module.exports = {
 
     return (platforms = new Platforms(
         this.getCache(),
-        this.getPriceOracle()
+        this.getPriceOracle(),
+        this.getTokenCollector(),
     ));
   },
 
@@ -152,7 +153,11 @@ module.exports = {
       return balances;
     }
 
-    return (balances = new Balances(this.getCache(), this.getPriceOracle()));
+    return (balances = new Balances(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+    ));
   },
 
   getTokenCollector() {

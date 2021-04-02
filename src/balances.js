@@ -6,9 +6,10 @@ const Web3EthContract = require("web3-eth-contract");
 const _ = require("lodash");
 
 module.exports = class Balances {
-  constructor(cache, priceOracle) {
+  constructor(cache, priceOracle, tokenCollector) {
     this.cache = cache;
     this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector;
   }
 
   async getAllLpTokenBalances(address) {
@@ -63,7 +64,7 @@ module.exports = class Balances {
       return cacheItem;
     }
 
-    const tokenMap = this.priceOracle.getAddressSymbolMap();
+    const tokenMap = this.tokenCollector.allAsAddressMap();
 
     const tokenAddress = (await this.getPlatformTokens()).map(p => p.contract.toLowerCase());
 
@@ -101,7 +102,7 @@ module.exports = class Balances {
     allBalances.filter(c => c.balance > 0).forEach(b => {
       const item = {
         token: b.contract,
-        amount: b.balance / 1e18,
+        amount: b.balance / (10 ** this.tokenCollector.getDecimals(b.contract)),
       };
 
       const price = this.priceOracle.findPrice(b.contract)
@@ -114,7 +115,7 @@ module.exports = class Balances {
       }
 
       if (tokenMap[b.contract.toLowerCase()]) {
-        item.symbol = tokenMap[b.contract.toLowerCase()];
+        item.symbol = tokenMap[b.contract.toLowerCase()].symbol;
       }
 
       balances.push(item);

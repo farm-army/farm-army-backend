@@ -29,7 +29,7 @@ module.exports = class PriceCollector {
       throw new Error(`Invalid address: ${address}`)
     }
 
-    if (price > 5000000 || price < 0.0000000001) {
+    if (price > 5000000000 || price < 0.0000000001) {
       // skipping invalid prices
       console.error('price issues:', address, price)
       return;

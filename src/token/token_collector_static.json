@@ -68,5 +68,15 @@
     "symbol": "bpdot",
     "address": "0x557b3aB377bbD68DFC6dADEFafA3CC4e4B6677c6",
     "decimals": 18
+  },
+  {
+    "symbol": "bfi",
+    "address": "0x81859801b01764D4f0Fa5E64729f5a6C3b91435b",
+    "decimals": 18
+  },
+  {
+    "symbol": "sbfi",
+    "address": "0xaaaf5d9923be358ea0b6205ef2a3b929d460ac7a",
+    "decimals": 18
   }
 ]
