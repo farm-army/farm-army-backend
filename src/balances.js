@@ -214,6 +214,14 @@ module.exports = class Balances {
         token: "blzd",
         contract: "0x57067A6BD75c0E95a6A5f158455926e43E79BeB0"
       },
+      {
+        token: "bbdo",
+        contract: "0x9586b02B09bd68A7cD4aa9167a61B78F43092063"
+      },
+      {
+        token: "bpdot",
+        contract: "0x557b3aB377bbD68DFC6dADEFafA3CC4e4B6677c6"
+      },
     ];
   }
   async getBalances(address) {

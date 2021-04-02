@@ -201,7 +201,6 @@ module.exports = class valuedefi {
       const item = {
         id: `valuedefi_vsafe_${farm.id}`,
         name: farm.wantTokenName,
-        token: farm.wantTokenSymbol.toLowerCase(),
         provider: "valuedefi",
         raw: Object.freeze(farm),
         link:
@@ -213,6 +212,10 @@ module.exports = class valuedefi {
           type: "vsafe"
         }
       };
+
+      if (farm.wantTokenSymbol) {
+        item.token = farm.wantTokenSymbol;
+      }
 
       if (farm.farmOptions && farm.farmOptions.strategies) {
         const platforms = farm.farmOptions.strategies

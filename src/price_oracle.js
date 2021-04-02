@@ -58,6 +58,8 @@ const tokenMaps = {
   "0x5A41F637C3f7553dBa6dDC2D3cA92641096577ea": "juld",
   "0x0abd3E3502c15ec252f90F64341cbA74a24fba06": "space",
   "0x57067A6BD75c0E95a6A5f158455926e43E79BeB0": "blzd",
+  "0x9586b02B09bd68A7cD4aa9167a61B78F43092063": "bbdo",
+  "0x557b3aB377bbD68DFC6dADEFafA3CC4e4B6677c6": "bpdot",
 };
 
 module.exports = class PriceOracle {
@@ -191,6 +193,7 @@ module.exports = class PriceOracle {
       this.getCoingeckoPrices(),
       this.jsonRequest('https://api.beefy.finance/prices'),
       this.jsonRequest('https://api.beefy.finance/lps'),
+      this.updateBDollarPrices()
     ])
 
     bPrices.filter(p => p.status === 'fulfilled').forEach(p => {
@@ -266,6 +269,22 @@ module.exports = class PriceOracle {
         prices[maps[key.toLowerCase()]] = value.usd;
       }
     }
+
+    return prices;
+  }
+
+  async updateBDollarPrices() {
+    const pricesCalls = (await Promise.allSettled([
+      this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=BDO'),
+      this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=bBDO'),
+      this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=sBDO'),
+      this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=bpDOT'),
+    ])).filter(r => r.value && r.value.data).map(r => r.value);
+
+    const prices = [];
+    [...pricesCalls].forEach(p => {
+      prices[p.data.token.toLowerCase()] = p.data.price;
+    });
 
     return prices;
   }
