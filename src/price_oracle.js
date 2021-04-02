@@ -16,7 +16,6 @@ const lpAbi = JSON.parse(
 
 const pricesAddress = {};
 const pricesLpAddressMap = {};
-const allPrices = {};
 const fetch = require("node-fetch");
 
 const myManagedLp = [];
@@ -63,10 +62,11 @@ const tokenMaps = {
 };
 
 module.exports = class PriceOracle {
-  constructor(services, tokenCollector, lpTokenCollector) {
+  constructor(services, tokenCollector, lpTokenCollector, priceCollector) {
     this.services = services;
     this.tokenCollector = tokenCollector;
     this.lpTokenCollector = lpTokenCollector;
+    this.priceCollector = priceCollector;
   }
 
   async update() {
@@ -109,25 +109,18 @@ module.exports = class PriceOracle {
    */
   findPrice(...addressOrTokens) {
     for (let addressOrToken of addressOrTokens) {
-      if (addressOrToken.startsWith("0x")) {
-        const price = this.getAddressPrice(addressOrToken)
-        if (price) {
-          return this.getAddressPrice(addressOrToken);
-        }
-      }
-
-      let tokenLowerCase = addressOrToken.toLowerCase();
-      if (allPrices[tokenLowerCase]) {
-        return allPrices[tokenLowerCase];
+      const price = this.priceCollector.getPrice(addressOrToken)
+      if (price) {
+        return price;
       }
 
       // flip token0 and token1
-      if (tokenLowerCase.includes('-') && tokenLowerCase.split('-').length === 2) {
-        const [t0, t1] = tokenLowerCase.split("-");
+      if (!addressOrToken.startsWith('0x') && addressOrToken.includes('-') && addressOrToken.split('-').length === 2) {
+        const [t0, t1] = addressOrToken.split("-");
 
-        const price = allPrices[`${t1}-${t0}`];
+        const price = this.priceCollector.getPrice(`${t1.toLowerCase()}-${t0.toLowerCase()}`)
         if (price) {
-          return allPrices[`${t1}-${t0}`];
+          return price;
         }
       }
     }
@@ -136,22 +129,11 @@ module.exports = class PriceOracle {
   }
 
   getAddressPrice(address) {
-    if (
-      tokenMaps[address.toLowerCase()] &&
-      allPrices[tokenMaps[address.toLowerCase()]]
-    ) {
-      return allPrices[tokenMaps[address.toLowerCase()]];
-    }
-
-    if (tokenMaps[address] && allPrices[tokenMaps[address]]) {
-      return allPrices[tokenMaps[address]];
-    }
-
-    return pricesAddress[address.toLowerCase()] || undefined;
+    return this.priceCollector.getPrice(address)
   }
 
   getAllPrices() {
-    return allPrices;
+    return this.priceCollector.getSymbolMap();
   }
 
   getAllAddressPrices() {
@@ -191,37 +173,55 @@ module.exports = class PriceOracle {
     const bPrices = await Promise.allSettled([
       this.getPancakeswapPrices(),
       this.getCoingeckoPrices(),
-      this.jsonRequest('https://api.beefy.finance/prices'),
-      this.jsonRequest('https://api.beefy.finance/lps'),
-      this.updateBDollarPrices()
+      this.getBeefyPrices(),
+      this.updateBDollarPrices(),
     ])
 
+    const addresses = [];
+
     bPrices.filter(p => p.status === 'fulfilled').forEach(p => {
-      for (const [key, value] of Object.entries(p.value)) {
-        allPrices[key.toLowerCase()] = value;
-      }
+      p.value.forEach(item => {
+        if (item.address) {
+          this.priceCollector.add(item.address, item.price);
+          addresses.push(item.address.toLowerCase())
+
+        } else if(item.symbol) {
+          // symbol resolve
+          const address = this.tokenCollector.getAddressBySymbol(item.symbol);
+          if (address) {
+            this.priceCollector.add(address, item.price)
+            addresses.push(address.toLowerCase())
+          }
+        }
+
+        if (item.symbol) {
+          this.priceCollector.addForSymbol(item.symbol, item.price)
+        }
+      })
     })
 
-    // some remapping
-    if (allPrices.eth) {
-      allPrices.beth = allPrices.eth;
-    }
+    this.priceCollector.save();
 
-    if (allPrices.wbnb) {
-      allPrices.bnb = allPrices.wbnb;
-    }
-
-    await Promise.allSettled([
+    const results = await Promise.allSettled([
       this.updateTokensVswap(),
       this.updateTokensBakery(),
-      this.updateHyperswap(),
+      this.updateHyperswap(this.priceCollector.getPrice('bnb')),
     ]);
+
+    results.filter(p => p.status === 'fulfilled').forEach(p => {
+      p.value.forEach(item => {
+        if (item.address && !addresses.includes(item.address.toLowerCase())) {
+          this.priceCollector.add(item.address, item.price);
+          this.priceCollector.addForSymbol(item.symbol, item.price);
+        }
+      })
+    })
 
     await this.tokenCollector.save();
   }
 
   async getPancakeswapPrices() {
-    const prices = {};
+    const prices = [];
 
     // most useful
     try {
@@ -233,11 +233,36 @@ module.exports = class PriceOracle {
           continue
         }
 
-        prices[key.toLowerCase()] = value;
+        prices.push({
+          symbol: key.toLowerCase(),
+          source: 'pancakeswap',
+          price: value
+        });
       }
     } catch (e) {
       console.log('error https://api.pancakeswap.com/api/v1/price', e.message)
     }
+
+    return prices;
+  }
+
+  async getBeefyPrices() {
+    const results = await Promise.allSettled([
+      this.jsonRequest('https://api.beefy.finance/prices'),
+      this.jsonRequest('https://api.beefy.finance/lps'),
+    ]);
+
+    const prices = [];
+
+    results.filter(p => p.status === 'fulfilled').forEach(p => {
+      for (const [symbol, price] of Object.entries(p.value)) {
+        prices.push({
+          symbol: symbol.toLowerCase(),
+          source: 'beefy',
+          price: price
+        });
+      }
+    })
 
     return prices;
   }
@@ -258,7 +283,7 @@ module.exports = class PriceOracle {
 
     const coingeckoTokens = await this.jsonRequest(`https://api.coingecko.com/api/v3/simple/price?ids=${Object.keys(maps).join(',')}&vs_currencies=usd`);
 
-    const prices = {};
+    const prices = [];
 
     for (const [key, value] of Object.entries(coingeckoTokens)) {
       if (!value.usd) {
@@ -266,7 +291,11 @@ module.exports = class PriceOracle {
       }
 
       if (maps[key.toLowerCase()]) {
-        prices[maps[key.toLowerCase()]] = value.usd;
+        prices.push({
+          symbol: key.toLowerCase(),
+          source: 'coingecko',
+          price: value.usd
+        });
       }
     }
 
@@ -283,7 +312,18 @@ module.exports = class PriceOracle {
 
     const prices = [];
     [...pricesCalls].forEach(p => {
-      prices[p.data.token.toLowerCase()] = p.data.price;
+      let item = {
+        symbol: p.data.token.toLowerCase(),
+        source: 'bdollar',
+        price: p.data.price
+      };
+
+      const address = this.tokenCollector.getAddressBySymbol(item.symbol);
+      if (address) {
+        item.address = address;
+      }
+
+      prices.push(item);
     });
 
     return prices;
@@ -357,6 +397,12 @@ module.exports = class PriceOracle {
         symbol: v.symbol,
         decimals: v.decimals
       };
+
+      this.tokenCollector.add({
+        address: v._token,
+        symbol: v.symbol.toLowerCase(),
+        decimals: v.decimals,
+      })
     });
 
     Object.values(managedLp).forEach(c => {
@@ -366,8 +412,8 @@ module.exports = class PriceOracle {
       const token0 = tokenAddressSymbol[c.token0.toLowerCase()];
       const token1 = tokenAddressSymbol[c.token1.toLowerCase()];
 
-      const token0Price = allPrices[token0.symbol.toLowerCase()];
-      const token1Price = allPrices[token1.symbol.toLowerCase()];
+      const token0Price = this.priceCollector.getPrice(c.token0, token0.symbol);
+      const token1Price = this.priceCollector.getPrice(c.token1, token1.symbol);
 
       pricesLpAddressMap[c.address.toLowerCase()] = Object.freeze([
         {
@@ -390,8 +436,11 @@ module.exports = class PriceOracle {
         return;
       }
 
-      let x0p = (reserve0.toNumber() / (10 ** token0.decimals)) * token0Price
-      let x1p = (reserve1.toNumber() / (10 ** token1.decimals)) * token1Price
+      let x0 = reserve0.toNumber() / (10 ** token0.decimals);
+      let x1 = reserve1.toNumber() / (10 ** token1.decimals);
+
+      let x0p = x0 * token0Price
+      let x1p = x1 * token1Price
 
       const number = (x0p + x1p) / c.totalSupply * (10 ** c.decimals);
       if (number <= 0) {
@@ -400,10 +449,12 @@ module.exports = class PriceOracle {
         return;
       }
 
+      this.priceCollector.add(c.address, number)
       pricesAddress[c.address.toLowerCase()] = number;
     });
 
     this.lpTokenCollector.save();
+    this.priceCollector.save();
   }
 
   async tokenMaps() {
@@ -465,8 +516,7 @@ module.exports = class PriceOracle {
     return tokens;
   }
 
-  async inchPricesAsBnb() {
-    const bnbPrice = allPrices['bnb'];
+  async inchPricesAsBnb(bnbPrice) {
     if (!bnbPrice) {
       return;
     }
@@ -487,7 +537,6 @@ module.exports = class PriceOracle {
         }
 
         pricesAddress[key.toLowerCase()] = price;
-        allPrices[tokens[key].symbol.toLowerCase()] = price;
       }
     }
   }
@@ -513,12 +562,9 @@ module.exports = class PriceOracle {
 
     const result = await foo.json();
 
-    const tokens = {};
+    const prices = [];
     result.data.tokens.forEach(t => {
-      const symbol = t.symbol.toLowerCase();
-      tokens[t.id.toLowerCase()] = symbol;
-
-      tokenMaps[t.id.toLowerCase()] = symbol;
+      tokenMaps[t.id.toLowerCase()] = t.symbol.toLowerCase();
 
       this.tokenCollector.add({
         symbol: t.symbol,
@@ -526,16 +572,22 @@ module.exports = class PriceOracle {
         decimals: parseInt(t.decimals),
       })
 
-      if (t.priceUSD && !pricesAddress[t.id.toLowerCase()]) {
-        pricesAddress[t.id.toLowerCase()] = t.priceUSD;
+      // invalid
+      if (t.symbol.toLowerCase() === 'seeds') {
+        return;
       }
 
-      if (t.priceUSD && !allPrices[t.symbol.toLowerCase()]) {
-        allPrices[t.symbol.toLowerCase()] = t.priceUSD;
+      if (t.priceUSD) {
+        prices.push({
+          address: t.id,
+          symbol: t.symbol.toLowerCase(),
+          price: t.priceUSD,
+          source: 'vswap',
+        });
       }
     });
 
-    return tokens;
+    return prices;
   }
 
   async updateTokensBakery() {
@@ -563,13 +615,8 @@ module.exports = class PriceOracle {
 
     const result = await foo.json();
 
-    const tokens = {};
+    const prices = [];
     result.data.tokens.forEach(t => {
-      const symbol = t.symbol.toLowerCase();
-      tokens[t.id.toLowerCase()] = symbol;
-
-      tokenMaps[t.id.toLowerCase()] = symbol;
-
       this.tokenCollector.add({
         symbol: t.symbol,
         address: t.id,
@@ -579,20 +626,25 @@ module.exports = class PriceOracle {
       if (t.tokenDayData && t.tokenDayData[0] && t.tokenDayData[0].priceUSD) {
         const { priceUSD } = t.tokenDayData[0];
 
-        if (!pricesAddress[t.id.toLowerCase()]) {
-          pricesAddress[t.id.toLowerCase()] = priceUSD;
-        }
-
-        if (!allPrices[t.symbol.toLowerCase()]) {
-          allPrices[t.symbol.toLowerCase()] = priceUSD;
+        if (priceUSD) {
+          prices.push({
+            address: t.id,
+            symbol: t.symbol.toLowerCase(),
+            price: priceUSD,
+            source: 'bakery',
+          });
         }
       }
     });
 
-    return tokens;
+    return prices;
   }
 
-  async updateHyperswap() {
+  async updateHyperswap(bnbPrice) {
+    if (!bnbPrice) {
+      throw Error('Invalid bnb price')
+    }
+
     const foo = await fetch("https://subgraph.hyperswap.fi/subgraphs/name/theothug/swap-subgraph", {
       "headers": {
         "accept": "*/*",
@@ -611,14 +663,10 @@ module.exports = class PriceOracle {
 
     const result = await foo.json();
 
-    const tokens = {};
+    const prices = [];
     result.data.tokens
       .filter(t => ['alloy', 'drugs', 'hypr', 'thugs', 'guns', 'smoke', 'cred', 'dvt'].includes(t.symbol.toLowerCase()))
       .forEach(t => {
-        const symbol = t.symbol.toLowerCase();
-        tokens[t.id.toLowerCase()] = symbol;
-        tokenMaps[t.id.toLowerCase()] = symbol;
-
         this.tokenCollector.add({
           symbol: t.symbol,
           address: t.id,
@@ -626,20 +674,17 @@ module.exports = class PriceOracle {
         })
 
         // risky price catch; only what we really need: BHC token is really crazy!
-        if (t.derivedBNB && allPrices['bnb']) {
-          const priceUSD = t.derivedBNB * allPrices['bnb'];
-
-          if (!pricesAddress[t.id.toLowerCase()]) {
-            pricesAddress[t.id.toLowerCase()] = priceUSD;
-          }
-
-          if (!allPrices[t.symbol.toLowerCase()]) {
-            allPrices[t.symbol.toLowerCase()] = priceUSD;
-          }
+        if (t.derivedBNB) {
+          prices.push({
+            address: t.id,
+            symbol: t.symbol.toLowerCase(),
+            price: t.derivedBNB * bnbPrice,
+            source: 'hyperswap',
+          });
         }
       });
 
-    return tokens;
+    return prices;
   }
 
   getLpSplits(farm, yieldFarm) {

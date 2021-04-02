@@ -21,6 +21,8 @@ module.exports = class TokenCollector {
       if (addresses) {
         this.tokens = addresses;
       }
+
+      STATIC_TOKENS.forEach(i => this.add(i))
     }, 1)
   }
 
@@ -29,7 +31,7 @@ module.exports = class TokenCollector {
       throw new Error(`Invalid token: ${JSON.stringify(token)}`)
     }
 
-    if (token.symbol.length > 8 || !token.address.startsWith('0x') || token.decimals > 20 || token.decimals < 0) {
+    if (token.symbol.length > 30 || !token.address.startsWith('0x') || token.decimals > 20 || token.decimals < 0) {
       throw new Error(`Invalid token: ${JSON.stringify(token)}`)
     }
 
@@ -57,7 +59,7 @@ module.exports = class TokenCollector {
    * @returns {*|undefined}
    */
   getTokenBySymbol(symbol) {
-    if (!symbol || symbol.length > 8) {
+    if (!symbol || symbol.length > 50) {
       throw new Error(`Invalid symbol: ${symbol}`)
     }
 
@@ -91,5 +93,21 @@ module.exports = class TokenCollector {
     return !tokenStore
       ? defaultDecimals
       : tokenStore.decimals;
+  }
+
+  /**
+   * @param {string} symbol
+   * @returns {string|undefined}
+   */
+  getAddressBySymbol(symbol) {
+    if (!symbol || symbol.length > 50) {
+      throw new Error(`Invalid symbol: ${symbol}`)
+    }
+
+    const token = this.getTokenBySymbol(symbol)
+
+    return token
+      ? token.address
+      : undefined;
   }
 }

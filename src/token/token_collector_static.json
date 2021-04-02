@@ -48,5 +48,25 @@
     "symbol": "juld",
     "address": "0x5a41f637c3f7553dba6ddc2d3ca92641096577ea",
     "decimals": 18
+  },
+  {
+    "symbol": "space",
+    "address": "0x0abd3E3502c15ec252f90F64341cbA74a24fba06",
+    "decimals": 18
+  },
+  {
+    "symbol": "blzd",
+    "address": "0x57067A6BD75c0E95a6A5f158455926e43E79BeB0",
+    "decimals": 18
+  },
+  {
+    "symbol": "bbdo",
+    "address": "0x9586b02B09bd68A7cD4aa9167a61B78F43092063",
+    "decimals": 18
+  },
+  {
+    "symbol": "bpdot",
+    "address": "0x557b3aB377bbD68DFC6dADEFafA3CC4e4B6677c6",
+    "decimals": 18
   }
 ]
