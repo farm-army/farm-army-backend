@@ -11,6 +11,7 @@ let http;
 let tokenCollector;
 let addressTransactions;
 let liquidityTokenCollector;
+let priceCollector;
 
 const Cache = require("timed-cache");
 const Sqlite = require("better-sqlite3");
@@ -20,6 +21,7 @@ const Balances = require("./balances");
 const Platforms = require("./platforms/platforms");
 const PriceOracle = require("./price_oracle");
 const TokenCollector = require("./token/token_collector");
+const PriceCollector = require("./token/price_collector");
 const cacheManagerInstance = require('cache-manager');
 const fsStore = require('cache-manager-fs-hash');
 const path = require("path");
@@ -58,7 +60,8 @@ module.exports = {
     return (priceOracle = new PriceOracle(
       this,
       this.getTokenCollector(),
-      this.getLiquidityTokenCollector()
+      this.getLiquidityTokenCollector(),
+      this.getPriceCollector(),
     ));
   },
 
@@ -158,6 +161,14 @@ module.exports = {
     }
 
     return (tokenCollector = new TokenCollector(this.getCacheManager()));
+  },
+
+  getPriceCollector() {
+    if (priceCollector) {
+      return priceCollector;
+    }
+
+    return (priceCollector = new PriceCollector(this.getCacheManager()));
   },
 
   getDb() {
