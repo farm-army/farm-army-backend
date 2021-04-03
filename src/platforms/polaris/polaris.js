@@ -7,7 +7,7 @@ const Farms = require('./farms/farms.json');
 const PancakePlatformFork = require("../common").PancakePlatformFork;
 
 module.exports = class polaris extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0x3a5325f0e5ee4da06a285e988f052d4e45aa64b4"
+  static MASTER_ADDRESS = "0x69C77Aca910851E61a64b855116888F1c5eD3B75"
 
   getRawFarms() {
     return Farms.filter(i => i.ended !== true);
@@ -18,7 +18,7 @@ module.exports = class polaris extends PancakePlatformFork {
   }
 
   getName() {
-    return 'polaris';
+    return 'polar';
   }
 
   getFarmLink() {
@@ -27,13 +27,13 @@ module.exports = class polaris extends PancakePlatformFork {
 
   getFarmEarns(farm) {
     return farm.id.startsWith(`${this.getName()}_farm_`)
-      ? ['polaris']
+      ? ['polar']
       : undefined;
 
   }
 
   getPendingRewardContractMethod() {
-    return 'pendingRewards';
+    return 'pendingPolar';
   }
 
   getSousAbi() {
