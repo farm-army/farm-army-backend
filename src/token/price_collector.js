@@ -47,6 +47,10 @@ module.exports = class PriceCollector {
     await this.cacheManager.set('price-collector-symbols', this.pricesSymbols, {ttl: 60 * 60 * 3});
   }
 
+  getAddressMap() {
+    return this.prices;
+  }
+
   getSymbolMap() {
     return this.pricesSymbols;
   }
