@@ -105,7 +105,8 @@ module.exports = class TokenCollector {
    */
   getAddressBySymbol(symbol) {
     if (!symbol || symbol.length > 50) {
-      throw new Error(`Invalid symbol: ${symbol}`)
+      console.error(`Invalid symbol: ${symbol}`)
+      return undefined;
     }
 
     const token = this.getTokenBySymbol(symbol)
