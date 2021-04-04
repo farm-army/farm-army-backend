@@ -2,10 +2,10 @@ const _ = require("lodash");
 const fs = require("fs");
 const path = require("path");
 
-const Web3 = require("web3");
 const BigNumber = require("bignumber.js");
 const request = require("async-request");
 const Utils = require("./utils");
+const Web3EthContract = require("web3-eth-contract");
 
 const erc20ABI = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, "platforms/pancake/abi/erc20.json"), "utf8")
@@ -14,7 +14,6 @@ const lpAbi = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, "lpAbi.json"), "utf8")
 );
 
-const pricesAddress = {};
 const pricesLpAddressMap = {};
 const fetch = require("node-fetch");
 
@@ -52,12 +51,6 @@ module.exports = class PriceOracle {
     this.priceCollector = priceCollector;
   }
 
-  async update() {
-    for (const chunk of _.chunk(myManagedLp, 75)) {
-      await this.fetch(chunk);
-    }
-  }
-
   addLps(addresses) {
     addresses.forEach(a => {
       const a1 = a.toLowerCase();
@@ -72,13 +65,9 @@ module.exports = class PriceOracle {
     const lps = (await Promise.all(this.services.getPlatforms().getFunctionAwaits('getLbAddresses'))).flat()
     await this.updateTokens();
 
-    await Promise.all(
-      _.chunk(_.uniq(lps), 75).map(chunk => {
-        return this.fetch(chunk);
-      })
-    );
-
-    this.addLps(lps);
+    await Promise.allSettled(_.chunk(_.uniq(lps), 75).map(chunk => {
+      return this.fetch(chunk);
+    }));
   }
 
   /**
@@ -117,10 +106,6 @@ module.exports = class PriceOracle {
 
   getAllPrices() {
     return this.priceCollector.getSymbolMap();
-  }
-
-  getAllAddressPrices() {
-    return pricesAddress;
   }
 
   getAllLpAddressInfo() {
@@ -184,6 +169,7 @@ module.exports = class PriceOracle {
     const results = await Promise.allSettled([
       this.updateTokensVswap(),
       this.updateTokensBakery(),
+      this.inchPricesAsBnb(this.priceCollector.getPrice('bnb')),
       this.updateHyperswap(this.priceCollector.getPrice('bnb')),
     ]);
 
@@ -208,7 +194,7 @@ module.exports = class PriceOracle {
         rejectUnauthorized: false,
       });
       for (const [key, value] of Object.entries(pancakeTokens.prices)) {
-        if (key.toLowerCase() === 'banana') {
+        if (key.toLowerCase() === 'banana' || key.length > 15) {
           continue
         }
 
@@ -271,7 +257,7 @@ module.exports = class PriceOracle {
 
       if (maps[key.toLowerCase()]) {
         prices.push({
-          symbol: key.toLowerCase(),
+          symbol: maps[key.toLowerCase()],
           source: 'coingecko',
           price: value.usd
         });
@@ -311,10 +297,8 @@ module.exports = class PriceOracle {
   }
 
   async fetch(lpAddress) {
-    const web3 = new Web3("https://bsc-dataseed.binance.org/");
-
     const v = lpAddress.map(address => {
-      const vault = new web3.eth.Contract(lpAbi, address);
+      const vault = new Web3EthContract(lpAbi, address);
       return {
         totalSupply: vault.methods.totalSupply(),
         token0: vault.methods.token0(),
@@ -351,7 +335,7 @@ module.exports = class PriceOracle {
       };
 
       if (!ercs[v.token0]) {
-        const vault = new web3.eth.Contract(erc20ABI, v.token0);
+        const vault = new Web3EthContract(erc20ABI, v.token0);
         ercs[v.token0] = {
           symbol: vault.methods.symbol(),
           decimals: vault.methods.decimals(),
@@ -360,7 +344,7 @@ module.exports = class PriceOracle {
       }
 
       if (!ercs[v.token1]) {
-        const vault = new web3.eth.Contract(erc20ABI, v.token1);
+        const vault = new Web3EthContract(erc20ABI, v.token1);
         ercs[v.token1] = {
           symbol: vault.methods.symbol(),
           decimals: vault.methods.decimals(),
@@ -431,7 +415,6 @@ module.exports = class PriceOracle {
       }
 
       this.priceCollector.add(c.address, number)
-      pricesAddress[c.address.toLowerCase()] = number;
     });
 
     this.lpTokenCollector.save();
@@ -496,15 +479,17 @@ module.exports = class PriceOracle {
 
   async inchPricesAsBnb(bnbPrice) {
     if (!bnbPrice) {
-      return;
+      return [];
     }
 
-    let [tokens, prices] = await Promise.all([
+    let [tokens, pricesMap] = await Promise.all([
       this.jsonRequest('https://tokens.1inch.exchange/v1.1/chain-56'),
       this.jsonRequest('https://token-prices.1inch.exchange/v1.1/56'),
     ]);
 
-    for (const [key, value] of Object.entries(prices)) {
+    const prices = [];
+
+    for (const [key, value] of Object.entries(pricesMap)) {
       if (tokens[key] && tokens[key].decimals && tokens[key].symbol && !['bnb', 'wbnb'].includes(tokens[key].symbol.toLowerCase())) {
         const price = (value / 10 ** 18) * bnbPrice;
 
@@ -514,9 +499,16 @@ module.exports = class PriceOracle {
           continue
         }
 
-        pricesAddress[key.toLowerCase()] = price;
+        prices.push({
+          address: key,
+          symbol: tokens[key].symbol.toLowerCase(),
+          price: price,
+          source: '1inch',
+        });
       }
     }
+
+    return prices;
   }
 
   async updateTokensVswap() {
@@ -542,8 +534,6 @@ module.exports = class PriceOracle {
 
     const prices = [];
     result.data.tokens.forEach(t => {
-      tokenMaps[t.id.toLowerCase()] = t.symbol.toLowerCase();
-
       this.tokenCollector.add({
         symbol: t.symbol,
         address: t.id,

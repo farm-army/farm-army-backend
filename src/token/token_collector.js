@@ -28,11 +28,13 @@ module.exports = class TokenCollector {
 
   add(token) {
     if (!token.symbol || !token.address || !token.decimals) {
-      throw new Error(`Invalid token: ${JSON.stringify(token)}`)
+      console.error(`Invalid token: ${JSON.stringify(token)}`);
+      return;
     }
 
     if (token.symbol.length > 30 || !token.address.startsWith('0x') || token.decimals > 20 || token.decimals < 0) {
-      throw new Error(`Invalid token: ${JSON.stringify(token)}`)
+      console.error(`Invalid token: ${JSON.stringify(token)}`);
+      return;
     }
 
     let tokenObject = Object.freeze({
@@ -64,7 +66,8 @@ module.exports = class TokenCollector {
    */
   getTokenBySymbol(symbol) {
     if (!symbol || symbol.length > 50) {
-      throw new Error(`Invalid symbol: ${symbol}`)
+      console.error(`Invalid symbol: ${symbol}`)
+      return undefined;
     }
 
     return this.tokenSymbols[symbol.toLowerCase()] || undefined

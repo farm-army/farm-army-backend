@@ -184,7 +184,8 @@ module.exports = {
     return (db = new Db(
       this.getDatabase(),
       this.getPriceOracle(),
-      this.getPlatforms()
+      this.getPlatforms(),
+      this.getPriceCollector()
     ));
   },
 

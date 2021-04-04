@@ -1,17 +1,16 @@
 "use strict";
 
 module.exports = class Db {
-  constructor(database, priceOracle, platforms) {
+  constructor(database, priceOracle, platforms, priceCollector) {
     this.database = database;
     this.priceOracle = priceOracle;
     this.platforms = platforms;
+    this.priceCollector = priceCollector;
   }
 
   async updateAddressMaps() {
     const inserts = [];
-    for (const [key, value] of Object.entries(
-        this.priceOracle.getAllAddressPrices()
-    )) {
+    for (const [key, value] of Object.entries(this.priceCollector.getAddressMap())) {
       inserts.push({
         token: key,
         price: value.toString()
