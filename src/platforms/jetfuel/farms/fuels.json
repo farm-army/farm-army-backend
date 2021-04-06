@@ -11,7 +11,7 @@
       "address": "0x3763a3263ceaca5e7cc1bc22a43920bad9f743cd",
       "addLiquidityLink": "https://exchange.pancakeswap.finance/#/add/ETH/0x2090c8295769791ab7A3CF1CC6e0AA19F35e441A",
       "infoLink": "https://pancakeswap.info/pair/0x3763a3263ceaca5e7cc1bc22a43920bad9f743cd",
-      "weight": 5000,
+      "weight": 4950,
       "otherAssetSymbol": "FUEL",
       "type": "lp",
       "provider": {
@@ -43,7 +43,7 @@
       "address": "0xd26092c6ce6fb359302a9453dc0c7f312794ef7e",
       "addLiquidityLink": "https://swap.hyperjump.fi/#/add/0x2090c8295769791ab7a3cf1cc6e0aa19f35e441a/BNB",
       "infoLink": "https://info.hyperjump.fi/pair/0xd26092c6ce6fb359302a9453dc0c7f312794ef7e",
-      "weight": 2925,
+      "weight": 2950,
       "otherAssetSymbol": "FUEL",
       "type": "lp",
       "provider": {
@@ -325,7 +325,7 @@
       "address": "0xd46e7f33f8788f87d6017074dc4e4d781d3df91e",
       "addLiquidityLink": "https://swap.hyperjump.fi/#/add/0x6fd7c98458a943f469e1cf4ea85b173f5cd342f4/BNB",
       "infoLink": "https://info.hyperjump.fi/pair/0xd46e7f33f8788f87d6017074dc4e4d781d3df91e",
-      "weight": 149,
+      "weight": 100,
       "otherAssetSymbol": "BHC",
       "type": "lp",
       "provider": {
@@ -355,7 +355,7 @@
       "address": "0x70d8929d04b60af4fb9b58713ebcf18765ade422",
       "addLiquidityLink": "https://exchange.pancakeswap.finance/?_gl=1*16p1jnt*_ga*MTY0ODM3NTQ1MC4xNjA3MTk1OTc5*_ga_334KNG3DMQ*MTYwNzE5NTk3OS4xLjEuMTYwNzE5NjQwMC4w#/add/0x2170ed0880ac9a755fd29b2688956bd959f933f8/ETH",
       "infoLink": "https://pancakeswap.info/pair/0x70d8929d04b60af4fb9b58713ebcf18765ade422",
-      "weight": 141,
+      "weight": 120,
       "otherAssetSymbol": "ETH",
       "type": "lp",
       "provider": {
@@ -387,7 +387,7 @@
       "pid": 0,
       "addLiquidityLink": "https://exchange.pancakeswap.finance/?_gl=1*1sc8z1e*_ga*MTY0ODM3NTQ1MC4xNjA3MTk1OTc5*_ga_334KNG3DMQ*MTYwNzE5NTk3OS4xLjEuMTYwNzE5NjQzMS4w#/add/0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82/ETH",
       "infoLink": "https://pancakeswap.info/pair/0xa527a61703d82139f8a06bc30097cc9caa2df5a6",
-      "weight": 141,
+      "weight": 120,
       "otherAssetSymbol": "CAKE",
       "type": "lp",
       "provider": {
@@ -418,7 +418,7 @@
       "address": "0x4269e7f43a63cea1ad7707be565a94a9189967e9",
       "addLiquidityLink": "https://exchange.pancakeswap.finance/?_gl=1*1uddt8h*_ga*MTY0ODM3NTQ1MC4xNjA3MTk1OTc5*_ga_334KNG3DMQ*MTYwNzIyODMwMy4yLjEuMTYwNzIyOTAxNi4w#/add/0xbf5140a22578168fd562dccf235e5d43a02ce9b1/ETH",
       "infoLink": "https://pancakeswap.info/pair/0x4269e7f43a63cea1ad7707be565a94a9189967e9",
-      "weight": 141,
+      "weight": 120,
       "otherAssetSymbol": "UNI",
       "type": "lp",
       "provider": {
@@ -449,7 +449,7 @@
       "address": "0xaebe45e3a03b734c68e5557ae04bfc76917b4686",
       "addLiquidityLink": "https://exchange.pancakeswap.finance/?_gl=1*14v4kgq*_ga*MTY0ODM3NTQ1MC4xNjA3MTk1OTc5*_ga_334KNG3DMQ*MTYwNzE5NTk3OS4xLjEuMTYwNzE5NjQ2MC4w#/add/0xf8a0bf9cf54bb92f17374d9e9a321e6a111a51bd/ETH",
       "infoLink": "https://pancakeswap.info/pair/0xaebe45e3a03b734c68e5557ae04bfc76917b4686",
-      "weight": 141,
+      "weight": 120,
       "otherAssetSymbol": "LINK",
       "type": "lp",
       "provider": {
@@ -480,7 +480,7 @@
       "address": "0x1b96b92314c44b159149f7e0303511fb2fc4774f",
       "addLiquidityLink": "https://exchange.pancakeswap.finance/?_gl=1*5h3ybq*_ga*MTY0ODM3NTQ1MC4xNjA3MTk1OTc5*_ga_334KNG3DMQ*MTYwNzE5NTk3OS4xLjEuMTYwNzE5NjM1My4w#/add/0xe9e7cea3dedca5984780bafc599bd69add087d56/ETH",
       "infoLink": "https://pancakeswap.info/pair/0x1b96b92314c44b159149f7e0303511fb2fc4774f",
-      "weight": 81,
+      "weight": 70,
       "otherAssetSymbol": "WBUSD",
       "type": "lp",
       "provider": {
@@ -511,7 +511,7 @@
       "address": "0x20bcc3b8a0091ddac2d0bc30f68e6cbb97de59cd",
       "addLiquidityLink": "https://exchange.pancakeswap.finance/?_gl=1*ycnthk*_ga*MTY0ODM3NTQ1MC4xNjA3MTk1OTc5*_ga_334KNG3DMQ*MTYwNzE5NTk3OS4xLjEuMTYwNzE5NjM3Ny4w#/add/0x55d398326f99059ff775485246999027b3197955/ETH",
       "infoLink": "https://pancakeswap.info/pair/0x20bcc3b8a0091ddac2d0bc30f68e6cbb97de59cd",
-      "weight": 81,
+      "weight": 70,
       "otherAssetSymbol": "USDT",
       "type": "lp",
       "provider": {
@@ -1364,5 +1364,37 @@
       "type": "vault"
     },
     "strategyAddress": "0x867Af054bEfC5316D92E61Cd594aE87D464DB13c"
+  },
+  {
+    "id": 45,
+    "name": "Space Shuttle Atlantis",
+    "img": "rocket.svg",
+    "route": "/space-shuttle-atlantis",
+    "asset": {
+      "symbol": "TRYON-BNB-CAKE",
+      "label": "TRYON-BNB",
+      "decimals": 18,
+      "address": "0x4f64775d261e1ee3ed2f24a5e18d8ca6905a879b",
+      "addLiquidityLink": "https://exchange.pancakeswap.finance/#/add/0x050f65BEf6bd15De57462cf75d06BafEB2A59118/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "infoLink": "https://pancakeswap.info/pair/0x4f64775d261e1ee3ed2f24a5e18d8ca6905a879b",
+      "otherAssetSymbol": "TRYON",
+      "weight": 230,
+      "type": "lp",
+      "provider": {
+        "value": "pancake",
+        "label": "PancakeSwap",
+        "masterAddress": "0x73feaa1eE314F8c655E354234017bE2193C9E24E"
+      },
+      "inFuel": true,
+      "smallNum": true
+    },
+    "vaultAsset": {
+      "symbol": "TRYON-BNB-CAKE-VAULT",
+      "label": "TRYON-BNB-CAKE-VAULT",
+      "decimals": 18,
+      "address": "0x4ad9A2Aba8155a3c4D9148d8dB3212926f901aFa",
+      "type": "vault"
+    },
+    "strategyAddress": "0x7aC6832E4AD2105aE4888D8BF93636f377830be9"
   }
 ]

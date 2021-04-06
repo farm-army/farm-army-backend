@@ -30,6 +30,122 @@
     "isFinished": false
   },
   {
+    "sousId": 91,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "NRV",
+      "address": {
+        "56": "0x42f6f551ae042cbe50c739158b4f0cac0edb9096",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://nerve.fi/"
+    },
+    "contractAddress": {
+      "56": "0xABFd8d1942628124aB971937154f826Bce86DcbC",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.15046"
+  },
+  {
+    "sousId": 90,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "DEGO",
+      "address": {
+        "56": "0x3fda9383a84c05ec8f7630fe10adf1fac13241cc",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://bsc.dego.finance/home"
+    },
+    "contractAddress": {
+      "56": "0x526d3c204255f807C95a99b69596f2f9f72345e5",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.00405"
+  },
+  {
+    "sousId": 89,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "GUM",
+      "address": {
+        "56": "0xc53708664b99DF348dd27C3Ac0759d2DA9c40462",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://gourmetgalaxy.io/"
+    },
+    "contractAddress": {
+      "56": "0xAa2082BeE04fc518300ec673F9497ffa6F669dB8",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.08912"
+  },
+  {
+    "sousId": 88,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "pBTC",
+      "address": {
+        "56": "0xed28a457a5a76596ac48d87c0f577020f6ea1c4c",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://ptokens.io/"
+    },
+    "contractAddress": {
+      "56": "0x9096625Bc0d36F5EDa6d44e511641667d89C28f4",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.0000031"
+  },
+  {
     "sousId": 87,
     "stakingToken": {
       "symbol": "CAKE",
