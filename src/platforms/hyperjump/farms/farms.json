@@ -144,6 +144,60 @@
     }
   },
   {
+    "pid": 8,
+    "lpSymbol": "JGN-BNB",
+    "lpAddresses": {
+      "56": "0xc7c4726d0a45e4e7392901a90dcb52ec4d2bd1a3",
+      "97": "0xc7c4726d0a45e4e7392901a90dcb52ec4d2bd1a3"
+    },
+    "tokenSymbol": "JGN",
+    "tokenAddresses": {
+      "56": "0xc13b7a43223bb9bf4b69bd68ab20ca1b79d81c75",
+      "97": "0xc13b7a43223bb9bf4b69bd68ab20ca1b79d81c75"
+    },
+    "quoteTokenSymbol": "BNB",
+    "quoteTokenAdresses": {
+      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    }
+  },
+  {
+    "pid": 38,
+    "lpSymbol": "JGN-ALLOY",
+    "lpAddresses": {
+      "56": "0x5f4276e7e4c34fba1cfe4145d1c0417c8d223a81",
+      "97": "0x5f4276e7e4c34fba1cfe4145d1c0417c8d223a81"
+    },
+    "tokenSymbol": "JGN",
+    "tokenAddresses": {
+      "56": "0xc13b7a43223bb9bf4b69bd68ab20ca1b79d81c75",
+      "97": "0xc13b7a43223bb9bf4b69bd68ab20ca1b79d81c75"
+    },
+    "quoteTokenSymbol": "ALLOY",
+    "quoteTokenAdresses": {
+      "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+      "97": "0xC5FD6F3eB1f63082Daee9e09E17D870005962309"
+    }
+  },
+  {
+    "pid": 39,
+    "lpSymbol": "SOAK-ALLOY",
+    "lpAddresses": {
+      "56": "0x911439fc0438924c2a56e7a849dd018150eed1ab",
+      "97": "0x911439fc0438924c2a56e7a849dd018150eed1ab"
+    },
+    "tokenSymbol": "SOAK",
+    "tokenAddresses": {
+      "56": "0x849233ff1aea15d80ef658b2871664c9ca994063",
+      "97": "0x849233ff1aea15d80ef658b2871664c9ca994063"
+    },
+    "quoteTokenSymbol": "ALLOY",
+    "quoteTokenAdresses": {
+      "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+      "97": "0xC5FD6F3eB1f63082Daee9e09E17D870005962309"
+    }
+  },
+  {
     "pid": 36,
     "lpSymbol": "GFCE-BNB",
     "lpAddresses": {
@@ -622,24 +676,6 @@
     "tokenAddresses": {
       "56": "0x3aabcf53a1930a42e18d938c019e83ebee50a849",
       "97": "0x3aabcf53a1930a42e18d938c019e83ebee50a849"
-    },
-    "quoteTokenSymbol": "BNB",
-    "quoteTokenAdresses": {
-      "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-      "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
-    }
-  },
-  {
-    "pid": 8,
-    "lpSymbol": "JGN-BNB",
-    "lpAddresses": {
-      "56": "0xc7c4726d0a45e4e7392901a90dcb52ec4d2bd1a3",
-      "97": "0xc7c4726d0a45e4e7392901a90dcb52ec4d2bd1a3"
-    },
-    "tokenSymbol": "JGN",
-    "tokenAddresses": {
-      "56": "0xc13b7a43223bb9bf4b69bd68ab20ca1b79d81c75",
-      "97": "0xc13b7a43223bb9bf4b69bd68ab20ca1b79d81c75"
     },
     "quoteTokenSymbol": "BNB",
     "quoteTokenAdresses": {

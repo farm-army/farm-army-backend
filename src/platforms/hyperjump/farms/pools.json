@@ -17,6 +17,40 @@
     "tokenDecimals": 18
   },
   {
+    "sousId": 85,
+    "tokenName": "NAR",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0x5C9C4b9412E193D38374eF954d10C74DD4f1C9d0",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://narwhalswap.org/",
+    "harvest": true,
+    "tokenPerBlock": "0.09375",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 84,
+    "tokenName": "GFCE",
+    "stakingTokenName": "ALLOY",
+    "stakingTokenAddress": "0x3ae713C662B8852D686e718E0762631A4CB84954",
+    "contractAddress": {
+      "56": "0x4ADc9b5aAAfed932586A1b383F2F0f9ce3454c3a",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://jetfuel.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.005208",
+    "sortOrder": 999,
+    "isFinished": false,
+    "tokenDecimals": 9
+  },
+  {
     "sousId": 83,
     "tokenName": "BELUGA",
     "stakingTokenName": "ALLOY",

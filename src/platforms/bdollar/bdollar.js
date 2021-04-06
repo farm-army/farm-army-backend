@@ -180,7 +180,12 @@ module.exports = class bdollar {
       }
 
       if (farm.earnTokenName) {
-        item.earns = [farm.earnTokenName.toLowerCase()];
+        const earnTokenName = farm.earnTokenName.toLowerCase().replace(/\s/g, '')
+        let split = earnTokenName.split('+').filter(e => e.match(/^[\w-]{1,6}$/g));
+
+        if (split.length > 0) {
+          item.earns = split;
+        }
       }
 
       if (!item.extra.transactionToken && farm.depositTokenName) {
