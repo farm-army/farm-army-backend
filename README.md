@@ -7,8 +7,10 @@ Track your farming and pool performance on the Binance Chain
 | Platform  | Auto Fetch | Done | Notes |  
 |---|---|---|---|  
 | acryptos  | :x:  | :heavy_check_mark:  |  |  
+| alpaca | :heavy_check_mark:  | :heavy_check_mark:  |   | 
+| alpha | :x:  | :white_check_mark:  |   | 
 | apeswap | :x: | :heavy_check_mark:  |  |
-| autofarm | :heavy_check_mark:  | :heavy_check_mark:  |   |  
+| autofarm | :heavy_check_mark:  | :heavy_check_mark:  |   |
 | bakery | :white_check_mark: | :white_check_mark:  | farm config inconsistent for non so called "supportedPools"  |  
 | bdollar | :x:  |  :white_check_mark: | staking missing  |  
 | bearn | :x:  |  :white_check_mark: | staking missing  |  
@@ -17,13 +19,16 @@ Track your farming and pool performance on the Binance Chain
 | goose | :white_check_mark:  | :white_check_mark: | pools  |  
 | hyperjump | :x: |  :heavy_check_mark: | |  
 | jetfuel | :x:  | :white_check_mark:  |  staking missing  |  
+| jul | :x:  | :white_check_mark:  |   |
 | slime | :x: | :heavy_check_mark:  |  |
 | kebab | :x:  | :white_check_mark:  |  pools |  
 | pancake | :white_check_mark: | :heavy_check_mark: |   |  
 | pancakebunny | :x: | :heavy_check_mark:  |   |  
 | saltswap | :x: | :heavy_check_mark:  |  |
 | slime | :x: | :heavy_check_mark:  |  |
+| space | :x:  | :white_check_mark:  |   |
 | valuedefi | :heavy_check_mark: | :white_check_mark:  | staking missing |
+| wault | :x:  | :white_check_mark:  |   | 
 
  - `Auto Fetch`
    - :heavy_check_mark: New vaults are directly added when new are added New vaults are directly added when new are added
