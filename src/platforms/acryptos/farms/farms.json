@@ -5,7 +5,7 @@
       "token": "0x4197C6EF3879a08cD51e5560da5064B773aa1d29",
       "tokenSymbol": "ACS",
       "strategy": "0x8650ab7e2C53E705d484c3b98bE14C1Ba1e8D690",
-      "walletInfo": "<a class=\"wallet-info\" href=\"https://exchange.pancakeswap.finance/#/swap?outputCurrency=0x4197C6EF3879a08cD51e5560da5064B773aa1d29\" target=\"_blank\"><span data-i18n=\"get\">Get</span> ACS</a>",
+      "walletInfo": "<a class=\"wallet-info\" href=\"https://1inch.exchange/#/r/0x5BD97307A40DfBFDBAEf4B3d997ADB816F2dadCC/BNB/ACS?network=56\" target=\"_blank\"><span data-i18n=\"get\">Get</span> ACS</a>",
       "transactionInfo": "<a class=\"wallet-info\" href=\"https://docs.acryptos.com/fees#acs-vault\" target=\"_blank\"><span data-i18n=\"withdrawFee\">Withdrawal fee</span>: 10%<br/>acsACS <span data-i18n=\"nonTrans\">is non-transferrable</span></a>"
     },
     "tags": [
@@ -514,7 +514,6 @@
     "tags": [
       "acs",
       "pancake",
-      null,
       "v2"
     ]
   },
@@ -536,7 +535,6 @@
     "tags": [
       "acs",
       "pancake",
-      null,
       "v2"
     ]
   },
@@ -558,7 +556,6 @@
     "tags": [
       "acs",
       "pancake",
-      null,
       "v2"
     ]
   },
@@ -580,7 +577,6 @@
     "tags": [
       "acs",
       "pancake",
-      null,
       "v2"
     ]
   },
@@ -601,7 +597,6 @@
     "tags": [
       "acs",
       "pancake",
-      null,
       "v2"
     ]
   },
@@ -670,7 +665,6 @@
     "tags": [
       "acs",
       "pancake",
-      null,
       "v2"
     ]
   },
@@ -691,8 +685,30 @@
     "tags": [
       "acs",
       "pancake",
-      null,
       "v2"
+    ]
+  },
+  {
+    "vault": {
+      "address": "0x1B5ca4cBf6a2f453506fEC365dc0061d8D127Ec9",
+      "token": "0xb5F6f7dAD23132d40d778085D795BD0FD4B859CD",
+      "tokenSymbol": "pBTC-BNB",
+      "harvesterRewardSymbol": "CAKE",
+      "strategy": "0x88206dba3b99C69C82352091893456650e706022",
+      "walletInfo": "<a class=\"wallet-info\" href=\"https://exchange.pancakeswap.finance/#/add/BNB/0xeD28A457A5A76596ac48d87C0f577020F6Ea1c4C\" target=\"_blank\"><span data-i18n=\"get\">Get</span> pBTC-BNB</a>",
+      "fromBlock": 6168888,
+      "defaultRoiDay": 0.007912328767123288
+    },
+    "farm": {
+      "master": "0xb1fa5d3c0111d8E9ac43A19ef17b281D5D4b474E",
+      "token": "0x1B5ca4cBf6a2f453506fEC365dc0061d8D127Ec9",
+      "tokenSymbol": "acs.pBTC-BNB"
+    },
+    "tags": [
+      "acs",
+      "pancake",
+      "v2",
+      "new"
     ]
   },
   {
@@ -855,6 +871,54 @@
   },
   {
     "vault": {
+      "address": "0xD7d38dBcC1cF9DF5f644b23eB19DdeA17105ec25",
+      "token": "0xc746337b5F800a0e19eD4eB3bda03FF1401B8167",
+      "tokenSymbol": "ZIL-BNB",
+      "harvesterRewardSymbol": "CAKE",
+      "strategy": "0xA29489BffF0D59E6415A1788E1F3765D18961e57",
+      "walletInfo": "<a class=\"wallet-info\" href=\"https://exchange.pancakeswap.finance/#/add/BNB/0xb86AbCb37C3A4B64f74f59301AFF131a1BEcC787\" target=\"_blank\"><span data-i18n=\"get\">Get</span> ZIL-BNB</a>",
+      "fromBlock": 6098888,
+      "defaultRoiDay": 0.0035309589041095887
+    },
+    "farm": {
+      "master": "0xb1fa5d3c0111d8E9ac43A19ef17b281D5D4b474E",
+      "token": "0xD7d38dBcC1cF9DF5f644b23eB19DdeA17105ec25",
+      "tokenSymbol": "acsZIL-BNB",
+      "transactionInfo": "<a class=\"wallet-info\" href=\"https://docs.acryptos.com/fees#acs-farms-v2\" target=\"_blank\">Harvest fee: 0.03 ACS</a>"
+    },
+    "tags": [
+      "acs",
+      "pancake",
+      "v2",
+      "new"
+    ]
+  },
+  {
+    "vault": {
+      "address": "0xeF015F747dC06672501Ff0F20c3b94F56FA5427F",
+      "token": "0x496a8b716A3A3410B16e71E3c906968CE4488e52",
+      "tokenSymbol": "TKO-BNB",
+      "harvesterRewardSymbol": "CAKE",
+      "strategy": "0xC0ceB8D9E60A9a68eFf0C13277cAdac3baCD7694",
+      "walletInfo": "<a class=\"wallet-info\" href=\"https://exchange.pancakeswap.finance/#/add/BNB/0x9f589e3eabe42ebC94A44727b3f3531C0c877809\" target=\"_blank\"><span data-i18n=\"get\">Get</span> TKO-BNB</a>",
+      "fromBlock": 6378888,
+      "defaultRoiDay": 0.010652054794520548
+    },
+    "farm": {
+      "master": "0xb1fa5d3c0111d8E9ac43A19ef17b281D5D4b474E",
+      "token": "0xeF015F747dC06672501Ff0F20c3b94F56FA5427F",
+      "tokenSymbol": "acsTKO-BNB",
+      "transactionInfo": "<a class=\"wallet-info\" href=\"https://docs.acryptos.com/fees#acs-farms-v2\" target=\"_blank\">Harvest fee: 0.03 ACS</a>"
+    },
+    "tags": [
+      "acs",
+      "pancake",
+      "v2",
+      "new"
+    ]
+  },
+  {
+    "vault": {
       "address": "0xe427a9688C0d16eA5d29DB0dcC1D6E1e61Ea9908",
       "token": "0x610e7a287c27dfFcaC0F0a94f547Cc1B770cF483",
       "tokenSymbol": "TWT-BNB",
@@ -966,6 +1030,30 @@
   },
   {
     "vault": {
+      "address": "0xC109d8B9F89Bd939B81Df4Fe47951f9683207102",
+      "token": "0xdC6C130299E53ACD2CC2D291fa10552CA2198a6b",
+      "tokenSymbol": "WATCH-BNB",
+      "harvesterRewardSymbol": "CAKE",
+      "strategy": "0x603CeEf3ef79E986a1B13A1861632Dc759Cf470f",
+      "walletInfo": "<a class=\"wallet-info\" href=\"https://exchange.pancakeswap.finance/#/add/BNB/0x7A9f28EB62C791422Aa23CeAE1dA9C847cBeC9b0\" target=\"_blank\"><span data-i18n=\"get\">Get</span> WATCH-BNB</a>",
+      "fromBlock": 5958888,
+      "defaultRoiDay": 0.0057229589041095895
+    },
+    "farm": {
+      "master": "0xb1fa5d3c0111d8E9ac43A19ef17b281D5D4b474E",
+      "token": "0xC109d8B9F89Bd939B81Df4Fe47951f9683207102",
+      "tokenSymbol": "acsWATCH-BNB",
+      "transactionInfo": "<a class=\"wallet-info\" href=\"https://docs.acryptos.com/fees#acs-farms-v2\" target=\"_blank\">Harvest fee: 0.03 ACS</a>"
+    },
+    "tags": [
+      "acs",
+      "pancake",
+      "v2",
+      "new"
+    ]
+  },
+  {
+    "vault": {
       "address": "0x2D8483Bc2a9E2723711888532Fd542483F041137",
       "token": "0x4576C456AF93a37a096235e5d83f812AC9aeD027",
       "tokenSymbol": "SWINGBY-BNB",
@@ -1061,6 +1149,30 @@
   },
   {
     "vault": {
+      "address": "0x373561f3119353e50F21EE1181dd8749ae8276b9",
+      "token": "0xf64a269F0A06dA07D23F43c1Deb217101ee6Bee7",
+      "tokenSymbol": "MIR-UST",
+      "harvesterRewardSymbol": "CAKE",
+      "strategy": "0x795AA6253DA7CAa9c2d38b2f2a471a0505493225",
+      "walletInfo": "<a class=\"wallet-info\" href=\"https://exchange.pancakeswap.finance/#/add/0x23396cF899Ca06c4472205fC903bDB4de249D6fC/0x5B6DcF557E2aBE2323c48445E8CC948910d8c2c9\" target=\"_blank\"><span data-i18n=\"get\">Get</span> MIR-UST</a>",
+      "fromBlock": 6308888,
+      "defaultRoiDay": 0.002983013698630137
+    },
+    "farm": {
+      "master": "0xb1fa5d3c0111d8E9ac43A19ef17b281D5D4b474E",
+      "token": "0x373561f3119353e50F21EE1181dd8749ae8276b9",
+      "tokenSymbol": "acsMIR-UST",
+      "transactionInfo": "<a class=\"wallet-info\" href=\"https://docs.acryptos.com/fees#acs-farms-v2\" target=\"_blank\">Harvest fee: 0.03 ACS</a>"
+    },
+    "tags": [
+      "acs",
+      "pancake",
+      "v2",
+      "new"
+    ]
+  },
+  {
+    "vault": {
       "address": "0xED51b5c077B71d5B475E30C88B72632fa679fCE3",
       "token": "0x0392957571F28037607C14832D16f8B653eDd472",
       "tokenSymbol": "COMP-ETH",
@@ -1133,7 +1245,7 @@
       "token": "0x5b17b4d5e4009B5C43e3e3d63A5229F794cBA389",
       "tokenSymbol": "ACSI",
       "strategy": "0x7232e1f646B14edFC263E04311729cCfE0ef20Fb",
-      "walletInfo": "<a class=\"wallet-info\" href=\"https://exchange.pancakeswap.finance/#/swap?inputCurrency=0x4197C6EF3879a08cD51e5560da5064B773aa1d29&outputCurrency=0x5b17b4d5e4009B5C43e3e3d63A5229F794cBA389\" target=\"_blank\"><span data-i18n=\"get\">Get</span> ACSI</a>",
+      "walletInfo": "<a class=\"wallet-info\" href=\"https://1inch.exchange/#/r/0x5BD97307A40DfBFDBAEf4B3d997ADB816F2dadCC/ACS/ACSI?network=56\" target=\"_blank\"><span data-i18n=\"get\">Get</span> ACSI</a>",
       "transactionInfo": "<a class=\"wallet-info\" href=\"https://docs.acryptos.com/fees#acs-vault\" target=\"_blank\"><span data-i18n=\"withdrawFee\">Withdrawal fee</span>: 10%<br/>acsACSI <span data-i18n=\"nonTrans\">is non-transferrable</span></a>"
     },
     "tags": [

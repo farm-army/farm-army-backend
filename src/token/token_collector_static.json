@@ -93,5 +93,10 @@
     "symbol": "alpha",
     "address": "0xa1faa113cbE53436Df28FF0aEe54275c13B40975",
     "decimals": 18
+  },
+  {
+    "symbol": "mdx",
+    "address": "0x9c65ab58d8d978db963e63f2bfb7121627e3a739",
+    "decimals": 18
   }
 ]

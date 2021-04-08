@@ -21,7 +21,8 @@ Track your farming and pool performance on the Binance Chain
 | jetfuel | :x:  | :white_check_mark:  |  staking missing  |  
 | jul | :x:  | :white_check_mark:  |   |
 | slime | :x: | :heavy_check_mark:  |  |
-| kebab | :x:  | :white_check_mark:  |  pools |  
+| kebab | :x:  | :white_check_mark:  |  pools |
+| mdex | :x:  | :white_check_mark:  |   |  
 | pancake | :white_check_mark: | :heavy_check_mark: |   |  
 | pancakebunny | :x: | :heavy_check_mark:  |   |  
 | saltswap | :x: | :heavy_check_mark:  |  |

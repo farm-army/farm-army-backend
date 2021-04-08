@@ -235,6 +235,10 @@ module.exports = class Balances {
         token: "alpha",
         contract: "0xa1faa113cbE53436Df28FF0aEe54275c13B40975"
       },
+      {
+        token: "mdx",
+        contract: "0x9c65ab58d8d978db963e63f2bfb7121627e3a739"
+      },
     ];
   }
 

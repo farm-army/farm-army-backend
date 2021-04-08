@@ -213,16 +213,14 @@ module.exports = class pancakebunny {
       }
 
       if (farm.earn) {
-        const earn = farm.earn.toLowerCase().replace(/  +/g, " ");
-        earn.split("+").forEach(e => {
+        const earn = farm.earn.toLowerCase().replace(/ /g, '');
+        earn.split("+").filter(e => e.match(/^[\w-]{1,6}$/g)).forEach(e => {
           const token = e.trim();
-          if (["bunny", "cake", "bnb", "wbnb"].includes(token)) {
-            if (!items.earns) {
-              items.earns = [];
-            }
-
-            items.earns.push(token);
+          if (!items.earns) {
+            items.earns = [];
           }
+
+          items.earns.push(token);
         });
       }
 

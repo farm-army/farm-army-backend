@@ -6,19 +6,17 @@
     "earn": "BUNNY",
     "summary": "Time to Boost BUNNY",
     "description": "Time to Boost BUNNY",
-    "type": "bunny",
-    "launch": 1615460700
+    "type": "bunny"
   },
   "BUNNY-BNB FLIP Boost": {
     "address": "0x69FF781Cf86d42af9Bf93c06B8bE0F16a2905cBC",
     "token": "0x7Bb89460599Dbf32ee3Aa50798BBcEae2A5F7f6a",
     "deposit": "BUNNY-BNB FLIP",
-    "earn": "BUNNY",
+    "earn": "CAKE + BUNNY",
     "summary": "Time to Boost BUNNY",
     "description": "Time to Boost BUNNY",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/ETH/0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51",
-    "type": "bunnyBNB",
-    "launch": 1615460700
+    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51",
+    "type": "bunnyBNB"
   },
   "BUNNY": {
     "address": "0xCADc8CB26c8C7cB46500E61171b5F27e9bd7889D",
@@ -29,16 +27,6 @@
     "description": "Take PancakeBunny's performance fee to WBNB",
     "type": "bunnyStake"
   },
-  "BUNNY-BNB FLIP (legacy)": {
-    "address": "0xc80eA568010Bca1Ad659d1937E17834972d66e0D",
-    "token": "0x7Bb89460599Dbf32ee3Aa50798BBcEae2A5F7f6a",
-    "deposit": "BUNNY-BNB FLIP",
-    "earn": "BUNNY",
-    "summary": "Double your BUNNY",
-    "description": "Take BUNNY as rewards for providing liquidity",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/ETH/0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51",
-    "type": "bunnyFlip"
-  },
   "CAKE": {
     "address": "0xEDfcB78e73f7bA6aD2D829bf5D462a0924da28eD",
     "token": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
@@ -47,13 +35,53 @@
     "description": "Auto-Compounding",
     "type": "cakeStake"
   },
+  "BNB": {
+    "address": "0x52cFa188A1468A521A98eaa798E715Fbb9eb38a3",
+    "token": "0x0000000000000000000000000000000000000000",
+    "earn": "BNB + BUNNY",
+    "summary": "Auto-Compounding",
+    "description": "Auto-Compounding",
+    "type": "venus"
+  },
+  "ETH": {
+    "address": "0x22af73683dee5D266B0c36c37D0Fd62c402Fd250",
+    "token": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+    "earn": "ETH + BUNNY",
+    "summary": "Auto-Compounding",
+    "description": "Auto-Compounding",
+    "type": "venus"
+  },
+  "BTCB": {
+    "address": "0x549d2e2B4fA19179CA5020A981600571C2954F6a",
+    "token": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+    "earn": "BTCB + BUNNY",
+    "summary": "Auto-Compounding",
+    "description": "Auto-Compounding",
+    "type": "venus"
+  },
+  "USDT": {
+    "address": "0x0Ba950F0f099229828c10a9B307280a450133FFc",
+    "token": "0x55d398326f99059fF775485246999027B3197955",
+    "earn": "USDT + BUNNY",
+    "summary": "Auto-Compounding",
+    "description": "Auto-Compounding",
+    "type": "venus"
+  },
+  "BUSD": {
+    "address": "0x0243A20B20ECa78ddEDF6b8ddb43a0286438A67A",
+    "token": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+    "earn": "BUSD + BUNNY",
+    "summary": "Auto-Compounding",
+    "description": "Auto-Compounding",
+    "type": "venus"
+  },
   "CAKE-BNB FLIP": {
     "address": "0x7eaaEaF2aB59C2c85a17BEB15B110F81b192e98a",
     "token": "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6",
     "earn": "CAKE-BNB FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/ETH/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
     "type": "flipToFlip"
   },
   "CAKE-BNB FLIP CAKE Maximizer": {
@@ -63,7 +91,7 @@
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
     "description": "How Maximizer Works?\\n*Check it out on the wiki",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/ETH/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
     "type": "flipToCake"
   },
   "BTCB-BNB FLIP": {
@@ -72,7 +100,7 @@
     "earn": "BTCB-BNB FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/ETH/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
     "type": "flipToFlip"
   },
   "BTCB-BNB FLIP CAKE Maximizer": {
@@ -82,7 +110,7 @@
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
     "description": "How Maximizer Works?\\n*Check it out on the wiki",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/ETH/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
     "type": "flipToCake"
   },
   "ETH-BNB FLIP": {
@@ -91,7 +119,7 @@
     "earn": "ETH-BNB FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/ETH/0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
     "type": "flipToFlip"
   },
   "ETH-BNB FLIP CAKE Maximizer": {
@@ -101,7 +129,7 @@
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
     "description": "How Maximizer Works?\\n*Check it out on the wiki",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/ETH/0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
     "type": "flipToCake"
   },
   "BUSD-BNB FLIP": {
@@ -110,7 +138,7 @@
     "earn": "BUSD-BNB FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/ETH/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
     "type": "flipToFlip"
   },
   "BUSD-BNB FLIP CAKE Maximizer": {
@@ -120,7 +148,7 @@
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
     "description": "How Maximizer Works?\\n*Check it out on the wiki",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/ETH/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
     "type": "flipToCake"
   },
   "USDT-BNB FLIP": {
@@ -129,7 +157,7 @@
     "earn": "USDT-BNB FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/ETH/0x55d398326f99059fF775485246999027B3197955",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x55d398326f99059fF775485246999027B3197955",
     "type": "flipToFlip"
   },
   "USDT-BNB FLIP CAKE Maximizer": {
@@ -139,7 +167,7 @@
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
     "description": "How Maximizer Works?\\n*Check it out on the wiki",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/ETH/0x55d398326f99059fF775485246999027B3197955",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x55d398326f99059fF775485246999027B3197955",
     "type": "flipToCake"
   },
   "VAI-BUSD FLIP": {
@@ -148,7 +176,7 @@
     "earn": "VAI-BUSD FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
     "type": "flipToFlip"
   },
   "VAI-BUSD FLIP CAKE Maximizer": {
@@ -158,7 +186,7 @@
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
     "description": "How Maximizer Works?\\n*Check it out on the wiki",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
     "type": "flipToCake"
   },
   "USDT-BUSD FLIP": {
@@ -167,7 +195,7 @@
     "earn": "USDT-BUSD FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/0x55d398326f99059fF775485246999027B3197955/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/0x55d398326f99059fF775485246999027B3197955/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
     "type": "flipToFlip"
   },
   "USDT-BUSD FLIP CAKE Maximizer": {
@@ -177,7 +205,7 @@
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
     "description": "How Maximizer Works?\\n*Check it out on the wiki",
-    "liquidity": "https://exchange.pancakeswap.finance/#/add/0x55d398326f99059fF775485246999027B3197955/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/0x55d398326f99059fF775485246999027B3197955/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
     "type": "flipToCake"
   }
 }

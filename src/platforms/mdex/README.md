@@ -1,0 +1,1 @@
+https://bscscan.com/address/0xc48fe252aa631017df253578b1405ea399728a50#readContract

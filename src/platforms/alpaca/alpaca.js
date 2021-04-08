@@ -294,11 +294,13 @@ module.exports = class acryptos {
 
         // positions
         if (call.positionInfo) {
+          // positionInfo[0]: position full value
+          // positionInfo[1]: debit
           const amount = call.positionInfo[0] || 0;
           if (amount > 0) {
             result.deposit = {
               symbol: "?",
-              amount: amount / 1e18, // bnb or busd
+              amount: (amount - (call.positionInfo[1] || 0)) / 1e18, //  bnb or busd
             };
 
             if (farm.raw.ibAddress && this.ibTokenMapping[farm.raw.ibAddress.toLowerCase()]) {
