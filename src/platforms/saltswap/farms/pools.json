@@ -320,7 +320,7 @@
     "harvest": true,
     "tokenPerBlock": "0.00005541666667",
     "sortOrder": 13,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18,
     "burnFee": 15
   },
@@ -423,5 +423,80 @@
     "isFinished": false,
     "tokenDecimals": 18,
     "burnFee": 5
+  },
+  {
+    "sousId": 17,
+    "tokenName": "PALM",
+    "stakingTokenName": "SALT-PALM",
+    "stakingTokenAddress": {
+      "56": "0x34951e9ca4891b4264a6cb9850e0b85a850414e5",
+      "97": "0x85582d24455caaf44fc4f914bdca2a6cb73e6681"
+    },
+    "contractAddress": {
+      "56": "0x42187c7eada603198165c2B95EA237865036BEd1",
+      "97": "0xF08d05d91426A63aB35Ef7f4bBC6E8717B59e838"
+    },
+    "rewardTokenAddress": {
+      "56": "0x9768E5b2d8e761905BC81Dfc554f9437A46CdCC6",
+      "97": "0xec5dcb5dbf4b114c9d0f65bccab49ec54f6a0867"
+    },
+    "poolCategory": "Community",
+    "projectLink": "https://yieldbay.finance",
+    "harvest": true,
+    "tokenPerBlock": "0.00744047619",
+    "sortOrder": 16,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "burnFee": 10
+  },
+  {
+    "sousId": 18,
+    "tokenName": "CAKE",
+    "stakingTokenName": "SALT",
+    "stakingTokenAddress": {
+      "56": "0x2849b1aE7E04A3D9Bc288673A92477CF63F28aF4",
+      "97": "0x85582d24455caaf44fc4f914bdca2a6cb73e6681"
+    },
+    "contractAddress": {
+      "56": "0x59f2B754944e78f849E03db39273da9251ADbF0E",
+      "97": "0x9FcA113B2D4E64462229E107A8F4Aa7359D055F5"
+    },
+    "rewardTokenAddress": {
+      "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://pancakeswap.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.001191340278",
+    "sortOrder": 17,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "burnFee": 15
+  },
+  {
+    "sousId": 19,
+    "tokenName": "MCH",
+    "stakingTokenName": "SALT-MCH",
+    "stakingTokenAddress": {
+      "56": "0xf09a33f69c7f9a19f87c53469b52665ec4e1c97b",
+      "97": "0x85582d24455caaf44fc4f914bdca2a6cb73e6681"
+    },
+    "contractAddress": {
+      "56": "0x01c1e411D447e9d18D95C05408A7e765Ec308D48",
+      "97": "0x9FcA113B2D4E64462229E107A8F4Aa7359D055F5"
+    },
+    "rewardTokenAddress": {
+      "56": "0x46483f3a766ae2c0c811ff953ac3dc69a3a20968",
+      "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee"
+    },
+    "poolCategory": "Community",
+    "projectLink": "https://magnifico-chef-git-main-chefmagnifico.vercel.app/",
+    "harvest": true,
+    "tokenPerBlock": "0.0162037037",
+    "sortOrder": 18,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "burnFee": 10
   }
 ]

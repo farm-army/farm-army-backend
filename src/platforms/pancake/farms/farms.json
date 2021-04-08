@@ -52,6 +52,162 @@
     }
   },
   {
+    "pid": 121,
+    "lpSymbol": "BONDLY-BNB LP",
+    "lpAddresses": {
+      "56": "0x67581bfb4fc13bb73c71489b504e9b5354769063",
+      "97": ""
+    },
+    "token": {
+      "symbol": "BONDLY",
+      "address": {
+        "56": "0x96058f8c3e16576d9bd68766f3836d9a33158f89",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.bondly.finance/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 120,
+    "lpSymbol": "TKO-BNB LP",
+    "lpAddresses": {
+      "56": "0x496a8b716A3A3410B16e71E3c906968CE4488e52",
+      "97": ""
+    },
+    "token": {
+      "symbol": "TKO",
+      "address": {
+        "56": "0x9f589e3eabe42ebc94a44727b3f3531c0c877809",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.tokocrypto.com/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 119,
+    "lpSymbol": "APYS-BNB LP",
+    "lpAddresses": {
+      "56": "0xE5783Cc9dFb3E7e474B81B07369a008e80F1cEdb",
+      "97": ""
+    },
+    "token": {
+      "symbol": "APYS",
+      "address": {
+        "56": "0x37dfACfaeDA801437Ff648A1559d73f4C40aAcb7",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://apyswap.com/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 118,
+    "lpSymbol": "HOO-BUSD LP",
+    "lpAddresses": {
+      "56": "0x3c9e55edbd937ae0ad8c084a1a8302110612a371",
+      "97": ""
+    },
+    "token": {
+      "symbol": "HOO",
+      "address": {
+        "56": "0xe1d1f66215998786110ba0102ef558b22224c016",
+        "97": ""
+      },
+      "decimals": 8,
+      "projectLink": "https://hoo.com/"
+    },
+    "quoteToken": {
+      "symbol": "BUSD",
+      "address": {
+        "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.paxos.com/busd/"
+    }
+  },
+  {
+    "pid": 117,
+    "lpSymbol": "ODDZ-BNB LP",
+    "lpAddresses": {
+      "56": "0x61376b56ff33c618b115131712a4138f98810a6a",
+      "97": ""
+    },
+    "token": {
+      "symbol": "ODDZ",
+      "address": {
+        "56": "0xcd40f2670cf58720b694968698a5514e924f742d",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://oddz.fi/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 116,
+    "lpSymbol": "EASY-BNB LP",
+    "lpAddresses": {
+      "56": "0xbd1ec00b0d1cca9d5b28fbe0bb7d664238af2ffa",
+      "97": ""
+    },
+    "token": {
+      "symbol": "EASY",
+      "address": {
+        "56": "0x7c17c8bed8d14bacce824d020f994f4880d6ab3b",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://easyfi.network/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
     "pid": 115,
     "lpSymbol": "NRV-BNB LP",
     "lpAddresses": {
