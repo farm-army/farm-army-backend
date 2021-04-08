@@ -227,8 +227,43 @@ module.exports = class Balances {
         token: "polaris",
         contract: "0x3a5325f0e5ee4da06a285e988f052d4e45aa64b4"
       },
+      {
+        token: "alpaca",
+        contract: "0x8F0528cE5eF7B51152A59745bEfDD91D97091d2F"
+      },
+      {
+        token: "alpha",
+        contract: "0xa1faa113cbE53436Df28FF0aEe54275c13B40975"
+      },
     ];
   }
+
+  async getBalancesFormFetched(wallet) {
+    const pools = await this.getPlatformTokens();
+
+    const tokenAddresses = pools.map(p => p.contract.toLowerCase());
+
+    const tokens = [];
+
+    wallet.forEach(w => {
+      if (tokenAddresses.includes(w.token.toLowerCase())) {
+        let item = {
+          balance: w.amount,
+          token: w.symbol,
+          contract: w.token
+        };
+
+        if (w.usd) {
+          item.usd = w.usd;
+        }
+
+        tokens.push(item);
+      }
+    })
+
+    return tokens;
+  }
+
   async getBalances(address) {
     const cacheKey = `balances-address-${address}`;
 
