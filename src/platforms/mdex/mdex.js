@@ -90,7 +90,7 @@ module.exports = class mdex {
         raw: Object.freeze(farm),
         provider: 'mdex',
         has_details: true,
-        link: `https://mdex.com/#/pool/liquidity/mdx/${encodeURIComponent(id)}`,
+        link: `https://mdex.com/#/pool/liquidity/mdx/${encodeURIComponent(farm.pid.toString())}`,
         extra: {},
         earns: ['mdx'],
       };

@@ -194,7 +194,7 @@ module.exports = class PriceOracle {
         rejectUnauthorized: false,
       });
       for (const [key, value] of Object.entries(pancakeTokens.prices)) {
-        if (key.toLowerCase() === 'banana' || key.length > 15) {
+        if (key.toLowerCase() === 'banana' || key === 'cCAKE' || key.length > 15) {
           continue
         }
 

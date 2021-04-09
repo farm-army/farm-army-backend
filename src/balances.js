@@ -239,6 +239,10 @@ module.exports = class Balances {
         token: "mdx",
         contract: "0x9c65ab58d8d978db963e63f2bfb7121627e3a739"
       },
+      {
+        token: "ccake",
+        contract: "0xc7091aa18598b87588e37501b6ce865263cd67ce"
+      }
     ];
   }
 

@@ -77,9 +77,7 @@ module.exports = class alpha {
     const positions = [];
     if (json.data && json.data.positions) {
       json.data.positions.forEach(p => {
-        if (p.debtShare && parseInt(p.debtShare) > 0) {
-          positions.push(p)
-        }
+        positions.push(p)
       })
     } else {
       console.log('alpha error: ', address)
@@ -178,12 +176,14 @@ module.exports = class alpha {
         const result = {};
 
         // positions
+        // positionInfo[0] => position
+        // positionInfo[1] => debit
         if (call.positionInfo) {
-          const amount = call.positionInfo[0] || 0;
-          if (amount > 0) {
+          const positionValue = call.positionInfo[0] || 0;
+          if (positionValue > 0) {
             result.deposit = {
               symbol: "?",
-              amount: amount / 1e18, // bnb
+              amount: (positionValue - (call.positionInfo[1] || 0)) / 1e18, // lp / token amount and removed leverage amount
             };
 
             if (farm.raw.lpTokenAddress) {

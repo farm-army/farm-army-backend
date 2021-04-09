@@ -98,5 +98,10 @@
     "symbol": "mdx",
     "address": "0x9c65ab58d8d978db963e63f2bfb7121627e3a739",
     "decimals": 18
+  },
+  {
+    "symbol": "ccake",
+    "address": "0xc7091aa18598b87588e37501b6ce865263cd67ce",
+    "decimals": 18
   }
 ]
