@@ -20,6 +20,8 @@ module.exports = class acryptos {
     ['0xd7D069493685A581d27824Fc46EdA46B7EfC0063'.toLowerCase()]: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
     // ibBUSD => BUSD
     ['0x7C9e73d4C71dae564d41F78d56439bB4ba87592f'.toLowerCase()]: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+    // ibETH => BUSD
+    ['0xbfF4a34A4644a113E8200D7F1D79b3555f723AfE'.toLowerCase()]: '0x2170ed0880ac9a755fd29b2688956bd959f933f8',
   }
 
   constructor(cache, priceOracle) {
@@ -129,7 +131,7 @@ module.exports = class acryptos {
       }
     }
 
-    const text = await request("https://raw.githubusercontent.com/alpaca-finance/alpaca-contract/master/.mainnet.json");
+    const text = await request("https://raw.githubusercontent.com/alpaca-finance/bsc-alpaca-contract/main/.mainnet.json");
 
     const response = JSON.parse(text.body);
     const farms = [];
