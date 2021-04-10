@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+  farmarmy:
+    container_name: farmarmy
+    image: fa
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+    volumes:
+      - farmarmy_cache:/farmarmy/var/cache
+      - farmarmy_db:/farmarmy/db
+
+volumes:
+  farmarmy_cache:
+  farmarmy_db:
+  
