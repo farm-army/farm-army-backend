@@ -49,7 +49,8 @@ Thumbs.db
 *.wmv
 
 .config.json.local
+db/
 .db.db
 .db.db.*
-
+var/cache
 
