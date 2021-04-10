@@ -44,6 +44,12 @@ module.exports = {
       return database;
     }
 
+    const dir = "db";
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+
+    const myDb = Sqlite(`${dir}/db.db`);
     const myDb = Sqlite("db.db");
     myDb.pragma("journal_mode = WAL");
     myDb.pragma("SYNCHRONOUS = 1;");
