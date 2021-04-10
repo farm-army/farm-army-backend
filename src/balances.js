@@ -271,42 +271,4 @@ module.exports = class Balances {
 
     return tokens;
   }
-
-  async getBalances(address) {
-    const cacheKey = `balances-address-${address}`;
-
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
-    }
-
-    const pools = await this.getPlatformTokens()
-
-    const vaultCalls = pools.map(pool => {
-      const vault = new Web3EthContract(ABI.erc20ABI, pool.contract);
-      return {
-        token: pool.token,
-        contract: pool.contract,
-        balance: vault.methods.balanceOf(address)
-      };
-    });
-
-    const balances = await utils.multiCall(vaultCalls);
-
-    for (const balance of balances) {
-      let price = this.priceOracle.findPrice(balance.contract.toLowerCase(), balance.token);
-
-      if (price) {
-        balance.usd = (balance.balance / 1e18) * price;
-      }
-
-      balance.balance /= 1e18;
-    }
-
-    const b = Object.freeze(balances);
-
-    this.cache.put(cacheKey, b, { ttl: 300 * 1000 });
-
-    return b;
-  }
 };

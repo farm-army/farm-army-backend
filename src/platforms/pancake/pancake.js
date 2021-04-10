@@ -34,8 +34,7 @@ module.exports = class pancake {
   }
 
   getRawFarms() {
-    return JSON.parse(fs.readFileSync(path.resolve(__dirname, "farms/farms.json"), "utf8"))
-      .filter(p => p.pid > 0);
+    return JSON.parse(fs.readFileSync(path.resolve(__dirname, "farms/farms.json"), "utf8"));
   }
 
   getRawPools() {
@@ -51,26 +50,21 @@ module.exports = class pancake {
     }
 
     const vaultCalls = this.getRawFarms().map(farm => {
-      const vault = new Web3EthContract(erc20ABI, farm.lpAddresses["56"]);
+      const contract = new Web3EthContract(masterchefABI, masterChefAddress);
       return {
-        allowance: vault.methods.allowance(address, masterChefAddress),
-        pid: `pancake_farm_${farm.pid}`
+        userInfo: contract.methods.userInfo(farm.pid, address),
+        id: `pancake_farm_${farm.pid}`
       };
     });
 
     const poolCallsContract = this.getRawPools()
       .filter(pool => pool.stakingToken && pool.stakingToken.address[56] && pool.stakingToken.address[56])
-      .map(pool => {
-        const contract = new Web3EthContract(
-          erc20ABI,
-          pool.stakingToken.address[56]
-        );
+      .map(farm => {
+        const contract = new Web3EthContract(sousChefABI, farm.contractAddress["56"]);
+
         return {
-          allowance: contract.methods.allowance(
-            address,
-            pool.contractAddress["56"]
-          ),
-          sousId: `pancake_pool_${pool.sousId}`
+          userInfo: contract.methods.userInfo(address),
+          id: `pancake_pool_${farm.sousId}`
         };
       });
 
@@ -79,15 +73,9 @@ module.exports = class pancake {
       Utils.multiCall(poolCallsContract)
     ]);
 
-    const farmIds = farmCalls
-      .filter(v => new BigNumber(v.allowance).isGreaterThan(0))
-      .map(v => v.pid);
-
-    const poolIds = poolCalls
-      .filter(v => new BigNumber(v.allowance).isGreaterThan(0))
-      .map(v => v.sousId);
-
-    const result = [...farmIds, ...poolIds];
+    const result = [...farmCalls, ...poolCalls]
+      .filter(v => v.userInfo && new BigNumber(v.userInfo[0] || 0).isGreaterThan(0))
+      .map(v => v.id);
 
     this.cache.put(`getAddressFarms-pancake-${address}`, result, {
       ttl: 300 * 1000
@@ -113,10 +101,7 @@ module.exports = class pancake {
       await Utils.multiCall(
         this.getRawFarms().map(farm => {
           return {
-            totalSupply: new Web3EthContract(
-              erc20ABI,
-              farm.lpAddresses[56]
-            ).methods.totalSupply(),
+            totalSupply: new Web3EthContract(erc20ABI, farm.lpAddresses[56]).methods.totalSupply(),
             lpAddress: farm.lpAddresses[56]
           };
         })
@@ -262,14 +247,11 @@ module.exports = class pancake {
     const vaultCalls2 = addressPools.map(id => {
       const farm = farms.find(f => f.id === id);
 
-      const vault = new Web3EthContract(
-        sousChefABI,
-        farm.raw.contractAddress["56"]
-      );
+      const contract = new Web3EthContract(sousChefABI, farm.raw.contractAddress["56"]);
 
       return {
-        userInfo: vault.methods.userInfo(address),
-        pendingReward: vault.methods.pendingReward(address),
+        userInfo: contract.methods.userInfo(address),
+        pendingReward: contract.methods.pendingReward(address),
         id: id
       };
     });
