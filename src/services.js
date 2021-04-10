@@ -50,7 +50,6 @@ module.exports = {
     }
 
     const myDb = Sqlite(`${dir}/db.db`);
-    const myDb = Sqlite("db.db");
     myDb.pragma("journal_mode = WAL");
     myDb.pragma("SYNCHRONOUS = 1;");
     myDb.pragma("LOCKING_MODE = EXCLUSIVE;");
