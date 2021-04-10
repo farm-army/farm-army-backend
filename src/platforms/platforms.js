@@ -56,4 +56,12 @@ module.exports = class Platforms {
         return parameters ? p[1][func](...parameters) : p[1][func]();
       });
   }
+
+  getFunctionAwaitsForPlatforms(platforms, func, parameters) {
+    return this.platforms()
+      .filter(p => platforms.includes(p[0]) && p[1][func])
+      .map(p => {
+        return parameters ? p[1][func](...parameters) : p[1][func]();
+      });
+  }
 };

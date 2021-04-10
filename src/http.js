@@ -52,7 +52,12 @@ module.exports = class Http {
           return;
         }
 
+        let timer = -performance.now();
         res.json(await instance.getDetails(address, farmId));
+
+        timer += performance.now();
+        console.log(`${new Date().toISOString()}: detail ${address} - ${farmId} - ${(timer / 1000).toFixed(3)} sec`);
+
       } catch (e) {
         console.error(e);
         res.status(500).json({ message: e.message });
@@ -82,6 +87,68 @@ module.exports = class Http {
       res.json(result);
     });
 
+    app.get("/yield/:address", async (req, res) => {
+      if (!req.query.p) {
+        res.status(400).json({error: 'missing "p" query parameter'});
+        return;
+      }
+
+      let timer = -performance.now();
+      const { address } = req.params;
+
+      let platforms = _.uniq(req.query.p.split(',').filter(e => e.match(/^[\w]+$/g)));
+      if (platforms.length === 0) {
+        res.json({});
+        return;
+      }
+
+      let functionAwaitsForPlatforms = this.platforms.getFunctionAwaitsForPlatforms(platforms, 'getYields', [address]);
+
+      const awaits = await Promise.allSettled([...functionAwaitsForPlatforms]);
+
+      const response = {}
+      awaits.forEach(v => {
+        if (!v.value) {
+          console.error(v);
+          return;
+        }
+
+        v.value.forEach(vault => {
+          const item = _.cloneDeep(vault);
+          delete item.farm.raw;
+
+          if (!response[vault.farm.provider]) {
+            response[vault.farm.provider] = [];
+          }
+
+          response[vault.farm.provider].push(item);
+        });
+      });
+
+      timer += performance.now();
+      console.log(`${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: ${(timer / 1000).toFixed(3)} sec`);
+
+      res.json(response);
+    });
+
+    app.get("/wallet/:address", async (req, res) => {
+      let timer = -performance.now();
+      const { address } = req.params;
+
+      const [tokens, liquidityPools] = await Promise.allSettled([
+        this.balances.getAllTokenBalances(address),
+        this.balances.getAllLpTokenBalances(address)
+      ]);
+
+      timer += performance.now();
+      console.log(`${new Date().toISOString()}: wallet ${address} - ${(timer / 1000).toFixed(3)} sec`);
+
+      res.json({
+        tokens: tokens.value ? tokens.value : [],
+        liquidityPools: liquidityPools.value ? liquidityPools.value : [],
+      });
+    });
+
     app.get("/all/yield/:address", async (req, res) => {
       const { address } = req.params;
 
@@ -94,11 +161,7 @@ module.exports = class Http {
       ]);
 
       timer += performance.now();
-      console.log(
-        `${new Date().toISOString()}: yield ${address}: ${(
-          timer / 1000
-        ).toFixed(3)} sec`
-      );
+      console.log(`${new Date().toISOString()}: yield ${address}: ${(timer / 1000).toFixed(3)} sec`);
 
       const response = {};
 
