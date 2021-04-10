@@ -50,11 +50,7 @@ module.exports = class autofarm {
       const contract = new Web3EthContract(abi, autofarm.MASTER_CHEF);
       return {
         id: farm.id,
-        pendingAUTO: contract.methods.pendingAUTO(farm.raw.id, address),
-        stakedWantTokens: contract.methods.stakedWantTokens(
-          farm.raw.id,
-          address
-        )
+        stakedWantTokens: contract.methods.stakedWantTokens(farm.raw.id, address)
       };
     });
 
@@ -63,7 +59,6 @@ module.exports = class autofarm {
     const response = calls
       .filter(
         v =>
-          new BigNumber(v.pendingAUTO).isGreaterThan(Utils.DUST_FILTER) ||
           new BigNumber(v.stakedWantTokens).isGreaterThan(Utils.DUST_FILTER)
       )
       .map(v => v.id);

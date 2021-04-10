@@ -82,10 +82,6 @@ module.exports = class Http {
       res.json(result);
     });
 
-    app.get("/balances/:address", async (req, res) => {
-      res.json(await this.balances.getBalances(req.params.address));
-    });
-
     app.get("/all/yield/:address", async (req, res) => {
       const { address } = req.params;
 
