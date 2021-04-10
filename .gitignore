@@ -21,7 +21,6 @@ dist/
 
 # Maven
 target/
-dist/
 
 # JetBrains IDE
 .idea/
@@ -54,3 +53,4 @@ db/
 .db.db.*
 var/cache
 
+/config.json.local
