@@ -102,7 +102,11 @@ node src/index.js
 ```
 
 ```
-  /balances/:address
+  /yield/:address?p=autofarm,pancake
+```
+
+```
+  /wallet/:address
 ```
 
 ```
