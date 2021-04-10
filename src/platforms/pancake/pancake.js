@@ -34,9 +34,8 @@ module.exports = class pancake {
   }
 
   getRawFarms() {
-    return JSON.parse(
-      fs.readFileSync(path.resolve(__dirname, "farms/farms.json"), "utf8")
-    );
+    return JSON.parse(fs.readFileSync(path.resolve(__dirname, "farms/farms.json"), "utf8"))
+      .filter(p => p.pid > 0);
   }
 
   getRawPools() {
