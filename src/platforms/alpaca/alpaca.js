@@ -81,7 +81,7 @@ module.exports = class acryptos {
     }
 
     const controller = new AbortController()
-    setTimeout(() => controller.abort(), 3200)
+    setTimeout(() => controller.abort(), 7600)
 
     const opts = {
       method: "POST",

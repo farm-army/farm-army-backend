@@ -12,6 +12,7 @@ let tokenCollector;
 let addressTransactions;
 let liquidityTokenCollector;
 let priceCollector;
+let farmFetcher;
 
 const Cache = require("timed-cache");
 const Sqlite = require("better-sqlite3");
@@ -27,6 +28,7 @@ const fsStore = require('cache-manager-fs-hash');
 const path = require("path");
 const AddressTransactions = require("./token/address_transactions");
 const LiquidityTokenCollector = require("./token/liquidity_token_collector");
+const FarmFetcher = require("./farm/farm_fetcher");
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -202,5 +204,13 @@ module.exports = {
       this.getTokenCollector(),
       this.getLiquidityTokenCollector(),
     ));
-  }
+  },
+
+  getFarmFetcher() {
+    if (farmFetcher) {
+      return farmFetcher;
+    }
+
+    return (farmFetcher = new FarmFetcher());
+  },
 };

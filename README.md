@@ -113,6 +113,14 @@ node src/index.js
   /all/yield/:address
 ```
 
+### Generate Farm ###
+
+
+```
+node src/command/farm_fetcher.js <masterChefAddress>
+node src/command/farm_fetcher.js 0x76FCeffFcf5325c6156cA89639b17464ea833ECd
+```
+
 ### Farm / Pool Contract ###
 
 Every farm contract should be converted / provided in a common format. Still feature early definition
