@@ -30,6 +30,151 @@
     "isFinished": false
   },
   {
+    "sousId": 102,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "TLM",
+      "address": {
+        "56": "0x2222227e22102fe3322098e4cbfe18cfebd57c95",
+        "97": ""
+      },
+      "decimals": 4,
+      "projectLink": "https://alienworlds.io/"
+    },
+    "contractAddress": {
+      "56": "0xC59aa49aE508050c2dF653E77bE13822fFf02E9A",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "17.361"
+  },
+  {
+    "sousId": 101,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "JGN",
+      "address": {
+        "56": "0xc13b7a43223bb9bf4b69bd68ab20ca1b79d81c75",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://jgndefi.com/"
+    },
+    "contractAddress": {
+      "56": "0x14AeA62384789EDA98f444cCb970F6730877d3F9",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.08796"
+  },
+  {
+    "sousId": 100,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "EPS",
+      "address": {
+        "56": "0xa7f552078dcc247c2684336020c03648500c6d9f",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://ellipsis.finance/"
+    },
+    "contractAddress": {
+      "56": "0xebb87dF24D65977cbe62538E4B3cFBD5d0308642",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.07716"
+  },
+  {
+    "sousId": 99,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "ARPA",
+      "address": {
+        "56": "0x6f769e65c14ebd1f68817f5f1dcdb61cfa2d6f7e",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://arpachain.io/"
+    },
+    "contractAddress": {
+      "56": "0x40918EF8efFF4aA061656013a81E0e5A8A702eA7",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.949"
+  },
+  {
+    "sousId": 98,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "ITAM",
+      "address": {
+        "56": "0x04c747b40be4d535fc83d09939fb0f626f32800b",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://itam.network/"
+    },
+    "contractAddress": {
+      "56": "0x44eC1B26035865D9A7C130fD872670CD7Ebac2bC",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "3.096"
+  },
+  {
     "sousId": 97,
     "stakingToken": {
       "symbol": "CAKE",
@@ -1573,7 +1718,7 @@
     "harvest": true,
     "tokenPerBlock": "0.6",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 45,

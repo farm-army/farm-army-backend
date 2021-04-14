@@ -52,6 +52,136 @@
     }
   },
   {
+    "pid": 127,
+    "lpSymbol": "TLM-BNB LP",
+    "lpAddresses": {
+      "56": "0x34e821e785A93261B697eBD2797988B3AA78ca33",
+      "97": ""
+    },
+    "token": {
+      "symbol": "TLM",
+      "address": {
+        "56": "0x2222227e22102fe3322098e4cbfe18cfebd57c95",
+        "97": ""
+      },
+      "decimals": 4,
+      "projectLink": "https://alienworlds.io/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 125,
+    "lpSymbol": "JGN-BNB LP",
+    "lpAddresses": {
+      "56": "0x890479844484D67e34B99e1BBc1468231b254c08",
+      "97": ""
+    },
+    "token": {
+      "symbol": "JGN",
+      "address": {
+        "56": "0xc13b7a43223bb9bf4b69bd68ab20ca1b79d81c75",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://jgndefi.com/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 124,
+    "lpSymbol": "EPS-BNB LP",
+    "lpAddresses": {
+      "56": "0xf9045866e7b372def1eff3712ce55fac1a98daf0",
+      "97": ""
+    },
+    "token": {
+      "symbol": "EPS",
+      "address": {
+        "56": "0xa7f552078dcc247c2684336020c03648500c6d9f",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://ellipsis.finance/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 123,
+    "lpSymbol": "ARPA-BNB LP",
+    "lpAddresses": {
+      "56": "0xfb29fca952b478ddcb8a43f57176161e498225b1",
+      "97": ""
+    },
+    "token": {
+      "symbol": "ARPA",
+      "address": {
+        "56": "0x6f769e65c14ebd1f68817f5f1dcdb61cfa2d6f7e",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://arpachain.io/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
+    "pid": 122,
+    "lpSymbol": "ITAM-BNB LP",
+    "lpAddresses": {
+      "56": "0xCdC53345192D0e31eEAD03D7E9e008Ee659FAEbE",
+      "97": ""
+    },
+    "token": {
+      "symbol": "ITAM",
+      "address": {
+        "56": "0x04c747b40be4d535fc83d09939fb0f626f32800b",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://itam.network/"
+    },
+    "quoteToken": {
+      "symbol": "wBNB",
+      "address": {
+        "56": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    }
+  },
+  {
     "pid": 121,
     "lpSymbol": "BONDLY-BNB LP",
     "lpAddresses": {

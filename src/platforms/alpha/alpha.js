@@ -183,13 +183,21 @@ module.exports = class alpha {
           if (positionValue > 0) {
             result.deposit = {
               symbol: "?",
-              amount: (positionValue - (call.positionInfo[1] || 0)) / 1e18, // lp / token amount and removed leverage amount
+              amount: (positionValue - (call.positionInfo[1] || 0)) / 1e18, // amount of bnb; remove debit
             };
 
             if (farm.raw.lpTokenAddress) {
-              const price = this.priceOracle.getAddressPrice(farm.raw.lpTokenAddress);
+              const price = this.priceOracle.getAddressPrice('0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'); // BNB only for now
               if (price) {
                 result.deposit.usd = result.deposit.amount * price;
+
+                // reverse lp amount based on the usd price
+                if (farm.raw.lpTokenAddress) {
+                  let lpPrice = this.priceOracle.findPrice(farm.raw.lpTokenAddress);
+                  if (lpPrice) {
+                    result.deposit.amount = result.deposit.usd / lpPrice
+                  }
+                }
               }
             }
           }
