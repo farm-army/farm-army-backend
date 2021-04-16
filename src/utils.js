@@ -38,7 +38,7 @@ const ENDPOINTS_RPC_WRAPPER = {};
 
 HOSTS.forEach(url => {
   ENDPOINTS_MULTICALL[url] = new MulticallProvider(
-    new providers.JsonRpcProvider({
+    new providers.StaticJsonRpcProvider({
       url: url,
       timeout: 10000,
     }),
