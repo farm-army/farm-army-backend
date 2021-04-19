@@ -37,7 +37,7 @@ module.exports = class pancake {
   }
 
   async getFetchedFarms() {
-    const cacheKey = `pancake-v1-master-pools`
+    const cacheKey = `pancake-v1-master-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -306,7 +306,7 @@ module.exports = class pancake {
         }
 
         if (!price) {
-          price = this.priceOracle.findPrice(`cake-${symbol}`);
+          price = this.priceOracle.findPrice(`cake-${farm.token.toLowerCase()}`);
         }
 
         if (price) {
