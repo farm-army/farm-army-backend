@@ -116,7 +116,11 @@ module.exports = class bakery {
 
       if (farm.lpAddresses && farm.lpAddresses[56]) {
         item.extra.lpAddress = farm.lpAddresses[56];
+
+        item.extra.transactionToken = item.extra.lpAddress
       }
+
+      item.extra.transactionAddress = bakery.MASTER_ADDRESS
 
       if (farm.tokenSymbol) {
         item.earns = ["bake"];
@@ -239,7 +243,16 @@ module.exports = class bakery {
       return {};
     }
 
-    return Utils.getTransactions(bakery.MASTER_ADDRESS, farm.extra.lpAddress, address);
+
+    if (farm.extra.transactionAddress && farm.extra.transactionToken) {
+      return Utils.getTransactions(
+        farm.extra.transactionAddress,
+        farm.extra.transactionToken,
+        address
+      );
+    }
+
+    return {};
   }
 
   async getDetails(address, id) {

@@ -6,6 +6,6 @@ void async function main() {
     process.exit()
   }
 
-  console.log(await services.getFarmFetcher().fetchForMasterChef(process.argv[2]))
+  console.log(JSON.stringify(await services.getFarmFetcher().fetchForMasterChef(process.argv[2])))
   process.exit()
 }()

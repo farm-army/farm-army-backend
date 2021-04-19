@@ -133,10 +133,14 @@ module.exports = class beefy {
       }
 
       if (farm.earnedTokenAddress) {
+        item.extra.transactionAddress = farm.earnedTokenAddress;
+
         item.extra.pricePerFullShareToken = farm.earnedTokenAddress;
       }
 
       if (vaultElement.tokenAddress) {
+        item.extra.transactionToken = vaultElement.tokenAddress
+
         let price = this.priceOracle.findPrice(vaultElement.tokenAddress);
         if (!price) {
           price = this.priceOracle.findPrice(farm.id);
@@ -232,11 +236,15 @@ module.exports = class beefy {
       return {};
     }
 
-    return Utils.getTransactions(
-      farm.raw.earnedTokenAddress,
-      farm.raw.tokenAddress,
-      address
-    );
+    if (farm.extra.transactionAddress && farm.extra.transactionToken) {
+      return Utils.getTransactions(
+        farm.extra.transactionAddress,
+        farm.extra.transactionToken,
+        address
+      );
+    }
+
+    return {};
   }
 
   async getDetails(address, id) {

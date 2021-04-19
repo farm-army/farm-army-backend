@@ -7,7 +7,7 @@ const path = require("path");
 const BigNumber = require("bignumber.js");
 const Web3EthContract = require("web3-eth-contract");
 
-const Utils = require("../../services").Utils;
+const Utils = require("../../utils");
 
 const masterChefAddress = "0x73feaa1eE314F8c655E354234017bE2193C9E24E";
 
@@ -22,15 +22,39 @@ const sousChefABI = JSON.parse(
 );
 
 module.exports = class pancake {
-  constructor(cache, priceOracle) {
+  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     this.cache = cache;
     this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector;
+    this.farmCollector = farmCollector;
+    this.cacheManager = cacheManager;
   }
 
   getLbAddresses() {
     return this.getRawFarms()
-        .filter(c => c.lpAddresses && c.lpAddresses[56])
-        .map(c => c.lpAddresses[56]);
+        .filter(c => c.lpAddresses && this.getAddress(c.lpAddresses))
+        .map(c => this.getAddress(c.lpAddresses));
+  }
+
+  async getFetchedFarms() {
+    const cacheKey = `pancake-v1-master-pools`
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
+    }
+
+    const foo = (await this.farmCollector.fetchForMasterChef(masterChefAddress)).filter(f => f.isFinished !== true);
+
+    const reformat = foo.map(f => {
+      f.lpAddresses = f.lpAddress
+
+      return f
+    })
+
+    await this.cacheManager.set(cacheKey, reformat, {ttl: 60 * 30})
+
+    return reformat;
   }
 
   getRawFarms() {
@@ -49,7 +73,7 @@ module.exports = class pancake {
       return cacheItem;
     }
 
-    const vaultCalls = this.getRawFarms().map(farm => {
+    const vaultCalls = (await this.getFetchedFarms()).map(farm => {
       const contract = new Web3EthContract(masterchefABI, masterChefAddress);
       return {
         userInfo: contract.methods.userInfo(farm.pid, address),
@@ -94,24 +118,22 @@ module.exports = class pancake {
       }
     }
 
-    const farms = this.getRawFarms();
+    const farms = await this.getFetchedFarms();
 
     const farmTvls = {};
-    (
-      await Utils.multiCall(
-        this.getRawFarms().map(farm => {
-          return {
-            totalSupply: new Web3EthContract(erc20ABI, farm.lpAddresses[56]).methods.totalSupply(),
-            lpAddress: farm.lpAddresses[56]
-          };
-        })
-      )
-    ).forEach(call => {
+    (await Utils.multiCall((await this.getFetchedFarms()).map(farm => {
+      let lpAddresses = this.getAddress(farm.lpAddresses);
+      return {
+          totalSupply: new Web3EthContract(erc20ABI, lpAddresses).methods.totalSupply(),
+          lpAddress: lpAddresses
+        };
+      })
+    )).forEach(call => {
       farmTvls[call.lpAddress] = call.totalSupply;
     });
 
     const resultFarms = farms.map(farm => {
-      const symbol = `${farm.token.symbol}-${farm.quoteToken.symbol}`.toLowerCase();
+      const symbol = `${farm.lpSymbol}`.toLowerCase();
 
       const item = {
         id: `pancake_farm_${farm.pid}`,
@@ -126,9 +148,10 @@ module.exports = class pancake {
         extra: {}
       };
 
-      if (farm.lpAddresses && farm.lpAddresses[56]) {
-        item.extra.lpAddress = farm.lpAddresses[56];
-        item.extra.transactionToken = farm.lpAddresses[56];
+      let lpAddress = this.getAddress(farm.lpAddresses);
+      if (lpAddress) {
+        item.extra.lpAddress = lpAddress;
+        item.extra.transactionToken = lpAddress;
         item.extra.transactionAddress = masterChefAddress;
       }
 
@@ -139,12 +162,12 @@ module.exports = class pancake {
         };
       }
 
-      if (farmTvls[farm.lpAddresses[56]]) {
+      if (lpAddress && farmTvls[lpAddress]) {
         item.tvl = {
-          amount: farmTvls[farm.lpAddresses[56]] / 1e18
+          amount: farmTvls[lpAddress] / 1e18
         };
 
-        const addressPrice = this.priceOracle.getAddressPrice(farm.lpAddresses[56]);
+        const addressPrice = this.priceOracle.getAddressPrice(lpAddress);
         if (addressPrice) {
           item.tvl.usd = item.tvl.amount * addressPrice;
         }
@@ -271,17 +294,15 @@ module.exports = class pancake {
       .map(call => {
         const farm = farms.find(f => f.id === call.id);
 
-        const symbol = `${farm.raw.token.symbol}-${farm.raw.quoteToken.symbol}`.toLowerCase();
-
         const result = {};
         result.deposit = {
-          symbol: symbol,
+          symbol: farm.symbol,
           amount: ethers.utils.formatUnits(call.userInfo[0].toString(), 18)
         };
 
         let price;
-        if (farm.raw.lpAddresses && farm.raw.lpAddresses["56"]) {
-          price = this.priceOracle.getAddressPrice(farm.raw.lpAddresses["56"]);
+        if (this.getAddress(farm.raw.lpAddresses)) {
+          price = this.priceOracle.getAddressPrice(this.getAddress(farm.raw.lpAddresses));
         }
 
         if (!price) {
@@ -400,5 +421,17 @@ module.exports = class pancake {
     }
 
     return result;
+  }
+
+  getAddress(address) {
+    if (typeof address === 'string' && address.startsWith('0x')) {
+      return address;
+    }
+
+    if (address[56]) {
+      return address[56];
+    }
+
+    return undefined;
   }
 };

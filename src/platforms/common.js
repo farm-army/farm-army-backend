@@ -6,6 +6,15 @@ const Utils = require("../utils");
 const erc20Abi = require("../abi/erc20.json");
 
 module.exports = {
+  PancakePlatformForkAuto: class PancakePlatformForkAuto {
+    constructor(cache, priceOracle) {
+      this.cache = cache;
+      this.priceOracle = priceOracle;
+    }
+
+
+  },
+
   PancakePlatformFork: class PancakePlatformFork {
     constructor(cache, priceOracle) {
       this.cache = cache;

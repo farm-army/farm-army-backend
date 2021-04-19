@@ -103,16 +103,32 @@ module.exports = class TokenCollector {
   }
 
   /**
-   * @param {string} symbol
+   * @param {string} address
+   * @returns {number}
+   */
+  getSymbolByAddress(address) {
+    if (!address || !address.startsWith('0x')) {
+      throw new Error(`Invalid address: ${address}`)
+    }
+
+    const tokenStore = this.getTokenByAddress(address)
+
+    return !tokenStore
+      ? undefined
+      : tokenStore.symbol;
+  }
+
+  /**
+   * @param {string} address
    * @returns {string|undefined}
    */
-  getAddressBySymbol(symbol) {
-    if (!symbol || symbol.length > 50) {
-      console.error(`Invalid symbol: ${symbol}`)
+  getAddressBySymbol(address) {
+    if (!address || address.length > 50) {
+      console.error(`Invalid symbol: ${address}`)
       return undefined;
     }
 
-    const token = this.getTokenBySymbol(symbol)
+    const token = this.getTokenBySymbol(address)
 
     return token
       ? token.address
