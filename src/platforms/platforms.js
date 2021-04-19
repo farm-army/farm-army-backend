@@ -7,7 +7,8 @@ const path = require("path");
 let platformInstances;
 
 module.exports = class Platforms {
-  constructor(cache, priceOracle, tokenCollector) {
+  constructor(platforms, cache, priceOracle, tokenCollector) {
+    this.myPlatforms = platforms;
     this.cache = cache;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
@@ -17,18 +18,24 @@ module.exports = class Platforms {
     const me = this;
     const folder = path.resolve(__dirname, ".");
 
+    const alreadyInjected = this.myPlatforms.map(p => p.constructor.name);
+
     const platforms = fs
       .readdirSync(folder, { withFileTypes: true })
-      .filter(f => f.isDirectory())
+      .filter(f => f.isDirectory() && !alreadyInjected.includes(f.name))
       .map(f => f.name);
 
-    return platforms
+    const newInstances = platforms
       .map(x => `${folder}/${x}/${x}.js`)
       .filter(x => fs.existsSync(x))
       .map(p => [
         path.basename(p).substr(0, path.basename(p).length - 3),
         new (require(p))(me.cache, me.priceOracle, me.tokenCollector) // TODO: init should be done from services.js
       ]);
+
+    newInstances.push(...this.myPlatforms.map(p => [p.constructor.name, p]));
+
+    return newInstances;
   }
 
   platforms() {

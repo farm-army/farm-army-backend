@@ -65,12 +65,18 @@ module.exports = class Http {
     });
 
     app.get("/transactions/:address", async (req, res) => {
+      let timer = -performance.now();
+      let address = req.params.address;
+
       try {
-        res.json(await this.addressTransactions.getTransactions(req.params.address));
+        res.json(await this.addressTransactions.getTransactions(address));
       } catch (e) {
         console.error(e);
         res.status(500).json({message: e.message});
       }
+
+      timer += performance.now();
+      console.log(`${new Date().toISOString()}: tranactions ${address} - ${(timer / 1000).toFixed(3)} sec`);
     });
 
     app.get("/farms", async (req, res) => {

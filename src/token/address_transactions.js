@@ -3,15 +3,17 @@
 const request = require("async-request");
 
 module.exports = class AddressTransactions {
-  constructor(platforms, cacheManager, bscApiKey, liquidityTokenCollector) {
+  constructor(platforms, cacheManager, bscApiKey, liquidityTokenCollector, tokenCollector, priceCollector) {
     this.platforms = platforms;
     this.cacheManager = cacheManager;
     this.bscApiKey = bscApiKey;
     this.liquidityTokenCollector = liquidityTokenCollector;
+    this.tokenCollector = tokenCollector;
+    this.priceCollector = priceCollector;
   }
 
   async getTransactions(address) {
-    const cacheKey = `all-transactions-${address}`
+    const cacheKey = `all-v3-transactions-${address}`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -38,7 +40,17 @@ module.exports = class AddressTransactions {
     const map = {}
     items.flat().forEach(i => {
       if (i.extra && i.extra.transactionAddress && i.extra.transactionToken) {
-        map[i.extra.transactionAddress.toLowerCase() + '-' + i.extra.transactionToken.toLowerCase()] = i.id
+        let item = {
+          id: i.id,
+          provider: i.provider,
+          name: i.name,
+        };
+
+        if (i.link) {
+          item.link = i.link;
+        }
+
+        map[i.extra.transactionAddress.toLowerCase() + '-' + i.extra.transactionToken.toLowerCase()] = item
       }
     });
 
@@ -58,6 +70,11 @@ module.exports = class AddressTransactions {
 
         let symbol = t.tokenSymbol.toLowerCase();
 
+        const singleSymbol = this.liquidityTokenCollector.getSymbolNames(t.contractAddress);
+        if (singleSymbol) {
+          symbol = singleSymbol;
+        }
+
         const lpSymbol = this.liquidityTokenCollector.getSymbolNames(t.contractAddress);
         if (lpSymbol) {
           symbol = lpSymbol;
@@ -67,7 +84,7 @@ module.exports = class AddressTransactions {
           timestamp: parseInt(t.timeStamp),
           amount: amount,
           hash: t.hash,
-          symbol: symbol,
+          symbol: symbol.toLowerCase(),
           tokenName: t.tokenName,
           tokenAddress: t.contractAddress,
           from: t.from,
@@ -81,6 +98,13 @@ module.exports = class AddressTransactions {
 
         if (map[target + '-' + t.contractAddress.toLowerCase()]) {
           newVar.vault = map[target + '-' + t.contractAddress.toLowerCase()];
+        }
+
+        if (t.contractAddress) {
+          const price = this.priceCollector.getPrice(t.contractAddress);
+          if (price) {
+            newVar.usd = newVar.amount * price;
+          }
         }
 
         return newVar;

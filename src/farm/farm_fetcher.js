@@ -8,8 +8,12 @@ const ErcAbi = require("./abi/abiErc.json");
 const _ = require("lodash");
 
 module.exports = class FarmFetcher {
+  constructor(apiKey) {
+    this.apiKey = apiKey;
+  }
+
   async fetchForMasterChef(masterChef) {
-    const text = await request(`https://api.bscscan.com/api?module=contract&action=getabi&address=${masterChef}`);
+    const text = await request(`https://api.bscscan.com/api?module=contract&action=getabi&address=${masterChef}&apikey=${this.apiKey}`);
 
     const abi = JSON.parse(JSON.parse(text.body).result);
 
@@ -106,7 +110,7 @@ module.exports = class FarmFetcher {
       tokenAddresses.push(masterInfo[0].rewardToken);
     }
 
-    const tokens = await Utils.multiCallIndexBy('token', _.uniq(tokenAddresses).map(token => {
+    const tokensRaw = await Utils.multiCallIndexBy('token', _.uniq(tokenAddresses).map(token => {
       const web3EthContract = new Web3EthContract(ErcAbi, token);
 
       return {
@@ -116,6 +120,12 @@ module.exports = class FarmFetcher {
       }
     }));
 
+    const tokens = {}
+    for (const [key, value] of Object.entries(tokensRaw)) {
+      if (value.decimals && value.symbol) {
+        tokens[key.toLowerCase()] = value;
+      }
+    }
 
     // format items in pancakeswap format
     const all = [];
@@ -147,48 +157,55 @@ module.exports = class FarmFetcher {
       }
 
       if (!isLp) {
+        let token = tokens[pool.poolInfo[0].toLowerCase()];
+
+        if (!token) {
+          return;
+        }
+
         item.token = {
-          symbol: tokens[pool.poolInfo[0]].symbol,
+          symbol: token.symbol,
           address: pool.poolInfo[0],
-          decimals: parseInt(tokens[pool.poolInfo[0]].decimals),
+          decimals: parseInt(token.decimals),
         }
 
         item.raw.tokens = [
           {
             address: pool.poolInfo[0],
-            symbol: tokens[pool.poolInfo[0]].symbol,
-            decimals: parseInt(tokens[pool.poolInfo[0]].decimals),
+            symbol: token.symbol,
+            decimals: parseInt(token.decimals),
           }
         ];
       } else {
-        item.token = {
-          symbol: tokens[lpTokenInfo.token0].symbol,
-          address: lpTokenInfo.token0,
-          decimals: parseInt(tokens[lpTokenInfo.token0].decimals),
+        let token0 = tokens[lpTokenInfo.token0.toLowerCase()];
+        let token1 = tokens[lpTokenInfo.token1.toLowerCase()];
+
+        if (!token0 || !token1) {
+          return;
         }
 
         item.quoteToken = {
-          symbol: tokens[lpTokenInfo.token1].symbol,
+          symbol: token1.symbol,
           address: lpTokenInfo.token1,
-          decimals: parseInt(tokens[lpTokenInfo.token1].decimals),
+          decimals: parseInt(token1.decimals),
         }
 
         item.token = {
-          symbol: tokens[lpTokenInfo.token0].symbol,
+          symbol: token0.symbol,
           address: lpTokenInfo.token0,
-          decimals: parseInt(tokens[lpTokenInfo.token0].decimals),
+          decimals: parseInt(token0.decimals),
         }
 
         item.raw.tokens = [
           {
             address: lpTokenInfo.token0,
-            symbol: tokens[lpTokenInfo.token0].symbol,
-            decimals: parseInt(tokens[lpTokenInfo.token0].decimals),
+            symbol: token0.symbol,
+            decimals: parseInt(token0.decimals),
           },
           {
             address: lpTokenInfo.token1,
-            symbol: tokens[lpTokenInfo.token1].symbol,
-            decimals: parseInt(tokens[lpTokenInfo.token1].decimals),
+            symbol: token1.symbol,
+            decimals: parseInt(token1.decimals),
           }
         ];
       }
@@ -210,6 +227,6 @@ module.exports = class FarmFetcher {
       all.push(item)
     });
 
-    return JSON.stringify(all);
+    return all;
   }
 }

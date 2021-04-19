@@ -125,6 +125,12 @@ module.exports = class autofarm {
         item.extra.pricePerFullShare = farm.wantPrice;
       }
 
+      if (farm.wantAddress) {
+        item.extra.transactionToken = farm.wantAddress;
+      }
+
+      item.extra.transactionAddress = autofarm.MASTER_CHEF;
+
       const notes = [];
       if (farm.notes) {
         notes.push(...farm.notes);
@@ -258,11 +264,15 @@ module.exports = class autofarm {
       return {};
     }
 
-    return Utils.getTransactions(
-      autofarm.MASTER_CHEF,
-      farm.raw.wantAddress,
-      address
-    );
+    if (farm.extra.transactionAddress && farm.extra.transactionToken) {
+      return Utils.getTransactions(
+        farm.extra.transactionAddress,
+        farm.extra.transactionToken,
+        address
+      );
+    }
+
+    return {}
   }
 
   async getDetails(address, id) {

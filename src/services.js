@@ -30,6 +30,9 @@ const AddressTransactions = require("./token/address_transactions");
 const LiquidityTokenCollector = require("./token/liquidity_token_collector");
 const FarmFetcher = require("./farm/farm_fetcher");
 
+const Pancake = require("./platforms/pancake/pancake");
+let pancake;
+
 const _ = require("lodash");
 const fs = require("fs");
 
@@ -73,9 +76,24 @@ module.exports = {
     }
 
     return (platforms = new Platforms(
+      [this.getPancake()],
         this.getCache(),
         this.getPriceOracle(),
         this.getTokenCollector(),
+    ));
+  },
+
+  getPancake() {
+    if (pancake) {
+      return pancake;
+    }
+
+    return (pancake = new Pancake(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
     ));
   },
 
@@ -97,6 +115,8 @@ module.exports = {
       this.getUserCacheManager(),
       module.exports.CONFIG['BSCSCAN_API_KEY'],
       this.getLiquidityTokenCollector(),
+      this.getTokenCollector(),
+      this.getPriceCollector(),
     ));
   },
 
@@ -211,6 +231,8 @@ module.exports = {
       return farmFetcher;
     }
 
-    return (farmFetcher = new FarmFetcher());
+    return (farmFetcher = new FarmFetcher(
+      module.exports.CONFIG['BSCSCAN_API_KEY'],
+    ));
   },
 };
