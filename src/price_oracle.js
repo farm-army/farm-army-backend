@@ -221,7 +221,7 @@ module.exports = class PriceOracle {
 
     results.filter(p => p.status === 'fulfilled').forEach(p => {
       for (const [symbol, price] of Object.entries(p.value)) {
-        if (symbol.toLowerCase() === 'btcst') {
+        if (symbol.toLowerCase() === 'btcst' || price > 500000 || price < 0.00000001) {
           continue;
         }
 
