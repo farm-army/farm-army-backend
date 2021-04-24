@@ -7,9 +7,10 @@ const Utils = require("../../services").Utils;
 const Web3EthContract = require("web3-eth-contract");
 
 module.exports = class pancakebunny {
-  constructor(cache, priceOracle) {
+  constructor(cache, priceOracle, tokenCollector) {
     this.cache = cache;
     this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector
   }
 
   /**
@@ -139,9 +140,27 @@ module.exports = class pancakebunny {
 
       farm.id = key;
 
+      let tokenSymbol = key.toLowerCase()
+        .replace('boost', '')
+        .replace('flip', '')
+        .replace('cake maximizer', '')
+        .replace('maximizer', '')
+        .replace('flip', '')
+        .replace('v2', '')
+        .replace(/\s/g, '')
+        .trim();
+
+      if (farm.token) {
+        const lpSymbol = this.tokenCollector.getSymbolByAddress(farm.token);
+        if (lpSymbol) {
+          tokenSymbol = lpSymbol;
+        }
+      }
+
       const items = {
-        id: `pancakebunny_${key.toLowerCase().replace(" ", "-")}`,
+        id: `pancakebunny_${key.toLowerCase().replace(/\s/g, '-')}`,
         name: key,
+        token: tokenSymbol,
         platform: farm.liquidity ? "pancake" : "pancakebunny",
         raw: Object.freeze(farm),
         provider: "pancakebunny",
@@ -343,6 +362,11 @@ module.exports = class pancakebunny {
         if (farm.extra && farm.extra.tokenPrice) {
           result.deposit.usd = (result.deposit.amount * farm.extra.tokenPrice) / 1e18;
         }
+      }
+
+      // dust
+      if (result.deposit.usd && result.deposit.usd < 0.01) {
+        continue;
       }
 
       let pendingUSD
