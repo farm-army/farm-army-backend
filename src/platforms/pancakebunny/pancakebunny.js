@@ -359,8 +359,14 @@ module.exports = class pancakebunny {
           amount: balance / 1e18
         };
 
-        if (farm.extra && farm.extra.tokenPrice) {
-          result.deposit.usd = (result.deposit.amount * farm.extra.tokenPrice) / 1e18;
+        let price = (farm.extra && farm.extra.tokenPrice) ? farm.extra.tokenPrice : undefined;
+
+        if (!price && farm.raw.token) {
+          price = this.priceOracle.getAddressPrice(farm.raw.token);
+        }
+
+        if (price) {
+          result.deposit.usd = (result.deposit.amount * price) / 1e18;
         }
       }
 
