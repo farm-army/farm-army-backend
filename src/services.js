@@ -31,7 +31,10 @@ const LiquidityTokenCollector = require("./token/liquidity_token_collector");
 const FarmFetcher = require("./farm/farm_fetcher");
 
 const Pancake = require("./platforms/pancake/pancake");
+const Swamp = require("./platforms/swamp/swamp");
+
 let pancake;
+let swamp;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -76,7 +79,10 @@ module.exports = {
     }
 
     return (platforms = new Platforms(
-      [this.getPancake()],
+        [
+          this.getPancake(),
+          this.getSwamp(),
+        ],
         this.getCache(),
         this.getPriceOracle(),
         this.getTokenCollector(),
@@ -89,6 +95,20 @@ module.exports = {
     }
 
     return (pancake = new Pancake(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getSwamp() {
+    if (swamp) {
+      return swamp;
+    }
+
+    return (swamp = new Swamp(
       this.getCache(),
       this.getPriceOracle(),
       this.getTokenCollector(),

@@ -242,6 +242,10 @@ module.exports = class Balances {
       {
         token: "ccake",
         contract: "0xc7091aa18598b87588e37501b6ce865263cd67ce"
+      },
+      {
+        token: "swamp",
+        contract: "0xc5A49b4CBe004b6FD55B30Ba1dE6AC360FF9765d"
       }
     ];
   }

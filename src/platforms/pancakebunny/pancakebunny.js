@@ -6,6 +6,8 @@ const path = require("path");
 const Utils = require("../../services").Utils;
 const Web3EthContract = require("web3-eth-contract");
 
+const b3c9 = require('./abi/0xb3c96d3c3d643c2318e4cdd0a9a48af53131f5f4.json');
+
 module.exports = class pancakebunny {
   constructor(cache, priceOracle, tokenCollector) {
     this.cache = cache;
@@ -318,25 +320,31 @@ module.exports = class pancakebunny {
         };
       });
 
-    const infoOfPoolBoost = addressFarms
+    const poolsOfAddresses = addressFarms
       .map(farmId => farms.find(f => f.id === farmId))
-      .filter(farm => pancakebunny.BUNNY_CHEF_ADDRESSES.includes(farm.raw.address))
-      .map(myPool => {
-        return {
-          reference: myPool.id.toString(),
-          contractAddress: '0xb10bfe5b40f814b4c21a0ce601005dcc1eda0d48',
-          abi: pancakebunny.BUNNY_CHEF_ABI,
-          calls: [
-            {
-              reference: "infoOfPool",
-              method: "infoOfPool",
-              parameters: [myPool.raw.address, address]
-            }
-          ]
-        };
-      });
+      .map(farm => farm.raw.address);
 
-    const calls = await Utils.multiCallRpcIndex([...infoOfPool, ...infoOfPoolBoost]);
+    const poolsOfCall = {
+      reference: 'poolsOf',
+      contractAddress: "0xb3c96d3c3d643c2318e4cdd0a9a48af53131f5f4",
+      abi: b3c9,
+      calls: [
+        {
+          reference: "poolsOf",
+          method: "poolsOf",
+          parameters: [address, poolsOfAddresses]
+        }
+      ]
+    }
+
+    const calls = await Utils.multiCallRpcIndex([...infoOfPool, poolsOfCall]);
+
+    const poolsOf = {};
+    if (calls.poolsOf && calls.poolsOf.poolsOf) {
+      calls.poolsOf.poolsOf.forEach(p => {
+        poolsOf[p.pool.toLowerCase()] = p;
+      })
+    }
 
     const results = [];
 
@@ -351,6 +359,10 @@ module.exports = class pancakebunny {
 
       if (calls[farm.id] && calls[farm.id].infoOfPool && calls[farm.id].infoOfPool.balance && calls[farm.id].infoOfPool.balance.gt(0)) {
         balance = calls[farm.id].infoOfPool.balance.toString();
+      }
+
+      if (!balance && poolsOf[farm.raw.address.toLowerCase()]) {
+        balance = poolsOf[farm.raw.address.toLowerCase()].balance.toString();
       }
 
       if (balance) {
@@ -371,7 +383,7 @@ module.exports = class pancakebunny {
       }
 
       // dust
-      if (result.deposit.usd && result.deposit.usd < 0.01) {
+      if (result.deposit && result.deposit.usd && result.deposit.usd < 0.01) {
         continue;
       }
 
@@ -380,9 +392,13 @@ module.exports = class pancakebunny {
       let pendingBUNNY
       let pendingCAKE
 
+      let info = undefined;
+
       // old ones
       if (calls[farm.id] && calls[farm.id].infoOfPool) {
-        let { pUSD, pBNB, pBUNNY, pCAKE } = calls[farm.id].infoOfPool;
+        info = calls[farm.id].infoOfPool;
+
+        const { pUSD, pBNB, pBUNNY, pCAKE } = info;
 
         pendingUSD = pUSD;
         pendingBNB = pBNB;
@@ -390,10 +406,33 @@ module.exports = class pancakebunny {
         pendingCAKE = pCAKE;
       }
 
+      // ???
+      if (poolsOf[farm.raw.address.toLowerCase()]) {
+        info = poolsOf[farm.raw.address.toLowerCase()]
+
+        const { pUSD, pBNB, pBUNNY, pCAKE } = info;
+
+        if (pendingUSD && !pendingUSD.gt(0) > 0) {
+          pendingUSD = pUSD;
+        }
+
+        if (pendingBNB && !pendingBNB.gt(0) > 0) {
+          pendingBNB = pBNB;
+        }
+
+        if (pendingBUNNY && !pendingBUNNY.gt(0) > 0) {
+          pendingBUNNY = pBUNNY;
+        }
+
+        if (pendingCAKE && !pendingCAKE.gt(0) > 0) {
+          pendingCAKE = pCAKE;
+        }
+      }
+
       if (pendingUSD || pendingBNB || pendingBUNNY || pendingCAKE) {
         result.rewards = [];
 
-        if (pendingBUNNY && pendingBUNNY.gt(0) > 0) {
+        if (pendingBUNNY && pendingBUNNY.gt(0)) {
           const item = {
             symbol: "bunny",
             amount: pendingBUNNY.toString() / 1e18
@@ -406,7 +445,7 @@ module.exports = class pancakebunny {
           result.rewards.push(item);
         }
 
-        if (pendingBNB && pendingBNB.gt(0) > 0) {
+        if (pendingBNB && pendingBNB.gt(0)) {
           const item = {
             symbol: "bnb",
             amount: pendingBNB.toString() / 1e18
@@ -419,7 +458,7 @@ module.exports = class pancakebunny {
           result.rewards.push(item);
         }
 
-        if (pendingCAKE > 0) {
+        if (pendingCAKE && pendingCAKE.gt(0)) {
           const item = {
             symbol: "cake",
             amount: pendingCAKE.toString() / 1e18
