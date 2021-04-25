@@ -19,8 +19,8 @@ module.exports = class Http {
   start(port = 3000) {
     this.routes();
 
-    this.app.listen(port, "127.0.0.1", () => {
-      console.log(`Listening at http://127.0.0.1:${port} @env:(${process.env.NODE_ENV ? process.env.NODE_ENV : 'n/a'})`);
+    this.app.listen(port, "0.0.0.0", () => {
+      console.log(`Listening at http://0.0.0.0:${port} @env:(${process.env.NODE_ENV ? process.env.NODE_ENV : 'n/a'})`);
     });
   }
 
