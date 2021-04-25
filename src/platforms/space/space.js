@@ -9,7 +9,7 @@ const PancakePlatformFork = require("../common").PancakePlatformFork;
 module.exports = class space extends PancakePlatformFork {
   static MASTER_ADDRESS = "0xc8cf0767fB2258b23B90636A5e21cfaD113e8182"
 
-  getRawFarms() {
+  async getRawFarms() {
     return Farms.filter(i => i.ended !== true);
   }
 

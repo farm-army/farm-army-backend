@@ -21,7 +21,7 @@ module.exports = {
       this.priceOracle = priceOracle;
     }
 
-    getRawFarms() {
+    async getRawFarms() {
       throw new Error('not implemented');
     }
 
@@ -58,7 +58,7 @@ module.exports = {
     }
 
     async getLbAddresses() {
-      return this.getRawFarms()
+      return (await this.getRawFarms())
         .filter(f => f.lpAddresses && this.getAddress(f.lpAddresses))
         .map(farm => this.getAddress(farm.lpAddresses));
     }
@@ -123,7 +123,7 @@ module.exports = {
         }
       }
 
-      const farmBalanceCalls = this.getRawFarms().map(farm => {
+      const farmBalanceCalls = (await this.getRawFarms()).map(farm => {
         let address = farm.isTokenOnly !== true
           ? this.getAddress(farm.lpAddresses)
           : this.getAddress(farm.tokenAddresses);
@@ -150,7 +150,7 @@ module.exports = {
         Utils.multiCallIndexBy('address', poolBalanceCalls),
       ]);
 
-      const farms = this.getRawFarms().map(farm => {
+      const farms = (await this.getRawFarms()).map(farm => {
         const item = {
           id: `${this.getName()}_farm_${farm.pid}`,
           name: farm.lpSymbol,
@@ -179,7 +179,7 @@ module.exports = {
           item.link = link;
         }
 
-        if (item.extra.transactionToken && farmBalances[item.extra.transactionToken] && farmBalances[item.extra.transactionToken].balance) {
+        if (item.extra.transactionToken && farmBalances[item.extra.transactionToken] && farmBalances[item.extra.transactionToken].balance && farmBalances[item.extra.transactionToken].balance > 0) {
           item.tvl = {
             amount: farmBalances[item.extra.transactionToken].balance / 1e18
           };

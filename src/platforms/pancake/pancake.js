@@ -30,10 +30,16 @@ module.exports = class pancake {
     this.cacheManager = cacheManager;
   }
 
-  getLbAddresses() {
-    return this.getRawFarms()
-        .filter(c => c.lpAddresses && this.getAddress(c.lpAddresses))
-        .map(c => this.getAddress(c.lpAddresses));
+  async getLbAddresses() {
+    let old = this.getRawFarms()
+      .filter(c => c.lpAddresses && this.getAddress(c.lpAddresses))
+      .map(c => this.getAddress(c.lpAddresses));
+
+    const chain = (await this.getFetchedFarms())
+      .filter(c => c.lpAddresses && c.isTokenOnly !== true)
+      .map(c => this.getAddress(c.lpAddress));
+
+    return _.uniqWith([...old, ...chain], (a,b) => a.toLowerCase() === b.toLowerCase())
   }
 
   async getFetchedFarms() {
@@ -300,17 +306,12 @@ module.exports = class pancake {
           amount: ethers.utils.formatUnits(call.userInfo[0].toString(), 18)
         };
 
-        let price;
         if (this.getAddress(farm.raw.lpAddresses)) {
-          price = this.priceOracle.getAddressPrice(this.getAddress(farm.raw.lpAddresses));
-        }
+          let price = this.priceOracle.getAddressPrice(this.getAddress(farm.raw.lpAddresses));
 
-        if (!price) {
-          price = this.priceOracle.findPrice(`cake-${farm.token.toLowerCase()}`);
-        }
-
-        if (price) {
-          result.deposit.usd = (call.userInfo[0] / 1e18) * price;
+          if (price) {
+            result.deposit.usd = (call.userInfo[0] / 1e18) * price;
+          }
         }
 
         if (new BigNumber(call.pendingCake).isGreaterThan(0)) {

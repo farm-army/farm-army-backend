@@ -1,7 +1,9 @@
 [
   {
     "pid": 0,
+    "layerId": 0,
     "risk": 5,
+    "farmType": 0,
     "lpSymbol": "EGG-BUSD LP",
     "lpAddresses": {
       "56": "0x19e7cbecdd23a16dfa5573df54d98f7caae03019",
@@ -16,11 +18,14 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    }
+    },
+    "highlighted": true
   },
   {
     "pid": 1,
+    "layerId": 0,
     "risk": 5,
+    "farmType": 0,
     "lpSymbol": "EGG-BNB LP",
     "lpAddresses": {
       "56": "0xd1b59d11316e87c3a0a069e80f590ba35cd8d8d3",
@@ -35,11 +40,35 @@
     "quoteTokenAdresses": {
       "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
       "97": ""
+    },
+    "highlighted": true
+  },
+  {
+    "pid": 24,
+    "layerId": 0,
+    "risk": 3,
+    "farmType": 0,
+    "lpSymbol": "TYPH-BUSD LP",
+    "lpAddresses": {
+      "56": "0x9fE5e1DbE102d4Dfa52176F5667E714aee63c776",
+      "97": ""
+    },
+    "tokenSymbol": "TYPH",
+    "tokenAddresses": {
+      "56": "0x4090e535f2e251f5f88518998b18b54d26b3b07c",
+      "97": ""
+    },
+    "quoteTokenSymbol": "BUSD",
+    "quoteTokenAdresses": {
+      "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "97": ""
     }
   },
   {
     "pid": 2,
+    "layerId": 0,
     "risk": 3,
+    "farmType": 0,
     "lpSymbol": "BNB-BUSD LP",
     "lpAddresses": {
       "56": "0x1b96b92314c44b159149f7e0303511fb2fc4774f",
@@ -58,7 +87,9 @@
   },
   {
     "pid": 3,
+    "layerId": 0,
     "risk": 1,
+    "farmType": 0,
     "lpSymbol": "USDT-BUSD LP",
     "lpAddresses": {
       "56": "0xc15fa3e22c912a276550f3e5fe3b0deb87b55acd",
@@ -77,7 +108,9 @@
   },
   {
     "pid": 4,
+    "layerId": 0,
     "risk": 2,
+    "farmType": 0,
     "lpSymbol": "BTCB-BNB LP",
     "lpAddresses": {
       "56": "0x7561eee90e24f3b348e1087a005f78b4c8453524",
@@ -96,7 +129,9 @@
   },
   {
     "pid": 5,
+    "layerId": 0,
     "risk": 2,
+    "farmType": 0,
     "lpSymbol": "ETH-BNB LP",
     "lpAddresses": {
       "56": "0x70d8929d04b60af4fb9b58713ebcf18765ade422",
@@ -115,7 +150,9 @@
   },
   {
     "pid": 6,
+    "layerId": 0,
     "risk": 1,
+    "farmType": 0,
     "lpSymbol": "DAI-BUSD LP",
     "lpAddresses": {
       "56": "0x3ab77e40340ab084c3e23be8e5a6f7afed9d41dc",
@@ -134,7 +171,9 @@
   },
   {
     "pid": 7,
+    "layerId": 0,
     "risk": 1,
+    "farmType": 0,
     "lpSymbol": "USDC-BUSD LP",
     "lpAddresses": {
       "56": "0x680dd100e4b394bda26a59dd5c119a391e747d18",
@@ -153,7 +192,9 @@
   },
   {
     "pid": 9,
+    "layerId": 0,
     "risk": 3,
+    "farmType": 0,
     "lpSymbol": "DOT-BNB LP",
     "lpAddresses": {
       "56": "0xbcd62661a6b1ded703585d3af7d7649ef4dcdb5c",
@@ -172,7 +213,9 @@
   },
   {
     "pid": 10,
+    "layerId": 0,
     "risk": 4,
+    "farmType": 0,
     "lpSymbol": "CAKE-BUSD LP",
     "lpAddresses": {
       "56": "0x0ed8e0a2d99643e1e65cca22ed4424090b8b7458",
@@ -191,7 +234,9 @@
   },
   {
     "pid": 11,
+    "layerId": 0,
     "risk": 4,
+    "farmType": 0,
     "lpSymbol": "CAKE-BNB LP",
     "lpAddresses": {
       "56": "0xa527a61703d82139f8a06bc30097cc9caa2df5a6",
@@ -210,8 +255,11 @@
   },
   {
     "pid": 12,
+    "layerId": 0,
     "risk": 5,
+    "allowCompound": true,
     "isTokenOnly": true,
+    "farmType": 1,
     "lpSymbol": "EGG",
     "lpAddresses": {
       "56": "0x19e7cbecdd23a16dfa5573df54d98f7caae03019",
@@ -226,12 +274,15 @@
     "quoteTokenAdresses": {
       "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
       "97": ""
-    }
+    },
+    "highlighted": true
   },
   {
     "pid": 13,
+    "layerId": 0,
     "risk": 1,
     "isTokenOnly": true,
+    "farmType": 1,
     "lpSymbol": "BUSD",
     "lpAddresses": {
       "56": "0x19e7cbecdd23a16dfa5573df54d98f7caae03019",
@@ -250,8 +301,10 @@
   },
   {
     "pid": 14,
+    "layerId": 0,
     "risk": 3,
     "isTokenOnly": true,
+    "farmType": 1,
     "lpSymbol": "WBNB",
     "lpAddresses": {
       "56": "0x1b96b92314c44b159149f7e0303511fb2fc4774f",
@@ -270,8 +323,10 @@
   },
   {
     "pid": 15,
+    "layerId": 0,
     "risk": 1,
     "isTokenOnly": true,
+    "farmType": 1,
     "lpSymbol": "USDT",
     "lpAddresses": {
       "56": "0xc15fa3e22c912a276550f3e5fe3b0deb87b55acd",
@@ -290,8 +345,10 @@
   },
   {
     "pid": 16,
+    "layerId": 0,
     "risk": 2,
     "isTokenOnly": true,
+    "farmType": 1,
     "lpSymbol": "BTCB",
     "lpAddresses": {
       "56": "0xb8875e207ee8096a929d543c9981c9586992eacb",
@@ -310,8 +367,10 @@
   },
   {
     "pid": 17,
+    "layerId": 0,
     "risk": 2,
     "isTokenOnly": true,
+    "farmType": 1,
     "lpSymbol": "ETH",
     "lpAddresses": {
       "56": "0xd9a0d1f5e02de2403f68bb71a15f8847a854b494",
@@ -330,8 +389,10 @@
   },
   {
     "pid": 18,
+    "layerId": 0,
     "risk": 1,
     "isTokenOnly": true,
+    "farmType": 1,
     "lpSymbol": "DAI",
     "lpAddresses": {
       "56": "0x3ab77e40340ab084c3e23be8e5a6f7afed9d41dc",
@@ -350,8 +411,10 @@
   },
   {
     "pid": 19,
+    "layerId": 0,
     "risk": 1,
     "isTokenOnly": true,
+    "farmType": 1,
     "lpSymbol": "USDC",
     "lpAddresses": {
       "56": "0x680dd100e4b394bda26a59dd5c119a391e747d18",
@@ -370,8 +433,10 @@
   },
   {
     "pid": 20,
+    "layerId": 0,
     "risk": 3,
     "isTokenOnly": true,
+    "farmType": 1,
     "lpSymbol": "DOT",
     "lpAddresses": {
       "56": "0x54c1ec2f543966953f2f7564692606ea7d5a184e",
@@ -390,8 +455,10 @@
   },
   {
     "pid": 21,
+    "layerId": 0,
     "risk": 4,
     "isTokenOnly": true,
+    "farmType": 1,
     "lpSymbol": "CAKE",
     "lpAddresses": {
       "56": "0x0ed8e0a2d99643e1e65cca22ed4424090b8b7458",
@@ -410,8 +477,10 @@
   },
   {
     "pid": 22,
+    "layerId": 0,
     "risk": 3,
     "isTokenOnly": true,
+    "farmType": 1,
     "lpSymbol": "BSCX",
     "lpAddresses": {
       "56": "0xa32a983a64ce21834221aa0ad1f1533907553136",
@@ -430,8 +499,10 @@
   },
   {
     "pid": 23,
+    "layerId": 0,
     "risk": 3,
     "isTokenOnly": true,
+    "farmType": 1,
     "lpSymbol": "AUTO",
     "lpAddresses": {
       "56": "0x4d0228ebeb39f6d2f29ba528e2d15fc9121ead56",

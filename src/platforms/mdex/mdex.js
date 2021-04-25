@@ -10,6 +10,8 @@ const request = require("async-request");
 const MasterAbi = require('./abi/master.json');
 const Farms = require('./farms/farms.json');
 
+const FarmsReqeust = require('./farms/request.json');
+
 module.exports = class mdex {
   constructor(cache, priceOracle) {
     this.cache = cache;
@@ -64,15 +66,24 @@ module.exports = class mdex {
       }
     }
 
-    const text = await request('https://gateway.mdex.cc/v2/mingpool/lps?mdex_chainid=56');
-    const response = JSON.parse(text.body);
+    const staticFarms = _.cloneDeep(Farms);
 
+    // unused: cloudflare block
     const info = {};
-    (response.result || []).forEach(pool => {
-      info[pool.address.toLowerCase()] = pool
+
+    (FarmsReqeust.result || []).forEach((pool, index) => {
+      const staticFind = staticFarms.find(f => f.pid.toString() === index.toString())
+
+      if (!staticFind) {
+        staticFarms.push({
+          "pid": index,
+          "lpAddress": pool.address,
+          "name": pool.pool_name,
+        })
+      }
     })
 
-    const farms = Farms.map(farm => {
+    const farms = staticFarms.map(farm => {
       let id = crypto.createHash('md5')
         .update(farm.pid.toString())
         .digest("hex");

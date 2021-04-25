@@ -23,11 +23,12 @@ Track your farming and pool performance on the Binance Chain
 | slime | :x: | :heavy_check_mark:  |  |
 | kebab | :x:  | :white_check_mark:  |  pools |
 | mdex | :x:  | :white_check_mark:  |   |  
-| pancake | :white_check_mark: | :heavy_check_mark: |   |  
+| pancake | :white_check_mark: | :heavy_check_mark: | vaults via masterchef; pools manual  |  
 | pancakebunny | :x: | :heavy_check_mark:  |   |  
 | saltswap | :x: | :heavy_check_mark:  |  |
 | slime | :x: | :heavy_check_mark:  |  |
 | space | :x:  | :white_check_mark:  |   |
+| swamp | :x: | :heavy_check_mark:  | fetch via masterchef |
 | valuedefi | :heavy_check_mark: | :white_check_mark:  | staking missing |
 | wault | :x:  | :white_check_mark:  |   | 
 
