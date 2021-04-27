@@ -32,9 +32,21 @@ const FarmFetcher = require("./farm/farm_fetcher");
 
 const Pancake = require("./platforms/pancake/pancake");
 const Swamp = require("./platforms/swamp/swamp");
+const Blizzard = require("./platforms/blizzard/blizzard");
+const Hyperjump = require("./platforms/hyperjump/hyperjump");
+const Slime = require("./platforms/slime/slime");
+const Apeswap = require("./platforms/apeswap/apeswap");
+const Goose = require("./platforms/goose/goose");
+const Cheese = require("./platforms/cheese/cheese");
 
 let pancake;
 let swamp;
+let blizzard;
+let hyperjump;
+let slime;
+let apeswap;
+let goose;
+let cheese;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -82,6 +94,12 @@ module.exports = {
         [
           this.getPancake(),
           this.getSwamp(),
+          this.getBlizzard(),
+          this.getHyperjump(),
+          this.getSlime(),
+          this.getApeswap(),
+          this.getGoose(),
+          this.getCheese(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -109,6 +127,90 @@ module.exports = {
     }
 
     return (swamp = new Swamp(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getBlizzard() {
+    if (blizzard) {
+      return blizzard;
+    }
+
+    return (blizzard = new Blizzard(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getHyperjump() {
+    if (hyperjump) {
+      return hyperjump;
+    }
+
+    return (hyperjump = new Hyperjump(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getSlime() {
+    if (slime) {
+      return slime;
+    }
+
+    return (slime = new Slime(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getApeswap() {
+    if (apeswap) {
+      return apeswap;
+    }
+
+    return (apeswap = new Apeswap(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getGoose() {
+    if (goose) {
+      return goose;
+    }
+
+    return (goose = new Goose(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getCheese() {
+    if (cheese) {
+      return cheese;
+    }
+
+    return (cheese = new Cheese(
       this.getCache(),
       this.getPriceOracle(),
       this.getTokenCollector(),

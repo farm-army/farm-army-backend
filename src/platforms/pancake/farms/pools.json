@@ -30,6 +30,416 @@
     "isFinished": false
   },
   {
+    "sousId": 116,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "DFD",
+      "address": {
+        "56": "0x9899a98b222fcb2f3dbee7df45d943093a4ff9ff",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://dusd.finance/"
+    },
+    "contractAddress": {
+      "56": "0xAF3EfE5fCEeBc603Eada6A2b0172be11f7405102",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.46296",
+    "isFinished": false
+  },
+  {
+    "sousId": 115,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "ALPACA",
+      "address": {
+        "56": "0x8f0528ce5ef7b51152a59745befdd91d97091d2f",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.alpacafinance.org/"
+    },
+    "contractAddress": {
+      "56": "0xf73fdeb26a8c7a4abf3809d3db11a06ba5c13d0e",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.22743",
+    "isFinished": false
+  },
+  {
+    "sousId": 114,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "τBTC",
+      "address": {
+        "56": "0x2cd1075682b0fccaadd0ca629e138e64015ba11c",
+        "97": ""
+      },
+      "decimals": 9,
+      "projectLink": "https://www.btcst.finance/"
+    },
+    "contractAddress": {
+      "56": "0xaac7171afc93f4b75e1268d208040b152ac65e32",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.00000608",
+    "isFinished": false
+  },
+  {
+    "sousId": 113,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "τBTC",
+      "address": {
+        "56": "0x2cd1075682b0fccaadd0ca629e138e64015ba11c",
+        "97": ""
+      },
+      "decimals": 9,
+      "projectLink": "https://www.btcst.finance/"
+    },
+    "contractAddress": {
+      "56": "0x2c6017269b4324d016ca5d8e3267368652c18905",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.00000608",
+    "isFinished": true
+  },
+  {
+    "sousId": 112,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "SWINGBY",
+      "address": {
+        "56": "0x71de20e0c4616e7fcbfdd3f875d568492cbe4739",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://swingby.network/"
+    },
+    "contractAddress": {
+      "56": "0x675434c68f2672c983e36cf10ed13a4014720b79",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.21527"
+  },
+  {
+    "sousId": 111,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "XED",
+      "address": {
+        "56": "0x5621b5a3f4a8008c4ccdd1b942b121c8b1944f1f",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.exeedme.com/"
+    },
+    "contractAddress": {
+      "56": "0x05d6c2d1d687eacfb5e6440d5a3511e91f2201a8",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.3472"
+  },
+  {
+    "sousId": 110,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "HAKKA",
+      "address": {
+        "56": "0x1d1eb8e8293222e1a29d2c0e4ce6c0acfd89aaac",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://hakka.finance/"
+    },
+    "contractAddress": {
+      "56": "0xd623a32da4a632ce01766c317d07cb2cad56949b",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "3.4722"
+  },
+  {
+    "sousId": 109,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "CGG",
+      "address": {
+        "56": "0x1613957159e9b0ac6c80e824f7eea748a32a0ae2",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://chainguardians.io/"
+    },
+    "contractAddress": {
+      "56": "0xdf75f38dbc98f9f26377414e567abcb8d57cca33",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.10918"
+  },
+  {
+    "sousId": 108,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "MIX",
+      "address": {
+        "56": "0xB67754f5b4C704A24d2db68e661b2875a4dDD197",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://mixie.chainguardians.io/"
+    },
+    "contractAddress": {
+      "56": "0xce64a930884b2c68cd93fc1c7c7cdc221d427692",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.3721"
+  },
+  {
+    "sousId": 107,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "SUTER",
+      "address": {
+        "56": "0x4cfbbdfbd5bf0814472ff35c72717bd095ada055",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://shield.suterusu.io/"
+    },
+    "contractAddress": {
+      "56": "0xc1E70edd0141c454b834Deac7ddDeA413424aEf9",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "15.3356"
+  },
+  {
+    "sousId": 106,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "bROOBEE",
+      "address": {
+        "56": "0xe64f5cb844946c1f102bd25bbd87a5ab4ae89fbe",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://roobee.io/"
+    },
+    "contractAddress": {
+      "56": "0x189d8228CdfDc404Bd9e5bD65ff958cb5fd8855c",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "14.4675"
+  },
+  {
+    "sousId": 105,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "HZN",
+      "address": {
+        "56": "0xc0eff7749b125444953ef89682201fb8c6a917cd",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://horizonprotocol.com/"
+    },
+    "contractAddress": {
+      "56": "0x0196c582216e2463f052E2B07Ef8667Bec9Fb17a",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.6944"
+  },
+  {
+    "sousId": 104,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "ALPA",
+      "address": {
+        "56": "0xc5e6689c9c8b02be7c49912ef19e79cf24977f03",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://bsc.alpaca.city/"
+    },
+    "contractAddress": {
+      "56": "0x8f84106286c9c8A42bc3555C835E6e2090684ab7",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.23495"
+  },
+  {
+    "sousId": 103,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "PERL",
+      "address": {
+        "56": "0x0f9e4d49f25de22c2202af916b681fbb3790497b",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://perlinx.finance/"
+    },
+    "contractAddress": {
+      "56": "0xa8d32b31ECB5142f067548Bf0424389eE98FaF26",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "1.1574"
+  },
+  {
     "sousId": 102,
     "stakingToken": {
       "symbol": "CAKE",
@@ -1506,7 +1916,7 @@
     "harvest": true,
     "tokenPerBlock": "0.0578",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 52,
@@ -1536,7 +1946,7 @@
     "harvest": true,
     "tokenPerBlock": "0.13",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 51,
@@ -1566,7 +1976,7 @@
     "harvest": true,
     "tokenPerBlock": "0.1157",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 50,
@@ -1626,7 +2036,7 @@
     "harvest": true,
     "tokenPerBlock": "0.899",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 48,

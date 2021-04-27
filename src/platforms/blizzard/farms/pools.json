@@ -2,10 +2,40 @@
   {
     "sousId": 1,
     "stakingToken": {
-      "symbol": "BLZD",
+      "symbol": "xBLZD",
       "address": {
-        "56": "0x57067A6BD75c0E95a6A5f158455926e43E79BeB0",
-        "97": "0x1977ECbdE6832920c3554E238deDFfBC5ed996c9"
+        "56": "0x9a946c3Cb16c08334b69aE249690C236Ebd5583E",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://blizzard.money/"
+    },
+    "earningToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "contractAddress": {
+      "56": "0x69f834FD68E179c820c4c7b92671dbE3078737bf",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "tokenPerBlock": "0.01736",
+    "sortOrder": 999,
+    "isFinished": true
+  },
+  {
+    "sousId": 2,
+    "stakingToken": {
+      "symbol": "xBLZD",
+      "address": {
+        "56": "0x9a946c3Cb16c08334b69aE249690C236Ebd5583E",
+        "97": ""
       },
       "decimals": 18,
       "projectLink": "https://blizzard.money/"
@@ -15,52 +45,107 @@
       "projectLink": "https://www.binance.com/"
     },
     "contractAddress": {
-      "56": "0x481055C4182B9A5e90d8E7EDe9f65b957dC0Ec22",
+      "56": "0x543A2ab9CE2cFC1Aef153b7012AeD0D73d9968AB",
       "97": ""
     },
     "poolCategory": "Core",
     "harvest": true,
-    "tokenPerBlock": "0.002480",
-    "sortOrder": 999,
-    "isFinished": true
-  },
-  {
-    "sousId": 2,
-    "stakingToken": {
-      "symbol": "BLZD",
-      "address": {
-        "56": "0x57067A6BD75c0E95a6A5f158455926e43E79BeB0",
-        "97": "0x1977ECbdE6832920c3554E238deDFfBC5ed996c9"
-      },
-      "decimals": 18,
-      "projectLink": "https://blizzard.money/"
-    },
-    "earningToken": {
-      "symbol": "BIFI",
-      "address": {
-        "56": "0xca3f508b8e4dd382ee878a314789373d80a5190a",
-        "97": ""
-      },
-      "decimals": 18,
-      "projectLink": "https://beefy.finance/"
-    },
-    "contractAddress": {
-      "56": "0x95b3389f41dbf513De5710A68220efF5a42dB068",
-      "97": ""
-    },
-    "poolCategory": "Core",
-    "harvest": true,
-    "tokenPerBlock": "0.00009920",
+    "tokenPerBlock": "0.0008432",
     "sortOrder": 999,
     "isFinished": true
   },
   {
     "sousId": 3,
     "stakingToken": {
-      "symbol": "BLZD",
+      "symbol": "xBLZD",
       "address": {
-        "56": "0x57067A6BD75c0E95a6A5f158455926e43E79BeB0",
-        "97": "0x1977ECbdE6832920c3554E238deDFfBC5ed996c9"
+        "56": "0x9a946c3Cb16c08334b69aE249690C236Ebd5583E",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://blizzard.money/"
+    },
+    "earningToken": {
+      "symbol": "BNB",
+      "projectLink": "https://www.binance.com/"
+    },
+    "contractAddress": {
+      "56": "0x06C507bAA52d73343EFdF3Dbcf3e7704016bCE44",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "tokenPerBlock": "0.0008532",
+    "sortOrder": 999,
+    "isFinished": true
+  },
+  {
+    "sousId": 4,
+    "stakingToken": {
+      "symbol": "xBLZD",
+      "address": {
+        "56": "0x9a946c3Cb16c08334b69aE249690C236Ebd5583E",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://blizzard.money/"
+    },
+    "earningToken": {
+      "symbol": "ALLOY",
+      "address": {
+        "56": "0x5eF5994fA33FF4eB6c82d51ee1DC145c546065Bd",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://hyperjump.fi/"
+    },
+    "contractAddress": {
+      "56": "0x93AC4d0f3aF5d54528C72C698b4BbC57eaFd75D5",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "tokenPerBlock": "0.496031",
+    "sortOrder": 999,
+    "isFinished": true
+  },
+  {
+    "sousId": 5,
+    "stakingToken": {
+      "symbol": "xBLZD",
+      "address": {
+        "56": "0x9a946c3Cb16c08334b69aE249690C236Ebd5583E",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://blizzard.money/"
+    },
+    "earningToken": {
+      "symbol": "BHC",
+      "address": {
+        "56": "0x6fd7c98458a943f469E1Cf4eA85B173f5Cd342F4",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://billionhappiness.finance/"
+    },
+    "contractAddress": {
+      "56": "0x77FE8ad7E13E174Ab3350e3D679421ED692dDf83",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "tokenPerBlock": "0.001289",
+    "sortOrder": 999,
+    "isFinished": true
+  },
+  {
+    "sousId": 6,
+    "stakingToken": {
+      "symbol": "xBLZD",
+      "address": {
+        "56": "0x9a946c3Cb16c08334b69aE249690C236Ebd5583E",
+        "97": ""
       },
       "decimals": 18,
       "projectLink": "https://blizzard.money/"
@@ -75,42 +160,67 @@
       "projectLink": "https://bitcoin.org/"
     },
     "contractAddress": {
-      "56": "0xa918f270F3F9bC0032aF233876BA1EE43d4946e5",
+      "56": "0xE475A9C79E0a031D01043798d8be6002888135B8",
       "97": ""
     },
     "poolCategory": "Core",
     "harvest": true,
-    "tokenPerBlock": "0.0000049603",
+    "tokenPerBlock": "0.00000595238",
     "sortOrder": 999,
     "isFinished": false
   },
   {
-    "sousId": 4,
+    "sousId": 7,
     "stakingToken": {
-      "symbol": "BLZD",
+      "symbol": "xBLZD",
       "address": {
-        "56": "0x57067A6BD75c0E95a6A5f158455926e43E79BeB0",
-        "97": "0x1977ECbdE6832920c3554E238deDFfBC5ed996c9"
+        "56": "0x9a946c3Cb16c08334b69aE249690C236Ebd5583E",
+        "97": ""
       },
       "decimals": 18,
       "projectLink": "https://blizzard.money/"
     },
     "earningToken": {
-      "symbol": "ETH",
-      "address": {
-        "56": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
-        "97": ""
-      },
-      "decimals": 18,
-      "projectLink": "https://ethereum.org/en/"
+      "symbol": "BNB",
+      "projectLink": "https://www.binance.com/"
     },
     "contractAddress": {
-      "56": "0x6F7CAFCD187d9cAbfa5A0139c7cC28c03BF7633b",
+      "56": "0x38aC82c3cf91A8eF905C8534318EBC621F056Ac1",
       "97": ""
     },
     "poolCategory": "Core",
     "harvest": true,
-    "tokenPerBlock": "0.000248",
+    "tokenPerBlock": "0.000595238",
+    "sortOrder": 999,
+    "isFinished": false
+  },
+  {
+    "sousId": 8,
+    "stakingToken": {
+      "symbol": "xBLZD",
+      "address": {
+        "56": "0x9a946c3Cb16c08334b69aE249690C236Ebd5583E",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://blizzard.money/"
+    },
+    "earningToken": {
+      "symbol": "BUSD",
+      "address": {
+        "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.paxos.com/busd/"
+    },
+    "contractAddress": {
+      "56": "0x8DFa4A2935e7BAb6fb1A8F8Fe68cA841F647d835",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "tokenPerBlock": "0.347222",
     "sortOrder": 999,
     "isFinished": false
   }

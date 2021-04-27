@@ -214,16 +214,15 @@ module.exports = class autofarm {
       return {
         id: farm.id,
         pendingAUTO: contract.methods.pendingAUTO(farm.raw.id, address),
-        stakedWantTokens: contract.methods.stakedWantTokens(
-          farm.raw.id,
-          address
-        )
+        stakedWantTokens: contract.methods.stakedWantTokens(farm.raw.id, address),
+        // userInfo: contract.methods.userInfo(farm.raw.id, address)
       };
     });
 
     const calls = await Utils.multiCall(tokenCalls);
 
-    return calls.map(call => {
+    const results = [];
+    calls.forEach(call => {
       const farm = farms.find(f => f.id === call.id);
 
       const result = {};
@@ -251,11 +250,25 @@ module.exports = class autofarm {
 
         deposit.usd = (call.stakedWantTokens / 1e18) * farm.raw.wantPrice;
 
+        // dust
+        if (deposit.usd < 0.01) {
+          return;
+        }
+
         result.deposit = deposit;
+
+        if (call.userInfo && call.userInfo[0]) {
+          const myYield = (call.userInfo[0] / 1e18);
+
+          deposit.yield = deposit.amount - myYield;
+          deposit.usd_yield = deposit.yield * farm.raw.wantPrice;
+        }
       }
 
-      return result;
+      results.push(result);
     });
+
+    return results;
   }
 
   async getTransactions(address, id) {

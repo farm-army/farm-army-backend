@@ -29,7 +29,8 @@ module.exports = class FarmFetcher {
       const pendingFunctionName = pendingFunction.name;
 
       const func = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase() === pendingFunctionName.replace('pending', '').toLowerCase());
-      if (func.name) {
+
+      if (func && func.name) {
         rewardTokenFunctionName = func.name;
       }
     }

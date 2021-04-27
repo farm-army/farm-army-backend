@@ -40,8 +40,8 @@
     "decimals": 18
   },
   {
-    "symbol": "slme",
-    "address": "0x4fcfa6cc8914ab455b5b33df916d90bfe70b6ab1",
+    "symbol": "slime",
+    "address": "0x23b06097f8fe2dd9d3df094d3ee8319daa8756c1",
     "decimals": 18
   },
   {
@@ -55,8 +55,8 @@
     "decimals": 18
   },
   {
-    "symbol": "blzd",
-    "address": "0x57067A6BD75c0E95a6A5f158455926e43E79BeB0",
+    "symbol": "xblzd",
+    "address": "0x9a946c3Cb16c08334b69aE249690C236Ebd5583E",
     "decimals": 18
   },
   {

@@ -5,14 +5,48 @@ const PancakePlatformFork = require("../common").PancakePlatformFork;
 const MasterChefAbi = require('./abi/masterchef.json');
 const SousChefAbi = require('./abi/souschef.json');
 
-const Farms = require('./farms/farms.json');
 const Pools = require('./farms/pools.json');
 
 module.exports = class blizzard extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0x2078F4A75c92A6918D13e3e2F14183443ebf55D3"
+  static MASTER_ADDRESS = "0x367CdDA266ADa588d380C7B970244434e4Dde790"
+
+  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
+    super(cache, priceOracle);
+
+    this.cache = cache;
+    this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector;
+    this.farmCollector = farmCollector;
+    this.cacheManager = cacheManager;
+  }
+
+  async getFetchedFarms() {
+    const cacheKey = `blizzard-v1-master-farms`
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
+    }
+
+    const foo = (await this.farmCollector.fetchForMasterChef(this.getMasterChefAddress())).filter(f => f.isFinished !== true);
+
+    const reformat = foo.map(f => {
+      f.lpAddresses = f.lpAddress
+
+      if (f.isTokenOnly === true) {
+        f.tokenAddresses = f.lpAddress
+      }
+
+      return f
+    })
+
+    await this.cacheManager.set(cacheKey, reformat, {ttl: 60 * 30})
+
+    return reformat;
+  }
 
   getRawFarms() {
-    return Farms.filter(i => i.ended !== true);
+    return this.getFetchedFarms();
   }
 
   getRawPools() {
@@ -33,12 +67,12 @@ module.exports = class blizzard extends PancakePlatformFork {
 
   getFarmEarns(farm) {
     return farm.id.startsWith(`${this.getName()}_farm_`)
-      ? ['blzd']
+      ? ['xblzd']
       : undefined;
   }
 
   getPendingRewardContractMethod() {
-    return 'pendingBlzd';
+    return 'pendingxBLZD';
   }
 
   getSousAbi() {
