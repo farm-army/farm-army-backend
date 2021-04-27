@@ -19,8 +19,25 @@ module.exports = class mdex {
   }
 
   async getLbAddresses() {
-    let lpAddresses = Farms
-      .filter(f => f.name.includes('/') && f.name.toLowerCase().includes('lp'))
+    const staticFarms = _.cloneDeep(Farms);
+
+    // unused: cloudflare block
+    const info = {};
+
+    (FarmsReqeust.result || []).forEach((pool, index) => {
+      const staticFind = staticFarms.find(f => f.pid.toString() === index.toString())
+
+      if (!staticFind) {
+        staticFarms.push({
+          "pid": index,
+          "lpAddress": pool.address,
+          "name": pool.pool_name,
+        })
+      }
+    })
+
+    let lpAddresses = staticFarms
+      .filter(f => f.name.includes('/'))
       .map(f => f.lpAddress);
 
     return _.uniq(lpAddresses);

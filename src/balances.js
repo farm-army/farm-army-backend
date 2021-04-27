@@ -201,7 +201,7 @@ module.exports = class Balances {
       },
       {
         token: "slime",
-        contract: "0x4fcfa6cc8914ab455b5b33df916d90bfe70b6ab1"
+        contract: "0x23b06097f8fe2dd9d3df094d3ee8319daa8756c1"
       },
       {
         token: "juld",
@@ -212,8 +212,8 @@ module.exports = class Balances {
         contract: "0x0abd3E3502c15ec252f90F64341cbA74a24fba06"
       },
       {
-        token: "blzd",
-        contract: "0x57067A6BD75c0E95a6A5f158455926e43E79BeB0"
+        token: "xblzd",
+        contract: "0x9a946c3Cb16c08334b69aE249690C236Ebd5583E"
       },
       {
         token: "bbdo",

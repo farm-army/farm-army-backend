@@ -2,6 +2,7 @@
   {
     "sousId": 0,
     "tokenName": "BANANA",
+    "image": "BANANA.svg",
     "stakingTokenName": "BANANA",
     "stakingTokenAddress": {
       "56": "0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
@@ -79,8 +80,8 @@
     "projectLink": "https://apoyield.com",
     "harvest": true,
     "tokenPerBlock": "396",
-    "sortOrder": 4,
-    "isFinished": false,
+    "sortOrder": 6,
+    "isFinished": true,
     "tokenDecimals": 8,
     "lpStaking": true
   },
@@ -124,7 +125,7 @@
     "harvest": true,
     "tokenPerBlock": "0.1446527778",
     "sortOrder": 3,
-    "isFinished": false,
+    "isFinished": true,
     "tokenDecimals": 18,
     "lpStaking": true
   },
@@ -145,8 +146,8 @@
     "projectLink": "https://cryptexlock.me/",
     "harvest": true,
     "tokenPerBlock": "0.002604166666667000",
-    "sortOrder": 3,
-    "isFinished": false,
+    "sortOrder": 4,
+    "isFinished": true,
     "tokenDecimals": 18,
     "lpStaking": true
   },
@@ -167,9 +168,402 @@
     "projectLink": "https://astronaut.to",
     "harvest": true,
     "tokenPerBlock": "0.28935185",
-    "sortOrder": 2,
+    "sortOrder": 5,
+    "isFinished": true,
+    "tokenDecimals": 8,
+    "lpStaking": true
+  },
+  {
+    "sousId": 17,
+    "tokenName": "SWAMP",
+    "stakingTokenName": "BANANA",
+    "image": "SWAMP.svg",
+    "stakingTokenAddress": {
+      "56": "0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0xA007a5a8165D70DdFBC230927Cd639163228Fc72",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://swamp.finance",
+    "harvest": true,
+    "tokenPerBlock": "0.000479442180800000",
+    "sortOrder": 7,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "lpStaking": false
+  },
+  {
+    "sousId": 19,
+    "tokenName": "ALLOY",
+    "stakingTokenName": "BANANA",
+    "image": "ALLOY.png",
+    "stakingTokenAddress": {
+      "56": "0x603c7f932ed1fc6575303d8fb018fdcbb0f39a95",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x834534853bff9C97F8A9b0fb9FFF864E3584Df99",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://hyperjump.fi",
+    "harvest": true,
+    "tokenPerBlock": "0.01467673032",
+    "sortOrder": 5,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "lpStaking": false
+  },
+  {
+    "sousId": 20,
+    "tokenName": "NAUT",
+    "stakingTokenName": "BANANA",
+    "image": "NAUT.png",
+    "stakingTokenAddress": {
+      "56": "0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0xDC0913b2bf505E03794f0A68a0DbBa333D8e0E01",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://astronaut.to",
+    "harvest": true,
+    "tokenPerBlock": "0.03858024691358",
+    "sortOrder": 5,
+    "isFinished": false,
+    "tokenDecimals": 8,
+    "lpStaking": false
+  },
+  {
+    "sousId": 18,
+    "tokenName": "NAUT",
+    "stakingTokenName": "BNB-NAUT",
+    "image": "NAUT.png",
+    "stakingTokenAddress": {
+      "56": "0x288ea5437c7aad045a393cee2f41e548df24d1c8",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x330de89a559a75738acB5b87aE93579120d53AfB",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://astronaut.to",
+    "harvest": true,
+    "tokenPerBlock": "0.049603174603175",
+    "sortOrder": 6,
     "isFinished": false,
     "tokenDecimals": 8,
     "lpStaking": true
+  },
+  {
+    "sousId": 8,
+    "tokenName": "NUTS",
+    "stakingTokenName": "BANANA-NUTS",
+    "image": "NUTS.svg",
+    "stakingTokenAddress": {
+      "56": "0x44baf117d79d5313bea1fbba416e4067436e4bbe",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x6Fd37f3F83F11100f9f501e2690E96F6fAC37E94",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://squirrel.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.024965277777778",
+    "sortOrder": 5,
+    "isFinished": true,
+    "tokenDecimals": 18,
+    "lpStaking": true
+  },
+  {
+    "sousId": 10,
+    "tokenName": "HPS",
+    "stakingTokenName": "BANANA-HPS",
+    "image": "HPS.png",
+    "stakingTokenAddress": {
+      "56": "0x268f002A3B8d2faC2aA2bA6D4B90d519ca0d1d46",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x9c64Cec2Ad86E918929665cF9AADf91cd755fEf1",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://billionhappiness.finance",
+    "harvest": true,
+    "tokenPerBlock": "0.014880952380952000",
+    "sortOrder": 4,
+    "isFinished": true,
+    "tokenDecimals": 18,
+    "lpStaking": true
+  },
+  {
+    "sousId": 11,
+    "tokenName": "BRICK",
+    "stakingTokenName": "BANANA-BRICK",
+    "image": "BRICK.png",
+    "stakingTokenAddress": {
+      "56": "0x51a9771708d0471a0e592e8febb2c6b868e3d99b",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x6B7254AdfCa2178B7065b4B57fDc452c405DFC8A",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://brickchain.finance",
+    "harvest": true,
+    "tokenPerBlock": "2.976190476190476",
+    "sortOrder": 3,
+    "isFinished": true,
+    "tokenDecimals": 18,
+    "lpStaking": true
+  },
+  {
+    "sousId": 12,
+    "tokenName": "JDI",
+    "stakingTokenName": "BNB-JDI",
+    "image": "JDI.png",
+    "stakingTokenAddress": {
+      "56": "0xfb6063f29af6dcd1fc03a8e221c6d91deabbe764",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x7336B60aC64a5Bf04Eec760bD135ea105994387C",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://jdiyield.com",
+    "harvest": true,
+    "tokenPerBlock": "0.07716049382716",
+    "sortOrder": 6,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "lpStaking": true
+  },
+  {
+    "sousId": 15,
+    "tokenName": "Inactive - FOXY",
+    "stakingTokenName": "BANANA",
+    "image": "FOXY.png",
+    "stakingTokenAddress": {
+      "56": "0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x4cb75836d3254f7454d1bf6d95448c496cbc16b1",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://foxynft.org",
+    "harvest": true,
+    "tokenPerBlock": "0.05787037037037",
+    "sortOrder": 5,
+    "isFinished": true,
+    "tokenDecimals": 9,
+    "lpStaking": false
+  },
+  {
+    "sousId": 13,
+    "tokenName": "FOXY",
+    "stakingTokenName": "BANANA",
+    "image": "FOXY.png",
+    "stakingTokenAddress": {
+      "56": "0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x726d5A4D170425C98BAff117BF3d9aF9f77f80bd",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://foxynft.org",
+    "harvest": true,
+    "tokenPerBlock": "0.05787037037037",
+    "sortOrder": 4,
+    "isFinished": false,
+    "tokenDecimals": 9,
+    "lpStaking": false
+  },
+  {
+    "sousId": 14,
+    "tokenName": "JDI",
+    "stakingTokenName": "BANANA",
+    "image": "JDI.png",
+    "stakingTokenAddress": {
+      "56": "0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x72C8750af0744282E065F0dF3F73460A3764c624",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://jdiyield.com",
+    "harvest": true,
+    "tokenPerBlock": "0.115640358485111",
+    "sortOrder": 3,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "lpStaking": false
+  },
+  {
+    "sousId": 16,
+    "tokenName": "LYPTUS",
+    "stakingTokenName": "BANANA",
+    "image": "LYPTUS.png",
+    "stakingTokenAddress": {
+      "56": "0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x1900f5370830F0aa46DF76a6a4F0656Ef321b9f8",
+      "97": "0xb1108939748A635C5ed982a17FF5C6E7D79ECF62"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://koaladefi.finance/",
+    "harvest": true,
+    "tokenPerBlock": "0.05787037037037",
+    "sortOrder": 3,
+    "isFinished": false,
+    "tokenDecimals": 18,
+    "lpStaking": false
+  },
+  {
+    "sousId": 21,
+    "tokenName": "BANANA",
+    "image": "BANANA.svg",
+    "stakingTokenName": "GNANA",
+    "stakingTokenAddress": {
+      "56": "0xdDb3Bd8645775F59496c821E4F55A7eA6A6dc299",
+      "97": "0x9407026d236DEAE22CC1F3c419A9e47CBfCFE9E5"
+    },
+    "contractAddress": {
+      "56": "0x8F97B2E6559084CFaBA140e2AB4Da9aAF23FE7F8",
+      "97": "0x3996F919980778cb0fc1982087cAc01089e33fe7"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://apeswap.finance/apezone",
+    "harvest": true,
+    "tokenPerBlock": "0.0868055555555556",
+    "sortOrder": 3,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 22,
+    "tokenName": "ONT",
+    "image": "ONT.png",
+    "stakingTokenName": "BANANA",
+    "stakingTokenAddress": {
+      "56": "0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x8e6f61f855a7483E29c8E87BF221C73e10b49738",
+      "97": "0x3996F919980778cb0fc1982087cAc01089e33fe7"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://ont.io",
+    "harvest": true,
+    "tokenPerBlock": "0.009645061728000000",
+    "sortOrder": 1,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 23,
+    "tokenName": "NFTL",
+    "image": "NFTL.jpg",
+    "stakingTokenName": "BANANA",
+    "stakingTokenAddress": {
+      "56": "0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x7618c42Fb5DC96F3C238FEC799B440AEd7c56E03",
+      "97": "0x3996F919980778cb0fc1982087cAc01089e33fe7"
+    },
+    "poolCategory": "Core",
+    "projectLink": "https://cybertime.finance",
+    "harvest": true,
+    "tokenPerBlock": "2.1428571429",
+    "sortOrder": 2,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 24,
+    "tokenName": "BFT",
+    "image": "BFT.svg",
+    "stakingTokenName": "BFT",
+    "stakingTokenAddress": {
+      "56": "0xa4f93159ce0a4b533b443c74b89967c60a5969f8",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x49bbB345c432b9B66b407f1525A81A84F4509b8b",
+      "97": "0x3996F919980778cb0fc1982087cAc01089e33fe7"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://www.bitfresh.win",
+    "harvest": true,
+    "tokenPerBlock": "3.858024691358025",
+    "sortOrder": 2,
+    "reflect": true,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 25,
+    "tokenName": "BFT",
+    "image": "BFT.svg",
+    "stakingTokenName": "GNANA",
+    "stakingTokenAddress": {
+      "56": "0xdDb3Bd8645775F59496c821E4F55A7eA6A6dc299",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0x5798271B134e27c4dE28CB33aa8D18e5753e83fC",
+      "97": "0x3996F919980778cb0fc1982087cAc01089e33fe7"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://www.bitfresh.win",
+    "harvest": true,
+    "tokenPerBlock": "5.787037037",
+    "sortOrder": 3,
+    "reflect": true,
+    "isFinished": false,
+    "tokenDecimals": 18
+  },
+  {
+    "sousId": 26,
+    "tokenName": "SAFEP",
+    "image": "SAFEP.svg",
+    "stakingTokenName": "GNANA",
+    "stakingTokenAddress": {
+      "56": "0xdDb3Bd8645775F59496c821E4F55A7eA6A6dc299",
+      "97": "0xed89477d619c7e73f752d5fc7be60308ceb63663"
+    },
+    "contractAddress": {
+      "56": "0xEdea59e33A6D0A2d491Aa818f6E08ea18DE13c32",
+      "97": "0x3996F919980778cb0fc1982087cAc01089e33fe7"
+    },
+    "poolCategory": "ApeZone",
+    "projectLink": "https://safeprotocol.io",
+    "harvest": true,
+    "tokenPerBlock": "11.5740740741",
+    "sortOrder": 3,
+    "reflect": true,
+    "isFinished": false,
+    "tokenDecimals": 8
   }
 ]

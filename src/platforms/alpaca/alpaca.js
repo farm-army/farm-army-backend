@@ -22,6 +22,8 @@ module.exports = class acryptos {
     ['0x7C9e73d4C71dae564d41F78d56439bB4ba87592f'.toLowerCase()]: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
     // ibETH => BUSD
     ['0xbfF4a34A4644a113E8200D7F1D79b3555f723AfE'.toLowerCase()]: '0x2170ed0880ac9a755fd29b2688956bd959f933f8',
+    // ibALPACA => ALPACA
+    ['0xf1bE8ecC990cBcb90e166b71E368299f0116d421'.toLowerCase()]: '0x8F0528cE5eF7B51152A59745bEfDD91D97091d2F',
   }
 
   constructor(cache, priceOracle) {
@@ -147,10 +149,12 @@ module.exports = class acryptos {
       bearing.workers.forEach(vault => {
         const contract = new Web3EthContract(VaultworkerAbi, vault.address);
 
-        vaultConfigCalls.push({
-          address: vault.address,
-          lpToken: contract.methods.lpToken(),
-        });
+        if (vault.address) {
+          vaultConfigCalls.push({
+            address: vault.address,
+            lpToken: contract.methods.lpToken(),
+          });
+        }
       })
     })
 
