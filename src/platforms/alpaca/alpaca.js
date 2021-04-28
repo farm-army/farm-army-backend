@@ -10,6 +10,7 @@ var crypto = require('crypto');
 const FairlaunchAbi = require('./abi/fairlaunch.json');
 const WorkerAbi = require('./abi/worker.json');
 const VaultworkerAbi = require('./abi/vaultworker.json');
+const FallbackVaults = require('./farms/fallback.json');
 
 const fetch = require("node-fetch");
 const AbortController = require("abort-controller")
@@ -133,9 +134,15 @@ module.exports = class acryptos {
       }
     }
 
-    const text = await request("https://raw.githubusercontent.com/alpaca-finance/bsc-alpaca-contract/main/.mainnet.json");
+    let response;
+    try {
+      const text = await request("https://raw.githubusercontent.com/alpaca-finance/bsc-alpaca-contract/main/.mainnet.json");
+      response = JSON.parse(text.body);
+    } catch (e) {
+      console.log(`github bsc-alpaca-contract vault fetch error: ${String(e)}`);
+      response = _.cloneDeep(FallbackVaults)
+    }
 
-    const response = JSON.parse(text.body);
     const farms = [];
 
     const idMap = {};

@@ -4,7 +4,11 @@ const PancakePlatformFork = require("../common").PancakePlatformFork;
 const MasterChefAbi = require('./abi/masterchef.json');
 const Web3EthContract = require("web3-eth-contract");
 const BigNumber = require("bignumber.js");
+
 const Utils = require("../../utils");
+const request = require("async-request");
+const JSDOM = require("jsdom").JSDOM;
+const erc20Abi = require("../../abi/erc20.json");
 
 module.exports = class swamp extends PancakePlatformFork {
   static MASTER_ADDRESS = "0x33adbf5f1ec364a4ea3a5ca8f310b597b8afdee3"
@@ -17,6 +21,132 @@ module.exports = class swamp extends PancakePlatformFork {
     this.tokenCollector = tokenCollector;
     this.farmCollector = farmCollector;
     this.cacheManager = cacheManager;
+  }
+
+  async getVaultInfo() {
+    const cacheKey = `swamp-v1-html-vaults`
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
+    }
+
+    let text
+    try {
+      text = await request('https://swamp.finance/app/');
+    } catch (e) {
+      console.log('error swamp fetching vault info')
+      await this.cacheManager.set(cacheKey, [], {ttl: 60 * 20})
+
+      return [];
+    }
+
+    const response = text.body;
+
+    const dom = new JSDOM(response);
+
+    const vaults = [];
+
+    dom.window.document.querySelectorAll(".pools .pool-card").forEach(i => {
+      const attributes = i.attributes;
+
+      const vault = {};
+      for (let i = attributes.length - 1; i >= 0; i--) {
+        let attribute = attributes[i];
+
+        if (attribute.name.startsWith('data-')) {
+          vault[attribute.name.substr(5)] = attribute.value
+        }
+      }
+
+      vaults.push(vault);
+    })
+
+    await this.cacheManager.set(cacheKey, vaults, {ttl: 60 * 20})
+
+    return vaults;
+  }
+
+  async getFarms(refresh = false) {
+    const cacheKey = `getFarms-${this.getName()}`;
+
+    if (!refresh) {
+      const cacheItem = this.cache.get(cacheKey);
+      if (cacheItem) {
+        return cacheItem;
+      }
+    }
+
+    const farmBalanceCalls = (await this.getRawFarms()).map(farm => {
+      let address = farm.isTokenOnly !== true
+        ? this.getAddress(farm.lpAddresses)
+        : this.getAddress(farm.tokenAddresses);
+
+      const token = new Web3EthContract(erc20Abi, address);
+      return {
+        address: address,
+        balance: token.methods.balanceOf(this.getMasterChefAddress()),
+      };
+    });
+
+    const [farmBalances] = await Promise.all([
+      Utils.multiCallIndexBy('address', farmBalanceCalls),
+    ]);
+
+    const vaultInfos = await this.getVaultInfo();
+
+    const farms = (await this.getRawFarms()).map(farm => {
+      const item = {
+        id: `${this.getName()}_farm_${farm.pid}`,
+        name: farm.lpSymbol,
+        provider: this.getName(),
+        raw: Object.freeze(farm),
+        has_details: true,
+        extra: {}
+      };
+
+      if (farm.isTokenOnly !== true) {
+        item.extra.lpAddress = this.getAddress(farm.lpAddresses);
+        item.extra.transactionToken = this.getAddress(farm.lpAddresses);
+      } else {
+        item.extra.transactionToken = this.getAddress(farm.tokenAddresses);
+      }
+
+      const farmEarns = this.getFarmEarns(item);
+      if (farmEarns && farmEarns.length > 0) {
+        item.earns = farmEarns;
+      }
+
+      item.extra.transactionAddress = this.getMasterChefAddress();
+
+      const link = this.getFarmLink(item);
+      if (link) {
+        item.link = link;
+      }
+
+      const vaultInfo = vaultInfos.find(v => v.pid.toString() === farm.pid.toString());
+      if (vaultInfo && vaultInfo.tvl && parseFloat(vaultInfo.tvl) > 0) {
+        item.tvl = {
+          usd: parseFloat(vaultInfo.tvl)
+        };
+      }
+
+      if (vaultInfo && vaultInfo.apy && parseFloat(vaultInfo.apy) > 0) {
+        item.yield = {
+          apy: parseFloat(vaultInfo.apy)
+        };
+      }
+
+      return Object.freeze(item);
+    });
+
+    const result = [...farms]
+
+    this.cache.put(cacheKey, result, {ttl: 1000 * 60 * 30});
+
+    console.log(`${this.getName()} updated`);
+
+    return result;
   }
 
   async getFetchedFarms() {
