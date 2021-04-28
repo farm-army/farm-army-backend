@@ -17,6 +17,7 @@
     "ethers": "^5.0.32",
     "ethers-multicall": "^0.1.6",
     "express": "^4.17.1",
+    "jsdom": "^16.5.3",
     "lodash": "^4.17.21",
     "mocha": "^8.3.0",
     "node-fetch": "^2.6.1",
