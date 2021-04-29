@@ -5,8 +5,11 @@ const fs = require("fs");
 const path = require("path");
 const Utils = require("../../services").Utils;
 const Web3EthContract = require("web3-eth-contract");
+const request = require("async-request");
 
 const b3c9 = require('./abi/0xb3c96d3c3d643c2318e4cdd0a9a48af53131f5f4.json');
+const Abi0xe375a1 = require('./abi/0xe375a12a556e954ccd48c0e0d3943f160d45ac2e.json');
+const Farms = require('./farms.json');
 
 module.exports = class pancakebunny {
   constructor(cache, priceOracle, tokenCollector) {
@@ -15,38 +18,8 @@ module.exports = class pancakebunny {
     this.tokenCollector = tokenCollector
   }
 
-  /**
-   * "new boost" vaults are hard coded :(
-   */
-  static BUNNY_CHEF_ADDRESSES = [
-    '0xb037581cF0cE10b04C4735443d95e0C93db5d940',
-    '0x69FF781Cf86d42af9Bf93c06B8bE0F16a2905cBC'
-  ]
-
-  static ABI = JSON.parse(
-    fs.readFileSync(
-      path.resolve(
-        __dirname,
-        "abi/0xe375a12a556e954ccd48c0e0d3943f160d45ac2e.json"
-      ),
-      "utf8"
-    )
-  )
-
-  static BUNNY_CHEF_ABI = JSON.parse(
-    fs.readFileSync(
-      path.resolve(
-        __dirname,
-        "abi/bunnyChef.json"
-      ),
-      "utf8"
-    )
-  )
-
   async getLbAddresses() {
-    const response = JSON.parse(
-      fs.readFileSync(path.resolve(__dirname, "farms.json"), "utf8")
-    );
+    const response = _.cloneDeep(Farms);
 
     const lpAddresses = [];
     for (const key of Object.keys(response)) {
@@ -67,43 +40,28 @@ module.exports = class pancakebunny {
       return cacheItem;
     }
 
-    const abi = JSON.parse(
-      fs.readFileSync(
-        path.resolve(
-          __dirname,
-          "abi/0xe375a12a556e954ccd48c0e0d3943f160d45ac2e.json"
-        ),
-        "utf8"
-      )
-    );
-
     const farms = await this.getFarms();
 
-    const tokenCalls = farms.map(myPool => {
-      return {
-        reference: myPool.id.toString(),
-        contractAddress: "0xe375a12a556e954ccd48c0e0d3943f160d45ac2e",
-        abi: abi,
-        calls: [
-          {
-            reference: "infoOfPool",
-            method: "infoOfPool",
-            parameters: [myPool.raw.address, address]
-          }
-        ]
-      };
-    });
+    const calls = await Utils.multiCallRpcIndex([{
+      reference: 'poolsOf',
+      contractAddress: "0xb3c96d3c3d643c2318e4cdd0a9a48af53131f5f4",
+      abi: b3c9,
+      calls: [
+        {
+          reference: "poolsOf",
+          method: "poolsOf",
+          parameters: [address, farms.filter(farm => farm.raw.address).map(farm => farm.raw.address)]
+        }
+      ]
+    }]);
 
-    const calls = await Utils.multiCallRpc(tokenCalls);
+    const poolsOf = calls && calls.poolsOf && calls.poolsOf.poolsOf ? calls.poolsOf.poolsOf : []
 
-    const result = calls
-      .filter(
-        v =>
-          v.infoOfPool &&
-          v.infoOfPool.balance &&
-          !v.infoOfPool.balance.isZero(0)
+    const result = poolsOf
+      .filter(p => p.balance.gt(0))
+      .map(p =>
+        farms.find(f => f.raw.address.toLowerCase() === p.pool.toLowerCase()).id
       )
-      .map(v => v.id);
 
     this.cache.put(`getAddressFarms-pancakebunny-${address}`, result, {
       ttl: 300 * 1000
@@ -122,9 +80,7 @@ module.exports = class pancakebunny {
       }
     }
 
-    const response = JSON.parse(
-      fs.readFileSync(path.resolve(__dirname, "farms.json"), "utf8")
-    );
+    const response = _.cloneDeep(Farms);
 
     const [prices, overall] = await Promise.all([
       this.getTokenPrices(),
@@ -207,28 +163,18 @@ module.exports = class pancakebunny {
         items.notes = finalNotes;
       }
 
-      if (overall[key] && overall[key].tvl) {
-        items.tvl = {
-          usd: overall[key].tvl / 1e18
-        };
-      }
+      let infoPool = overall[farm.address.toLowerCase()];
+      if (infoPool) {
 
-      if (overall[key] && overall[key].apyOfPool) {
-        let apy = 0;
-
-        const [apyPool, apyBunny] = Object.values(overall[key].apyOfPool);
-
-        if (apyPool > 0) {
-          apy += apyPool / 1e16;
+        if (infoPool.tvl > 0) {
+          items.tvl = {
+            usd: infoPool.tvl
+          };
         }
 
-        if (apyBunny > 0) {
-          apy += apyPool / 1e16;
-        }
-
-        if (apy > 0) {
+        if (infoPool.apy > 0) {
           items.yield = {
-            apy: apy
+            apy: infoPool.apy
           };
         }
       }
@@ -288,37 +234,9 @@ module.exports = class pancakebunny {
 
     const farms = await this.getFarms();
 
-    const abi = JSON.parse(
-      fs.readFileSync(
-        path.resolve(
-          __dirname,
-          "abi/0xe375a12a556e954ccd48c0e0d3943f160d45ac2e.json"
-        ),
-        "utf8"
-      )
-    );
-
     const bunnyPrice = this.priceOracle.findPrice("bunny");
     const cakePrice = this.priceOracle.findPrice("cake");
     const bnbPrice = this.priceOracle.findPrice("bnb");
-
-    const infoOfPool = addressFarms
-      .map(farmId => farms.find(f => f.id === farmId))
-      .filter(farm => !pancakebunny.BUNNY_CHEF_ADDRESSES.includes(farm.raw.address))
-      .map(myPool => {
-        return {
-          reference: myPool.id.toString(),
-          contractAddress: "0xe375a12a556e954ccd48c0e0d3943f160d45ac2e",
-          abi: abi,
-          calls: [
-            {
-              reference: "infoOfPool",
-              method: "infoOfPool",
-              parameters: [myPool.raw.address, address]
-            }
-          ]
-        };
-      });
 
     const poolsOfAddresses = addressFarms
       .map(farmId => farms.find(f => f.id === farmId))
@@ -337,7 +255,7 @@ module.exports = class pancakebunny {
       ]
     }
 
-    const calls = await Utils.multiCallRpcIndex([...infoOfPool, poolsOfCall]);
+    const calls = await Utils.multiCallRpcIndex([poolsOfCall]);
 
     const poolsOf = {};
     if (calls.poolsOf && calls.poolsOf.poolsOf) {
@@ -357,11 +275,7 @@ module.exports = class pancakebunny {
 
       let balance
 
-      if (calls[farm.id] && calls[farm.id].infoOfPool && calls[farm.id].infoOfPool.balance && calls[farm.id].infoOfPool.balance.gt(0)) {
-        balance = calls[farm.id].infoOfPool.balance.toString();
-      }
-
-      if (!balance && poolsOf[farm.raw.address.toLowerCase()]) {
+      if (poolsOf[farm.raw.address.toLowerCase()]) {
         balance = poolsOf[farm.raw.address.toLowerCase()].balance.toString();
       }
 
@@ -392,40 +306,16 @@ module.exports = class pancakebunny {
       let pendingBUNNY
       let pendingCAKE
 
-      let info = undefined;
-
-      // old ones
-      if (calls[farm.id] && calls[farm.id].infoOfPool) {
-        info = calls[farm.id].infoOfPool;
-
-        const { pUSD, pBNB, pBUNNY, pCAKE } = info;
-
-        pendingUSD = pUSD;
-        pendingBNB = pBNB;
-        pendingBUNNY = pBUNNY;
-        pendingCAKE = pCAKE;
-      }
-
       // ???
-      if (poolsOf[farm.raw.address.toLowerCase()]) {
-        info = poolsOf[farm.raw.address.toLowerCase()]
+      let poolsOfElement = poolsOf[farm.raw.address.toLowerCase()];
 
-        const { pUSD, pBNB, pBUNNY, pCAKE } = info;
+      if (poolsOfElement) {
+        const { pBUNNY, pBASE } = poolsOfElement;
 
-        if (pendingUSD && !pendingUSD.gt(0) > 0) {
-          pendingUSD = pUSD;
-        }
+        pendingBUNNY = pBUNNY;
 
-        if (pendingBNB && !pendingBNB.gt(0) > 0) {
-          pendingBNB = pBNB;
-        }
-
-        if (pendingBUNNY && !pendingBUNNY.gt(0) > 0) {
-          pendingBUNNY = pBUNNY;
-        }
-
-        if (pendingCAKE && !pendingCAKE.gt(0) > 0) {
-          pendingCAKE = pCAKE;
+        if (farm.raw.type === 'flipToCake') {
+          pendingCAKE = pBASE;
         }
       }
 
@@ -483,18 +373,8 @@ module.exports = class pancakebunny {
       fs.readFileSync(path.resolve(__dirname, "farms.json"), "utf8")
     );
 
-    const abi = JSON.parse(
-      fs.readFileSync(
-        path.resolve(
-          __dirname,
-          "abi/0xe375a12a556e954ccd48c0e0d3943f160d45ac2e.json"
-        ),
-        "utf8"
-      )
-    );
-
     const token = new Web3EthContract(
-      abi,
+      Abi0xe375a1,
       "0xe375a12a556e954ccd48c0e0d3943f160d45ac2e"
     );
 
@@ -526,29 +406,43 @@ module.exports = class pancakebunny {
       fs.readFileSync(path.resolve(__dirname, "farms.json"), "utf8")
     );
 
-    const tokenCalls = [];
-    for (const key of Object.keys(farms)) {
-      const farm = farms[key];
+    const calls = await Utils.multiCallRpcIndex([{
+      reference: 'poolsOf',
+      contractAddress: "0xb3c96d3c3d643c2318e4cdd0a9a48af53131f5f4",
+      abi: b3c9,
+      calls: [
+        {
+          reference: "poolsOf",
+          method: "poolsOf",
+          parameters: ['0x0000000000000000000000000000000000000000', Object.values(farms).filter(farm => farm.address).map(farm => farm.address)]
+        }
+      ]
+    }]);
 
-      if (farm.closed === true) {
-        continue;
+    const poolsOf = {};
+    if (calls.poolsOf && calls.poolsOf.poolsOf) {
+      calls.poolsOf.poolsOf.forEach(p => {
+        poolsOf[p.pool.toLowerCase()] = {
+          tvl: p.tvl.toString() / 1e18
+        };
+      })
+    }
+
+    const text = await request('https://firestore.googleapis.com/v1/projects/pancakebunny-finance/databases/(default)/documents/apy_data?pageSize=100');
+    const response = JSON.parse(text.body);
+
+    response.documents.forEach(v => {
+      const pool = v.fields.pool.stringValue;
+      const apy = v.fields.apy.stringValue;
+
+      if (!poolsOf[pool.toLowerCase()]) {
+        poolsOf[pool.toLowerCase()] = {};
       }
 
-      const token = new Web3EthContract(pancakebunny.ABI, "0xe375a12a556e954ccd48c0e0d3943f160d45ac2e");
+      poolsOf[pool.toLowerCase()].apy = parseFloat(apy);
+    })
 
-      tokenCalls.push({
-        apyOfPool: token.methods.apyOfPool(farm.address, 365),
-        tvl: token.methods.tvlOfPool(farm.address),
-        id: key
-      });
-    }
-
-    try {
-      return await Utils.multiCallIndexBy("id", tokenCalls);
-    } catch (e) {
-      console.log('pankebunny info fetch issue', e.message)
-      return {}
-    }
+    return poolsOf
   }
 
   async getDetails(address, id) {
