@@ -3,6 +3,7 @@
 const { performance } = require("perf_hooks");
 const express = require("express");
 const _ = require("lodash");
+const timeout = require('connect-timeout');
 
 module.exports = class Http {
   constructor(priceOracle, platforms, balances, addressTransactions, tokenCollector, liquidityTokenCollector) {
@@ -17,6 +18,8 @@ module.exports = class Http {
   }
 
   start(port = 3000) {
+    this.app.use(timeout('25s'));
+
     this.routes();
 
     this.app.listen(port, "127.0.0.1", () => {

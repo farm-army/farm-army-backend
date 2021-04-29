@@ -9,16 +9,15 @@
     "type": "bunny"
   },
   "BUNNY-BNB FLIP Boost": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0xa6C29a422D1612293669156a34f2793526783622",
-    "address": "0x69FF781Cf86d42af9Bf93c06B8bE0F16a2905cBC",
-    "token": "0x7Bb89460599Dbf32ee3Aa50798BBcEae2A5F7f6a",
+    "address": "0xa6C29a422D1612293669156a34f2793526783622",
+    "token": "0x5aFEf8567414F29f0f927A0F2787b188624c10E2",
     "deposit": "BUNNY-BNB FLIP",
     "earn": "CAKE + BUNNY",
     "summary": "Time to Boost BUNNY",
     "description": "Time to Boost BUNNY",
     "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51",
-    "type": "bunnyBNB"
+    "type": "bunnyBNB",
+    "live": true
   },
   "BUNNY": {
     "address": "0xCADc8CB26c8C7cB46500E61171b5F27e9bd7889D",
@@ -38,165 +37,151 @@
     "type": "cakeStake"
   },
   "CAKE-BNB FLIP": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0xA599d6b81eC4a5DDd8eCa85e3AAc31E006aF00AA",
-    "address": "0x7eaaEaF2aB59C2c85a17BEB15B110F81b192e98a",
-    "token": "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6",
+    "address": "0xA599d6b81eC4a5DDd8eCa85e3AAc31E006aF00AA",
+    "token": "0x0eD7e52944161450477ee417DE9Cd3a859b14fD0",
     "earn": "CAKE-BNB FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
     "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
-    "type": "flipToFlip"
+    "type": "flipToFlip",
+    "live": true
   },
   "CAKE-BNB FLIP CAKE Maximizer": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0x203Ee29ba85BbDfA23bFaE5D77620AeFDaf92cB1",
-    "address": "0x3f139386406b0924eF115BAFF71D0d30CC090Bd5",
-    "token": "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6",
+    "address": "0x203Ee29ba85BbDfA23bFaE5D77620AeFDaf92cB1",
+    "token": "0x0eD7e52944161450477ee417DE9Cd3a859b14fD0",
     "deposit": "CAKE-BNB FLIP",
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
+    "description": "How Maximizer Works?\\n*Check it out on the wiki",
     "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
-    "type": "flipToCake"
+    "type": "flipToCake",
+    "live": true
   },
   "BTCB-BNB FLIP": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0x285F793CE97079D4a5712E616AFBbb971Dbf1f1f",
-    "address": "0x0137d886e832842a3B11c568d5992Ae73f7A792e",
-    "token": "0x7561EEe90e24F3b348E1087A005F78B4c8453524",
+    "address": "0x285F793CE97079D4a5712E616AFBbb971Dbf1f1f",
+    "token": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
     "earn": "BTCB-BNB FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
     "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
-    "type": "flipToFlip"
+    "type": "flipToFlip",
+    "live": true
   },
   "BTCB-BNB FLIP CAKE Maximizer": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0xac20925e6615ad6871987e199783Fa80Bf24EB39",
-    "address": "0xCBd4472cbeB7229278F841b2a81F1c0DF1AD0058",
-    "token": "0x7561EEe90e24F3b348E1087A005F78B4c8453524",
+    "address": "0xac20925e6615ad6871987e199783Fa80Bf24EB39",
+    "token": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
     "deposit": "BTCB-BNB FLIP",
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
+    "description": "How Maximizer Works?\\n*Check it out on the wiki",
     "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
-    "type": "flipToCake"
+    "type": "flipToCake",
+    "live": true
   },
   "ETH-BNB FLIP": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0x0d17e7B77C678C79C3ab5176e164FF0BCceb8EAa",
-    "address": "0xE02BCFa3D0072AD2F52eD917a7b125e257c26032",
-    "token": "0x70d8929d04b60af4fb9b58713ebcf18765ade422",
+    "address": "0x0d17e7B77C678C79C3ab5176e164FF0BCceb8EAa",
+    "token": "0x74E4716E431f45807DCF19f284c7aA99F18a4fbc",
     "earn": "ETH-BNB FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
     "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
-    "type": "flipToFlip"
+    "type": "flipToFlip",
+    "live": true
   },
   "ETH-BNB FLIP CAKE Maximizer": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0x7D52a1697F2dF08E6fb2b5A88E0E8e4D7C11a921",
-    "address": "0x41dF17D1De8D4E43d5493eb96e01100908FCcc4f",
-    "token": "0x70d8929d04b60af4fb9b58713ebcf18765ade422",
+    "address": "0x7D52a1697F2dF08E6fb2b5A88E0E8e4D7C11a921",
+    "token": "0x74E4716E431f45807DCF19f284c7aA99F18a4fbc",
     "deposit": "ETH-BNB FLIP",
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
+    "description": "How Maximizer Works?\\n*Check it out on the wiki",
     "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
-    "type": "flipToCake"
+    "type": "flipToCake",
+    "live": true
   },
   "BUSD-BNB FLIP": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0xE0aca387C6600b455CCFC32B253e2DB13b71ca62",
-    "address": "0x1b6e3d394f1D809769407DEA84711cF57e507B99",
-    "token": "0x1B96B92314C44b159149f7E0303511fB2Fc4774f",
+    "address": "0xE0aca387C6600b455CCFC32B253e2DB13b71ca62",
+    "token": "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
     "earn": "BUSD-BNB FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
     "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "type": "flipToFlip"
+    "type": "flipToFlip",
+    "live": true
   },
   "BUSD-BNB FLIP CAKE Maximizer": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0x81fa6F9F4599c5316Cc53B782DE7c01EFf4f9551",
-    "address": "0x92a0f75a0f07C90a7EcB65eDD549Fa6a45a4975C",
-    "token": "0x1B96B92314C44b159149f7E0303511fB2Fc4774f",
+    "address": "0x81fa6F9F4599c5316Cc53B782DE7c01EFf4f9551",
+    "token": "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
     "deposit": "BUSD-BNB FLIP",
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
+    "description": "How Maximizer Works?\\n*Check it out on the wiki",
     "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "type": "flipToCake"
+    "type": "flipToCake",
+    "live": true
   },
   "USDT-BNB FLIP": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0x633e538EcF0bee1a18c2EDFE10C4Da0d6E71e77B",
-    "address": "0xC1aAE51746bEA1a1Ec6f17A4f75b422F8a656ee6",
-    "token": "0x20bCC3b8a0091dDac2d0BC30F68E6CBb97de59Cd",
+    "address": "0x633e538EcF0bee1a18c2EDFE10C4Da0d6E71e77B",
+    "token": "0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE",
     "earn": "USDT-BNB FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
     "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x55d398326f99059fF775485246999027B3197955",
-    "type": "flipToFlip"
+    "type": "flipToFlip",
+    "live": true
   },
   "USDT-BNB FLIP CAKE Maximizer": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0xac7D40638271D349cb2DeDfdC6268A77738403Fa",
-    "address": "0xE07BdaAc4573a00208D148bD5b3e5d2Ae4Ebd0Cc",
-    "token": "0x20bCC3b8a0091dDac2d0BC30F68E6CBb97de59Cd",
+    "address": "0xac7D40638271D349cb2DeDfdC6268A77738403Fa",
+    "token": "0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE",
     "deposit": "USDT-BNB FLIP",
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
+    "description": "How Maximizer Works?\\n*Check it out on the wiki",
     "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x55d398326f99059fF775485246999027B3197955",
-    "type": "flipToCake"
-  },
-  "VAI-BUSD FLIP": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0xFdb7D4AbD0109b36667946726dF943E83570286C",
-    "address": "0xa59EFEf41040e258191a4096DC202583765a43E7",
-    "token": "0xfF17ff314925Dff772b71AbdFF2782bC913B3575",
-    "earn": "VAI-BUSD FLIP + BUNNY",
-    "summary": "Auto-Compounding FLIP to FLIP",
-    "description": "Auto-Compounding FLIP to FLIP",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "type": "flipToFlip"
-  },
-  "VAI-BUSD FLIP CAKE Maximizer": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0x7f0320cef62C88CE1DB7d77c1849082C053E2344",
-    "address": "0xa5B8cdd3787832AdEdFe5a04bF4A307051538FF2",
-    "token": "0xfF17ff314925Dff772b71AbdFF2782bC913B3575",
-    "deposit": "VAI-BUSD FLIP",
-    "earn": "CAKE + BUNNY",
-    "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "type": "flipToCake"
+    "type": "flipToCake",
+    "live": true
   },
   "USDT-BUSD FLIP": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0xC341c6a006cab105E8CD2518e25aaB311Cb22FF6",
-    "address": "0xC0314BbE19D4D5b048D3A3B974f0cA1B2cEE5eF3",
-    "token": "0xc15fa3E22c912A276550F3E5FE3b0Deb87B55aCd",
+    "address": "0xC341c6a006cab105E8CD2518e25aaB311Cb22FF6",
+    "token": "0x7EFaEf62fDdCCa950418312c6C91Aef321375A00",
     "earn": "USDT-BUSD FLIP + BUNNY",
     "summary": "Auto-Compounding FLIP to FLIP",
     "description": "Auto-Compounding FLIP to FLIP",
     "exchange": "https://exchange.pancakeswap.finance/#/add/0x55d398326f99059fF775485246999027B3197955/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "type": "flipToFlip"
+    "type": "flipToFlip",
+    "live": true
   },
   "USDT-BUSD FLIP CAKE Maximizer": {
-    "legacyDesc": "Auto-Migration will be executed after SA:FU UTC",
-    "legacy": "0x74fdc215f8309Ec58Fd34455bf3Fee95FB3416dD",
-    "address": "0x866FD0028eb7fc7eeD02deF330B05aB503e199d4",
-    "token": "0xc15fa3E22c912A276550F3E5FE3b0Deb87B55aCd",
+    "address": "0x74fdc215f8309Ec58Fd34455bf3Fee95FB3416dD",
+    "token": "0x7EFaEf62fDdCCa950418312c6C91Aef321375A00",
     "deposit": "USDT-BUSD FLIP",
     "earn": "CAKE + BUNNY",
     "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
+    "description": "How Maximizer Works?\\n*Check it out on the wiki",
     "exchange": "https://exchange.pancakeswap.finance/#/add/0x55d398326f99059fF775485246999027B3197955/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "type": "flipToCake"
+    "type": "flipToCake",
+    "live": true
+  },
+  "VAI-BUSD FLIP": {
+    "address": "0xFdb7D4AbD0109b36667946726dF943E83570286C",
+    "token": "0x133ee93FE93320e1182923E1a640912eDE17C90C",
+    "earn": "VAI-BUSD FLIP + BUNNY",
+    "summary": "Auto-Compounding FLIP to FLIP",
+    "description": "Auto-Compounding FLIP to FLIP",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+    "type": "flipToFlip",
+    "live": true
+  },
+  "VAI-BUSD FLIP CAKE Maximizer": {
+    "address": "0x7f0320cef62C88CE1DB7d77c1849082C053E2344",
+    "token": "0x133ee93FE93320e1182923E1a640912eDE17C90C",
+    "deposit": "VAI-BUSD FLIP",
+    "earn": "CAKE + BUNNY",
+    "summary": "Compound CAKE recursively",
+    "description": "How Maximizer Works?\\n*Check it out on the wiki",
+    "exchange": "https://exchange.pancakeswap.finance/#/add/0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+    "type": "flipToCake",
+    "live": true
   },
   "BNB": {
     "address": "0x52cFa188A1468A521A98eaa798E715Fbb9eb38a3",
@@ -237,163 +222,5 @@
     "summary": "Auto-Compounding",
     "description": "Auto-Compounding",
     "type": "venus"
-  },
-  "BUNNY-BNB V2 FLIP Boost": {
-    "address": "0xa6C29a422D1612293669156a34f2793526783622",
-    "token": "0x5aFEf8567414F29f0f927A0F2787b188624c10E2",
-    "deposit": "BUNNY-BNB FLIP",
-    "earn": "CAKE + BUNNY",
-    "summary": "Time to Boost BUNNY",
-    "description": "Time to Boost BUNNY",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51",
-    "type": "bunnyBNB",
-    "live": true
-  },
-  "CAKE-BNB V2 FLIP": {
-    "address": "0xA599d6b81eC4a5DDd8eCa85e3AAc31E006aF00AA",
-    "token": "0x0eD7e52944161450477ee417DE9Cd3a859b14fD0",
-    "earn": "CAKE-BNB FLIP + BUNNY",
-    "summary": "Auto-Compounding FLIP to FLIP",
-    "description": "Auto-Compounding FLIP to FLIP",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
-    "type": "flipToFlip",
-    "live": true
-  },
-  "CAKE-BNB FLIP V2 CAKE Maximizer": {
-    "address": "0x203Ee29ba85BbDfA23bFaE5D77620AeFDaf92cB1",
-    "token": "0x0eD7e52944161450477ee417DE9Cd3a859b14fD0",
-    "deposit": "CAKE-BNB FLIP",
-    "earn": "CAKE + BUNNY",
-    "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
-    "type": "flipToCake",
-    "live": true
-  },
-  "BTCB-BNB V2 FLIP": {
-    "address": "0x285F793CE97079D4a5712E616AFBbb971Dbf1f1f",
-    "token": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
-    "earn": "BTCB-BNB FLIP + BUNNY",
-    "summary": "Auto-Compounding FLIP to FLIP",
-    "description": "Auto-Compounding FLIP to FLIP",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
-    "type": "flipToFlip",
-    "live": true
-  },
-  "BTCB-BNB FLIP V2 CAKE Maximizer": {
-    "address": "0xac20925e6615ad6871987e199783Fa80Bf24EB39",
-    "token": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
-    "deposit": "BTCB-BNB FLIP",
-    "earn": "CAKE + BUNNY",
-    "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
-    "type": "flipToCake",
-    "live": true
-  },
-  "ETH-BNB V2 FLIP": {
-    "address": "0x0d17e7B77C678C79C3ab5176e164FF0BCceb8EAa",
-    "token": "0x74E4716E431f45807DCF19f284c7aA99F18a4fbc",
-    "earn": "ETH-BNB FLIP + BUNNY",
-    "summary": "Auto-Compounding FLIP to FLIP",
-    "description": "Auto-Compounding FLIP to FLIP",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
-    "type": "flipToFlip",
-    "live": true
-  },
-  "ETH-BNB FLIP V2 CAKE Maximizer": {
-    "address": "0x7D52a1697F2dF08E6fb2b5A88E0E8e4D7C11a921",
-    "token": "0x74E4716E431f45807DCF19f284c7aA99F18a4fbc",
-    "deposit": "ETH-BNB FLIP",
-    "earn": "CAKE + BUNNY",
-    "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
-    "type": "flipToCake",
-    "live": true
-  },
-  "BUSD-BNB V2 FLIP": {
-    "address": "0xE0aca387C6600b455CCFC32B253e2DB13b71ca62",
-    "token": "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
-    "earn": "BUSD-BNB FLIP + BUNNY",
-    "summary": "Auto-Compounding FLIP to FLIP",
-    "description": "Auto-Compounding FLIP to FLIP",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "type": "flipToFlip",
-    "live": true
-  },
-  "BUSD-BNB FLIP V2 CAKE Maximizer": {
-    "address": "0x81fa6F9F4599c5316Cc53B782DE7c01EFf4f9551",
-    "token": "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
-    "deposit": "BUSD-BNB FLIP",
-    "earn": "CAKE + BUNNY",
-    "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "type": "flipToCake",
-    "live": true
-  },
-  "USDT-BNB V2 FLIP": {
-    "address": "0x633e538EcF0bee1a18c2EDFE10C4Da0d6E71e77B",
-    "token": "0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE",
-    "earn": "USDT-BNB FLIP + BUNNY",
-    "summary": "Auto-Compounding FLIP to FLIP",
-    "description": "Auto-Compounding FLIP to FLIP",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x55d398326f99059fF775485246999027B3197955",
-    "type": "flipToFlip",
-    "live": true
-  },
-  "USDT-BNB FLIP V2 CAKE Maximizer": {
-    "address": "0xac7D40638271D349cb2DeDfdC6268A77738403Fa",
-    "token": "0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE",
-    "deposit": "USDT-BNB FLIP",
-    "earn": "CAKE + BUNNY",
-    "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/ETH/0x55d398326f99059fF775485246999027B3197955",
-    "type": "flipToCake",
-    "live": true
-  },
-  "VAI-BUSD V2 FLIP": {
-    "address": "0xFdb7D4AbD0109b36667946726dF943E83570286C",
-    "token": "0x133ee93FE93320e1182923E1a640912eDE17C90C",
-    "earn": "VAI-BUSD FLIP + BUNNY",
-    "summary": "Auto-Compounding FLIP to FLIP",
-    "description": "Auto-Compounding FLIP to FLIP",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "type": "flipToFlip",
-    "live": true
-  },
-  "VAI-BUSD FLIP V2 CAKE Maximizer": {
-    "address": "0x7f0320cef62C88CE1DB7d77c1849082C053E2344",
-    "token": "0x133ee93FE93320e1182923E1a640912eDE17C90C",
-    "deposit": "VAI-BUSD FLIP",
-    "earn": "CAKE + BUNNY",
-    "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "type": "flipToCake",
-    "live": true
-  },
-  "USDT-BUSD V2 FLIP": {
-    "address": "0xC341c6a006cab105E8CD2518e25aaB311Cb22FF6",
-    "token": "0x7EFaEf62fDdCCa950418312c6C91Aef321375A00",
-    "earn": "USDT-BUSD FLIP + BUNNY",
-    "summary": "Auto-Compounding FLIP to FLIP",
-    "description": "Auto-Compounding FLIP to FLIP",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/0x55d398326f99059fF775485246999027B3197955/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "type": "flipToFlip",
-    "live": true
-  },
-  "USDT-BUSD FLIP V2 CAKE Maximizer": {
-    "address": "0x74fdc215f8309Ec58Fd34455bf3Fee95FB3416dD",
-    "token": "0x7EFaEf62fDdCCa950418312c6C91Aef321375A00",
-    "deposit": "USDT-BUSD FLIP",
-    "earn": "CAKE + BUNNY",
-    "summary": "Compound CAKE recursively",
-    "description": "How Maximizer Works?\n*Check it out on the wiki",
-    "exchange": "https://exchange.pancakeswap.finance/#/add/0x55d398326f99059fF775485246999027B3197955/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "type": "flipToCake",
-    "live": true
   }
 }
