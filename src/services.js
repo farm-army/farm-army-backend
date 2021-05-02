@@ -13,6 +13,7 @@ let addressTransactions;
 let liquidityTokenCollector;
 let priceCollector;
 let farmFetcher;
+let contractAbiFetcher;
 
 const Cache = require("timed-cache");
 const Sqlite = require("better-sqlite3");
@@ -29,6 +30,7 @@ const path = require("path");
 const AddressTransactions = require("./token/address_transactions");
 const LiquidityTokenCollector = require("./token/liquidity_token_collector");
 const FarmFetcher = require("./farm/farm_fetcher");
+const ContractAbiFetcher = require("./abi/contract_abi_fetcher");
 
 const Pancake = require("./platforms/pancake/pancake");
 const Swamp = require("./platforms/swamp/swamp");
@@ -38,6 +40,12 @@ const Slime = require("./platforms/slime/slime");
 const Apeswap = require("./platforms/apeswap/apeswap");
 const Goose = require("./platforms/goose/goose");
 const Cheese = require("./platforms/cheese/cheese");
+const Space = require("./platforms/space/space");
+const Saltswap = require("./platforms/saltswap/saltswap");
+const Mdex = require("./platforms/mdex/mdex");
+const Pandayield = require("./platforms/pandayield/pandayield");
+const Wault = require("./platforms/wault/wault");
+const Cafeswap = require("./platforms/cafeswap/cafeswap");
 
 let pancake;
 let swamp;
@@ -47,6 +55,12 @@ let slime;
 let apeswap;
 let goose;
 let cheese;
+let space;
+let saltswap;
+let mdex;
+let pandayield;
+let wault;
+let cafeswap;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -100,6 +114,12 @@ module.exports = {
           this.getApeswap(),
           this.getGoose(),
           this.getCheese(),
+          this.getSpace(),
+          this.getSaltswap(),
+          this.getMdex(),
+          this.getPandayield(),
+          this.getWault(),
+          this.getCafeswap(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -211,6 +231,90 @@ module.exports = {
     }
 
     return (cheese = new Cheese(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getMdex() {
+    if (mdex) {
+      return mdex;
+    }
+
+    return (mdex = new Mdex(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getSpace() {
+    if (space) {
+      return space;
+    }
+
+    return (space = new Space(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getPandayield() {
+    if (pandayield) {
+      return pandayield;
+    }
+
+    return (pandayield = new Pandayield(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getCafeswap() {
+    if (cafeswap) {
+      return cafeswap;
+    }
+
+    return (cafeswap = new Cafeswap(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getSaltswap() {
+    if (saltswap) {
+      return saltswap;
+    }
+
+    return (saltswap = new Saltswap(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getWault() {
+    if (wault) {
+      return wault;
+    }
+
+    return (wault = new Wault(
       this.getCache(),
       this.getPriceOracle(),
       this.getTokenCollector(),
@@ -354,7 +458,18 @@ module.exports = {
     }
 
     return (farmFetcher = new FarmFetcher(
+      this.getContractAbiFetcher(),
+    ));
+  },
+
+  getContractAbiFetcher() {
+    if (contractAbiFetcher) {
+      return contractAbiFetcher;
+    }
+
+    return (contractAbiFetcher = new ContractAbiFetcher(
       module.exports.CONFIG['BSCSCAN_API_KEY'],
+      this.getCacheManager(),
     ));
   },
 };

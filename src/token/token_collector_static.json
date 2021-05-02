@@ -108,5 +108,15 @@
     "symbol": "swamp",
     "address": "0xc5A49b4CBe004b6FD55B30Ba1dE6AC360FF9765d",
     "decimals": 18
+  },
+  {
+    "symbol": "bboo",
+    "address": "0x51f015e3dEA234039fB536C358781118f36f1745",
+    "decimals": 18
+  },
+  {
+    "symbol": "brew",
+    "address": "0x790Be81C3cA0e53974bE2688cDb954732C9862e1",
+    "decimals": 18
   }
 ]

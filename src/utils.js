@@ -44,7 +44,8 @@ HOSTS.forEach(url => {
     }),
     {
       contract: "0xB94858b0bB5437498F5453A16039337e5Fdc269C",
-      timeWindow: 300
+      batchSize: 50,
+      timeWindow: 50,
     }
   )
 
@@ -58,8 +59,6 @@ HOSTS.forEach(url => {
 });
 
 const ENDPOINTS = Object.freeze(Object.keys(ENDPOINTS_MULTICALL));
-
-let allApys = {};
 
 module.exports = {
   PRICES: {},
@@ -165,6 +164,24 @@ module.exports = {
   },
 
   multiCallRpcIndex: async calls => {
+    const try1 =  await module.exports.multiCallRpcIndexInner(calls);
+
+    if (try1 === false) {
+      console.error('multiCallRpcIndex retry');
+      const try2 = await module.exports.multiCallRpcIndexInner(calls);
+
+      if (try2 === false) {
+        console.error('multiCallRpcIndex final failed');
+        return []
+      }
+
+      return try2
+    }
+
+    return try1;
+  },
+
+  multiCallRpcIndexInner: async calls => {
     const endpoints = _.shuffle(ENDPOINTS.slice());
 
     const promises = [];
@@ -194,9 +211,15 @@ module.exports = {
     try {
       results = await Promise.all([...promises]);
     } catch (e) {
-      console.error('failed', 'multiCallRpcIndex', e.message)
+      console.error('failed', 'multiCallRpcIndex', e.message);
+      if (e.message && e.message.includes('property \'toHexString\' of undefined')) {
+        return false;
+      }
+
       return [];
     }
+
+    // pcIndex Cannot read property 'toHexString' of undefined
 
     const final = {};
     results.forEach(call => {
@@ -223,10 +246,6 @@ module.exports = {
     } catch (e) {
       console.error("https://api.beefy.finance/apy", e.message);
     }
-  },
-
-  getApy: token => {
-    return allApys[token] || undefined;
   },
 
   findYieldForDetails: result => {

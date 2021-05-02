@@ -1,4 +1,3 @@
-const request = require("async-request");
 const Utils = require("../utils");
 const Web3EthContract = require("web3-eth-contract");
 
@@ -8,20 +7,15 @@ const ErcAbi = require("./abi/abiErc.json");
 const _ = require("lodash");
 
 module.exports = class FarmFetcher {
-  constructor(apiKey) {
-    this.apiKey = apiKey;
+  constructor(contractAbiFetcher) {
+    this.contractAbiFetcher = contractAbiFetcher;
   }
 
   async fetchForMasterChef(masterChef) {
-    const text = await request(`https://api.bscscan.com/api?module=contract&action=getabi&address=${masterChef}&apikey=${this.apiKey}`);
-
-    const abi = JSON.parse(JSON.parse(text.body).result);
+    const abi = await this.contractAbiFetcher.getAbiForContractAddress(masterChef);
 
     const poolInfoFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase().startsWith('poolinfo'));
-    const poolLengthFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase().startsWith('poollength'));
-
     const poolInfoFunctionName = poolInfoFunction.name;
-    const poolLengthFunctionName = poolLengthFunction.name;
 
     let rewardTokenFunctionName = undefined;
     const pendingFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase().startsWith('pending'));
@@ -40,18 +34,27 @@ module.exports = class FarmFetcher {
     }
 
     let web3EthContract1 = new Web3EthContract(abi, masterChef);
-    let masterInfoCall = {
-      poolLength: web3EthContract1.methods[poolLengthFunctionName](),
-    };
+
+    let masterInfoCall = {};
 
     if (rewardTokenFunctionName) {
       masterInfoCall.rewardToken = web3EthContract1.methods[rewardTokenFunctionName]();
     }
 
-    const masterInfo = await Utils.multiCall([masterInfoCall]);
+    const poolLengthFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase().startsWith('poollength'));
+    if (poolLengthFunction && poolLengthFunction.name) {
+      masterInfoCall.poolLength = web3EthContract1.methods[poolLengthFunction.name]()
+    }
 
-    if (!masterInfo[0].poolLength) {
-      console.log('found not poolLength')
+    const masterInfo = await Utils.multiCall([masterInfoCall]);
+    let poolLength = masterInfo[0].poolLength;
+
+    if (!poolLength) {
+      poolLength = await this.findPoolLengthViaPoolInfo(web3EthContract1, poolInfoFunctionName);
+    }
+
+    if (!poolLength) {
+      console.log('found no poolLength')
       process.exit();
     }
 
@@ -74,7 +77,7 @@ module.exports = class FarmFetcher {
     }));
     */
 
-    const pools = await Utils.multiCall([...Array(parseInt(masterInfo[0].poolLength)).keys()].map(id => {
+    const pools = await Utils.multiCall([...Array(parseInt(poolLength)).keys()].map(id => {
       return {
         pid: id.toString(),
         poolInfo: new Web3EthContract(abi, masterChef).methods[poolInfoFunctionName](id),
@@ -82,7 +85,7 @@ module.exports = class FarmFetcher {
     }));
 
     // lpToken or single token
-    const lpTokens = await Utils.multiCallIndexBy('pid', pools.filter(p => p.poolInfo && p.poolInfo[0]).map(p => {
+    const lpTokens = await Utils.multiCallIndexBy('pid', pools.filter(p => p.poolInfo && p.poolInfo[0] && p.poolInfo[0].startsWith('0x')).map(p => {
       const [lpToken, allocPoint, lastRewardBlock, accCakePerShare] = Object.values(p.poolInfo);
 
       const web3EthContract = new Web3EthContract(TokenABI, lpToken);
@@ -128,6 +131,8 @@ module.exports = class FarmFetcher {
       }
     }
 
+    let blockNumber = await Utils.getWeb3().eth.getBlockNumber();
+
     // format items in pancakeswap format
     const all = [];
     pools.forEach(pool => {
@@ -149,6 +154,7 @@ module.exports = class FarmFetcher {
           lpSymbol: lpTokenInfo.symbol,
           allocPoint: allocPoint,
           lastRewardBlock: lastRewardBlock,
+          lastRewardSecondsAgo: (blockNumber - lastRewardBlock) * 3,
           accCakePerShare: accCakePerShare,
         }
       };
@@ -213,10 +219,10 @@ module.exports = class FarmFetcher {
 
       item.lpSymbol = item.raw.tokens.map(t => t.symbol.toUpperCase()).join('-');
 
-      if (masterInfo[0].rewardToken && tokens[masterInfo[0].rewardToken]) {
-        let earnToken = tokens[masterInfo[0].rewardToken];
+      if (masterInfo[0].rewardToken && tokens[masterInfo[0].rewardToken.toLowerCase()]) {
+        let earnToken = tokens[masterInfo[0].rewardToken.toLowerCase()];
 
-        item.raw.earns = [
+        item.earns = item.raw.earns = [
           {
             address: masterInfo[0].rewardToken,
             symbol: earnToken.symbol,
@@ -229,5 +235,25 @@ module.exports = class FarmFetcher {
     });
 
     return all;
+  }
+
+  async findPoolLengthViaPoolInfo(web3EthContract, poolInfoFunctionName) {
+    const calls = [];
+
+    for(let id = 1; id < 1000; id += 10){
+      calls.push({
+        pid: id.toString(),
+        poolInfo: web3EthContract.methods[poolInfoFunctionName](id),
+      });
+    }
+
+    const tokensRaw = await Utils.multiCall(calls);
+
+    const results = tokensRaw.filter(p => p.poolInfo).map(p => parseInt(p.pid))
+    if (results.length === 0) {
+      return undefined;
+    }
+
+    return Math.max(...results);
   }
 }

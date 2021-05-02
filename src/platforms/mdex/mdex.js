@@ -5,42 +5,46 @@ const Web3EthContract = require("web3-eth-contract");
 const BigNumber = require("bignumber.js");
 const Utils = require("../../utils");
 const crypto = require('crypto');
-const request = require("async-request");
-
 const MasterAbi = require('./abi/master.json');
-const Farms = require('./farms/farms.json');
-
-const FarmsReqeust = require('./farms/request.json');
 
 module.exports = class mdex {
-  constructor(cache, priceOracle) {
+  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     this.cache = cache;
     this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector;
+    this.farmCollector = farmCollector;
+    this.cacheManager = cacheManager;
+  }
+
+  async getFetchedFarms() {
+    const cacheKey = `mdex-v1-master-farms`
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
+    }
+
+    const foo = (await this.farmCollector.fetchForMasterChef('0xc48fe252aa631017df253578b1405ea399728a50'));
+
+    const reformat = foo.map(f => {
+      f.lpAddresses = f.lpAddress
+
+      if (f.isTokenOnly === true) {
+        f.tokenAddresses = f.lpAddress
+      }
+
+      return f
+    })
+
+    await this.cacheManager.set(cacheKey, reformat, {ttl: 60 * 30})
+
+    return reformat;
   }
 
   async getLbAddresses() {
-    const staticFarms = _.cloneDeep(Farms);
-
-    // unused: cloudflare block
-    const info = {};
-
-    (FarmsReqeust.result || []).forEach((pool, index) => {
-      const staticFind = staticFarms.find(f => f.pid.toString() === index.toString())
-
-      if (!staticFind) {
-        staticFarms.push({
-          "pid": index,
-          "lpAddress": pool.address,
-          "name": pool.pool_name,
-        })
-      }
-    })
-
-    let lpAddresses = staticFarms
-      .filter(f => f.name.includes('/'))
-      .map(f => f.lpAddress);
-
-    return _.uniq(lpAddresses);
+    return (await this.getFarms())
+      .filter(item => item.extra.lpAddress)
+      .map(item => item.extra.lpAddress);
   }
 
   async getAddressFarms(address) {
@@ -83,37 +87,17 @@ module.exports = class mdex {
       }
     }
 
-    const staticFarms = _.cloneDeep(Farms);
+    const rawFarms = await this.getFetchedFarms()
 
-    // unused: cloudflare block
-    const info = {};
-
-    (FarmsReqeust.result || []).forEach((pool, index) => {
-      const staticFind = staticFarms.find(f => f.pid.toString() === index.toString())
-
-      if (!staticFind) {
-        staticFarms.push({
-          "pid": index,
-          "lpAddress": pool.address,
-          "name": pool.pool_name,
-        })
-      }
-    })
-
-    const farms = staticFarms.map(farm => {
+    const farms = rawFarms.map(farm => {
       let id = crypto.createHash('md5')
         .update(farm.pid.toString())
         .digest("hex");
 
-      let name = farm.name.toLowerCase()
-        .replace('lp', '')
-        .replace('/', '-')
-        .trim()
-
       let item = {
         id: `mdex_${id}`,
-        name: name.toUpperCase(),
-        token: name.toLowerCase(),
+        name: farm.lpSymbol.toUpperCase(),
+        token: farm.lpSymbol.toLowerCase(),
         platform: 'mdex',
         raw: Object.freeze(farm),
         provider: 'mdex',
@@ -128,17 +112,6 @@ module.exports = class mdex {
 
       if (item.token.includes('-')) {
         item.extra.lpAddress = farm.lpAddress;
-      }
-
-      let httpInfo = info[farm.lpAddress.toLowerCase()];
-      if (httpInfo) {
-        if (httpInfo.pool_tvl) {
-          item.tvl = {
-            usd: httpInfo.pool_tvl
-          };
-        }
-
-        // TODO: use "pool_apy"
       }
 
       return item;
@@ -274,5 +247,9 @@ module.exports = class mdex {
     }
 
     return result;
+  }
+
+  getName() {
+    return 'mdex';
   }
 };
