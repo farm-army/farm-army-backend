@@ -1,12 +1,10 @@
 "use strict";
 
 const MasterChefAbi = require('./abi/masterchef.json');
-const SousChefAbi = require('./abi/souschef.json');
-
 const PancakePlatformFork = require("../common").PancakePlatformFork;
 
-module.exports = class slime extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0xc4bC80Fa8349B1E4A3D848F0B2c8d4146403F515"
+module.exports = class pandayield extends PancakePlatformFork {
+  static MASTER_ADDRESS = "0x51f015e3dEA234039fB536C358781118f36f1745"
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     super(cache, priceOracle);
@@ -19,7 +17,7 @@ module.exports = class slime extends PancakePlatformFork {
   }
 
   async getFetchedFarms() {
-    const cacheKey = `slime-v1-master-farms`
+    const cacheKey = `pandayield-v1-master-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -52,29 +50,26 @@ module.exports = class slime extends PancakePlatformFork {
   }
 
   getName() {
-    return 'slime';
+    return 'pandayield';
   }
 
-  getFarmLink(farm) {
-    if (farm.id.startsWith(`${this.getName()}_sous_`)) {
-      return 'https://app.slime.finance/pools';
-    }
-
-    return 'https://app.slime.finance/farms';
+  getFarmLink() {
+    return 'https://pandayield.com/#/farms/all';
   }
 
   getFarmEarns(farm) {
     return farm.id.startsWith(`${this.getName()}_farm_`)
-      ? ['slime']
+      ? ['bboo']
       : undefined;
+
   }
 
   getPendingRewardContractMethod() {
-    return 'pendingReward';
+    return 'pendingCake';
   }
 
   getSousAbi() {
-    return SousChefAbi;
+    return [];
   }
 
   getMasterChefAbi() {
@@ -82,6 +77,6 @@ module.exports = class slime extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return slime.MASTER_ADDRESS;
+    return pandayield.MASTER_ADDRESS;
   }
 };

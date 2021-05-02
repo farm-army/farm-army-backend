@@ -34,14 +34,7 @@ module.exports = class pancakebunny {
     return _.uniq(lpAddresses);
   }
 
-  async getAddressFarms(address) {
-    const cacheItem = this.cache.get(`getAddressFarms-pancakebunny-${address}`);
-    if (cacheItem) {
-      return cacheItem;
-    }
-
-    const farms = await this.getFarms();
-
+  async getBalancedAddressPoolInfo(address, pools) {
     const calls = await Utils.multiCallRpcIndex([{
       reference: 'poolsOf',
       contractAddress: "0xb3c96d3c3d643c2318e4cdd0a9a48af53131f5f4",
@@ -50,12 +43,31 @@ module.exports = class pancakebunny {
         {
           reference: "poolsOf",
           method: "poolsOf",
-          parameters: [address, farms.filter(farm => farm.raw.address).map(farm => farm.raw.address)]
+          parameters: [address, pools]
         }
       ]
     }]);
 
-    const poolsOf = calls && calls.poolsOf && calls.poolsOf.poolsOf ? calls.poolsOf.poolsOf : []
+    return (calls && calls.poolsOf && calls.poolsOf.poolsOf ? calls.poolsOf.poolsOf : [])
+      .filter(p => p.balance.gt(0))
+  }
+
+  async getAddressFarms(address) {
+    const cacheItem = this.cache.get(`getAddressFarms-pancakebunny-${address}`);
+    if (cacheItem) {
+      return cacheItem;
+    }
+
+    const farms = await this.getFarms();
+
+    const poolsOf = await this.getBalancedAddressPoolInfo(
+      address,
+      farms.filter(farm => farm.raw.address).map(farm => farm.raw.address)
+    )
+
+    this.cache.put(`getAddressFarms-all-pancakebunny-${address}`, poolsOf, {
+      ttl: 60 * 1000
+    });
 
     const result = poolsOf
       .filter(p => p.balance.gt(0))
@@ -119,13 +131,19 @@ module.exports = class pancakebunny {
         id: `pancakebunny_${key.toLowerCase().replace(/\s/g, '-')}`,
         name: key,
         token: tokenSymbol,
-        platform: farm.liquidity ? "pancake" : "pancakebunny",
+        platform: farm.exchange && farm.exchange.includes('pancakeswap') ? "pancake" : "pancakebunny",
         raw: Object.freeze(farm),
         provider: "pancakebunny",
         link: `https://pancakebunny.finance/farm/${encodeURI(key)}`,
         has_details: true,
         extra: {}
       };
+
+      if (farm.exchange && farm.exchange.toLowerCase().includes('pancakeswap')) {
+        items.platform = 'pancake';
+      } else if (farm.type && farm.type.toLowerCase().includes('venus')) {
+        items.platform = 'venus';
+      }
 
       // lpAddress
       if (key.match(/([\w]{0,4})-([\w]{0,4})\s*/g)) {
@@ -234,32 +252,18 @@ module.exports = class pancakebunny {
 
     const farms = await this.getFarms();
 
-    const bunnyPrice = this.priceOracle.findPrice("bunny");
-    const cakePrice = this.priceOracle.findPrice("cake");
-    const bnbPrice = this.priceOracle.findPrice("bnb");
+    let poolsOfCalls = this.cache.get(`getAddressFarms-all-pancakebunny-${address}`);
+    if (!poolsOfCalls) {
+      const poolsOfAddresses = addressFarms
+        .map(farmId => farms.find(f => f.id === farmId))
+        .map(farm => farm.raw.address);
 
-    const poolsOfAddresses = addressFarms
-      .map(farmId => farms.find(f => f.id === farmId))
-      .map(farm => farm.raw.address);
-
-    const poolsOfCall = {
-      reference: 'poolsOf',
-      contractAddress: "0xb3c96d3c3d643c2318e4cdd0a9a48af53131f5f4",
-      abi: b3c9,
-      calls: [
-        {
-          reference: "poolsOf",
-          method: "poolsOf",
-          parameters: [address, poolsOfAddresses]
-        }
-      ]
+      poolsOfCalls = await this.getBalancedAddressPoolInfo(address, poolsOfAddresses);
     }
 
-    const calls = await Utils.multiCallRpcIndex([poolsOfCall]);
-
     const poolsOf = {};
-    if (calls.poolsOf && calls.poolsOf.poolsOf) {
-      calls.poolsOf.poolsOf.forEach(p => {
+    if (poolsOfCalls) {
+      poolsOfCalls.forEach(p => {
         poolsOf[p.pool.toLowerCase()] = p;
       })
     }
@@ -328,6 +332,7 @@ module.exports = class pancakebunny {
             amount: pendingBUNNY.toString() / 1e18
           };
 
+          const bunnyPrice = this.priceOracle.findPrice("bunny")
           if (bunnyPrice) {
             item.usd = item.amount * bunnyPrice;
           }
@@ -341,6 +346,7 @@ module.exports = class pancakebunny {
             amount: pendingBNB.toString() / 1e18
           };
 
+          const bnbPrice = this.priceOracle.findPrice("bnb");
           if (bnbPrice) {
             item.usd = item.amount * bnbPrice;
           }
@@ -354,6 +360,7 @@ module.exports = class pancakebunny {
             amount: pendingCAKE.toString() / 1e18
           };
 
+          const cakePrice = this.priceOracle.findPrice("cake")
           if (cakePrice) {
             item.usd = item.amount * cakePrice;
           }

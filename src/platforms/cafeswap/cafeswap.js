@@ -1,12 +1,11 @@
 "use strict";
 
 const MasterChefAbi = require('./abi/masterchef.json');
-const SousChefAbi = require('./abi/souschef.json');
 
 const PancakePlatformFork = require("../common").PancakePlatformFork;
 
-module.exports = class slime extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0xc4bC80Fa8349B1E4A3D848F0B2c8d4146403F515"
+module.exports = class cafeswap extends PancakePlatformFork {
+  static MASTER_ADDRESS = "0xc772955c33088a97D56d0BBf473d05267bC4feBB"
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     super(cache, priceOracle);
@@ -19,7 +18,7 @@ module.exports = class slime extends PancakePlatformFork {
   }
 
   async getFetchedFarms() {
-    const cacheKey = `slime-v1-master-farms`
+    const cacheKey = `cafeswap-v1-master-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -52,29 +51,29 @@ module.exports = class slime extends PancakePlatformFork {
   }
 
   getName() {
-    return 'slime';
+    return 'cafeswap';
   }
 
   getFarmLink(farm) {
     if (farm.id.startsWith(`${this.getName()}_sous_`)) {
-      return 'https://app.slime.finance/pools';
+      return 'https://app.cafeswap.finance/pools';
     }
 
-    return 'https://app.slime.finance/farms';
+    return 'https://app.cafeswap.finance/farms';
   }
 
   getFarmEarns(farm) {
     return farm.id.startsWith(`${this.getName()}_farm_`)
-      ? ['slime']
+      ? farm.raw.earns ? farm.raw.earns.map(i => i.symbol.toLowerCase()) : []
       : undefined;
   }
 
   getPendingRewardContractMethod() {
-    return 'pendingReward';
+    return 'pendingCake';
   }
 
   getSousAbi() {
-    return SousChefAbi;
+    return {};
   }
 
   getMasterChefAbi() {
@@ -82,6 +81,6 @@ module.exports = class slime extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return slime.MASTER_ADDRESS;
+    return cafeswap.MASTER_ADDRESS;
   }
 };

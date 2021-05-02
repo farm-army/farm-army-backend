@@ -246,6 +246,14 @@ module.exports = class Balances {
       {
         token: "swamp",
         contract: "0xc5A49b4CBe004b6FD55B30Ba1dE6AC360FF9765d"
+      },
+      {
+        token: "bboo",
+        contract: "0x51f015e3dEA234039fB536C358781118f36f1745"
+      },
+      {
+        "token": "brew",
+        "contract": "0x790Be81C3cA0e53974bE2688cDb954732C9862e1"
       }
     ];
   }
