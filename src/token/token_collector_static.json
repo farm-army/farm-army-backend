@@ -118,5 +118,10 @@
     "symbol": "brew",
     "address": "0x790Be81C3cA0e53974bE2688cDb954732C9862e1",
     "decimals": 18
+  },
+  {
+    "symbol": "belt",
+    "address": "0xE0e514c71282b6f4e823703a39374Cf58dc3eA4f",
+    "decimals": 18
   }
 ]

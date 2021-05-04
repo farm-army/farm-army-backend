@@ -43,7 +43,7 @@ module.exports = class pancake {
   }
 
   async getFetchedFarms() {
-    const cacheKey = `pancake-v1-master-farms`
+    const cacheKey = `pancake-v2-master-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -190,6 +190,21 @@ module.exports = class pancake {
         const addressPrice = this.priceOracle.getAddressPrice(lpAddress);
         if (addressPrice) {
           item.tvl.usd = item.tvl.amount * addressPrice;
+        }
+      }
+
+      if (item.tvl && item.tvl.usd && farm.raw.yearlyRewardsInToken) {
+        const yearlyRewardsInToken = farm.raw.yearlyRewardsInToken;
+
+        if (item.raw.earns && item.raw.earns[0]) {
+          const tokenPrice = this.priceOracle.getAddressPrice(item.raw.earns[0].address);
+          if (tokenPrice) {
+            const dailyApr = (yearlyRewardsInToken * tokenPrice) / item.tvl.usd;
+
+            item.yield = {
+              apy: Utils.compoundCommon(dailyApr) * 100
+            };
+          }
         }
       }
 

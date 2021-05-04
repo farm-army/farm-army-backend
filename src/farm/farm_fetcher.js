@@ -11,9 +11,7 @@ module.exports = class FarmFetcher {
     this.contractAbiFetcher = contractAbiFetcher;
   }
 
-  async fetchForMasterChef(masterChef) {
-    const abi = await this.contractAbiFetcher.getAbiForContractAddress(masterChef);
-
+  extractFunctionsFromAbi(abi) {
     const poolInfoFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase().startsWith('poolinfo'));
     const poolInfoFunctionName = poolInfoFunction.name;
 
@@ -29,6 +27,57 @@ module.exports = class FarmFetcher {
       }
     }
 
+    // multiplier
+    let multiplierFunctionName = undefined;
+    const multiplierFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase().includes('multiplier') && f.inputs.length === 2);
+    if (multiplierFunction && multiplierFunction.name) {
+      multiplierFunctionName = multiplierFunction.name;
+    }
+
+    // tokenPerBlock
+    let tokenPerBlockFunctionName = undefined;
+    const tokenPerBlockFunction = abi.find(f => f.name && f.type === 'function' && f.name && !f.name.includes('DevPerBlock') && f.name.toLowerCase().includes('perblock') && f.inputs.length === 0);
+    if (tokenPerBlockFunction && tokenPerBlockFunction.name) {
+      tokenPerBlockFunctionName = tokenPerBlockFunction.name;
+    }
+
+    // totalAllocPoint
+    let totalAllocPointFunctionName = undefined;
+    const totalAllocPointFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase().includes('totalallocpoint'));
+    if (totalAllocPointFunction && totalAllocPointFunction.name) {
+      totalAllocPointFunctionName = totalAllocPointFunction.name;
+    }
+
+    // poolLength
+    let poolLengthFunctionName = undefined;
+    const poolLengthFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase().startsWith('poollength'));
+    if (poolLengthFunction && poolLengthFunction.name) {
+      poolLengthFunctionName = poolLengthFunction.name;
+    }
+
+    return {
+      poolInfoFunctionName: poolInfoFunctionName,
+      rewardTokenFunctionName: rewardTokenFunctionName,
+      multiplierFunctionName: multiplierFunctionName,
+      tokenPerBlockFunctionName: tokenPerBlockFunctionName,
+      totalAllocPointFunctionName: totalAllocPointFunctionName,
+      poolLengthFunctionName: poolLengthFunctionName,
+    }
+  }
+
+  async fetchForMasterChef(masterChef) {
+    const abi = await this.contractAbiFetcher.getAbiForContractAddress(masterChef);
+
+    const {
+      poolInfoFunctionName,
+      rewardTokenFunctionName,
+      multiplierFunctionName,
+      tokenPerBlockFunctionName,
+      totalAllocPointFunctionName,
+      poolLengthFunctionName
+    } = this.extractFunctionsFromAbi(abi);
+
+
     if (!rewardTokenFunctionName) {
       console.log('no reward token contract method found')
     }
@@ -41,9 +90,26 @@ module.exports = class FarmFetcher {
       masterInfoCall.rewardToken = web3EthContract1.methods[rewardTokenFunctionName]();
     }
 
-    const poolLengthFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase().startsWith('poollength'));
-    if (poolLengthFunction && poolLengthFunction.name) {
-      masterInfoCall.poolLength = web3EthContract1.methods[poolLengthFunction.name]()
+    let blockNumber = await Utils.getWeb3().eth.getBlockNumber();
+
+    // multiplier
+    if (multiplierFunctionName) {
+      masterInfoCall.multiplier = web3EthContract1.methods[multiplierFunctionName](blockNumber, blockNumber + 1);
+    }
+
+    // tokenPerBlock
+    if (tokenPerBlockFunctionName) {
+      masterInfoCall.tokenPerBlock = web3EthContract1.methods[tokenPerBlockFunctionName]();
+    }
+
+    // tokenPerBlock
+    if (totalAllocPointFunctionName) {
+      masterInfoCall.totalAllocPoint = web3EthContract1.methods[totalAllocPointFunctionName]();
+    }
+
+    // poolLength
+    if (poolLengthFunctionName) {
+      masterInfoCall.poolLength = web3EthContract1.methods[poolLengthFunctionName]()
     }
 
     const masterInfo = await Utils.multiCall([masterInfoCall]);
@@ -131,8 +197,6 @@ module.exports = class FarmFetcher {
       }
     }
 
-    let blockNumber = await Utils.getWeb3().eth.getBlockNumber();
-
     // format items in pancakeswap format
     const all = [];
     pools.forEach(pool => {
@@ -156,11 +220,27 @@ module.exports = class FarmFetcher {
           lastRewardBlock: lastRewardBlock,
           lastRewardSecondsAgo: (blockNumber - lastRewardBlock) * 3,
           accCakePerShare: accCakePerShare,
+          poolInfo: pool.poolInfo
         }
       };
 
       if (parseInt(allocPoint) === 0) {
         item.isFinished = true;
+      }
+
+      if (parseInt(allocPoint) > 0) {
+        const masterInfoCall = masterInfo[0];
+
+        if (masterInfoCall.totalAllocPoint && masterInfoCall.tokenPerBlock && masterInfoCall.multiplier) {
+          const totalAllocPoint = masterInfoCall.totalAllocPoint;
+          const poolBlockRewards = (masterInfoCall.tokenPerBlock * masterInfoCall.multiplier * allocPoint) / totalAllocPoint;
+
+          const secondsPerBlock = 3;
+          const secondsPerYear = 31536000;
+          const yearlyRewards = (poolBlockRewards / secondsPerBlock) * secondsPerYear;
+
+          item.raw.yearlyRewardsInToken = yearlyRewards / 1e18;
+        }
       }
 
       if (!isLp) {

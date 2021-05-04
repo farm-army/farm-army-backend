@@ -131,7 +131,6 @@ module.exports = class pancakebunny {
         id: `pancakebunny_${key.toLowerCase().replace(/\s/g, '-')}`,
         name: key,
         token: tokenSymbol,
-        platform: farm.exchange && farm.exchange.includes('pancakeswap') ? "pancake" : "pancakebunny",
         raw: Object.freeze(farm),
         provider: "pancakebunny",
         link: `https://pancakebunny.finance/farm/${encodeURI(key)}`,
@@ -139,7 +138,7 @@ module.exports = class pancakebunny {
         extra: {}
       };
 
-      if (farm.exchange && farm.exchange.toLowerCase().includes('pancakeswap')) {
+      if ((farm.exchange && farm.exchange.toLowerCase().includes('pancakeswap')) || (farm.type && farm.type.toLowerCase().includes('cakestake'))) {
         items.platform = 'pancake';
       } else if (farm.type && farm.type.toLowerCase().includes('venus')) {
         items.platform = 'venus';

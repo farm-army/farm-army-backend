@@ -47,6 +47,21 @@ module.exports = class swamp extends PancakePlatformFork {
 
     const vaults = [];
 
+    const platforms = [];
+    dom.window.document.querySelectorAll(".platform .itm").forEach(i => {
+      const attributes = i.attributes;
+      const info = {};
+      for (let i = attributes.length - 1; i >= 0; i--) {
+        let attribute = attributes[i];
+
+        if (attribute.name.startsWith('data-')) {
+          info[attribute.name.substr(5)] = attribute.value
+        }
+      }
+
+      platforms.push(info);
+    })
+
     dom.window.document.querySelectorAll(".pools .pool-card").forEach(i => {
       const attributes = i.attributes;
 
@@ -56,6 +71,14 @@ module.exports = class swamp extends PancakePlatformFork {
 
         if (attribute.name.startsWith('data-')) {
           vault[attribute.name.substr(5)] = attribute.value
+        }
+      }
+
+      if (vault.platform) {
+        const platform = platforms.find(p => p.value.toString() === vault.platform.toString());
+
+        if (platform) {
+          vault.platform_name = platform.name;
         }
       }
 
@@ -135,6 +158,14 @@ module.exports = class swamp extends PancakePlatformFork {
         item.yield = {
           apy: parseFloat(vaultInfo.apy)
         };
+      }
+
+      if (vaultInfo.platform_name) {
+        item.platform = vaultInfo.platform_name.toLowerCase();
+
+        item.platform = item.platform
+          .replace('pancake swap v2', 'pancake')
+          .replace('pancake swap', 'pancake')
       }
 
       return Object.freeze(item);

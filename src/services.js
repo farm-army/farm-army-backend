@@ -46,6 +46,9 @@ const Mdex = require("./platforms/mdex/mdex");
 const Pandayield = require("./platforms/pandayield/pandayield");
 const Wault = require("./platforms/wault/wault");
 const Cafeswap = require("./platforms/cafeswap/cafeswap");
+const Belt = require("./platforms/belt/belt");
+const Kebab = require("./platforms/kebab/kebab");
+const Polaris = require("./platforms/polaris/polaris");
 
 let pancake;
 let swamp;
@@ -61,6 +64,9 @@ let mdex;
 let pandayield;
 let wault;
 let cafeswap;
+let belt;
+let kebab;
+let polaris;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -120,6 +126,9 @@ module.exports = {
           this.getPandayield(),
           this.getWault(),
           this.getCafeswap(),
+          this.getBelt(),
+          this.getKebab(),
+          this.getPolaris(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -147,6 +156,20 @@ module.exports = {
     }
 
     return (swamp = new Swamp(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getPolaris() {
+    if (polaris) {
+      return polaris;
+    }
+
+    return (polaris = new Polaris(
       this.getCache(),
       this.getPriceOracle(),
       this.getTokenCollector(),
@@ -225,6 +248,20 @@ module.exports = {
     ));
   },
 
+  getKebab() {
+    if (kebab) {
+      return kebab;
+    }
+
+    return (kebab = new Kebab(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
   getCheese() {
     if (cheese) {
       return cheese;
@@ -287,6 +324,20 @@ module.exports = {
     }
 
     return (cafeswap = new Cafeswap(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getBelt() {
+    if (belt) {
+      return belt;
+    }
+
+    return (belt = new Belt(
       this.getCache(),
       this.getPriceOracle(),
       this.getTokenCollector(),
