@@ -17,7 +17,7 @@ module.exports = class mdex {
   }
 
   async getFetchedFarms() {
-    const cacheKey = `mdex-v1-master-farms`
+    const cacheKey = `mdex-v2-master-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -42,9 +42,9 @@ module.exports = class mdex {
   }
 
   async getLbAddresses() {
-    return (await this.getFarms())
-      .filter(item => item.extra.lpAddress)
-      .map(item => item.extra.lpAddress);
+    return (await this.getFetchedFarms())
+      .filter(f => f.isTokenOnly === false)
+      .map(f => f.lpAddress);
   }
 
   async getAddressFarms(address) {
@@ -78,7 +78,7 @@ module.exports = class mdex {
   }
 
   async getFarms(refresh = false) {
-    const cacheKey = "getFarms-mdex";
+    const cacheKey = "getFarms-mdex-v2";
 
     if (!refresh) {
       const cacheItem = this.cache.get(cacheKey);
@@ -88,6 +88,19 @@ module.exports = class mdex {
     }
 
     const rawFarms = await this.getFetchedFarms()
+
+    const blockNumber = await Utils.getWeb3().eth.getBlockNumber();
+
+    let web3EthContract = new Web3EthContract(MasterAbi, '0xc48fe252aa631017df253578b1405ea399728a50');
+    const [reward] = await Utils.multiCall([
+      {
+        reward: web3EthContract.methods.reward(blockNumber),
+        totalAllocPoint: web3EthContract.methods.totalAllocPoint()
+      }
+    ])
+
+    const blockRewards = reward.reward;
+    const totalAllocPoint = reward.totalAllocPoint;
 
     const farms = rawFarms.map(farm => {
       let id = crypto.createHash('md5')
@@ -112,6 +125,37 @@ module.exports = class mdex {
 
       if (item.token.includes('-')) {
         item.extra.lpAddress = farm.lpAddress;
+      }
+
+      if (item.raw && item.raw.raw && item.raw.raw.poolInfo[5]) {
+        item.tvl = {
+          amount: item.raw.raw.poolInfo[5] / 1e18
+        };
+
+        const addressPrice = this.priceOracle.getAddressPrice(item.extra.transactionToken);
+        if (addressPrice) {
+          item.tvl.usd = item.tvl.amount * addressPrice;
+        }
+      }
+
+      if (farm.raw.allocPoint > 0 && item.tvl && item.tvl.usd) {
+        const allocPoint = farm.raw.allocPoint;
+        const poolBlockRewards = (blockRewards * allocPoint) / totalAllocPoint
+
+        const secondsPerBlock = 3;
+        const secondsPerYear = 31536000;
+        const yearlyRewards = (poolBlockRewards / secondsPerBlock) * secondsPerYear;
+
+        const price = this.priceOracle.findPrice('mdx');
+        if (price) {
+          const yearlyRewardsInUsd = (yearlyRewards * price) / 1e18;
+          const dailyApr = yearlyRewardsInUsd / item.tvl.usd
+
+          // compound(simpleApy, HOURLY_HPY, 1, 0.94);
+          item.yield = {
+            apy: Utils.compound(dailyApr, 8760, 0.94) * 100
+          };
+        }
       }
 
       return item;

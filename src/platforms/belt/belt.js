@@ -1,14 +1,10 @@
 "use strict";
 
 const MasterChefAbi = require('./abi/masterchef.json');
-const SousChefAbi = require('./abi/souschef.json');
-
-const Pools = require('./farms/pools.json');
-
 const PancakePlatformFork = require("../common").PancakePlatformFork;
 
-module.exports = class kebab extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0x76FCeffFcf5325c6156cA89639b17464ea833ECd"
+module.exports = class belt extends PancakePlatformFork {
+  static MASTER_ADDRESS = "0xD4BbC80b9B102b77B21A06cb77E954049605E6c1"
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     super(cache, priceOracle);
@@ -21,7 +17,7 @@ module.exports = class kebab extends PancakePlatformFork {
   }
 
   async getFetchedFarms() {
-    const cacheKey = `kebab-v1-master-farms`
+    const cacheKey = `belt-v1-master-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -50,19 +46,15 @@ module.exports = class kebab extends PancakePlatformFork {
   }
 
   getRawPools() {
-    return Pools.filter(p => p.isFinished !== true);
+    return [];
   }
 
   getName() {
-    return 'kebab';
+    return 'belt';
   }
 
   getFarmLink(farm) {
-    if (farm.id.startsWith(`${this.getName()}_sous_`)) {
-      return 'https://kebabfinance.com/#/pools';
-    }
-
-    return 'https://kebabfinance.com/#/farms';
+    return 'https://belt.fi/';
   }
 
   getFarmEarns(farm) {
@@ -72,11 +64,11 @@ module.exports = class kebab extends PancakePlatformFork {
   }
 
   getPendingRewardContractMethod() {
-    return 'pendingCake';
+    return 'pendingBELT';
   }
 
   getSousAbi() {
-    return SousChefAbi;
+    return {};
   }
 
   getMasterChefAbi() {
@@ -84,6 +76,6 @@ module.exports = class kebab extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return kebab.MASTER_ADDRESS;
+    return belt.MASTER_ADDRESS;
   }
 };

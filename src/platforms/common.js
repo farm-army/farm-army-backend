@@ -190,6 +190,21 @@ module.exports = {
           }
         }
 
+        if (item.tvl && item.tvl.usd && farm.raw && farm.raw.yearlyRewardsInToken) {
+          const yearlyRewardsInToken = farm.raw.yearlyRewardsInToken;
+
+          if (item.raw.earns && item.raw.earns[0]) {
+            const tokenPrice = this.priceOracle.getAddressPrice(item.raw.earns[0].address);
+            if (tokenPrice) {
+              const dailyApr = (yearlyRewardsInToken * tokenPrice) / item.tvl.usd;
+
+              item.yield = {
+                apy: Utils.compoundCommon(dailyApr) * 100
+              };
+            }
+          }
+        }
+
         return item;
       });
 

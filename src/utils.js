@@ -495,5 +495,16 @@ module.exports = {
       amount: yieldAmount,
       percent: parseFloat(((yieldAmount / depositAmount) * 100).toFixed(3))
     };
+  },
+
+  /**
+   * Also used sometimes
+   */
+  compoundCommon: (r) => {
+    return module.exports.compound(r, 2190, 1, 0.955);
+  },
+
+  compound: (r, n = 365, t = 1, c = 1) => {
+    return (1 + (r * c) / n) ** (n * t) - 1;
   }
 };

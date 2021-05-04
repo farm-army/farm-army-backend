@@ -46,8 +46,13 @@ module.exports = class valuedefi {
   }
 
   async getRawPools() {
-    const text = await request("https://api.vswap.fi/api/farm/pool-info");
-    return JSON.parse(text.body).data;
+    try {
+      const text = await request("https://api.vswap.fi/api/farm/pool-info");
+      return JSON.parse(text.body).data;
+    } catch (e) {
+      console.log('error: https://api.vswap.fi/api/farm/pool-info')
+      return []
+    }
   }
 
   async getCouncilVerified() {
