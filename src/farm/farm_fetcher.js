@@ -79,7 +79,7 @@ module.exports = class FarmFetcher {
 
 
     if (!rewardTokenFunctionName) {
-      console.log('no reward token contract method found')
+      console.log(`no reward token contract method found for "${masterChef}"`)
     }
 
     let web3EthContract1 = new Web3EthContract(abi, masterChef);
