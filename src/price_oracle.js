@@ -7,6 +7,8 @@ const request = require("async-request");
 const Utils = require("./utils");
 const Web3EthContract = require("web3-eth-contract");
 
+const FulcrumLendingTokenAbi = require("./abi/fulcrum_lending_tokens.json");
+
 const erc20ABI = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, "platforms/pancake/abi/erc20.json"), "utf8")
 );
@@ -44,11 +46,12 @@ const myManagedLp = [];
 //   also:https://github.com/npty/lp-inspector
 
 module.exports = class PriceOracle {
-  constructor(services, tokenCollector, lpTokenCollector, priceCollector) {
+  constructor(services, tokenCollector, lpTokenCollector, priceCollector, cacheManager) {
     this.services = services;
     this.tokenCollector = tokenCollector;
     this.lpTokenCollector = lpTokenCollector;
     this.priceCollector = priceCollector;
+    this.cacheManager = cacheManager;
   }
 
   addLps(addresses) {
@@ -139,6 +142,8 @@ module.exports = class PriceOracle {
       this.getCoingeckoPrices(),
       this.getBeefyPrices(),
       this.updateBDollarPrices(),
+      this.updateFulcrumTokens(),
+      this.updateCoinGeckoPrices(),
     ])
 
     const addresses = [];
@@ -185,6 +190,58 @@ module.exports = class PriceOracle {
     await this.tokenCollector.save();
   }
 
+  async getCoinGeckoTokens() {
+    const cacheKey = `coingekko-v1-token-addresses`
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
+    }
+
+    const tokens = await this.jsonRequest('https://api.coingecko.com/api/v3/coins/list?include_platform=true');
+
+    const matches = {};
+
+    tokens.forEach(token => {
+      if (token['platforms'] && token['platforms']['binance-smart-chain'] && token['platforms']['binance-smart-chain'].startsWith('0x')) {
+        matches[token['id']] = token['platforms']['binance-smart-chain'];
+      }
+    })
+
+    await this.cacheManager.set(cacheKey, matches, {ttl: 60 * 60})
+
+    return matches
+  }
+
+  async updateCoinGeckoPrices() {
+    const tokens = await this.getCoinGeckoTokens();
+
+    const matches = [];
+
+    for (let chunk of _.chunk(Object.keys(tokens), 100)) {
+      const prices = await this.jsonRequest(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`);
+
+      for (const [key, value] of Object.entries(prices)) {
+        if(tokens[key] && value.usd && value.usd > 0.0000001 && value.usd < 10000000) {
+          let item = {
+            address: tokens[key].toLowerCase(),
+            price: value.usd,
+            source: 'coingecko',
+          };
+
+          const symbol = this.tokenCollector.getSymbolByAddress(tokens[key].toLowerCase());
+          if (symbol) {
+            item.symbol = symbol;
+          }
+
+          matches.push(item);
+        }
+      }
+    }
+
+    return matches
+  }
+
   async getPancakeswapPrices() {
     const prices = [];
 
@@ -195,6 +252,10 @@ module.exports = class PriceOracle {
       });
       for (const [key, value] of Object.entries(pancakeTokens.prices)) {
         if (key.toLowerCase() === 'banana' || key === 'cCAKE' || key.length > 15) {
+          continue
+        }
+
+        if (value > 5000000000 || value < 0.0000000001) {
           continue
         }
 
@@ -558,6 +619,49 @@ module.exports = class PriceOracle {
         });
       }
     });
+
+    return prices;
+  }
+
+  async updateFulcrumTokens() {
+    const pancakeResponse = await request('https://api.bzx.network/v1/lending-info?networks=bsc');
+    const foo = JSON.parse(pancakeResponse.body);
+
+    const v = foo.data.bsc.map(token => {
+      const vault = new Web3EthContract(FulcrumLendingTokenAbi, token.address);
+      return {
+        token: token.address,
+        symbol: vault.methods.symbol(),
+        tokenPrice: vault.methods.tokenPrice(),
+        loanTokenAddress: vault.methods.loanTokenAddress(),
+      };
+    });
+
+    const vaultCalls = await Utils.multiCallIndexBy('token', v);
+
+    const prices = [];
+    foo.data.bsc.forEach(token => {
+      let vaultCall = vaultCalls[token.address];
+      if (!vaultCall || !vaultCall.tokenPrice || !vaultCall.loanTokenAddress) {
+        return;
+      }
+
+      this.tokenCollector.add({
+        symbol: vaultCall.symbol,
+        address: vaultCall.token,
+        decimals: 18,
+      })
+
+      const loanTokenPrice = this.priceCollector.getPrice(vaultCall.loanTokenAddress);
+      if (loanTokenPrice) {
+        prices.push({
+          address: vaultCall.token,
+          symbol: vaultCall.symbol,
+          price: loanTokenPrice * (vaultCall.tokenPrice / 1e18),
+          source: 'fulcrum',
+        });
+      }
+    })
 
     return prices;
   }

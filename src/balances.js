@@ -258,6 +258,10 @@ module.exports = class Balances {
       {
         "token": "belt",
         "contract": "0xE0e514c71282b6f4e823703a39374Cf58dc3eA4f"
+      },
+      {
+        "token": "panther",
+        "contract": "0x1f546aD641B56b86fD9dCEAc473d1C7a357276B7"
       }
     ];
   }

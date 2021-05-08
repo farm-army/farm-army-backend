@@ -14,6 +14,7 @@ let liquidityTokenCollector;
 let priceCollector;
 let farmFetcher;
 let contractAbiFetcher;
+let tokenInfo;
 
 const Cache = require("timed-cache");
 const Sqlite = require("better-sqlite3");
@@ -31,6 +32,7 @@ const AddressTransactions = require("./token/address_transactions");
 const LiquidityTokenCollector = require("./token/liquidity_token_collector");
 const FarmFetcher = require("./farm/farm_fetcher");
 const ContractAbiFetcher = require("./abi/contract_abi_fetcher");
+const TokenInfo = require("./token/token_info");
 
 const Pancake = require("./platforms/pancake/pancake");
 const Swamp = require("./platforms/swamp/swamp");
@@ -49,6 +51,7 @@ const Cafeswap = require("./platforms/cafeswap/cafeswap");
 const Belt = require("./platforms/belt/belt");
 const Kebab = require("./platforms/kebab/kebab");
 const Polaris = require("./platforms/polaris/polaris");
+const Panther = require("./platforms/panther/panther");
 
 let pancake;
 let swamp;
@@ -67,6 +70,7 @@ let cafeswap;
 let belt;
 let kebab;
 let polaris;
+let panther;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -102,6 +106,7 @@ module.exports = {
       this.getTokenCollector(),
       this.getLiquidityTokenCollector(),
       this.getPriceCollector(),
+      this.getCacheManager(),
     ));
   },
 
@@ -129,6 +134,7 @@ module.exports = {
           this.getBelt(),
           this.getKebab(),
           this.getPolaris(),
+          this.getPanther(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -374,6 +380,20 @@ module.exports = {
     ));
   },
 
+  getPanther() {
+    if (panther) {
+      return panther;
+    }
+
+    return (panther = new Panther(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
   getCache() {
     if (cache) {
       return cache;
@@ -500,6 +520,7 @@ module.exports = {
       this.getAddressTransactions(),
       this.getTokenCollector(),
       this.getLiquidityTokenCollector(),
+      this.getTokenInfo(),
     ));
   },
 
@@ -521,6 +542,19 @@ module.exports = {
     return (contractAbiFetcher = new ContractAbiFetcher(
       module.exports.CONFIG['BSCSCAN_API_KEY'],
       this.getCacheManager(),
+    ));
+  },
+
+  getTokenInfo() {
+    if (tokenInfo) {
+      return tokenInfo;
+    }
+
+    return (tokenInfo = new TokenInfo(
+        this.getCacheManager(),
+        this.getTokenCollector(),
+        this.getLiquidityTokenCollector(),
+        this.getPriceCollector(),
     ));
   },
 };
