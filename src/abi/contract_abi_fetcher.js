@@ -13,7 +13,7 @@ module.exports = class ContractAbiFetcher {
   }
 
   async getAbiForContractAddress(address) {
-    const cacheKey = `abi-contract-v1-${address}}`
+    const cacheKey = `abi-contract-v1-${address}`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {

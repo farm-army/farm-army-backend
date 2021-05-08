@@ -39,6 +39,12 @@ module.exports = class PriceCollector {
   }
 
   addForSymbol(symbol, price) {
+    if (price > 5000000000 || price < 0.0000000001) {
+      // skipping invalid prices
+      console.error('price issues:', symbol, price)
+      return;
+    }
+
     this.pricesSymbols[symbol.toLowerCase()] = parseFloat(price);
   }
 
