@@ -9,7 +9,7 @@ module.exports = class TokenInfo {
     }
 
     async getTokenInfo(token) {
-        const cacheKey = `token-info-v1-${token}`
+        const cacheKey = `token-info-v3-${token}`
 
         const cache = await this.cacheManager.get(cacheKey)
         if (cache) {
@@ -28,6 +28,24 @@ module.exports = class TokenInfo {
         const lpToken = this.liquidityTokenCollector.get(token);
         if (lpToken) {
             result.liquidityPool = lpToken;
+
+            if (lpToken.tokens.length === 2) {
+                const equalLiquidityPools = this.liquidityTokenCollector.getPoolAddressesForPair(lpToken.tokens[0].address, lpToken.tokens[1].address)
+                  .filter(p => p.address.toLowerCase() !== token)
+                  .map(p => {
+                      const price = this.priceCollector.getPrice(p.address);
+
+                      if (price) {
+                          p.price = price;
+                      }
+
+                      return p;
+                  });
+
+                if (equalLiquidityPools.length > 0) {
+                    result.equalLiquidityPools = equalLiquidityPools
+                }
+            }
         }
 
         const price = this.priceCollector.getPrice(token);

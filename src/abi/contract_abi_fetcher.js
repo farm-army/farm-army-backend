@@ -1,15 +1,7 @@
-const request = require("async-request");
-const PromiseThrottle = require('promise-throttle');
-
 module.exports = class ContractAbiFetcher {
-  constructor(apiKey, cacheManager) {
-    this.apiKey = apiKey;
+  constructor(bscscanRequest, cacheManager) {
+    this.bscscanRequest = bscscanRequest;
     this.cacheManager = cacheManager;
-
-    this.promiseThrottle = new PromiseThrottle({
-      requestsPerSecond: 2,
-      promiseImplementation: Promise
-    });
   }
 
   async getAbiForContractAddress(address) {
@@ -20,10 +12,7 @@ module.exports = class ContractAbiFetcher {
       return cache;
     }
 
-    // 5 sec limit; also need some window
-    const text = await this.promiseThrottle.add(async () => {
-      return await request(`https://api.bscscan.com/api?module=contract&action=getabi&address=${address}&apikey=${encodeURIComponent(this.apiKey)}`)
-    });
+    const text = await this.bscscanRequest.get(`https://api.bscscan.com/api?module=contract&action=getabi&address=${address}`);
 
     let parse = JSON.parse(text.body);
     const abi = JSON.parse(parse.result);

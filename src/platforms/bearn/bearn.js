@@ -55,7 +55,6 @@ module.exports = class bearn {
 
         return {
           userInfo: vault.methods.userInfo(farm.raw.pid, address),
-          stakedWantTokens: vault.methods.stakedWantTokens(farm.raw.pid, address),
           id: farm.id.toString()
         };
       });
@@ -79,8 +78,7 @@ module.exports = class bearn {
     const result = [...vaults, ...pools]
       .filter(
         v =>
-          new BigNumber(v.userInfo[0] || 0).isGreaterThan(Utils.DUST_FILTER) ||
-          new BigNumber(v.stakedWantTokens || 0).isGreaterThan(Utils.DUST_FILTER)
+          new BigNumber(v.userInfo[0] || 0).isGreaterThan(Utils.DUST_FILTER)
       )
       .map(v => v.id);
 
@@ -105,14 +103,22 @@ module.exports = class bearn {
     ])
 
     const vaultsInfo = {};
-    Object.values(JSON.parse(responseVaults.body).data.vaultInfos).forEach(v => {
-      vaultsInfo[v.pid] = v;
-    });
+    try {
+      Object.values(JSON.parse(responseVaults.body).data.vaultInfos).forEach(v => {
+        vaultsInfo[v.pid] = v;
+      });
+    } catch (e) {
+      console.log('bearn error: vaults')
+    }
 
     const poolsInfo = {};
-    Object.values(JSON.parse(responsePools.body).data.pools.bsc).forEach(v => {
-      poolsInfo[v.pid] = v;
-    });
+    try {
+      Object.values(JSON.parse(responsePools.body).data.pools.bsc).forEach(v => {
+        poolsInfo[v.pid] = v;
+      });
+    } catch (e) {
+      console.log('bearn error: pools')
+    }
 
     const farms = this.getRawVaults().map(farm => {
       const item = {
@@ -257,9 +263,10 @@ module.exports = class bearn {
       Utils.multiCall(poolCalls),
     ]);
 
-    const resultFarms = [...vaults, ...pools]
-      .filter(v => new BigNumber(v.userInfo[0] || 0).isGreaterThan(0))
-      .map(call => {
+    const resultFarms = [];
+
+    [...vaults, ...pools].filter(v => new BigNumber(v.userInfo[0] || 0).isGreaterThan(Utils.DUST_FILTER))
+      .forEach(call => {
         const farm = farms.find(f => f.id === call.id);
 
         let amount = call.stakedWantTokens;
@@ -301,6 +308,11 @@ module.exports = class bearn {
           let priceReward = this.priceOracle.findPrice(tokenName);
           if (priceReward) {
             reward.usd = reward.amount * priceReward;
+
+            // filter
+            if (reward.usd < 0.01 || reward.usd > 1000000000) {
+              return;
+            }
           }
 
           rewards.push(reward);
@@ -312,7 +324,7 @@ module.exports = class bearn {
 
         result.farm = farm;
 
-        return result;
+        resultFarms.push(result);
       });
 
     return resultFarms;
