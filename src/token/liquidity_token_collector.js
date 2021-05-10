@@ -41,6 +41,34 @@ module.exports = class LiquidityTokenCollector {
       : value.tokens.map(t => t.symbol.toLowerCase()).join('-')
   }
 
+  getPoolAddressesForPair(token0, token1) {
+    const myToken0 = token0.toLowerCase();
+    const myToken1 = token1.toLowerCase();
+
+    const same = [];
+
+    Object.values(this.tokens).forEach(pair => {
+      if (pair.tokens.length !== 2) {
+        return;
+      }
+
+      let pToken0 = pair.tokens[0].address;
+      let pToken1 = pair.tokens[1].address;
+      if (!pToken0 || !pToken1) {
+        return;
+      }
+
+      let isSamePair = (pToken0.toLowerCase() === myToken0 && pToken1.toLowerCase() === myToken1)
+       || (pToken0.toLowerCase() === myToken1 && pToken1.toLowerCase() === myToken0);
+
+      if (isSamePair) {
+        same.push(pair);
+      }
+    });
+
+    return same;
+  }
+
   all() {
     return Object.values(this.tokens);
   }

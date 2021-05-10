@@ -15,6 +15,7 @@ let priceCollector;
 let farmFetcher;
 let contractAbiFetcher;
 let tokenInfo;
+let bscscanRequest;
 
 const Cache = require("timed-cache");
 const Sqlite = require("better-sqlite3");
@@ -33,6 +34,7 @@ const LiquidityTokenCollector = require("./token/liquidity_token_collector");
 const FarmFetcher = require("./farm/farm_fetcher");
 const ContractAbiFetcher = require("./abi/contract_abi_fetcher");
 const TokenInfo = require("./token/token_info");
+const BscscanRequest = require("./utils/bscscan_request");
 
 const Pancake = require("./platforms/pancake/pancake");
 const Swamp = require("./platforms/swamp/swamp");
@@ -410,7 +412,7 @@ module.exports = {
     return (addressTransactions = new AddressTransactions(
       this.getPlatforms(),
       this.getUserCacheManager(),
-      module.exports.CONFIG['BSCSCAN_API_KEY'],
+      this.getBscscanRequest(),
       this.getLiquidityTokenCollector(),
       this.getTokenCollector(),
       this.getPriceCollector(),
@@ -540,7 +542,7 @@ module.exports = {
     }
 
     return (contractAbiFetcher = new ContractAbiFetcher(
-      module.exports.CONFIG['BSCSCAN_API_KEY'],
+      this.getBscscanRequest(),
       this.getCacheManager(),
     ));
   },
@@ -555,6 +557,16 @@ module.exports = {
         this.getTokenCollector(),
         this.getLiquidityTokenCollector(),
         this.getPriceCollector(),
+    ));
+  },
+
+  getBscscanRequest() {
+    if (bscscanRequest) {
+      return bscscanRequest;
+    }
+
+    return (bscscanRequest = new BscscanRequest(
+        module.exports.CONFIG['BSCSCAN_API_KEY'],
     ));
   },
 };

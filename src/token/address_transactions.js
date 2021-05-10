@@ -1,12 +1,10 @@
 'use strict';
 
-const request = require("async-request");
-
 module.exports = class AddressTransactions {
-  constructor(platforms, cacheManager, bscApiKey, liquidityTokenCollector, tokenCollector, priceCollector) {
+  constructor(platforms, cacheManager, bscscanRequest, liquidityTokenCollector, tokenCollector, priceCollector) {
     this.platforms = platforms;
     this.cacheManager = cacheManager;
-    this.bscApiKey = bscApiKey;
+    this.bscscanRequest = bscscanRequest;
     this.liquidityTokenCollector = liquidityTokenCollector;
     this.tokenCollector = tokenCollector;
     this.priceCollector = priceCollector;
@@ -20,13 +18,12 @@ module.exports = class AddressTransactions {
       return cache;
     }
 
-    const myUrl = 'https://api.bscscan.com/api?module=account&action=tokentx&address=%address%&page=1&offset=300&sort=desc&apikey=%apikey%'
-      .replace("%address%", address)
-      .replace("%apikey%", this.bscApiKey);
+    const myUrl = 'https://api.bscscan.com/api?module=account&action=tokentx&address=%address%&page=1&offset=300&sort=desc'
+      .replace("%address%", address);
 
     let response = {};
     try {
-      const responseBody = await request(myUrl);
+      const responseBody = await this.bscscanRequest.get(myUrl);
       response = JSON.parse(responseBody.body);
     } catch (e) {
       console.error(myUrl, e.message);
