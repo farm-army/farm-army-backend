@@ -1,6 +1,5 @@
 "use strict";
 
-const ethers = require("ethers");
 const _ = require("lodash");
 const fs = require("fs");
 const path = require("path");
@@ -11,6 +10,9 @@ const Utils = require("../../utils");
 
 const masterChefAddress = "0x73feaa1eE314F8c655E354234017bE2193C9E24E";
 
+const cakeVaultAddress = '0xa80240Eb5d7E05d3F250cF000eEc0891d00b51CC';
+const cakeVaultAbi = require('./abi/cakeVault.json');
+
 const erc20ABI = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, "abi/erc20.json"), "utf8")
 );
@@ -20,6 +22,8 @@ const masterchefABI = JSON.parse(
 const sousChefABI = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, "abi/sousChef.json"), "utf8")
 );
+
+const sousChefCombinedABI = require('./abi/sousChefCombined.json');
 
 module.exports = class pancake {
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
@@ -43,7 +47,7 @@ module.exports = class pancake {
   }
 
   async getFetchedFarms() {
-    const cacheKey = `pancake-v2-master-farms`
+    const cacheKey = `pancake-v3-master-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -79,31 +83,27 @@ module.exports = class pancake {
       return cacheItem;
     }
 
-    const vaultCalls = (await this.getFetchedFarms()).map(farm => {
-      const contract = new Web3EthContract(masterchefABI, masterChefAddress);
-      return {
-        userInfo: contract.methods.userInfo(farm.pid, address),
-        id: `pancake_farm_${farm.pid}`
-      };
-    });
+    const results = [];
+    (await this.getFarms()).forEach(farm => {
+      if (farm.id.startsWith('pancake_farm_')) {
+        results.push({
+          userInfo: new Web3EthContract(masterchefABI, masterChefAddress).methods.userInfo(farm.raw.pid, address),
+          id: farm.id
+        });
+      } else if(farm.id.startsWith('pancake_pool_')) {
+        results.push({
+          userInfo: new Web3EthContract(sousChefABI, this.getAddress(farm.raw.contractAddress)).methods.userInfo(address),
+          id: farm.id
+        })
+      } else if(farm.id.startsWith('pancake_auto')) {
+        results.push({
+          userInfo: new Web3EthContract(cakeVaultAbi, cakeVaultAddress).methods.userInfo(address),
+          id: farm.id
+        })
+      }
+    })
 
-    const poolCallsContract = this.getRawPools()
-      .filter(pool => pool.stakingToken && pool.stakingToken.address[56] && pool.stakingToken.address[56])
-      .map(farm => {
-        const contract = new Web3EthContract(sousChefABI, farm.contractAddress["56"]);
-
-        return {
-          userInfo: contract.methods.userInfo(address),
-          id: `pancake_pool_${farm.sousId}`
-        };
-      });
-
-    const [farmCalls, poolCalls] = await Promise.all([
-      Utils.multiCall(vaultCalls),
-      Utils.multiCall(poolCallsContract)
-    ]);
-
-    const result = [...farmCalls, ...poolCalls]
+    const result = (await Utils.multiCall(results))
       .filter(v => v.userInfo && new BigNumber(v.userInfo[0] || 0).isGreaterThan(0))
       .map(v => v.id);
 
@@ -211,48 +211,72 @@ module.exports = class pancake {
       return Object.freeze(item);
     });
 
-    const rawPools = this.getRawPools();
+    const rawPools = _.clone(this.getRawPools());
 
-    const tvlPools = await Utils.multiCallIndexBy(
-      "sousId",
-      rawPools
-        .filter(pool => pool.contractAddress && pool.contractAddress[56])
-        .map(pool => {
-          const vault = new Web3EthContract(erc20ABI, pool.stakingToken.address[56]);
-          return {
-            sousId: pool.sousId.toString(),
-            token: pool.stakingToken.address[56],
-            balance: vault.methods.balanceOf(pool.contractAddress[56])
-          };
-        })
+    const known = rawPools
+      .filter(p => this.getAddress(p.contractAddress))
+      .map(p => this.getAddress(p.contractAddress).toLowerCase());
+
+    // append chain pools to static JSON
+    (await this.getPools()).forEach(p => {
+      const foo = p.raw.contractAddress.toLowerCase();
+
+      if (!known.includes(foo)) {
+        rawPools.push(p)
+      }
+    });
+
+    const addresses = _.uniqWith(
+      rawPools.map(p => [this.getAddress(p.stakingToken.address), this.getAddress(p.contractAddress)]),
+      (a, b) => a[1].toLowerCase() === b[1].toLowerCase()
+    );
+
+    const tvlPools = await Utils.multiCallIndexBy('address', addresses.map(address => {
+        return {
+          address: address[1].toLowerCase(),
+          balance: new Web3EthContract(erc20ABI, address[0]).methods.balanceOf(address[1])
+        };
+      })
     );
 
     const resultPools = rawPools.map(pool => {
+      let symbol = pool.earningToken.symbol;
+
+      let name = `${symbol} Pool`;
+      let token = symbol.toLowerCase();
+
+      //  Stake DOGE > Earn CAKE
+      if (symbol.toLowerCase() === 'cake') {
+        const symbolNew = this.tokenCollector.getSymbolByAddress(this.getAddress(pool.stakingToken.address))
+        if (symbolNew) {
+          name = `${symbolNew.toUpperCase()} Pool`;
+          token = symbolNew.toLowerCase();
+        }
+      }
+
       const item = {
         id: `pancake_pool_${pool.sousId}`,
-        name: `${pool.earningToken.symbol} Pool`,
-        token: pool.earningToken.symbol.toLowerCase(),
+        name: name,
+        token: token,
         platform: "pancake",
         raw: Object.freeze(pool),
         provider: "pancake",
-        earns: [pool.earningToken.symbol.toLowerCase()],
+        earns: [symbol.toLowerCase()],
         link: "https://pancakeswap.finance/pools",
         has_details: true,
         extra: {}
       };
 
-      if (pool.contractAddress && pool.contractAddress[56]) {
-        item.extra.transactionToken = pool.stakingToken.address[56];
-        item.extra.transactionAddress = pool.contractAddress[56];
-      }
+      item.extra.transactionToken = this.getAddress(pool.stakingToken.address);
+      item.extra.transactionAddress = this.getAddress(pool.contractAddress);
 
-      const tvl = tvlPools[pool.sousId.toString()];
+      const tvl = tvlPools[this.getAddress(pool.contractAddress).toLowerCase()];
       if (tvl && tvl.balance) {
         item.tvl = {
-          amount: tvl.balance / 1e18
+          amount: tvl.balance / (10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
         };
 
-        const addressPrice = this.priceOracle.getAddressPrice(tvl.token);
+        const addressPrice = this.priceOracle.getAddressPrice(item.extra.transactionToken);
         if (addressPrice) {
           item.tvl.usd = item.tvl.amount * addressPrice;
         }
@@ -262,6 +286,24 @@ module.exports = class pancake {
     });
 
     const result = [...resultFarms, ...resultPools];
+
+    result.push({
+      id: `pancake_auto`,
+      name: `Auto CAKE`,
+      token: 'cake',
+      platform: "pancake",
+      raw: Object.freeze({
+        lpAddresses: '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82'
+      }),
+      provider: "pancake",
+      earns: [],
+      link: "https://pancakeswap.finance/pools",
+      has_details: true,
+      extra: {
+        transactionToken: '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82',
+        transactionAddress: cakeVaultAddress,
+      }
+    });
 
     this.cache.put(cacheKey, result, { ttl: 300 * 1000 });
 
@@ -278,116 +320,80 @@ module.exports = class pancake {
   }
 
   async getYieldsInner(address, addresses) {
-    const addressFarms = addresses.filter(address =>
-      address.startsWith("pancake_farm_")
-    );
-    const addressPools = addresses.filter(address =>
-      address.startsWith("pancake_pool_")
-    );
-
-    if (addressFarms.length === 0 && addressPools.length === 0) {
+    if (addresses.length === 0) {
       return [];
     }
 
     const farms = await this.getFarms();
 
-    const vaultCalls = addressFarms.map(id => {
+    const callsPromises = [];
+    addresses.forEach(id => {
       const farm = farms.find(f => f.id === id);
 
-      const vault = new Web3EthContract(masterchefABI, masterChefAddress);
-      return {
-        userInfo: vault.methods.userInfo(farm.raw.pid, address),
-        pendingCake: vault.methods.pendingCake(farm.raw.pid, address),
-        id: id
-      };
-    });
+      if (farm.id.startsWith('pancake_farm_')) {
+        const contract = new Web3EthContract(masterchefABI, masterChefAddress);
 
-    const vaultCalls2 = addressPools.map(id => {
-      const farm = farms.find(f => f.id === id);
+        callsPromises.push({
+          userInfo: contract.methods.userInfo(farm.raw.pid, address),
+          pendingCake: contract.methods.pendingCake(farm.raw.pid, address),
+          id: farm.id
+        });
+      } else if(farm.id.startsWith('pancake_pool_')) {
+        const contract = new Web3EthContract(sousChefABI, this.getAddress(farm.raw.contractAddress));
 
-      const contract = new Web3EthContract(sousChefABI, farm.raw.contractAddress["56"]);
+        callsPromises.push({
+          userInfo: contract.methods.userInfo(address),
+          pendingReward: contract.methods.pendingReward(address),
+          id: farm.id
+        })
+      } else if(farm.id.startsWith('pancake_auto')) {
+        let contract = new Web3EthContract(cakeVaultAbi, cakeVaultAddress);
 
-      return {
-        userInfo: contract.methods.userInfo(address),
-        pendingReward: contract.methods.pendingReward(address),
-        id: id
-      };
-    });
+        callsPromises.push({
+          userInfo: contract.methods.userInfo(address),
+          id: farm.id
+        });
+      }
+    })
 
-    const [calls, calls2] = await Promise.all([
-      Utils.multiCall(vaultCalls),
-      Utils.multiCall(vaultCalls2)
-    ]);
+    const calls = await Utils.multiCall(callsPromises);
 
     const resultFarms = calls
-      .filter(
-        c =>
-          c.userInfo &&
-          c.userInfo[0] &&
-          new BigNumber(c.userInfo[0]).isGreaterThan(0)
-      )
+      .filter(c => c.userInfo && c.userInfo[0] && new BigNumber(c.userInfo[0]).isGreaterThan(0))
       .map(call => {
         const farm = farms.find(f => f.id === call.id);
 
         const result = {};
         result.deposit = {
           symbol: farm.symbol,
-          amount: ethers.utils.formatUnits(call.userInfo[0].toString(), 18)
+          amount: call.userInfo[0] / (10 ** this.tokenCollector.getDecimals(farm.extra.transactionToken))
         };
 
-        if (this.getAddress(farm.raw.lpAddresses)) {
-          let price = this.priceOracle.getAddressPrice(this.getAddress(farm.raw.lpAddresses));
+        let address1 = this.getAddress(farm.extra.transactionToken);
+        if (address1) {
+          let price = this.priceOracle.getAddressPrice(address1);
 
           if (price) {
-            result.deposit.usd = (call.userInfo[0] / 1e18) * price;
+            result.deposit.usd = result.deposit.amount * price;
           }
         }
 
         if (new BigNumber(call.pendingCake).isGreaterThan(0)) {
           const reward = {
             symbol: "cake",
-            amount: ethers.utils.formatUnits(call.pendingCake, 18)
+            amount: call.pendingCake / 1e18
           };
 
           const price = this.priceOracle.findPrice(reward.symbol);
           if (price) {
-            reward.usd = (call.pendingCake / 1e18) * price;
+            reward.usd = reward.amount * price;
           }
 
           result.rewards = [reward];
-        }
-
-        result.farm = farm;
-
-        return result;
-      });
-
-    const resultPools = calls2
-      .filter(
-        c =>
-          c.userInfo &&
-          c.userInfo[0] &&
-          (new BigNumber(c.userInfo[0]).isGreaterThan(0) ||
-            new BigNumber(c.pendingReward).isGreaterThan(0))
-      )
-      .map(call => {
-        const farm = farms.find(f => f.id === call.id);
-
-        const result = {};
-        result.deposit = {
-          symbol: farm.raw.stakingToken.symbol.toLowerCase(),
-          amount: ethers.utils.formatUnits(call.userInfo[0].toString(), 18)
-        };
-
-        const price = this.priceOracle.findPrice(result.deposit.symbol);
-        if (price) {
-          result.deposit.usd = (call.userInfo[0] / 1e18) * price;
-        }
-
-        if (new BigNumber(call.pendingReward).isGreaterThan(0)) {
+        } else if (new BigNumber(call.pendingReward).isGreaterThan(0)) {
           const reward = {
             symbol: farm.raw.earningToken.symbol.toLowerCase(),
-            amount: call.pendingReward / 1e18
+            amount: call.pendingReward / (10 ** this.tokenCollector.getDecimals(farm.raw.earningToken.address))
           };
 
           const price = this.priceOracle.findPrice(reward.symbol);
@@ -403,7 +409,7 @@ module.exports = class pancake {
         return result;
       });
 
-    return [...resultFarms, ...resultPools];
+    return Object.freeze(resultFarms);
   }
 
   async getTransactions(address, id) {
@@ -463,5 +469,106 @@ module.exports = class pancake {
     }
 
     return undefined;
+  }
+
+  async getPools() {
+    const cacheKey = `pancake-v4-master-pools`
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      //return cache;
+    }
+
+    const response = await request("https://raw.githubusercontent.com/pancakeswap/pancake-frontend/develop/src/config/constants/pools.ts");
+    const body = response.body;
+
+    const calls = [...body.matchAll(/contractAddress:\s+{\s*.*?\s*.*?56:\s*['](.*)[']/gm)]
+        .map(match => match && match[1])
+        .map(address => {
+          let web3EthContract = new Web3EthContract(sousChefCombinedABI, address);
+          return {
+            address: address,
+            bonusEndBlock: web3EthContract.methods.bonusEndBlock(),
+            rewardToken: web3EthContract.methods.rewardToken(),
+            poolInfo: web3EthContract.methods.poolInfo(0),
+            stakedToken: web3EthContract.methods.stakedToken(),
+            syrup: web3EthContract.methods.syrup(),
+          };
+        });
+
+    let blockNumber = await Utils.getWeb3().eth.getBlockNumber();
+
+    const items = [];
+    (await Utils.multiCall(calls)).forEach(item => {
+      let lpToken = item.syrup;
+
+      if (!lpToken || !lpToken.startsWith('0x')) {
+        lpToken = item.stakedToken;
+      }
+
+      if (!lpToken || !lpToken.startsWith('0x')) {
+        if (item.poolInfo && item.poolInfo[0] && item.poolInfo[0].startsWith('0x')) {
+          lpToken = item.poolInfo[0];
+        }
+      }
+
+      if (!lpToken || !item.rewardToken) {
+        return;
+      }
+
+      if (!item.bonusEndBlock || blockNumber > parseInt(item.bonusEndBlock)) {
+        return;
+      }
+
+      items.push({
+        address: item.address,
+        rewardToken: item.rewardToken,
+        bonusEndBlock: item.bonusEndBlock,
+        lpToken: lpToken,
+        raw: {
+          poolInfo: item.poolInfo
+        },
+      });
+    });
+
+    const rewardInfo = await Utils.multiCallIndexBy('token', items.map(item => {
+      const web3EthContract = new Web3EthContract(erc20ABI, item.rewardToken);
+
+      return {
+        token: item.rewardToken.toLowerCase(),
+        symbol: web3EthContract.methods.symbol(),
+        decimals: web3EthContract.methods.decimals(),
+      }
+    }));
+
+    const result = items
+      .filter(line => rewardInfo[line.rewardToken.toLowerCase()])
+      .map(line => {
+        const rewardToken = rewardInfo[line.rewardToken.toLowerCase()];
+        const lpTokenSymbol = this.tokenCollector.getSymbolByAddress(line.lpToken);
+
+        const raw = line;
+        raw.contractAddress = line.address; // needed for compatibility
+
+        const item = {
+          sousId: line.address,
+          stakingToken: {
+            symbol: lpTokenSymbol.toLowerCase(),
+            address: line.lpToken,
+          },
+          earningToken: {
+            symbol: rewardToken.symbol,
+            address: rewardToken.token,
+          },
+          contractAddress: line.address,
+          raw: raw,
+        }
+
+        return Object.freeze(item);
+      });
+
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30})
+
+    return result;
   }
 };

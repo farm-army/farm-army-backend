@@ -117,15 +117,15 @@ module.exports = class valuedefi {
     ]);
 
     const result1 = farmCalls
-      .filter(v => new BigNumber(v.userInfo[0] || 0).isGreaterThan(0))
+      .filter(v => new BigNumber(v.userInfo[0] || 0).isGreaterThan(Utils.DUST_FILTER))
       .map(v => v.id);
 
     const result2 = vSafes
-      .filter(v => new BigNumber(v.balanceOf || 0).isGreaterThan(0))
+      .filter(v => new BigNumber(v.balanceOf || 0).isGreaterThan(Utils.DUST_FILTER))
       .map(v => v.id);
 
     const result3 = councils
-      .filter(v => new BigNumber(v.userInfo[0] || 0).isGreaterThan(0))
+      .filter(v => new BigNumber(v.userInfo[0] || 0).isGreaterThan(Utils.DUST_FILTER))
       .map(v => v.id);
 
     const result = [...result1, ...result2, ...result3];

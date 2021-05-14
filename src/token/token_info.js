@@ -1,15 +1,16 @@
 'use strict';
 
 module.exports = class TokenInfo {
-    constructor(cacheManager, tokenCollector, liquidityTokenCollector, priceCollector) {
+    constructor(cacheManager, tokenCollector, liquidityTokenCollector, priceCollector, db) {
         this.cacheManager = cacheManager;
         this.tokenCollector = tokenCollector;
         this.liquidityTokenCollector = liquidityTokenCollector;
         this.priceCollector = priceCollector;
+        this.db = db;
     }
 
     async getTokenInfo(token) {
-        const cacheKey = `token-info-v3-${token}`
+        const cacheKey = `token-info-v4-${token}`
 
         const cache = await this.cacheManager.get(cacheKey)
         if (cache) {
@@ -51,6 +52,11 @@ module.exports = class TokenInfo {
         const price = this.priceCollector.getPrice(token);
         if (price) {
             result.price = price;
+        }
+
+        const candles = await this.db.getTokenPriceInWindow(token);
+        if (candles && candles.length > 0) {
+            result.candles = candles;
         }
 
         await this.cacheManager.set(cacheKey, result, {ttl: 60 * 10})

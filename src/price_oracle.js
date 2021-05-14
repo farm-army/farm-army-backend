@@ -524,7 +524,12 @@ module.exports = class PriceOracle {
     try {
       result = await foo.json();
     } catch (e) {
-      console.error('pancake price error', e.message)
+      console.error('cakeswap price fetch error', e.message)
+      return [];
+    }
+
+    if (!result.data || !result.data.tokens) {
+      console.error('cakeswap price fetch error')
       return [];
     }
 
