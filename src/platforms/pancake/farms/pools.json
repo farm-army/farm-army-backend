@@ -30,6 +30,666 @@
     "isFinished": false
   },
   {
+    "sousId": 138,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "KUN",
+      "address": {
+        "56": "0x1A2fb0Af670D0234c2857FaD35b789F8Cb725584",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://chemix.io/home"
+    },
+    "contractAddress": {
+      "56": "0x439b46d467402cebc1a2fa05038b5b696b1f4417",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.23148",
+    "isFinished": false
+  },
+  {
+    "sousId": 137,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "MATH",
+      "address": {
+        "56": "0xf218184af829cf2b0019f8e6f0b2423498a36983",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://mathwallet.org/"
+    },
+    "contractAddress": {
+      "56": "0x377ae5f933aa4cfa41fa03e2cae8a2befccf53b2",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.15798",
+    "isFinished": false
+  },
+  {
+    "sousId": 136,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "UST",
+      "address": {
+        "56": "0x23396cf899ca06c4472205fc903bdb4de249d6fc",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://mirror.finance/"
+    },
+    "contractAddress": {
+      "56": "0xce3ebac3f549ebf1a174a6ac3b390c179422b5f6",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.17361",
+    "isFinished": false
+  },
+  {
+    "sousId": 135,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "WIN",
+      "address": {
+        "56": "0xaef0d72a118ce24fee3cd1d43d383897d05b4e99",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://winklink.org/"
+    },
+    "contractAddress": {
+      "56": "0xd26dec254c699935c286cd90e9841dcabf1af72d",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "462.96",
+    "isFinished": false
+  },
+  {
+    "sousId": 134,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "TRX",
+      "address": {
+        "56": "0x85eac5ac2f758618dfa09bdbe0cf174e7d574d5b",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://tron.network/"
+    },
+    "contractAddress": {
+      "56": "0x93e2867d9b74341c2d19101b7fbb81d6063cca4d",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "4.0509",
+    "isFinished": false
+  },
+  {
+    "sousId": 133,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BTT",
+      "address": {
+        "56": "0x8595f9da7b868b1822194faed312235e43007b49",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.bittorrent.com/"
+    },
+    "contractAddress": {
+      "56": "0x3b644e44033cff70bd6b771904225f3dd69dfb6d",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "79.86",
+    "isFinished": false
+  },
+  {
+    "sousId": 132,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "LMT",
+      "address": {
+        "56": "0x9617857e191354dbea0b714d78bc59e57c411087",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://lympo.io/lmt/"
+    },
+    "contractAddress": {
+      "56": "0x0a687d7b951348d681f7ed5eea84c0ba7b9566dc",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.66145",
+    "isFinished": false
+  },
+  {
+    "sousId": 131,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "PNT",
+      "address": {
+        "56": "0xdaacb0ab6fb34d24e8a67bfa14bf4d95d4c7af92",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://ptokens.io/"
+    },
+    "contractAddress": {
+      "56": "0x417df1c0e6a498eb1f2247f99032a01d4fafe922",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.09548",
+    "isFinished": false
+  },
+  {
+    "sousId": 130,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "xMARK",
+      "address": {
+        "56": "0x26a5dfab467d4f58fb266648cae769503cec9580",
+        "97": ""
+      },
+      "decimals": 9,
+      "projectLink": "https://benchmarkprotocol.finance/"
+    },
+    "contractAddress": {
+      "56": "0xdc8943d806f9dd64312d155284abf780455fd345",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.0298",
+    "isFinished": false
+  },
+  {
+    "sousId": 129,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "RAMP",
+      "address": {
+        "56": "0x8519ea49c997f50ceffa444d240fb655e89248aa",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://rampdefi.com/"
+    },
+    "contractAddress": {
+      "56": "0xa90a894e5bc20ab2be46c7e033a38f8b8eaa771a",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.4861",
+    "isFinished": false
+  },
+  {
+    "sousId": 128,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "HAKKA",
+      "address": {
+        "56": "0x1d1eb8e8293222e1a29d2c0e4ce6c0acfd89aaac",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://hakka.finance/"
+    },
+    "contractAddress": {
+      "56": "0x34ac807e34e534fe426da1e11f816422774aae1c",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "3.4722",
+    "isFinished": false
+  },
+  {
+    "sousId": 127,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "pBTC",
+      "address": {
+        "56": "0xed28a457a5a76596ac48d87c0f577020f6ea1c4c",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://ptokens.io/"
+    },
+    "contractAddress": {
+      "56": "0x31fa2f516b77c4273168b284ac6d9def5aa6dafb",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.0000031",
+    "isFinished": false
+  },
+  {
+    "sousId": 126,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "LIEN",
+      "address": {
+        "56": "0x5d684adaf3fcfe9cfb5cede3abf02f0cdd1012e3",
+        "97": ""
+      },
+      "decimals": 8,
+      "projectLink": "https://lien.finance/"
+    },
+    "contractAddress": {
+      "56": "0x7112f8988f075c7784666ab071927ae4109a8076",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.003472",
+    "isFinished": false
+  },
+  {
+    "sousId": 125,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "bBadger",
+      "address": {
+        "56": "0x1f7216fdb338247512ec99715587bb97bbf96eae",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://badger.finance/"
+    },
+    "contractAddress": {
+      "56": "0x126dfbcef85c5bf335f8be99ca4006037f417892",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.00265278",
+    "isFinished": false
+  },
+  {
+    "sousId": 124,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "bDIGG",
+      "address": {
+        "56": "0x5986d5c77c65e5801a5caa4fae80089f870a71da",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://badger.finance/"
+    },
+    "contractAddress": {
+      "56": "0x4f0ad2332b1f9983e8f63cbee617523bb7de5031",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.00000403",
+    "isFinished": false
+  },
+  {
+    "sousId": 123,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "BONDLY",
+      "address": {
+        "56": "0x96058f8c3e16576d9bd68766f3836d9a33158f89",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.bondly.finance/"
+    },
+    "contractAddress": {
+      "56": "0x9483ca44324de06802576866b9d296f7614f45ac",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.4629",
+    "isFinished": false
+  },
+  {
+    "sousId": 122,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "XED",
+      "address": {
+        "56": "0x5621b5a3f4a8008c4ccdd1b942b121c8b1944f1f",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://www.exeedme.com/"
+    },
+    "contractAddress": {
+      "56": "0x72ceec6e2a142678e703ab0710de78bc819f4ce0",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.3472",
+    "isFinished": false
+  },
+  {
+    "sousId": 121,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "CGG",
+      "address": {
+        "56": "0x1613957159e9b0ac6c80e824f7eea748a32a0ae2",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://chainguardians.io/"
+    },
+    "contractAddress": {
+      "56": "0x1c6ed21d3313822ae73ed0d94811ffbbe543f341",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.10918",
+    "isFinished": false
+  },
+  {
+    "sousId": 120,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "PERL",
+      "address": {
+        "56": "0x0f9e4d49f25de22c2202af916b681fbb3790497b",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://perlinx.finance/"
+    },
+    "contractAddress": {
+      "56": "0x1ac0d0333640f57327c83053c581340ebc829e30",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "1.1574",
+    "isFinished": false
+  },
+  {
+    "sousId": 119,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "ARPA",
+      "address": {
+        "56": "0x6f769e65c14ebd1f68817f5f1dcdb61cfa2d6f7e",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://arpachain.io/"
+    },
+    "contractAddress": {
+      "56": "0xc707e5589aeb1dc117b0bb5a3622362f1812d4fc",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.949",
+    "isFinished": false
+  },
+  {
+    "sousId": 118,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "ODDZ",
+      "address": {
+        "56": "0xcd40f2670cf58720b694968698a5514e924f742d",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://oddz.fi/"
+    },
+    "contractAddress": {
+      "56": "0x22106cdcf9787969e1672d8e6a9c03a889cda9c5",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.11284",
+    "isFinished": false
+  },
+  {
+    "sousId": 117,
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82",
+        "97": "0xa35062141Fa33BCA92Ce69FeD37D0E8908868AAe"
+      },
+      "decimals": 18,
+      "projectLink": "https://pancakeswap.finance/"
+    },
+    "earningToken": {
+      "symbol": "DEXE",
+      "address": {
+        "56": "0x039cb485212f996a9dbb85a9a75d898f94d38da6",
+        "97": ""
+      },
+      "decimals": 18,
+      "projectLink": "https://dexe.network/"
+    },
+    "contractAddress": {
+      "56": "0x999b86e8bba3d4f05afb8155963999db70afa97f",
+      "97": ""
+    },
+    "poolCategory": "Core",
+    "harvest": true,
+    "sortOrder": 999,
+    "tokenPerBlock": "0.009837",
+    "isFinished": false
+  },
+  {
     "sousId": 116,
     "stakingToken": {
       "symbol": "CAKE",
@@ -205,7 +865,9 @@
     "poolCategory": "Core",
     "harvest": true,
     "sortOrder": 999,
-    "tokenPerBlock": "0.3472"
+    "tokenPerBlock": "0.3472",
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 110,
@@ -234,7 +896,9 @@
     "poolCategory": "Core",
     "harvest": true,
     "sortOrder": 999,
-    "tokenPerBlock": "3.4722"
+    "tokenPerBlock": "3.4722",
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 109,
@@ -263,7 +927,9 @@
     "poolCategory": "Core",
     "harvest": true,
     "sortOrder": 999,
-    "tokenPerBlock": "0.10918"
+    "tokenPerBlock": "0.10918",
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 108,
@@ -437,7 +1103,9 @@
     "poolCategory": "Core",
     "harvest": true,
     "sortOrder": 999,
-    "tokenPerBlock": "1.1574"
+    "tokenPerBlock": "1.1574",
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 102,
@@ -553,7 +1221,9 @@
     "poolCategory": "Core",
     "harvest": true,
     "sortOrder": 999,
-    "tokenPerBlock": "0.949"
+    "tokenPerBlock": "0.949",
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 98,
@@ -611,7 +1281,9 @@
     "poolCategory": "Core",
     "harvest": true,
     "sortOrder": 999,
-    "tokenPerBlock": "0.4629"
+    "tokenPerBlock": "0.4629",
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 96,
@@ -727,7 +1399,9 @@
     "poolCategory": "Core",
     "harvest": true,
     "sortOrder": 999,
-    "tokenPerBlock": "0.11284"
+    "tokenPerBlock": "0.11284",
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 92,
@@ -872,7 +1546,9 @@
     "poolCategory": "Core",
     "harvest": true,
     "sortOrder": 999,
-    "tokenPerBlock": "0.0000031"
+    "tokenPerBlock": "0.0000031",
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 87,
@@ -959,7 +1635,9 @@
     "poolCategory": "Core",
     "harvest": true,
     "sortOrder": 999,
-    "tokenPerBlock": "0.003472"
+    "tokenPerBlock": "0.003472",
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 84,
@@ -1046,7 +1724,9 @@
     "poolCategory": "Core",
     "harvest": true,
     "sortOrder": 999,
-    "tokenPerBlock": "0.00265278"
+    "tokenPerBlock": "0.00265278",
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 81,
@@ -1075,7 +1755,9 @@
     "poolCategory": "Core",
     "harvest": true,
     "sortOrder": 999,
-    "tokenPerBlock": "0.00000403"
+    "tokenPerBlock": "0.00000403",
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 80,
@@ -1164,7 +1846,8 @@
     "harvest": true,
     "tokenPerBlock": "0.01273",
     "sortOrder": 999,
-    "isFinished": true
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 77,
@@ -1494,7 +2177,7 @@
     "harvest": true,
     "tokenPerBlock": "0.00868",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 66,
@@ -1524,7 +2207,8 @@
     "harvest": true,
     "tokenPerBlock": "0.4861",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 65,
@@ -1584,7 +2268,8 @@
     "harvest": true,
     "tokenPerBlock": "0.009837",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 63,
@@ -1675,7 +2360,7 @@
     "harvest": true,
     "tokenPerBlock": "3.616",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 60,
@@ -1705,7 +2390,7 @@
     "harvest": true,
     "tokenPerBlock": "0.3472",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 59,
@@ -1735,7 +2420,7 @@
     "harvest": true,
     "tokenPerBlock": "0.0413",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 58,
@@ -1765,7 +2450,7 @@
     "harvest": true,
     "tokenPerBlock": "0.00248",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 57,
@@ -1795,7 +2480,7 @@
     "harvest": true,
     "tokenPerBlock": "6.365",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 56,
@@ -1825,7 +2510,7 @@
     "harvest": true,
     "tokenPerBlock": "0.000395",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 55,
@@ -1855,7 +2540,7 @@
     "harvest": true,
     "tokenPerBlock": "0.0723",
     "sortOrder": 999,
-    "isFinished": false
+    "isFinished": true
   },
   {
     "sousId": 54,
@@ -2930,7 +3615,8 @@
     "harvest": true,
     "tokenPerBlock": "23.14",
     "sortOrder": 999,
-    "isFinished": true
+    "isFinished": true,
+    "enableEmergencyWithdraw": true
   },
   {
     "sousId": 16,

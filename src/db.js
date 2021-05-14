@@ -1,5 +1,7 @@
 "use strict";
 
+const batchCandleJSON = require("candlestick-convert").batchCandleJSON;
+
 module.exports = class Db {
   constructor(database, priceOracle, platforms, priceCollector) {
     this.database = database;
@@ -139,6 +141,39 @@ module.exports = class Db {
       );
 
       resolve(stmt.all([token.toLowerCase(), ...timestamps]));
+    });
+  }
+
+  getTokenPriceInWindow(token) {
+    return new Promise(resolve => {
+      const nowX = Math.floor(Date.now() / 1000);
+
+      // full hour for cache hit
+      const now = nowX - (nowX % 3600);
+
+      const stmt = this.database.prepare('SELECT * FROM token_price WHERE token = ? AND created_at >= ? order by created_at ASC');
+
+      let number = now - (60 * 60 * 24 * 5);
+      let all = stmt.all([token.toLowerCase(), number]);
+
+      const candles = all.map(i => {
+        return {
+          time: i.created_at * 1000,
+          open: parseFloat(i.price),
+          high: parseFloat(i.price),
+          low: parseFloat(i.price),
+          close: parseFloat(i.price),
+          volume: 0,
+        }
+      })
+
+      const baseFrame = 60 * 5; // 5 minutes
+      const newFrame = 60 * 60; // 1 hour
+
+      resolve(batchCandleJSON(candles, baseFrame, newFrame).map(c => {
+        c.time = Math.round(c.time / 1000);
+        return c;
+      }));
     });
   }
 };

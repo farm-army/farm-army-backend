@@ -553,10 +553,11 @@ module.exports = {
     }
 
     return (tokenInfo = new TokenInfo(
-        this.getCacheManager(),
-        this.getTokenCollector(),
-        this.getLiquidityTokenCollector(),
-        this.getPriceCollector(),
+      this.getCacheManager(),
+      this.getTokenCollector(),
+      this.getLiquidityTokenCollector(),
+      this.getPriceCollector(),
+      this.getDb(),
     ));
   },
 

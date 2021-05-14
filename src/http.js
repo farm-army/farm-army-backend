@@ -38,7 +38,10 @@ module.exports = class Http {
     app.get("/token/:address", async (req, res) => {
       const {address} = req.params;
 
+      let timer = -performance.now();
       res.json(await this.tokenInfo.getTokenInfo(address));
+      timer += performance.now();
+      console.log(`${new Date().toISOString()}: token ${address} - ${(timer / 1000).toFixed(3)} sec`);
     });
 
     app.get("/tokens", async (req, res) => {
