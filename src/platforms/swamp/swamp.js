@@ -112,17 +112,6 @@ module.exports = class swamp extends PancakePlatformFork {
       };
     });
 
-    const vaultCalls = pools.map(pool => {
-      const vault = new Web3EthContract(ABI.vaultABI, pool.earnedTokenAddress);
-
-      return {
-        id: pool.id,
-        tokenAddress: pool.tokenAddress ? pool.tokenAddress : "",
-        pricePerFullShare: vault.methods.getPricePerFullShare(),
-        tvl: vault.methods.balance()
-      };
-    });
-
     const [farmBalances] = await Promise.all([
       Utils.multiCallIndexBy('address', farmBalanceCalls),
     ]);
@@ -171,7 +160,7 @@ module.exports = class swamp extends PancakePlatformFork {
         };
       }
 
-      if (vaultInfo.platform_name) {
+      if (vaultInfo && vaultInfo.platform_name) {
         item.platform = vaultInfo.platform_name.toLowerCase();
 
         item.platform = item.platform

@@ -162,7 +162,7 @@ module.exports = class pancake {
         platform: "pancake",
         raw: Object.freeze(farm),
         provider: "pancake",
-        earnings: ["cake"],
+        earns: ["cake"],
         link: "https://pancakeswap.finance/farms",
         has_details: true,
         extra: {}
@@ -280,6 +280,36 @@ module.exports = class pancake {
         if (addressPrice) {
           item.tvl.usd = item.tvl.amount * addressPrice;
         }
+
+        let rewardPerBlock = undefined;
+
+        if (pool.raw && pool.raw.rewardPerBlock) {
+          // chain data
+          rewardPerBlock = pool.raw.rewardPerBlock;
+        } else if(pool.tokenPerBlock) {
+          // static data
+          rewardPerBlock = pool.tokenPerBlock * 1e18;
+        }
+
+        if (item.tvl.usd && rewardPerBlock) {
+          const earnTokenAddress = this.getAddress(pool.earningToken.address);
+          const tokenPrice = this.priceOracle.getAddressPrice(earnTokenAddress);
+
+          if (tokenPrice) {
+            const secondsPerBlock = 3;
+            const secondsPerYear = 31536000;
+            const yearlyRewards = (rewardPerBlock / secondsPerBlock) * secondsPerYear  / (10 ** this.tokenCollector.getDecimals(earnTokenAddress));
+            const dailyApr = (yearlyRewards * tokenPrice) / item.tvl.usd;
+
+            // ignore pool init with low tvl
+            if (dailyApr < 5) {
+              item.yield = {
+                apy: Utils.compoundCommon(dailyApr) * 100
+              };
+            }
+          }
+
+        }
       }
 
       return Object.freeze(item);
@@ -364,9 +394,14 @@ module.exports = class pancake {
         const farm = farms.find(f => f.id === call.id);
 
         const result = {};
+
+        const decimals = farm.extra.transactionToken
+          ? 10 ** this.tokenCollector.getDecimals(farm.extra.transactionToken)
+          : 1e18;
+
         result.deposit = {
           symbol: farm.symbol,
-          amount: call.userInfo[0] / (10 ** this.tokenCollector.getDecimals(farm.extra.transactionToken))
+          amount: call.userInfo[0] / decimals
         };
 
         let address1 = this.getAddress(farm.extra.transactionToken);
@@ -391,9 +426,13 @@ module.exports = class pancake {
 
           result.rewards = [reward];
         } else if (new BigNumber(call.pendingReward).isGreaterThan(0)) {
+          let decimals = farm.raw.earningToken && farm.raw.earningToken.address && this.getAddress(farm.raw.earningToken.address)
+            ? 10 ** this.tokenCollector.getDecimals(this.getAddress(farm.raw.earningToken.address))
+            : 1e18;
+
           const reward = {
-            symbol: farm.raw.earningToken.symbol.toLowerCase(),
-            amount: call.pendingReward / (10 ** this.tokenCollector.getDecimals(farm.raw.earningToken.address))
+            symbol: farm.raw.earningToken ? farm.raw.earningToken.symbol.toLowerCase() : '?',
+            amount: call.pendingReward / decimals
           };
 
           const price = this.priceOracle.findPrice(reward.symbol);
@@ -472,15 +511,17 @@ module.exports = class pancake {
   }
 
   async getPools() {
-    const cacheKey = `pancake-v4-master-pools`
+    const cacheKey = `pancake-v6-master-pools`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
-      //return cache;
+      return cache;
     }
 
     const response = await request("https://raw.githubusercontent.com/pancakeswap/pancake-frontend/develop/src/config/constants/pools.ts");
     const body = response.body;
+
+    let blockNumber = await Utils.getWeb3().eth.getBlockNumber();
 
     const calls = [...body.matchAll(/contractAddress:\s+{\s*.*?\s*.*?56:\s*['](.*)[']/gm)]
         .map(match => match && match[1])
@@ -493,13 +534,14 @@ module.exports = class pancake {
             poolInfo: web3EthContract.methods.poolInfo(0),
             stakedToken: web3EthContract.methods.stakedToken(),
             syrup: web3EthContract.methods.syrup(),
+            rewardPerBlock: web3EthContract.methods.rewardPerBlock(),
+            multiplier: web3EthContract.methods.getMultiplier(blockNumber, blockNumber + 1),
           };
         });
 
-    let blockNumber = await Utils.getWeb3().eth.getBlockNumber();
-
     const items = [];
-    (await Utils.multiCall(calls)).forEach(item => {
+    let newVar = await Utils.multiCall(calls);
+    newVar.forEach(item => {
       let lpToken = item.syrup;
 
       if (!lpToken || !lpToken.startsWith('0x')) {
@@ -525,6 +567,9 @@ module.exports = class pancake {
         rewardToken: item.rewardToken,
         bonusEndBlock: item.bonusEndBlock,
         lpToken: lpToken,
+        rewardPerBlock: item.rewardPerBlock,
+        totalAllocPoint: item.totalAllocPoint,
+        multiplier: item.multiplier,
         raw: {
           poolInfo: item.poolInfo
         },

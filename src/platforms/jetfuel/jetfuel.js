@@ -24,9 +24,9 @@ module.exports = class jetfuel {
   }
 
   getRawFuels(...types) {
-    return JSON.parse(
-      fs.readFileSync(path.resolve(__dirname, "farms/fuels.json"), "utf8")
-    ).filter(p => types.includes(p.asset.type));
+    return JSON.parse(fs.readFileSync(path.resolve(__dirname, "farms/fuels.json"), "utf8"))
+      .filter(p => p.disabled !== true)
+      .filter(p => types.includes(p.asset.type));
   }
 
   async getLbAddresses() {
