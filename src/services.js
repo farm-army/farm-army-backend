@@ -396,6 +396,20 @@ module.exports = {
     ));
   },
 
+  getMacaronSwap() {
+    if (macaronswap) {
+      return macaronswap;
+    }
+
+    return (macaronswap = new MacaronSwap(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
   getCache() {
     if (cache) {
       return cache;
