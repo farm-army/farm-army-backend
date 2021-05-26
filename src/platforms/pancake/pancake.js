@@ -399,9 +399,14 @@ module.exports = class pancake {
           ? 10 ** this.tokenCollector.getDecimals(farm.extra.transactionToken)
           : 1e18;
 
+        var pos = 0  
+        if(farm.id.startsWith('pancake_auto') && c.userInfo[2]){
+          pos = 2
+        }
+
         result.deposit = {
           symbol: farm.symbol,
-          amount: call.userInfo[0] / decimals
+          amount: call.userInfo[pos] / decimals
         };
 
         let address1 = this.getAddress(farm.extra.transactionToken);
