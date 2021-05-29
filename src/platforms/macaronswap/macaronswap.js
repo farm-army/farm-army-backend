@@ -78,6 +78,6 @@ module.exports = class macaron extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return macaron.MASTER_ADDRESS;
+    return macaronswap.MASTER_ADDRESS;
   }
 };
