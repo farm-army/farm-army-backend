@@ -400,7 +400,7 @@ module.exports = class pancake {
           : 1e18;
 
         var pos = 0  
-        if(farm.id.startsWith('pancake_auto') && c.userInfo[2]){
+        if(farm.id.startsWith('pancake_auto') && call.userInfo[2]){
           pos = 2
         }
 
