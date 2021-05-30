@@ -1,6 +1,6 @@
 "use strict";
 
-const MasterChefAbi = require("./abi/masterchef.json");
+const MasterChefAbi = require("../macaron/abi/masterchef.json");
 const PancakePlatformFork = require("../common").PancakePlatformFork;
 
 module.exports = class macaron extends PancakePlatformFork {
@@ -17,7 +17,7 @@ module.exports = class macaron extends PancakePlatformFork {
   }
 
   async getFetchedFarms() {
-    const cacheKey = `macaronswap-master-farms`;
+    const cacheKey = `macaron-v1-master-farms`;
 
     const cache = await this.cacheManager.get(cacheKey);
     if (cache) {
@@ -78,6 +78,6 @@ module.exports = class macaron extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return macaronswap.MASTER_ADDRESS;
+    return macaron.MASTER_ADDRESS;
   }
 };

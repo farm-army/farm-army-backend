@@ -264,7 +264,7 @@ module.exports = class Balances {
         "contract": "0x1f546aD641B56b86fD9dCEAc473d1C7a357276B7"
       },
       {
-        token: "macaronswap",
+        token: "macaron",
         contract: "0xacb2d47827C9813AE26De80965845D80935afd0B"
       },
     ];

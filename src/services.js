@@ -54,6 +54,7 @@ const Belt = require("./platforms/belt/belt");
 const Kebab = require("./platforms/kebab/kebab");
 const Polaris = require("./platforms/polaris/polaris");
 const Panther = require("./platforms/panther/panther");
+const Macaron = require("./platforms/macaron/macaron");
 
 let pancake;
 let swamp;
@@ -73,6 +74,7 @@ let belt;
 let kebab;
 let polaris;
 let panther;
+let macaron;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -137,6 +139,7 @@ module.exports = {
           this.getKebab(),
           this.getPolaris(),
           this.getPanther(),
+          this.getMacaron(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -396,12 +399,12 @@ module.exports = {
     ));
   },
 
-  getMacaronSwap() {
-    if (macaronswap) {
-      return macaronswap;
+  getMacaron() {
+    if (macaron) {
+      return macaron;
     }
 
-    return (macaronswap = new MacaronSwap(
+    return (macaron = new Macaron(
       this.getCache(),
       this.getPriceOracle(),
       this.getTokenCollector(),
