@@ -8,13 +8,13 @@ const request = require("async-request");
 const Utils = require("../../utils");
 const Web3EthContract = require("web3-eth-contract");
 
-module.exports = class degentoken {
+module.exports = class degentokenfarms {
   constructor(cache, priceOracle) {
     this.cache = cache;
     this.priceOracle = priceOracle;
   }
 
-  static MASTER_CHEF = "0x6d1126fCD69463bcee076531EE1d8fFFD94138a5"
+  static MASTER_CHEF = "0x8f83b6E14EE0C3218Bea11c08954137848afD6c8"
 
   async getLbAddresses() {
     const text = await request(
@@ -22,21 +22,21 @@ module.exports = class degentoken {
     );
     const response = JSON.parse(text.body);
 
-    return Object.values(response.pools)
+    return Object.values(response.farms)
       .filter(f => f.wantIsLP && f.wantAddress)
       .map(f => f.wantAddress);
   }
 
-  async getaDGNZPrice() {
+  async getDGNZPrice() {
     const text = await request(
-      "https://api.degentoken.finance/api/v1/0x8f83b6E14EE0C3218Bea11c08954137848afD6c8/farm/5"
+      "https://api.degentoken.finance/api/v1/0x8f83b6E14EE0C3218Bea11c08954137848afD6c8/farm/0"
     );
     const response = JSON.parse(text.body);
     return response.lpprice;
   }
 
   async getAddressFarms(address) {
-    const cacheKey = `getAddressFarms-degentoken-${address}`;
+    const cacheKey = `getAddressFarms-degentokenfarms-${address}`;
     const cacheItem = this.cache.get(cacheKey);
     if (cacheItem) {
       return cacheItem;
@@ -46,20 +46,20 @@ module.exports = class degentoken {
       fs.readFileSync(
         path.resolve(
           __dirname,
-          "abi/0x6d1126fCD69463bcee076531EE1d8fFFD94138a5.json"
+          "abi/0x8f83b6E14EE0C3218Bea11c08954137848afD6c8.json"
         ),
         "utf8"
       )
     );
 
     const farms = await this.getFarms();
-    const aDGNZPrice = await this.getaDGNZPrice();
+    const DGNZPrice = await this.getDGNZPrice();
 
     const tokenCalls = farms.map(farm => {
-      const contract = new Web3EthContract(abi, degentoken.MASTER_CHEF);
+      const contract = new Web3EthContract(abi, degentokenfarms.MASTER_CHEF);
       return {
         id: farm.id,
-        stakedWantTokens: contract.methods.stakedWantTokens(farm.raw.id, address)
+        userInfo: contract.methods.userInfo(farm.raw.id, address)
       };
     });
 
@@ -68,7 +68,7 @@ module.exports = class degentoken {
     const response = calls
       .filter(
         v =>
-          new BigNumber(v.stakedWantTokens).isGreaterThan(Utils.DUST_FILTER)
+          new BigNumber(v.userInfo[0]).isGreaterThan(Utils.DUST_FILTER)
       )
       .map(v => v.id);
 
@@ -78,7 +78,7 @@ module.exports = class degentoken {
   }
 
   async getFarms(refresh = false) {
-    const cacheKey = "getFarms-degentoken";
+    const cacheKey = "getFarms-degentokenfarms";
 
     if (!refresh) {
       const cacheItem = this.cache.get(cacheKey);
@@ -95,14 +95,14 @@ module.exports = class degentoken {
 
     const farms = [];
 
-    for (const key of Object.keys(response.pools)) {
-      const farm = response.pools[key];
+    for (const key of Object.keys(response.farms)) {
+      const farm = response.farms[key];
 
       if (!farm.display || farm.display !== true) {
         continue;
       }
 
-      response.pools[key].id = key;
+      response.farms[key].id = key;
 
       let platform = farm.farmName;
       if (platform && platform.toLowerCase() === "pcs") {
@@ -120,15 +120,14 @@ module.exports = class degentoken {
 
     
       const item = {
-        id: `degentoken_${key}`,
+        id: `degentokenfarms_${key}`,
         name: symbol,
         platform: platform,
-        raw: Object.freeze(response.pools[key]),
+        raw: Object.freeze(response.farms[key]),
         provider: "degentoken",
         has_details: true,
         yield: {
-          apr: farm.apr * 100,
-          apy: farm.totalapy * 100
+          apy: farm.apy * 36500
         },
         tvl: {
           usd: farm.tvlusd
@@ -144,42 +143,14 @@ module.exports = class degentoken {
         item.extra.transactionToken = farm.wantAddress;
       }
 
-      item.extra.transactionAddress = degentoken.MASTER_CHEF;
-
-      const notes = [];
-      if (farm.notes) {
-        notes.push(...farm.notes);
-      }
-
-      [
-        "controllerFeeText",
-        "platformFeeText",
-        "buybackrateText",
-        "entranceFeeText"
-      ].forEach(key => {
-        if (farm[key]) {
-          notes.push(farm[key]);
-        }
-      });
-
-      if (notes.length > 0) {
-        const finalNotes = _.uniq(
-          notes
-            .map(b => b.replace(/<\/?[^>]+(>|$)/g, "").trim())
-            .filter(b => b.length > 0)
-        );
-
-        if (finalNotes.length > 0) {
-          item.notes = finalNotes;
-        }
-      }
+      item.extra.transactionAddress = degentokenfarms.MASTER_CHEF;
 
       if (
         farm.poolInfo &&
-        farm.poolInfo.accaDGNZPerShare &&
-        new BigNumber(farm.poolInfo.accaDGNZPerShare).isGreaterThan(0)
+        farm.poolInfo.accDGNZPerShare &&
+        new BigNumber(farm.poolInfo.accDGNZPerShare).isGreaterThan(0)
       ) {
-        item.earns = ["aDGNZ"];
+        item.earns = ["DGNZ"];
       }
 
       if (farm.wantIsLP === true) {
@@ -191,7 +162,7 @@ module.exports = class degentoken {
 
     this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
 
-    console.log("degentoken updated");
+    console.log("degentokenfarms updated");
 
     return farms;
   }
@@ -216,7 +187,7 @@ module.exports = class degentoken {
       fs.readFileSync(
         path.resolve(
           __dirname,
-          "abi/0x6d1126fCD69463bcee076531EE1d8fFFD94138a5.json"
+          "abi/0x8f83b6E14EE0C3218Bea11c08954137848afD6c8.json"
         ),
         "utf8"
       )
@@ -225,17 +196,16 @@ module.exports = class degentoken {
     const tokenCalls = addressFarms.map(id => {
       const farm = farms.find(f => f.id === id);
 
-      const contract = new Web3EthContract(abi, degentoken.MASTER_CHEF);
+      const contract = new Web3EthContract(abi, degentokenfarms.MASTER_CHEF);
       return {
         id: farm.id,
-        pendingaDGNZ: contract.methods.pendingaDGNZ(farm.raw.id, address),
-        stakedWantTokens: contract.methods.stakedWantTokens(farm.raw.id, address),
-        //userInfo: contract.methods.userInfo(farm.raw.id, address)
+        pendingDGNZ: contract.methods.pendingDGNZ(farm.raw.id, address),
+        userInfo: contract.methods.userInfo(farm.raw.id, address)
       };
     });
 
     const calls = await Utils.multiCall(tokenCalls);
-    const aDGNZPrice = await this.getaDGNZPrice();
+    const DGNZPrice = await this.getDGNZPrice();
 
     const results = [];
     calls.forEach(call => {
@@ -244,27 +214,27 @@ module.exports = class degentoken {
       const result = {};
       result.farm = farm;
 
-      if (new BigNumber(call.pendingaDGNZ).isGreaterThan(0)) {
+      if (new BigNumber(call.pendingDGNZ).isGreaterThan(0)) {
         const reward = {
-          symbol: "aDGNZ",
-          amount: call.pendingaDGNZ / 1e18
+          symbol: "DGNZ",
+          amount: call.pendingDGNZ / 1e18
         };
 
-        const farmPrice = farms.find(f => f.id === "degentoken_33");
-        if (aDGNZPrice) {
-          reward.usd = reward.amount * aDGNZPrice;
+        const farmPrice = farms.find(f => f.id === "degentokenfarms_0");
+        if (DGNZPrice) {
+          reward.usd = reward.amount * DGNZPrice;
         }
 
         result.rewards = [reward];
       }
 
-      if (new BigNumber(call.stakedWantTokens).isGreaterThan(0)) {
+      if (new BigNumber(call.userInfo[0]).isGreaterThan(0)) {
         const deposit = {
-          symbol: "aDGNZ",
-          amount: call.stakedWantTokens / 1e18
+          symbol: "DGNZ",
+          amount: call.userInfo[0] / 1e18
         };
 
-        deposit.usd = (call.stakedWantTokens / 1e18) * farm.raw.lpprice;
+        deposit.usd = (call.userInfo[0] / 1e18) * farm.raw.lpprice;
 
         // dust
         if (deposit.usd < 0.01) {
@@ -281,7 +251,6 @@ module.exports = class degentoken {
         }
       }
 
-      console.log("YEILD",result)
       results.push(result);
     });
 
