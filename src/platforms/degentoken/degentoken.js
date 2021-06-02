@@ -281,7 +281,6 @@ module.exports = class degentoken {
         }
       }
 
-      console.log("YEILD",result)
       results.push(result);
     });
 
