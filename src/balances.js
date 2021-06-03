@@ -262,6 +262,18 @@ module.exports = class Balances {
       {
         "token": "panther",
         "contract": "0x1f546aD641B56b86fD9dCEAc473d1C7a357276B7"
+      },
+      {
+        "token": "wings",
+        "contract": "0x0487b824c8261462F88940f97053E65bDb498446"
+      },
+      {
+        "token": "warden",
+        "contract": "0x0fEAdcC3824E7F3c12f40E324a60c23cA51627fc"
+      },
+      {
+        "token": "bsw",
+        "contract": "0x965F527D9159dCe6288a2219DB51fc6Eef120dD1"
       }
     ];
   }

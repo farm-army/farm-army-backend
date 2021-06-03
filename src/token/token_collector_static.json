@@ -128,5 +128,20 @@
     "symbol": "panther",
     "address": "0x1f546aD641B56b86fD9dCEAc473d1C7a357276B7",
     "decimals": 18
+  },
+  {
+    "symbol": "wings",
+    "address": "0x0487b824c8261462F88940f97053E65bDb498446",
+    "decimals": 18
+  },
+  {
+    "symbol": "warden",
+    "address": "0x0fEAdcC3824E7F3c12f40E324a60c23cA51627fc",
+    "decimals": 18
+  },
+  {
+    "symbol": "bsw",
+    "address": "0x965F527D9159dCe6288a2219DB51fc6Eef120dD1",
+    "decimals": 18
   }
 ]

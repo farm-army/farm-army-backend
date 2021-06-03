@@ -54,6 +54,9 @@ const Belt = require("./platforms/belt/belt");
 const Kebab = require("./platforms/kebab/kebab");
 const Polaris = require("./platforms/polaris/polaris");
 const Panther = require("./platforms/panther/panther");
+const Jetswap = require("./platforms/jetswap/jetswap");
+const Warden = require("./platforms/warden/warden");
+const Biswap = require("./platforms/biswap/biswap");
 
 let pancake;
 let swamp;
@@ -73,6 +76,9 @@ let belt;
 let kebab;
 let polaris;
 let panther;
+let jetswap;
+let warden;
+let biswap;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -137,6 +143,9 @@ module.exports = {
           this.getKebab(),
           this.getPolaris(),
           this.getPanther(),
+          this.getJetswap(),
+          this.getWarden(),
+          this.getBiswap(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -388,6 +397,48 @@ module.exports = {
     }
 
     return (panther = new Panther(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getWarden() {
+    if (warden) {
+      return warden;
+    }
+
+    return (warden = new Warden(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getBiswap() {
+    if (biswap) {
+      return biswap;
+    }
+
+    return (biswap = new Biswap(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getJetswap() {
+    if (jetswap) {
+      return jetswap;
+    }
+
+    return (jetswap = new Jetswap(
       this.getCache(),
       this.getPriceOracle(),
       this.getTokenCollector(),

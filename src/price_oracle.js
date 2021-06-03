@@ -8,6 +8,7 @@ const Utils = require("./utils");
 const Web3EthContract = require("web3-eth-contract");
 
 const FulcrumLendingTokenAbi = require("./abi/fulcrum_lending_tokens.json");
+const UniswapRouter = require("./abi/uniswap_router.json");
 
 const erc20ABI = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, "platforms/pancake/abi/erc20.json"), "utf8")
@@ -171,11 +172,14 @@ module.exports = class PriceOracle {
 
     this.priceCollector.save();
 
+    let bnbPrice = this.priceCollector.getPrice('bnb');
+
     const results = await Promise.allSettled([
+      this.updateViaRouter(bnbPrice),
       this.updateTokensVswap(),
       this.updateTokensBakery(),
-      this.inchPricesAsBnb(this.priceCollector.getPrice('bnb')),
-      this.updateHyperswap(this.priceCollector.getPrice('bnb')),
+      this.inchPricesAsBnb(bnbPrice),
+      this.updateHyperswap(bnbPrice),
     ]);
 
     results.filter(p => p.status === 'fulfilled').forEach(p => {
@@ -623,6 +627,49 @@ module.exports = class PriceOracle {
           source: 'vswap',
         });
       }
+    });
+
+    return prices;
+  }
+
+  async updateViaRouter(bnbPrice) {
+    if (!bnbPrice) {
+      throw Error('Invalid bnb price')
+    }
+
+    const tokens = [
+      {
+        router: '0x3a6d8cA21D1CF76F653A67577FA0D27453350dD8', // biswap
+        address: '0x965f527d9159dce6288a2219db51fc6eef120dd1', // bsw
+        symbol: 'bsw',
+        decimals: 18,
+      }
+    ];
+
+    const calls = tokens.map(t => {
+      const contract = new Web3EthContract(UniswapRouter, t.router);
+      return {
+        decimals: t.decimals.toString(),
+        symbol: t.symbol,
+        address: t.address,
+        amountsOut: contract.methods.getAmountsOut(new BigNumber(1e18), ['0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', t.address]),
+      };
+    })
+
+    const vaultCalls = await Utils.multiCall(calls);
+
+    const prices = [];
+
+    vaultCalls.forEach(call => {
+      const inBnb = call.amountsOut[1] / 10 ** call.decimals;
+      const usdPrice = bnbPrice / inBnb;
+
+      prices.push({
+        address: call.address,
+        symbol: call.symbol.toLowerCase(),
+        price: usdPrice,
+        source: 'router',
+      });
     });
 
     return prices;
