@@ -57,6 +57,7 @@ const Panther = require("./platforms/panther/panther");
 const Jetswap = require("./platforms/jetswap/jetswap");
 const Warden = require("./platforms/warden/warden");
 const Biswap = require("./platforms/biswap/biswap");
+const Macaron = require("./platforms/macaron/macaron");
 
 let pancake;
 let swamp;
@@ -79,6 +80,7 @@ let panther;
 let jetswap;
 let warden;
 let biswap;
+let macaron;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -146,6 +148,7 @@ module.exports = {
           this.getJetswap(),
           this.getWarden(),
           this.getBiswap(),
+          this.getMacaron(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -439,6 +442,20 @@ module.exports = {
     }
 
     return (jetswap = new Jetswap(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getMacaron() {
+    if (macaron) {
+      return macaron;
+    }
+
+    return (macaron = new Macaron(
       this.getCache(),
       this.getPriceOracle(),
       this.getTokenCollector(),
