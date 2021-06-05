@@ -1,0 +1,1170 @@
+[
+    {
+        "pid": 0,
+        "lpAddress": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+        "isTokenOnly": true,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+            "lpSymbol": "MCRN",
+            "allocPoint": "6125",
+            "lastRewardBlock": "7843973",
+            "lastRewardSecondsAgo": 393,
+            "accCakePerShare": "216546200907",
+            "poolInfo": {
+                "0": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "1": "6125",
+                "2": "7843973",
+                "3": "216546200907",
+                "4": false,
+                "5": "0x0000000000000000000000000000000000000000",
+                "6": "0x0000000000000000000000000000000000000000",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 946080,
+            "tokens": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "token": {
+            "symbol": "MCRN",
+            "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+            "decimals": 18
+        },
+        "lpSymbol": "MCRN",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 1,
+        "lpAddress": "0xc8f900Cd8052862A8A5Abf9278aD088611B2BD04",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0xc8f900Cd8052862A8A5Abf9278aD088611B2BD04",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "0",
+            "lastRewardBlock": "7728646",
+            "lastRewardSecondsAgo": 346374,
+            "accCakePerShare": "3730858126961",
+            "poolInfo": {
+                "0": "0xc8f900Cd8052862A8A5Abf9278aD088611B2BD04",
+                "1": "0",
+                "2": "7728646",
+                "3": "3730858126961",
+                "4": false,
+                "5": "0x0000000000000000000000000000000000000000",
+                "6": "0x0000000000000000000000000000000000000000",
+                "__length__": 7
+            },
+            "tokens": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "isFinished": true,
+        "quoteToken": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "MCRN",
+            "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+            "decimals": 18
+        },
+        "lpSymbol": "MCRN-WBNB",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 2,
+        "lpAddress": "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "0",
+            "lastRewardBlock": "7728646",
+            "lastRewardSecondsAgo": 346374,
+            "accCakePerShare": "4568686765993",
+            "poolInfo": {
+                "0": "0xA527a61703D82139F8a06Bc30097cC9CAA2df5A6",
+                "1": "0",
+                "2": "7728646",
+                "3": "4568686765993",
+                "4": true,
+                "5": "0x47dF563DE92bd0a36754F5B7124598cae0dAFEcF",
+                "6": "0x89cFdb1129082FF30D2601268bBAa95974938657",
+                "__length__": 7
+            },
+            "tokens": [
+                {
+                    "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                    "symbol": "Cake",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "isFinished": true,
+        "quoteToken": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "Cake",
+            "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "decimals": 18
+        },
+        "lpSymbol": "CAKE-WBNB",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 3,
+        "lpAddress": "0x1B96B92314C44b159149f7E0303511fB2Fc4774f",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x1B96B92314C44b159149f7E0303511fB2Fc4774f",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "0",
+            "lastRewardBlock": "7728646",
+            "lastRewardSecondsAgo": 346374,
+            "accCakePerShare": "565398440119",
+            "poolInfo": {
+                "0": "0x1B96B92314C44b159149f7E0303511fB2Fc4774f",
+                "1": "0",
+                "2": "7728646",
+                "3": "565398440119",
+                "4": true,
+                "5": "0x88326D36d376a75921D48969EdE8cE2F657C5848",
+                "6": "0xBb2A63cc08344815a875aCD7e6D886D54447cf27",
+                "__length__": 7
+            },
+            "tokens": [
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+                    "symbol": "BUSD",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "isFinished": true,
+        "quoteToken": {
+            "symbol": "BUSD",
+            "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "lpSymbol": "WBNB-BUSD",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 4,
+        "lpAddress": "0x7561EEe90e24F3b348E1087A005F78B4c8453524",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x7561EEe90e24F3b348E1087A005F78B4c8453524",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "0",
+            "lastRewardBlock": "7728646",
+            "lastRewardSecondsAgo": 346374,
+            "accCakePerShare": "62179529955550",
+            "poolInfo": {
+                "0": "0x7561EEe90e24F3b348E1087A005F78B4c8453524",
+                "1": "0",
+                "2": "7728646",
+                "3": "62179529955550",
+                "4": true,
+                "5": "0xCEb96744783e3189747D4285Ddd15D846Dc604aC",
+                "6": "0xfCf50C1f0e0acA59711f274be3ae533BcD29D942",
+                "__length__": 7
+            },
+            "tokens": [
+                {
+                    "address": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+                    "symbol": "BTCB",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "isFinished": true,
+        "quoteToken": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "BTCB",
+            "address": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+            "decimals": 18
+        },
+        "lpSymbol": "BTCB-WBNB",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 5,
+        "lpAddress": "0xc15fa3E22c912A276550F3E5FE3b0Deb87B55aCd",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0xc15fa3E22c912A276550F3E5FE3b0Deb87B55aCd",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "0",
+            "lastRewardBlock": "7728646",
+            "lastRewardSecondsAgo": 346374,
+            "accCakePerShare": "7725056030",
+            "poolInfo": {
+                "0": "0xc15fa3E22c912A276550F3E5FE3b0Deb87B55aCd",
+                "1": "0",
+                "2": "7728646",
+                "3": "7725056030",
+                "4": true,
+                "5": "0x7260DC886962F4f6037170dC0906f471A71Ae139",
+                "6": "0xABC01FE5A115A2d3eCcae6e1595d7C201dF14D43",
+                "__length__": 7
+            },
+            "tokens": [
+                {
+                    "address": "0x55d398326f99059fF775485246999027B3197955",
+                    "symbol": "USDT",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+                    "symbol": "BUSD",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "isFinished": true,
+        "quoteToken": {
+            "symbol": "BUSD",
+            "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "USDT",
+            "address": "0x55d398326f99059fF775485246999027B3197955",
+            "decimals": 18
+        },
+        "lpSymbol": "USDT-BUSD",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 6,
+        "lpAddress": "0x7EFaEf62fDdCCa950418312c6C91Aef321375A00",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x7EFaEf62fDdCCa950418312c6C91Aef321375A00",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "80",
+            "lastRewardBlock": "7839454",
+            "lastRewardSecondsAgo": 13950,
+            "accCakePerShare": "289428755011",
+            "poolInfo": {
+                "0": "0x7EFaEf62fDdCCa950418312c6C91Aef321375A00",
+                "1": "80",
+                "2": "7839454",
+                "3": "289428755011",
+                "4": true,
+                "5": "0x18655943bcFf28B9955feA1919a146Dd5E1F9f03",
+                "6": "0x59eAc384396071201435ae7bcaDeE2D1C3e19DA0",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 12356.963265306124,
+            "tokens": [
+                {
+                    "address": "0x55d398326f99059fF775485246999027B3197955",
+                    "symbol": "USDT",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+                    "symbol": "BUSD",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "BUSD",
+            "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "USDT",
+            "address": "0x55d398326f99059fF775485246999027B3197955",
+            "decimals": 18
+        },
+        "lpSymbol": "USDT-BUSD",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 7,
+        "lpAddress": "0xe8D5d81dac092Ae61d097f84EFE230759BF2e522",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0xe8D5d81dac092Ae61d097f84EFE230759BF2e522",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "5000",
+            "lastRewardBlock": "7843963",
+            "lastRewardSecondsAgo": 423,
+            "accCakePerShare": "10330299415918",
+            "poolInfo": {
+                "0": "0xe8D5d81dac092Ae61d097f84EFE230759BF2e522",
+                "1": "5000",
+                "2": "7843963",
+                "3": "10330299415918",
+                "4": false,
+                "5": "0x0000000000000000000000000000000000000000",
+                "6": "0x0000000000000000000000000000000000000000",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 772310.2040816327,
+            "tokens": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "MCRN",
+            "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+            "decimals": 18
+        },
+        "lpSymbol": "MCRN-WBNB",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 8,
+        "lpAddress": "0x0eD7e52944161450477ee417DE9Cd3a859b14fD0",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x0eD7e52944161450477ee417DE9Cd3a859b14fD0",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "700",
+            "lastRewardBlock": "7840361",
+            "lastRewardSecondsAgo": 11229,
+            "accCakePerShare": "19074410639530",
+            "poolInfo": {
+                "0": "0x0eD7e52944161450477ee417DE9Cd3a859b14fD0",
+                "1": "700",
+                "2": "7840361",
+                "3": "19074410639530",
+                "4": true,
+                "5": "0x2CAb85e1E9e72BE1BA284dD6d42215Ea0340E396",
+                "6": "0x6227e6A94a67Cc621c51BBCa6edd581a07E8Bb10",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 108123.42857142857,
+            "tokens": [
+                {
+                    "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                    "symbol": "Cake",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "Cake",
+            "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "decimals": 18
+        },
+        "lpSymbol": "CAKE-WBNB",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 9,
+        "lpAddress": "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "80",
+            "lastRewardBlock": "7840896",
+            "lastRewardSecondsAgo": 9624,
+            "accCakePerShare": "3623245314575",
+            "poolInfo": {
+                "0": "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
+                "1": "80",
+                "2": "7840896",
+                "3": "3623245314575",
+                "4": true,
+                "5": "0x74CdC7a47927eE7132594cc49b9b70EF17DE7A1c",
+                "6": "0xDeC7950840a32010410dcfFDC735911151604Ba5",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 12356.963265306124,
+            "tokens": [
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+                    "symbol": "BUSD",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "BUSD",
+            "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "lpSymbol": "WBNB-BUSD",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 10,
+        "lpAddress": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "100",
+            "lastRewardBlock": "7827538",
+            "lastRewardSecondsAgo": 49698,
+            "accCakePerShare": "207823553855394",
+            "poolInfo": {
+                "0": "0x61EB789d75A95CAa3fF50ed7E47b96c132fEc082",
+                "1": "100",
+                "2": "7827538",
+                "3": "207823553855394",
+                "4": true,
+                "5": "0x0EcFbe4f2E76b9506B518cb75024764500dcc835",
+                "6": "0xC9BE917bb1B27402798b20d2f49Cf62c6C632BB6",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 15446.204081632652,
+            "tokens": [
+                {
+                    "address": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+                    "symbol": "BTCB",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "BTCB",
+            "address": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+            "decimals": 18
+        },
+        "lpSymbol": "BTCB-WBNB",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 11,
+        "lpAddress": "0x74E4716E431f45807DCF19f284c7aA99F18a4fbc",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x74E4716E431f45807DCF19f284c7aA99F18a4fbc",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "20",
+            "lastRewardBlock": "7827532",
+            "lastRewardSecondsAgo": 49716,
+            "accCakePerShare": "28102050809290",
+            "poolInfo": {
+                "0": "0x74E4716E431f45807DCF19f284c7aA99F18a4fbc",
+                "1": "20",
+                "2": "7827532",
+                "3": "28102050809290",
+                "4": true,
+                "5": "0xD25DDF5fECe589cECCb0e2ed570E9090e8A6aCAA",
+                "6": "0xFE2b6Ad168477Bf91fcBc4e70DEc142552595087",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 3089.240816326531,
+            "tokens": [
+                {
+                    "address": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+                    "symbol": "ETH",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "ETH",
+            "address": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+            "decimals": 18
+        },
+        "lpSymbol": "ETH-WBNB",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 12,
+        "lpAddress": "0x3DcB1787a95D2ea0Eb7d00887704EeBF0D79bb13",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x3DcB1787a95D2ea0Eb7d00887704EeBF0D79bb13",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "40",
+            "lastRewardBlock": "7812326",
+            "lastRewardSecondsAgo": 95334,
+            "accCakePerShare": "1168244154282",
+            "poolInfo": {
+                "0": "0x3DcB1787a95D2ea0Eb7d00887704EeBF0D79bb13",
+                "1": "40",
+                "2": "7812326",
+                "3": "1168244154282",
+                "4": true,
+                "5": "0x2D6466999dc6d00BD6086486B7c4f8970F9F5e23",
+                "6": "0x4C2fa57D29c014c828B95698fA8F24015CD529F6",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 6178.481632653062,
+            "tokens": [
+                {
+                    "address": "0x4B0F1812e5Df2A09796481Ff14017e6005508003",
+                    "symbol": "TWT",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "TWT",
+            "address": "0x4B0F1812e5Df2A09796481Ff14017e6005508003",
+            "decimals": 18
+        },
+        "lpSymbol": "TWT-WBNB",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 13,
+        "lpAddress": "0xac109C8025F272414fd9e2faA805a583708A017f",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0xac109C8025F272414fd9e2faA805a583708A017f",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "10",
+            "lastRewardBlock": "7815368",
+            "lastRewardSecondsAgo": 86208,
+            "accCakePerShare": "84697939838563952",
+            "poolInfo": {
+                "0": "0xac109C8025F272414fd9e2faA805a583708A017f",
+                "1": "10",
+                "2": "7815368",
+                "3": "84697939838563952",
+                "4": true,
+                "5": "0x97D2450988A77a15354A1a9f6e87026A8e5b84bb",
+                "6": "0x4dE610F941d2ed0D3FFeDDfb3703718cb52C599A",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 1544.6204081632654,
+            "tokens": [
+                {
+                    "address": "0xbA2aE424d960c26247Dd6c32edC70B295c744C43",
+                    "symbol": "DOGE",
+                    "decimals": 8
+                },
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "DOGE",
+            "address": "0xbA2aE424d960c26247Dd6c32edC70B295c744C43",
+            "decimals": 8
+        },
+        "lpSymbol": "DOGE-WBNB",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 14,
+        "lpAddress": "0x894bd57afD8EFc93D9171cb585d11d0977557425",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x894bd57afD8EFc93D9171cb585d11d0977557425",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "5",
+            "lastRewardBlock": "7815369",
+            "lastRewardSecondsAgo": 86205,
+            "accCakePerShare": "8874864556839",
+            "poolInfo": {
+                "0": "0x894bd57afD8EFc93D9171cb585d11d0977557425",
+                "1": "5",
+                "2": "7815369",
+                "3": "8874864556839",
+                "4": true,
+                "5": "0x77a453885a5D4f5758AF70f8455586827aaE0b5a",
+                "6": "0xCe40702179B1500D757AC66e59f521f44e7c05ee",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 772.3102040816327,
+            "tokens": [
+                {
+                    "address": "0xaeF0d72a118ce24feE3cD1d43d383897D05B4e99",
+                    "symbol": "WIN",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "WIN",
+            "address": "0xaeF0d72a118ce24feE3cD1d43d383897D05B4e99",
+            "decimals": 18
+        },
+        "lpSymbol": "WIN-WBNB",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 15,
+        "lpAddress": "0x5aFEf8567414F29f0f927A0F2787b188624c10E2",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x5aFEf8567414F29f0f927A0F2787b188624c10E2",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "10",
+            "lastRewardBlock": "7829555",
+            "lastRewardSecondsAgo": 43647,
+            "accCakePerShare": "7922564774866",
+            "poolInfo": {
+                "0": "0x5aFEf8567414F29f0f927A0F2787b188624c10E2",
+                "1": "10",
+                "2": "7829555",
+                "3": "7922564774866",
+                "4": true,
+                "5": "0x876BCA87394Fa6b83DD6083696c37D0F06004Ea5",
+                "6": "0x54c1a845692F06547d57Ca4452fCe9F2dE4686EB",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 1544.6204081632654,
+            "tokens": [
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51",
+                    "symbol": "BUNNY",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "BUNNY",
+            "address": "0xC9849E6fdB743d08fAeE3E34dd2D1bc69EA11a51",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "lpSymbol": "WBNB-BUNNY",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 16,
+        "lpAddress": "0x804678fa97d91B974ec2af3c843270886528a9E6",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x804678fa97d91B974ec2af3c843270886528a9E6",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "40",
+            "lastRewardBlock": "7830547",
+            "lastRewardSecondsAgo": 40671,
+            "accCakePerShare": "97132332109",
+            "poolInfo": {
+                "0": "0x804678fa97d91B974ec2af3c843270886528a9E6",
+                "1": "40",
+                "2": "7830547",
+                "3": "97132332109",
+                "4": true,
+                "5": "0x062B071e2515906De1A321c009806f71fcE412d2",
+                "6": "0x9B5217F91E724a14298d1d29d70eDd469Aed3a14",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 6178.481632653062,
+            "tokens": [
+                {
+                    "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                    "symbol": "Cake",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+                    "symbol": "BUSD",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "BUSD",
+            "address": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "Cake",
+            "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "decimals": 18
+        },
+        "lpSymbol": "CAKE-BUSD",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 17,
+        "lpAddress": "0x824eb9faDFb377394430d2744fa7C42916DE3eCe",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x824eb9faDFb377394430d2744fa7C42916DE3eCe",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "20",
+            "lastRewardBlock": "7838459",
+            "lastRewardSecondsAgo": 16935,
+            "accCakePerShare": "2859161535972",
+            "poolInfo": {
+                "0": "0x824eb9faDFb377394430d2744fa7C42916DE3eCe",
+                "1": "20",
+                "2": "7838459",
+                "3": "2859161535972",
+                "4": true,
+                "5": "0xc2a00Ee7eBD3a0604D6140623D8c271C8F113171",
+                "6": "0xdaF567CdC6067C453Df260e6C63556DdEdF61cca",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 3089.240816326531,
+            "tokens": [
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD",
+                    "symbol": "LINK",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "LINK",
+            "address": "0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "lpSymbol": "WBNB-LINK",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    },
+    {
+        "pid": 18,
+        "lpAddress": "0x28415ff2C35b65B9E5c7de82126b4015ab9d031F",
+        "isTokenOnly": false,
+        "raw": {
+            "masterChefAddress": "0xFcDE390bF7a8B8614EC11fa8bde7565b3E64fe0b",
+            "lpToken": "0x28415ff2C35b65B9E5c7de82126b4015ab9d031F",
+            "lpSymbol": "Cake-LP",
+            "allocPoint": "20",
+            "lastRewardBlock": "7829542",
+            "lastRewardSecondsAgo": 43686,
+            "accCakePerShare": "515942621315",
+            "poolInfo": {
+                "0": "0x28415ff2C35b65B9E5c7de82126b4015ab9d031F",
+                "1": "20",
+                "2": "7829542",
+                "3": "515942621315",
+                "4": true,
+                "5": "0xd1BffDA83A92Bc23ae100Bf62C2b8329b1E59d54",
+                "6": "0x2D37a48608B3651dAD530301dA772CEc9bf497B7",
+                "__length__": 7
+            },
+            "yearlyRewardsInToken": 3089.240816326531,
+            "tokens": [
+                {
+                    "address": "0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47",
+                    "symbol": "ADA",
+                    "decimals": 18
+                },
+                {
+                    "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                    "symbol": "WBNB",
+                    "decimals": 18
+                }
+            ],
+            "earns": [
+                {
+                    "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                    "symbol": "MCRN",
+                    "decimals": 18
+                }
+            ]
+        },
+        "quoteToken": {
+            "symbol": "WBNB",
+            "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "decimals": 18
+        },
+        "token": {
+            "symbol": "ADA",
+            "address": "0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47",
+            "decimals": 18
+        },
+        "lpSymbol": "ADA-WBNB",
+        "earns": [
+            {
+                "address": "0xacb2d47827C9813AE26De80965845D80935afd0B",
+                "symbol": "MCRN",
+                "decimals": 18
+            }
+        ]
+    }
+]
