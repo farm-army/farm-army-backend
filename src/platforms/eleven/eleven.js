@@ -1,0 +1,360 @@
+"use strict";
+
+const _ = require("lodash");
+const request = require("async-request");
+const BigNumber = require("bignumber.js");
+const Web3EthContract = require("web3-eth-contract");
+const Utils = require("../../utils");
+const vaultABI = require("./abi/vaultABI.json");
+const erc20Abi = require("../../abi/erc20.json");
+const MasterchefAbi = require("./abi/masterchef.json");
+
+module.exports = class eleven {
+  static MASTER_CHEF = '0x1ac6C0B955B6D7ACb61c9Bdf3EE98E0689e07B8A';
+  static ELEVEN_TOKEN = '0xAcD7B3D9c10e97d0efA418903C0c7669E702E4C0';
+
+  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager, liquidityTokenCollector) {
+    this.cache = cache;
+    this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector;
+    this.farmCollector = farmCollector;
+    this.cacheManager = cacheManager;
+    this.liquidityTokenCollector = liquidityTokenCollector;
+  }
+
+  async getLbAddresses() {
+    return [];
+  }
+
+  async getRawFarms() {
+    const cacheKey = "getAddressFarms-github-eleven";
+
+    const cacheItem = this.cache.get(cacheKey);
+    if (cacheItem) {
+      return cacheItem;
+    }
+
+    const poolsResponse = await request(
+      "https://raw.githubusercontent.com/Eleven-Finance/elevenfinance/main/src/features/configure/pools.js"
+    );
+
+    let body = poolsResponse.body;
+
+    let pools = [];
+
+    const match = /export\s+const\s+pools\s+=\s+/.exec(body);
+    if (match) {
+      pools = Object.freeze(
+        eval(
+          body.substr(match.index).replace(/export\s+const\s+pools\s+=\s+/, "")
+        ).filter(p => {
+          return p.network.toLowerCase() === "bsc";
+        })
+      );
+
+      this.cache.put(cacheKey, pools, { ttl: 600 * 1000 });
+    }
+
+    return pools;
+  }
+
+  async getAddressFarms(address) {
+    const cacheItem = this.cache.get(`getAddressFarms-eleven-${address}`);
+    if (cacheItem) {
+      return cacheItem;
+    }
+
+    const farms = await this.getFarms();
+
+    const tokenCalls = [];
+
+    farms.forEach(farm => {
+      if (farm.raw.farm && farm.raw.farm.masterchefPid) {
+        const contract = new Web3EthContract(MasterchefAbi, eleven.MASTER_CHEF);
+        tokenCalls.push({
+          id: farm.id,
+          userInfo: contract.methods.userInfo(farm.raw.farm.masterchefPid, address)
+        });
+      }
+
+      if (farm.raw.earnedTokenAddress) {
+        const contract = new Web3EthContract(erc20Abi, farm.raw.earnedTokenAddress);
+        tokenCalls.push({
+          id: farm.id,
+          balanceOf: contract.methods.balanceOf(address)
+        });
+      }
+    });
+
+    const calls = await Utils.multiCall(tokenCalls);
+
+    const result = _.uniq(calls
+      .filter(v =>
+        (v.userInfo && v.userInfo[0] && new BigNumber(v.userInfo[0]).isGreaterThan(Utils.DUST_FILTER)) ||
+        (v.balanceOf && new BigNumber(v.balanceOf).isGreaterThan(Utils.DUST_FILTER))
+      )
+      .map(v => v.id));
+
+    this.cache.put(`getAddressFarms-eleven-${address}`, result, { ttl: 300 * 1000 });
+
+    return result;
+  }
+
+  async getFarms(refresh = false) {
+    if (!refresh) {
+      const cacheItem = this.cache.get("getFarms-eleven");
+      if (cacheItem) {
+        return cacheItem;
+      }
+    }
+
+    let apys = {};
+    try {
+      const text = await request("https://eleven.finance/api.json");
+      apys = JSON.parse(text.body);
+    } catch (e) {
+      console.error("https://eleven.finance/api.json", e.message);
+    }
+
+    const pools = await this.getRawFarms();
+
+    const vaultCalls = pools.map(pool => {
+      const vault = new Web3EthContract(vaultABI, pool.earnedTokenAddress);
+
+      return {
+        id: pool.id,
+        pricePerFullShare: vault.methods.getPricePerFullShare(),
+        tvl: vault.methods.balance()
+      };
+    });
+
+    const vault = await Utils.multiCallIndexBy("id", vaultCalls);
+
+    const farms = [];
+    pools.forEach(farm => {
+      const token = farm.token.toLowerCase()
+        .replace(/\s+v\d+$/, '')
+        .replace(/\s+\w*lp$/, '');
+
+      const item = {
+        id: `eleven_${farm.id.toLowerCase()}`,
+        name: token.toUpperCase(),
+        token: token,
+        platform: farm.platform,
+        provider: "eleven",
+        has_details: !!(farm.earnedTokenAddress && farm.tokenAddress),
+        raw: Object.freeze(farm),
+        extra: {},
+      };
+
+      if (farm.farm && farm.farm.earnedToken) {
+        item.earns = [farm.farm.earnedToken.toLowerCase()];
+      }
+
+      if (farm.uses) {
+        const uses = farm.uses.toLowerCase().replace('uses', '').trim();
+        if (uses.length > 0) {
+          item.platform = uses;
+        }
+      }
+
+      const vaultElement = vault[farm.id];
+      if (vaultElement.pricePerFullShare) {
+        item.extra.pricePerFullShare = vaultElement.pricePerFullShare / 1e18;
+      }
+
+      if (farm.earnedTokenAddress) {
+        item.extra.transactionAddress = farm.earnedTokenAddress;
+        item.extra.pricePerFullShareToken = farm.earnedTokenAddress;
+      }
+
+      if (farm.tokenAddress) {
+        item.extra.transactionToken = farm.tokenAddress;
+
+        if (this.liquidityTokenCollector.get(farm.tokenAddress)) {
+          item.extra.lpAddress = farm.tokenAddress;
+        }
+
+        item.tvl = {
+          amount: vaultElement.tvl / (10 ** this.tokenCollector.getDecimals(farm.tokenAddress))
+        };
+
+        const price = this.priceOracle.findPrice(farm.tokenAddress);
+        if (price) {
+          item.tvl.usd = item.tvl.amount * price;
+        }
+      }
+
+      if (apys[farm.token] && apys[farm.token].farm && apys[farm.token].farm.apy) {
+        item.yield = {
+          apy: apys[farm.token].farm.apy
+        };
+      }
+
+      if (apys[farm.token] && apys[farm.token].tvl) {
+        if (!item.tvl) {
+          item.tvl = {};
+        }
+
+        item.tvl.usd = apys[farm.token].tvl;
+      }
+
+      farms.push(Object.freeze(item));
+    });
+
+    this.cache.put("getFarms-eleven", farms, { ttl: 1000 * 60 * 30 });
+
+    console.log("eleven updated");
+
+    return farms;
+  }
+
+  async getYields(address) {
+    const addressFarms = await this.getAddressFarms(address);
+    if (addressFarms.length === 0) {
+      return [];
+    }
+
+    return await this.getYieldsInner(address, addressFarms);
+  }
+
+  async getYieldsInner(address, addressFarms) {
+    if (addressFarms.length === 0) {
+      return [];
+    }
+
+    const farms = await this.getFarms();
+
+    const callsPromise = [];
+    const calls2Promise = [];
+
+    addressFarms.forEach(id => {
+      const farm = farms.find(f => f.id === id);
+
+      if (farm.raw.farm && farm.raw.farm.masterchefPid) {
+        const contract = new Web3EthContract(MasterchefAbi, eleven.MASTER_CHEF);
+
+        callsPromise.push({
+          id: farm.id.toString(),
+          pendingRewards: contract.methods.pendingEleven(farm.raw.farm.masterchefPid, address),
+          userInfo: contract.methods.userInfo(farm.raw.farm.masterchefPid, address),
+        })
+      }
+
+      if (farm.raw.earnedTokenAddress) {
+        calls2Promise.push({
+          id: farm.id.toString(),
+          balanceOf: new Web3EthContract(erc20Abi, farm.raw.earnedTokenAddress).methods.balanceOf(address),
+        });
+      }
+    });
+
+    const [userInfo, balanceOf] = await Promise.all([
+      Utils.multiCallIndexBy('id', callsPromise),
+      Utils.multiCallIndexBy('id', calls2Promise),
+    ])
+
+    const result = _.uniq([...Object.values(userInfo), ...Object.values(balanceOf)]
+      .filter(v =>
+        (v.userInfo && v.userInfo[0] && new BigNumber(v.userInfo[0]).isGreaterThan(Utils.DUST_FILTER)) ||
+        (v.balanceOf && new BigNumber(v.balanceOf).isGreaterThan(Utils.DUST_FILTER))
+      )
+      .map(v => v.id));
+
+    return result
+      .map(id => {
+        const farm = farms.find(f => f.id === id);
+
+        let amount = 0;
+        if (userInfo[id] && userInfo[id].userInfo && userInfo[id].userInfo[0] && userInfo[id].userInfo[0] > 0) {
+          let decimals = farm.raw.tokenAddress ? (10 ** this.tokenCollector.getDecimals(farm.raw.tokenAddress)) : 1e18;
+          amount = (userInfo[id].userInfo[0] / decimals) * farm.extra.pricePerFullShare;
+        } else if (balanceOf[id] && balanceOf[id].balanceOf && balanceOf[id].balanceOf > 0) {
+          amount = balanceOf[id].balanceOf / 1e18 * farm.extra.pricePerFullShare;
+        }
+
+        const result = {};
+        result.farm = farm;
+
+        result.deposit = {
+          symbol: "?",
+          amount: amount,
+        };
+
+        if (farm.raw.tokenAddress) {
+          let price = this.priceOracle.findPrice(farm.raw.tokenAddress);
+          if (price) {
+            result.deposit.usd = result.deposit.amount * price;
+          }
+        }
+
+        if (userInfo[id] && new BigNumber(userInfo[id].pendingRewards).isGreaterThan(0)) {
+          const reward = {
+            symbol: "ele",
+            amount: userInfo[id].pendingRewards / (10 ** this.tokenCollector.getDecimals(eleven.ELEVEN_TOKEN))
+          };
+
+          const price = this.priceOracle.findPrice(eleven.ELEVEN_TOKEN);
+          if (price) {
+            reward.usd = reward.amount * price;
+          }
+
+          result.rewards = [reward];
+        }
+
+        return result;
+      });
+  }
+
+  async getTransactions(address, id) {
+    const farm = (await this.getFarms()).find(f => f.id === id);
+    if (!farm) {
+      return {};
+    }
+
+    if (farm.extra.transactionAddress && farm.extra.transactionToken) {
+      return Utils.getTransactions(
+        farm.extra.transactionAddress,
+        farm.extra.transactionToken,
+        address
+      );
+    }
+
+    return {};
+  }
+
+  async getDetails(address, id) {
+    const farm = (await this.getFarms()).find(f => f.id === id);
+    if (!farm) {
+      return {};
+    }
+
+    const [yieldFarms, transactions] = await Promise.all([
+      this.getYieldsInner(address, [farm.id]),
+      this.getTransactions(address, id)
+    ]);
+
+    const result = {};
+
+    let lpTokens = [];
+    if (yieldFarms[0]) {
+      result.farm = yieldFarms[0];
+      lpTokens = this.priceOracle.getLpSplits(farm, yieldFarms[0]);
+    }
+
+    if (transactions && transactions.length > 0) {
+      result.transactions = transactions;
+    }
+
+    if (lpTokens && lpTokens.length > 0) {
+      result.lpTokens = lpTokens;
+    }
+
+    const yieldDetails = Utils.findYieldForDetails(result);
+    if (yieldDetails) {
+      result.yield = yieldDetails;
+    }
+
+    return result;
+  }
+};

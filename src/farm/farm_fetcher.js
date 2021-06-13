@@ -6,6 +6,62 @@ const ErcAbi = require("./abi/abiErc.json");
 
 const _ = require("lodash");
 
+class PoolInfo {
+  constructor(input, methods) {
+    this.input = input;
+    this.methods = methods;
+  }
+
+  getLpToken() {
+    for (const name of this.methods) {
+      if (name.toLowerCase() === 'lptoken' || name.toLowerCase() === 'want') {
+        return this.input[this.methods.indexOf(name)];
+      }
+    }
+
+    if (this.input[0] && this.input[0].startsWith('0x')) {
+      return this.input[0];
+    }
+
+    for (const object of this.methods) {
+      const index = this.methods.indexOf(object);
+
+      if (this.input[index] && this.input[index].startsWith('0x')) {
+        return this.input[index];
+      }
+    }
+
+    return undefined
+  }
+
+  getNormalized() {
+    const result = {
+      lpToken: undefined,
+      allocPoint: undefined,
+      lastRewardBlock: undefined,
+      accCakePerShare: undefined,
+    }
+
+    if (this.input[0] && this.input[0].startsWith('0x')) {
+      result.lpToken = this.input[0];
+    }
+
+    for (const name of this.methods) {
+      if (name.toLowerCase() === 'lptoken' || name.toLowerCase() === 'want') {
+        result.lpToken = this.input[this.methods.indexOf(name)];
+      } else if (name.toLowerCase() === 'allocpoint') {
+        result.allocPoint = this.input[this.methods.indexOf(name)];
+      } else if (name.toLowerCase() === 'lastrewardblock') {
+        result.lastRewardBlock = this.input[this.methods.indexOf(name)];
+      } else if (name.toLowerCase().match(/acc.*per\w+/i)) {
+        result.accCakePerShare = this.input[this.methods.indexOf(name)];
+      }
+    }
+
+    return result;
+  }
+}
+
 module.exports = class FarmFetcher {
   constructor(contractAbiFetcher) {
     this.contractAbiFetcher = contractAbiFetcher;
@@ -24,6 +80,14 @@ module.exports = class FarmFetcher {
 
       if (func && func.name) {
         rewardTokenFunctionName = func.name;
+      }
+    }
+
+    // same have a "st" method
+    if (!rewardTokenFunctionName) {
+      const stFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase() === 'st');
+      if (stFunction && stFunction.outputs && stFunction.outputs[0] && stFunction.outputs[0].type === 'address') {
+        rewardTokenFunctionName = stFunction.name
       }
     }
 
@@ -124,6 +188,7 @@ module.exports = class FarmFetcher {
       process.exit();
     }
 
+
     // error case when address === 0?
     // fetch all pools
     /*
@@ -143,16 +208,22 @@ module.exports = class FarmFetcher {
     }));
     */
 
-    const pools = await Utils.multiCall([...Array(parseInt(poolLength)).keys()].map(id => {
+    const poolsRaw = await Utils.multiCall([...Array(parseInt(poolLength)).keys()].map(id => {
       return {
         pid: id.toString(),
         poolInfo: new Web3EthContract(abi, masterChef).methods[poolInfoFunctionName](id),
       };
     }));
 
+    const methods = abi.find(f => f.name === poolInfoFunctionName).outputs.map(o => o.name);
+    const pools = poolsRaw.map(p => {
+      p.poolInfoObject = new PoolInfo(p.poolInfo, methods);
+      return p;
+    });
+
     // lpToken or single token
-    const lpTokens = await Utils.multiCallIndexBy('pid', pools.filter(p => p.poolInfo && p.poolInfo[0] && p.poolInfo[0].startsWith('0x')).map(p => {
-      const [lpToken, allocPoint, lastRewardBlock, accCakePerShare] = Object.values(p.poolInfo);
+    const lpTokens = await Utils.multiCallIndexBy('pid', pools.filter(p => p.poolInfoObject && p.poolInfoObject.getLpToken()).map(p => {
+      const lpToken = p.poolInfoObject.getLpToken();
 
       const web3EthContract = new Web3EthContract(TokenABI, lpToken);
 
@@ -206,11 +277,13 @@ module.exports = class FarmFetcher {
       }
 
       const isLp = !!lpTokenInfo.token0;
-      const [lpToken, allocPoint, lastRewardBlock, accCakePerShare] = Object.values(pool.poolInfo);
+
+      const poolInfoNormalized = pool.poolInfoObject.getNormalized();
+      const {lpToken, allocPoint, lastRewardBlock, accCakePerShare} = poolInfoNormalized;
 
       const item = {
         pid: parseInt(pool.pid),
-        lpAddress: pool.poolInfo[0],
+        lpAddress: pool.poolInfoObject.getLpToken(),
         isTokenOnly: !isLp,
         raw: {
           masterChefAddress: masterChef,
@@ -220,7 +293,8 @@ module.exports = class FarmFetcher {
           lastRewardBlock: lastRewardBlock,
           lastRewardSecondsAgo: (blockNumber - lastRewardBlock) * 3,
           accCakePerShare: accCakePerShare,
-          poolInfo: pool.poolInfo
+          poolInfo: pool.poolInfo,
+          poolInfoNormalized: poolInfoNormalized
         }
       };
 
@@ -244,7 +318,7 @@ module.exports = class FarmFetcher {
       }
 
       if (!isLp) {
-        let token = tokens[pool.poolInfo[0].toLowerCase()];
+        let token = tokens[pool.poolInfoObject.getLpToken().toLowerCase()];
 
         if (!token) {
           return;
@@ -252,13 +326,13 @@ module.exports = class FarmFetcher {
 
         item.token = {
           symbol: token.symbol,
-          address: pool.poolInfo[0],
+          address: pool.poolInfoObject.getLpToken(),
           decimals: parseInt(token.decimals),
         }
 
         item.raw.tokens = [
           {
-            address: pool.poolInfo[0],
+            address: pool.poolInfoObject.getLpToken(),
             symbol: token.symbol,
             decimals: parseInt(token.decimals),
           }

@@ -78,7 +78,7 @@ module.exports = {
           const vault = new Web3EthContract(this.getMasterChefAbi(), this.getMasterChefAddress());
           return {
             userInfo: vault.methods.userInfo(farm.raw.pid, address),
-            pendingReward: vault.methods[this.getPendingRewardContractMethod()](farm.raw.pid, address),
+            pendingReward: this.getPendingRewardContractMethod() ? vault.methods[this.getPendingRewardContractMethod()](farm.raw.pid, address) : '0',
             id: farm.id.toString()
           };
         });
@@ -283,7 +283,7 @@ module.exports = {
 
           return {
             userInfo: contract.methods.userInfo(farm.raw.pid, address),
-            pendingReward: contract.methods[this.getPendingRewardContractMethod()](farm.raw.pid, address),
+            pendingReward: this.getPendingRewardContractMethod() ? contract.methods[this.getPendingRewardContractMethod()](farm.raw.pid, address) : '0',
             id: farm.id.toString()
           };
         });
@@ -330,11 +330,11 @@ module.exports = {
 
         if (rewards > 0) {
           const reward = {
-            symbol: farm.earns[0] ? farm.earns[0] : '?',
+            symbol: farm.earns && farm.earns[0] ? farm.earns[0] : '?',
             amount: rewards / 1e18
           };
 
-          if (farm.earns[0]) {
+          if (farm.earns && farm.earns[0]) {
             const priceReward = this.priceOracle.findPrice(farm.earns[0]);
             if (priceReward) {
               reward.usd = reward.amount * priceReward;

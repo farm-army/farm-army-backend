@@ -643,6 +643,12 @@ module.exports = class PriceOracle {
         address: '0x965f527d9159dce6288a2219db51fc6eef120dd1', // bsw
         symbol: 'bsw',
         decimals: 18,
+      },
+      {
+        router: '0x34DBe8E5faefaBF5018c16822e4d86F02d57Ec27', // coinswap
+        address: '0x3bc5798416c1122BcFd7cb0e055d50061F23850d', // bsw
+        symbol: 'css',
+        decimals: 18,
       }
     ];
 

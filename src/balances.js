@@ -274,6 +274,18 @@ module.exports = class Balances {
       {
         "token": "bsw",
         "contract": "0x965F527D9159dCe6288a2219DB51fc6Eef120dD1"
+      },
+      {
+        "token": "gen",
+        "contract": "0xB0F2939A1c0e43683E5954c9Fe142F7df9F8D967"
+      },
+      {
+        "token": "ele",
+        "contract": "0xAcD7B3D9c10e97d0efA418903C0c7669E702E4C0"
+      },
+      {
+        "token": "css",
+        "contract": "0x3bc5798416c1122BcFd7cb0e055d50061F23850d",
       }
     ];
   }

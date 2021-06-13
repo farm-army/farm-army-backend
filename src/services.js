@@ -57,6 +57,9 @@ const Panther = require("./platforms/panther/panther");
 const Jetswap = require("./platforms/jetswap/jetswap");
 const Warden = require("./platforms/warden/warden");
 const Biswap = require("./platforms/biswap/biswap");
+const Evodefi = require("./platforms/evodefi/evodefi");
+const Eleven = require("./platforms/eleven/eleven");
+const Coinswap = require("./platforms/coinswap/coinswap");
 
 let pancake;
 let swamp;
@@ -79,6 +82,9 @@ let panther;
 let jetswap;
 let warden;
 let biswap;
+let evodefi;
+let eleven;
+let coinswap;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -146,6 +152,9 @@ module.exports = {
           this.getJetswap(),
           this.getWarden(),
           this.getBiswap(),
+          this.getEvodefi(),
+          this.getEleven(),
+          this.getCoinswap(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -178,6 +187,35 @@ module.exports = {
       this.getTokenCollector(),
       this.getFarmFetcher(),
       this.getCacheManager(),
+    ));
+  },
+
+  getEvodefi() {
+    if (evodefi) {
+      return evodefi;
+    }
+
+    return (evodefi = new Evodefi(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getEleven() {
+    if (eleven) {
+      return eleven;
+    }
+
+    return (eleven = new Eleven(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+      this.getLiquidityTokenCollector(),
     ));
   },
 
@@ -425,6 +463,20 @@ module.exports = {
     }
 
     return (biswap = new Biswap(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getCoinswap() {
+    if (coinswap) {
+      return coinswap;
+    }
+
+    return (coinswap = new Coinswap(
       this.getCache(),
       this.getPriceOracle(),
       this.getTokenCollector(),

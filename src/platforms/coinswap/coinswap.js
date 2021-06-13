@@ -3,8 +3,8 @@
 const MasterChefAbi = require('./abi/masterchef.json');
 const PancakePlatformFork = require("../common").PancakePlatformFork;
 
-module.exports = class panther extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0x058451c62b96c594ad984370eda8b6fd7197bbd4"
+module.exports = class coinswap extends PancakePlatformFork {
+  static MASTER_ADDRESS = "0x3A0a988D680dBBB02DECBfd35F9E0676B4bEc292"
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     super(cache, priceOracle);
@@ -17,7 +17,7 @@ module.exports = class panther extends PancakePlatformFork {
   }
 
   async getFetchedFarms() {
-    const cacheKey = `panther-v1-master-farms`
+    const cacheKey = `coinswap-v2-master-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -50,13 +50,11 @@ module.exports = class panther extends PancakePlatformFork {
   }
 
   getName() {
-    return 'panther';
+    return 'coinswap';
   }
 
   getFarmLink(farm) {
-    return farm.isTokenOnly === true
-      ? 'https://pantherswap.com/pools?ref=q9gyayn267d5fdgedprkkpzqcjj97eeykj79skaby'
-      : 'https://pantherswap.com/farms?ref=q9gyayn267d5fdgedprkkpzqcjj97eeykj79skaby';
+    return 'https://master.coinswap.space/farm?coinswapfriend=0x898e99681C29479b86304292b03071C80A57948F';
   }
 
   getFarmEarns(farm) {
@@ -66,11 +64,11 @@ module.exports = class panther extends PancakePlatformFork {
   }
 
   getPendingRewardContractMethod() {
-    return 'pendingPanther';
+    return 'pendingReward';
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   getMasterChefAbi() {
@@ -78,6 +76,6 @@ module.exports = class panther extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return panther.MASTER_ADDRESS;
+    return coinswap.MASTER_ADDRESS;
   }
 };
