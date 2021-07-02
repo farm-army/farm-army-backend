@@ -49,12 +49,16 @@ module.exports = {
       throw new Error('not implemented');
     }
 
-    getMasterChefAbi() {
+    async getMasterChefAbi() {
       throw new Error('not implemented');
     }
 
     getMasterChefAddress() {
       throw new Error('not implemented');
+    }
+
+    getChain() {
+      return 'bsc';
     }
 
     async getLbAddresses() {
@@ -70,12 +74,13 @@ module.exports = {
       }
 
       let farmings = await this.getFarms();
+      const masterChefAbi = await this.getMasterChefAbi();
 
       const vaultCalls = farmings
         .filter(p => p.id.startsWith(`${this.getName()}_farm_`))
         .filter(f => f.raw.lpAddresses && this.getAddress(f.raw.lpAddresses))
         .map(farm => {
-          const vault = new Web3EthContract(this.getMasterChefAbi(), this.getMasterChefAddress());
+          const vault = new Web3EthContract(masterChefAbi, this.getMasterChefAddress());
           return {
             userInfo: vault.methods.userInfo(farm.raw.pid, address),
             pendingReward: this.getPendingRewardContractMethod() ? vault.methods[this.getPendingRewardContractMethod()](farm.raw.pid, address) : '0',
@@ -95,8 +100,8 @@ module.exports = {
         });
 
       const [farms, pools] = await Promise.all([
-        Utils.multiCall(vaultCalls),
-        Utils.multiCall(poolCalls)
+        Utils.multiCall(vaultCalls, this.getChain()),
+        Utils.multiCall(poolCalls, this.getChain())
       ]);
 
       const result = [...farms, ...pools]
@@ -146,8 +151,8 @@ module.exports = {
       });
 
       const [farmBalances, poolBalance] = await Promise.all([
-        Utils.multiCallIndexBy('address', farmBalanceCalls),
-        Utils.multiCallIndexBy('address', poolBalanceCalls),
+        Utils.multiCallIndexBy('address', farmBalanceCalls, this.getChain()),
+        Utils.multiCallIndexBy('address', poolBalanceCalls, this.getChain()),
       ]);
 
       const farms = (await this.getRawFarms()).map(farm => {
@@ -157,7 +162,8 @@ module.exports = {
           provider: this.getName(),
           raw: Object.freeze(farm),
           has_details: true,
-          extra: {}
+          extra: {},
+          chain: this.getChain(),
         };
 
         if (farm.isTokenOnly !== true) {
@@ -218,7 +224,8 @@ module.exports = {
           provider: this.getName(),
           raw: Object.freeze(farm),
           has_details: true,
-          extra: {}
+          extra: {},
+          chain: this.getChain(),
         };
 
         item.earns = [earningToken.toLowerCase()];
@@ -274,12 +281,13 @@ module.exports = {
       }
 
       const farms = await this.getFarms();
+      const masterChefAbi = await this.getMasterChefAbi();
 
       const farmCalls = addresses
         .filter(address => address.startsWith(`${this.getName()}_farm_`))
         .map(id => {
           const farm = farms.find(f => f.id === id);
-          const contract = new Web3EthContract(this.getMasterChefAbi(), this.getMasterChefAddress());
+          const contract = new Web3EthContract(masterChefAbi, this.getMasterChefAddress());
 
           return {
             userInfo: contract.methods.userInfo(farm.raw.pid, address),
@@ -302,8 +310,8 @@ module.exports = {
         });
 
       const [farmResults, sousResults] = await Promise.all([
-        Utils.multiCall(farmCalls),
-        Utils.multiCall(sousCalls),
+        Utils.multiCall(farmCalls, this.getChain()),
+        Utils.multiCall(sousCalls, this.getChain()),
       ]);
 
       return [...farmResults, ...sousResults].map(call => {

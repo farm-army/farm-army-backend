@@ -13,6 +13,10 @@ const fetch = require("node-fetch");
 const AbortController = require("abort-controller");
 const { MulticallProvider } = require("@0xsequence/multicall").providers;
 
+const MULTI_CALL_CONTRACT = {
+  bsc: '0xB94858b0bB5437498F5453A16039337e5Fdc269C',
+  polygon: '0x13E5407E38860A743E025A8834934BEA0264A8c1',
+}
 
 const HOSTS = Object.freeze([
   // Recommend
@@ -33,6 +37,15 @@ const HOSTS = Object.freeze([
   'https://bsc-dataseed4.binance.org/',
 ]);
 
+const HOSTS_POLYGON = Object.freeze([
+  // Recommend
+  'https://rpc-mainnet.matic.network',
+  'https://rpc-mainnet.maticvigil.com',
+  'https://rpc-mainnet.matic.quiknode.pro',
+  'https://matic-mainnet.chainstacklabs.com',
+  'https://matic-mainnet-full-rpc.bwarelabs.com',
+]);
+
 const ENDPOINTS_MULTICALL = {};
 const ENDPOINTS_RPC_WRAPPER = {};
 
@@ -43,7 +56,7 @@ HOSTS.forEach(url => {
       timeout: 10000,
     }),
     {
-      contract: "0xB94858b0bB5437498F5453A16039337e5Fdc269C",
+      contract: MULTI_CALL_CONTRACT.bsc,
       batchSize: 50,
       timeWindow: 50,
     }
@@ -60,9 +73,35 @@ HOSTS.forEach(url => {
 
 const ENDPOINTS = Object.freeze(Object.keys(ENDPOINTS_MULTICALL));
 
+const ENDPOINTS_MULTICALL_POLYGON = {};
+const ENDPOINTS_RPC_WRAPPER_POLYGON = {};
+
+HOSTS_POLYGON.forEach(url => {
+  ENDPOINTS_MULTICALL_POLYGON[url] = new MulticallProvider(
+    new providers.StaticJsonRpcProvider({
+      url: url,
+      timeout: 10000,
+    }),
+    {
+      contract: MULTI_CALL_CONTRACT.polygon,
+      batchSize: 50,
+      timeWindow: 50,
+    }
+  )
+
+  const f1 = new Web3.providers.HttpProvider(url, {
+      keepAlive: true,
+      timeout: 10000,
+    }
+  )
+
+  ENDPOINTS_RPC_WRAPPER_POLYGON[url] = new Web3(f1)
+});
+
+const ENDPOINTS_POLYGON = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_POLYGON));
+
 module.exports = {
   PRICES: {},
-  MULTI_CALL_CONTRACT: "0xB94858b0bB5437498F5453A16039337e5Fdc269C",
   BITQUERY_TRANSACTIONS: fs.readFileSync(
     path.resolve(__dirname, "bitquery/transactions.txt"),
     "utf8"
@@ -84,13 +123,13 @@ module.exports = {
     return ENDPOINTS_RPC_WRAPPER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER))[0]];
   },
 
-  multiCall: async vaultCalls => {
+  multiCall: async (vaultCalls, chain = 'bsc') => {
     if (vaultCalls.length === 0) {
       return [];
     }
 
     const promises = [];
-    const endpoints = _.shuffle(ENDPOINTS.slice());
+    const endpoints = _.shuffle(chain === 'polygon' ? ENDPOINTS_POLYGON.slice() : ENDPOINTS.slice());
 
     let i = 0;
 
@@ -98,7 +137,6 @@ module.exports = {
       .createHash("md5")
       .update(new Date().getTime().toString())
       .digest("hex");
-    // console.log('chunks', hash, vaultCalls.length, 'to ' + max);
 
     for (const chunk of _.chunk(vaultCalls, 80)) {
       const endpoint = endpoints[i];
@@ -128,8 +166,8 @@ module.exports = {
             done.push(endpointInner);
 
             const [foo] = await new MultiCall(
-              ENDPOINTS_RPC_WRAPPER[endpointInner],
-              module.exports.MULTI_CALL_CONTRACT
+              chain === 'polygon' ? ENDPOINTS_RPC_WRAPPER_POLYGON[endpointInner] : ENDPOINTS_RPC_WRAPPER[endpointInner],
+              MULTI_CALL_CONTRACT[chain]
             ).all([chunk]);
             return foo;
           } catch (e) {
@@ -149,8 +187,8 @@ module.exports = {
     return (await Promise.all(promises.map(fn => fn()))).flat(1);
   },
 
-  multiCallIndexBy: async (index, vaultCalls) => {
-    const proms = await module.exports.multiCall(vaultCalls);
+  multiCallIndexBy: async (index, vaultCalls, chain = 'bsc') => {
+    const proms = await module.exports.multiCall(vaultCalls, chain);
 
     const results = {};
 
@@ -163,12 +201,12 @@ module.exports = {
     return results;
   },
 
-  multiCallRpcIndex: async calls => {
-    const try1 =  await module.exports.multiCallRpcIndexInner(calls);
+  multiCallRpcIndex: async (calls, chain = 'bsc') => {
+    const try1 =  await module.exports.multiCallRpcIndexInner(calls, chain);
 
     if (try1 === false) {
       console.error('multiCallRpcIndex retry');
-      const try2 = await module.exports.multiCallRpcIndexInner(calls);
+      const try2 = await module.exports.multiCallRpcIndexInner(calls, chain);
 
       if (try2 === false) {
         console.error('multiCallRpcIndex final failed');
@@ -181,8 +219,8 @@ module.exports = {
     return try1;
   },
 
-  multiCallRpcIndexInner: async calls => {
-    const endpoints = _.shuffle(ENDPOINTS.slice());
+  multiCallRpcIndexInner: async (calls, chain = 'bsc') => {
+    const endpoints = _.shuffle(chain === 'polygon' ? ENDPOINTS_POLYGON.slice() : ENDPOINTS.slice());
 
     const promises = [];
 
@@ -190,7 +228,7 @@ module.exports = {
       const contract = new ethers.Contract(
         group.contractAddress,
         group.abi,
-        ENDPOINTS_MULTICALL[endpoints[0]]
+        chain === 'polygon' ? ENDPOINTS_MULTICALL_POLYGON[endpoints[0]] : ENDPOINTS_MULTICALL[endpoints[0]]
       );
 
       group.calls.forEach(call => {
@@ -237,15 +275,6 @@ module.exports = {
 
   multiCallRpc: async calls => {
     return Object.values(await module.exports.multiCallRpcIndex(calls));
-  },
-
-  fetchApys: async () => {
-    try {
-      const response = await request("https://api.beefy.finance/apy");
-      allApys = JSON.parse(response.body);
-    } catch (e) {
-      console.error("https://api.beefy.finance/apy", e.message);
-    }
   },
 
   findYieldForDetails: result => {
@@ -506,5 +535,43 @@ module.exports = {
 
   compound: (r, n = 365, t = 1, c = 1) => {
     return (1 + (r * c) / n) ** (n * t) - 1;
+  },
+
+  requestJsonGet: async (url, timeout = 10) => {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), timeout * 1000);
+
+    const opts = {
+      method: "GET",
+      signal: controller.signal
+    };
+
+    try {
+      const foo = await fetch(url, opts);
+      return await foo.json();
+    } catch (e) {
+      console.error('error: ', url, e)
+    }
+
+    return undefined;
+  },
+
+  requestGet: async (url, timeout = 10) => {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), timeout * 1000);
+
+    const opts = {
+      method: "GET",
+      signal: controller.signal
+    };
+
+    try {
+      const foo = await fetch(url, opts);
+      return await foo.text();
+    } catch (e) {
+      console.error('error: ', url, e)
+    }
+
+    return undefined;
   }
 };

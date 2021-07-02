@@ -2,7 +2,7 @@
 
 const MasterChefFarmsAbi = require('./abi/0x22fB2663C7ca71Adc2cc99481C77Aaf21E152e2D.json');
 const PancakePlatformFork = require("../common").PancakePlatformFork;
-const request = require("async-request");
+const Utils = require("../../utils");
 
 module.exports = class wault extends PancakePlatformFork {
   /// static MASTER_ADDRESS = "0x52a2B3BEAfA46BA51A4792793a7447396D09423f" // old ones?
@@ -28,12 +28,12 @@ module.exports = class wault extends PancakePlatformFork {
 
     let response
     try {
-      response = await request('https://api.wault.finance/farmsData2.js');
+      response = await Utils.requestGet('https://api.wault.finance/farmsData2.js');
     } catch (e) {
       return {}
     }
 
-    let poolsMatch = response.body.match(/^.*\s*\w+?\s*=\s*(.*)/);
+    let poolsMatch = response.match(/^.*\s*\w+?\s*=\s*(.*)/);
     if (!poolsMatch || !poolsMatch[1]) {
       return {}
     }

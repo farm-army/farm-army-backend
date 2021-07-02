@@ -4,7 +4,6 @@ const BigNumber = require("bignumber.js");
 const _ = require("lodash");
 const fs = require("fs");
 const path = require("path");
-const request = require("async-request");
 const Utils = require("../../utils");
 const Web3EthContract = require("web3-eth-contract");
 
@@ -17,10 +16,7 @@ module.exports = class autofarm {
   static MASTER_CHEF = "0x0895196562C7868C5Be92459FaE7f877ED450452"
 
   async getLbAddresses() {
-    const text = await request(
-      "https://static.autofarm.network/bsc/farm_data.json"
-    );
-    const response = JSON.parse(text.body);
+    const response = await Utils.requestJsonGet('https://static.autofarm.network/bsc/farm_data.json');
 
     return Object.values(response.pools)
       .filter(f => f.wantIsLP && f.wantAddress)
@@ -78,11 +74,7 @@ module.exports = class autofarm {
       }
     }
 
-    const text = await request(
-      "https://static.autofarm.network/bsc/farm_data.json"
-    );
-
-    const response = JSON.parse(text.body);
+    const response = await Utils.requestJsonGet('https://static.autofarm.network/bsc/farm_data.json');
 
     const farms = [];
 

@@ -6,7 +6,6 @@ const Web3EthContract = require("web3-eth-contract");
 const BigNumber = require("bignumber.js");
 
 const Utils = require("../../utils");
-const request = require("async-request");
 const JSDOM = require("jsdom").JSDOM;
 const erc20Abi = require("../../abi/erc20.json");
 
@@ -31,17 +30,15 @@ module.exports = class swamp extends PancakePlatformFork {
       return cache;
     }
 
-    let text
+    let response
     try {
-      text = await request('https://swamp.finance/app/');
+      response = await Utils.requestGet('https://swamp.finance/app/');
     } catch (e) {
       console.log('error swamp fetching vault info')
       await this.cacheManager.set(cacheKey, [], {ttl: 60 * 20})
 
       return [];
     }
-
-    const response = text.body;
 
     const dom = new JSDOM(response);
 

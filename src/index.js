@@ -1,3 +1,5 @@
+Error.stackTraceLimit = 30;
+
 "use strict";
 
 const _ = require("lodash");
@@ -7,11 +9,11 @@ const services = require("./services");
 
 async function farmUpdater() {
   await Promise.all(services.getPlatforms().getFunctionAwaits('getFarms', [true]));
+  await Promise.all(services.getPlatformsPolygon().getFunctionAwaits('getFarms', [true]));
 }
 
 async function priceUpdater() {
   await services.getPriceOracle().cronInterval();
-  await Utils.fetchApys();
 }
 
 // warmup
@@ -25,10 +27,10 @@ setTimeout(async () => {
 
   console.log("\x1b[32m" + "price init done" + "\x1b[0m");
 
-  setTimeout(async () => {
-    await farmUpdater();
-    console.log("\x1b[32m" + "farms init done" + "\x1b[0m");
-  }, 2000);
+  await farmUpdater();
+  console.log("\x1b[32m" + "farms init done" + "\x1b[0m");
+
+  services.getHttp().start(process.argv[2] || 3000)
 }, 1);
 
 // farm update interval
@@ -42,5 +44,3 @@ setInterval(async () => {
     services.getDb().updateLpInfoMaps()
   ]);
 }, 1000 * 60 * 4);
-
-services.getHttp().start()

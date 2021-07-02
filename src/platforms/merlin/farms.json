@@ -1,0 +1,2522 @@
+[
+  {
+    "id": 1,
+    "preText": "✨Magical Launch Promo✨",
+    "lpSymbol": "MERL",
+    "rewardsToken": {
+      "symbol": "MERL",
+      "address": {
+        "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+        "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "MERL",
+      "address": {
+        "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+        "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+      },
+      "decimals": 18
+    },
+    "vaultAddress": {
+      "56": "0xfF1Da0430C3C4afd6005c511cd5E271BE04f4738",
+      "97": "0xE6521d286242fC0567a1dD9d894104927c99d268"
+    },
+    "type": "own",
+    "earns": [
+      {
+        "token": {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        },
+        "amountPropNameInInfo": "pWBNB"
+      }
+    ],
+    "earnsRelationship": "and",
+    "apyOfPoolFetched": "apr"
+  },
+  {
+    "id": 2,
+    "lpSymbol": "MERL",
+    "countingDown": {
+      "launchDate": "2021-05-15T05:00:00.001Z"
+    },
+    "rewardsToken": {
+      "symbol": "WBNB",
+      "projectLink": "https://www.binance.com/",
+      "address": {
+        "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+      }
+    },
+    "stakingToken": {
+      "symbol": "MERL",
+      "address": {
+        "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+        "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+      },
+      "decimals": 18
+    },
+    "vaultAddress": {
+      "56": "0x3b87475ac293eeed0e8bC25713Eb8242A9497C3F",
+      "97": "0x9Dcb05c71Ea2CF831Cf8ce9ce525AbB21C51eB31"
+    },
+    "type": "own",
+    "earns": [
+      {
+        "token": {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        },
+        "amountPropNameInInfo": "pWBNB",
+        "getRewardMethodName": "getReward"
+      },
+      {
+        "token": {
+          "symbol": "ETH",
+          "projectLink": "",
+          "address": {
+            "56": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+            "97": "0xcD04aCda59b3bBA35B7aE34EE6B4f3C7Bd150E31"
+          }
+        },
+        "amountPropNameInInfo": "pETH",
+        "getRewardMethodName": "getRewardInETH"
+      },
+      {
+        "token": {
+          "symbol": "BTCB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+            "97": "0xa6d5d7DB41B49819EB3e0ceD9cBE7bB677a91e9C"
+          }
+        },
+        "amountPropNameInInfo": "pBTCB",
+        "getRewardMethodName": "getRewardInBTC"
+      }
+    ],
+    "earnsRelationship": "or",
+    "apyOfPoolFetched": "apr"
+  },
+  {
+    "id": 30,
+    "lpSymbol": "MERL-BNB LP",
+    "rewardsToken": {
+      "symbol": "MERL",
+      "address": {
+        "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+        "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "MERL-BNB LP",
+      "address": {
+        "56": "0x5f66f543B20A4BD4195521C14E9ae77ED7111c98",
+        "97": "0x607cD89C642aC06E8683443173E75E12426f0c4A"
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x5976217A01E6Bf7cb01D08ca0c8c96bf689844Be",
+      "97": "0xe8c47C5892984609A902077C37F2a21e59aAf26B"
+    },
+    "type": "own",
+    "earns": [
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      }
+    ],
+    "earnsRelationship": "and",
+    "apyOfPoolFetched": "apr"
+  },
+  {
+    "id": 3,
+    "lpSymbol": "CAKE",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "vaultAddress": {
+      "56": "0xa69AC402a8Afe80C4Db293baF231242242A131Af",
+      "97": "0x3f379f3F2E03ca9919714e312800f8eE81500a26"
+    },
+    "type": "single",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 6,
+    "lpSymbol": "CAKE-BNB LP",
+    "rewardsToken": {
+      "symbol": "CAKE-BNB LP",
+      "address": {
+        "56": "0x0ed7e52944161450477ee417de9cd3a859b14fd0",
+        "97": "0x63CF61D346A9BFF04d8b75254ca89550159aCdb0"
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "CAKE-BNB LP",
+      "address": {
+        "56": "0x0ed7e52944161450477ee417de9cd3a859b14fd0",
+        "97": "0x63CF61D346A9BFF04d8b75254ca89550159aCdb0"
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x4E5f611A964806c5fb79Aa0dC8cf945cDFdaa7E2",
+      "97": ""
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE-BNB LP",
+          "address": {
+            "56": "0x0ed7e52944161450477ee417de9cd3a859b14fd0",
+            "97": "0x63CF61D346A9BFF04d8b75254ca89550159aCdb0"
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "CAKE",
+              "address": {
+                "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+              },
+              "decimals": 18
+            },
+            {
+              "symbol": "WBNB",
+              "projectLink": "https://www.binance.com/",
+              "address": {
+                "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+              }
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 7,
+    "lpSymbol": "CAKE-BNB LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "CAKE-BNB LP",
+      "address": {
+        "56": "0x0ed7e52944161450477ee417de9cd3a859b14fd0",
+        "97": "0x63CF61D346A9BFF04d8b75254ca89550159aCdb0"
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x5bb11D23c94B13FbA6D22eAbb83bF3fd2458763E",
+      "97": ""
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 8,
+    "lpSymbol": "BNB-BUSD LP",
+    "rewardsToken": {
+      "symbol": "BNB-BUSD LP",
+      "address": {
+        "56": "0x58f876857a02d6762e0101bb5c46a8c1ed44dc16",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "BNB-BUSD LP",
+      "address": {
+        "56": "0x58f876857a02d6762e0101bb5c46a8c1ed44dc16",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0xBf3aa34aC3F6ea54DD0eC15e5011e0B5A09c17f1",
+      "97": ""
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "BNB-BUSD LP",
+          "address": {
+            "56": "0x58f876857a02d6762e0101bb5c46a8c1ed44dc16",
+            "97": ""
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "CAKE",
+              "address": {
+                "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+              },
+              "decimals": 18
+            },
+            {
+              "symbol": "WBNB",
+              "projectLink": "https://www.binance.com/",
+              "address": {
+                "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+              }
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 9,
+    "lpSymbol": "BNB-BUSD LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "BNB-BUSD LP",
+      "address": {
+        "56": "0x58f876857a02d6762e0101bb5c46a8c1ed44dc16",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x8AFdA0Df3D9601B32B731f829060BC0C1C95270D",
+      "97": ""
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 26,
+    "lpSymbol": "USDT-BUSD LP",
+    "rewardsToken": {
+      "symbol": "USDT-BUSD LP",
+      "address": {
+        "56": "0x7efaef62fddcca950418312c6c91aef321375a00",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "USDT-BUSD LP",
+      "address": {
+        "56": "0x7efaef62fddcca950418312c6c91aef321375a00",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x360DE98FDC44357CED3D0CbD44387160A8f270D4",
+      "97": ""
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "USDT-BUSD LP",
+          "address": {
+            "56": "0x7efaef62fddcca950418312c6c91aef321375a00",
+            "97": ""
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "CAKE",
+              "address": {
+                "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+              },
+              "decimals": 18
+            },
+            {
+              "symbol": "WBNB",
+              "projectLink": "https://www.binance.com/",
+              "address": {
+                "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+              }
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 27,
+    "lpSymbol": "USDT-BUSD LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "USDT-BUSD LP",
+      "address": {
+        "56": "0x7efaef62fddcca950418312c6c91aef321375a00",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x6c859c5f371DD107c423d4e065bFa09A8De421a9",
+      "97": ""
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 28,
+    "lpSymbol": "CAKE-BUSD LP",
+    "rewardsToken": {
+      "symbol": "CAKE-BUSD LP",
+      "address": {
+        "56": "0x804678fa97d91B974ec2af3c843270886528a9E6",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "BUSD",
+          "address": {
+            "56": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+            "97": "0x38790571CD4868bC58af9c2C600aC580e02822D6"
+          },
+          "decimals": 18,
+          "projectLink": "https://www.paxos.com/busd/"
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "CAKE-BUSD LP",
+      "address": {
+        "56": "0x804678fa97d91B974ec2af3c843270886528a9E6",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "BUSD",
+          "address": {
+            "56": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+            "97": "0x38790571CD4868bC58af9c2C600aC580e02822D6"
+          },
+          "decimals": 18,
+          "projectLink": "https://www.paxos.com/busd/"
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x18fC24Aad34Ce4346Fe288A41215AaD67EF77952",
+      "97": ""
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE-BUSD LP",
+          "address": {
+            "56": "0x804678fa97d91B974ec2af3c843270886528a9E6",
+            "97": ""
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "CAKE",
+              "address": {
+                "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+              },
+              "decimals": 18
+            },
+            {
+              "symbol": "BUSD",
+              "address": {
+                "56": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+                "97": "0x38790571CD4868bC58af9c2C600aC580e02822D6"
+              },
+              "decimals": 18,
+              "projectLink": "https://www.paxos.com/busd/"
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and",
+    "isNewBefore": "2021-06-05T12:00:00.000Z"
+  },
+  {
+    "id": 29,
+    "lpSymbol": "CAKE-BUSD LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "CAKE-BUSD LP",
+      "address": {
+        "56": "0x804678fa97d91B974ec2af3c843270886528a9E6",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "BUSD",
+          "address": {
+            "56": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+            "97": "0x38790571CD4868bC58af9c2C600aC580e02822D6"
+          },
+          "decimals": 18,
+          "projectLink": "https://www.paxos.com/busd/"
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0xb8c984498323ee7b5c85fe34419058e0d01884c2",
+      "97": ""
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and",
+    "isNewBefore": "2021-06-05T12:00:00.000Z"
+  },
+  {
+    "id": 10,
+    "lpSymbol": "BNB-ETH LP",
+    "rewardsToken": {
+      "symbol": "BNB-ETH LP",
+      "address": {
+        "56": "0x74e4716e431f45807dcf19f284c7aa99f18a4fbc",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "BNB-ETH LP",
+      "address": {
+        "56": "0x74e4716e431f45807dcf19f284c7aa99f18a4fbc",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x925697B5E8F9b1277ca9d94769E10C4cBf1676f5",
+      "97": ""
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "BNB-ETH LP",
+          "address": {
+            "56": "0x74e4716e431f45807dcf19f284c7aa99f18a4fbc",
+            "97": ""
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "CAKE",
+              "address": {
+                "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+              },
+              "decimals": 18
+            },
+            {
+              "symbol": "WBNB",
+              "projectLink": "https://www.binance.com/",
+              "address": {
+                "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+              }
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 11,
+    "lpSymbol": "BNB-ETH LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "BNB-ETH LP",
+      "address": {
+        "56": "0x74e4716e431f45807dcf19f284c7aa99f18a4fbc",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x2090b0477E4852f929018c78ba9DD57e3B551d40",
+      "97": ""
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 12,
+    "lpSymbol": "BNB-BTCB LP",
+    "rewardsToken": {
+      "symbol": "BNB-BTCB LP",
+      "address": {
+        "56": "0x61eb789d75a95caa3ff50ed7e47b96c132fec082",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "BNB-BTCB LP",
+      "address": {
+        "56": "0x61eb789d75a95caa3ff50ed7e47b96c132fec082",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x82089743e90562D001FECCE2EeF465a609829459",
+      "97": ""
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "BNB-BTCB LP",
+          "address": {
+            "56": "0x61eb789d75a95caa3ff50ed7e47b96c132fec082",
+            "97": ""
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "CAKE",
+              "address": {
+                "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+              },
+              "decimals": 18
+            },
+            {
+              "symbol": "WBNB",
+              "projectLink": "https://www.binance.com/",
+              "address": {
+                "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+              }
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 13,
+    "lpSymbol": "BNB-BTCB LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "BNB-BTCB LP",
+      "address": {
+        "56": "0x61eb789d75a95caa3ff50ed7e47b96c132fec082",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0xF02ef3DcD71F1881f7d1F6Fc6D6f95c021d874b1",
+      "97": ""
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 14,
+    "lpSymbol": "BNB-USDT LP",
+    "rewardsToken": {
+      "symbol": "BNB-USDT LP",
+      "address": {
+        "56": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "BNB-USDT LP",
+      "address": {
+        "56": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x4675D999c1896ADD7D839F090703269b721eD411",
+      "97": ""
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "BNB-USDT LP",
+          "address": {
+            "56": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+            "97": ""
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "CAKE",
+              "address": {
+                "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+              },
+              "decimals": 18
+            },
+            {
+              "symbol": "WBNB",
+              "projectLink": "https://www.binance.com/",
+              "address": {
+                "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+              }
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 15,
+    "lpSymbol": "BNB-USDT LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "BNB-USDT LP",
+      "address": {
+        "56": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x414C51d5e837514Ac133cC9C8E14516ddBCc09c1",
+      "97": ""
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 16,
+    "lpSymbol": "BNB-DOT LP",
+    "rewardsToken": {
+      "symbol": "BNB-DOT LP",
+      "address": {
+        "56": "0xDd5bAd8f8b360d76d12FdA230F8BAF42fe0022CF",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "BNB-DOT LP",
+      "address": {
+        "56": "0xDd5bAd8f8b360d76d12FdA230F8BAF42fe0022CF",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x92f8a3780D479DCaaeb85D84B9dB2296B96B8603",
+      "97": ""
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "BNB-DOT LP",
+          "address": {
+            "56": "0xDd5bAd8f8b360d76d12FdA230F8BAF42fe0022CF",
+            "97": ""
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "CAKE",
+              "address": {
+                "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+              },
+              "decimals": 18
+            },
+            {
+              "symbol": "WBNB",
+              "projectLink": "https://www.binance.com/",
+              "address": {
+                "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+              }
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 17,
+    "lpSymbol": "BNB-DOT LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "BNB-DOT LP",
+      "address": {
+        "56": "0xDd5bAd8f8b360d76d12FdA230F8BAF42fe0022CF",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x7E744494f57511CA6733C83F262b3f674e95F28E",
+      "97": ""
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 18,
+    "lpSymbol": "BNB-XRP LP",
+    "rewardsToken": {
+      "symbol": "BNB-XRP LP",
+      "address": {
+        "56": "0x03F18135c44C64ebFdCBad8297fe5bDafdBbdd86",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "BNB-XRP LP",
+      "address": {
+        "56": "0x03F18135c44C64ebFdCBad8297fe5bDafdBbdd86",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x3a8db48D7f995D281D894e819C016E8c356757fE",
+      "97": ""
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "BNB-XRP LP",
+          "address": {
+            "56": "0x03F18135c44C64ebFdCBad8297fe5bDafdBbdd86",
+            "97": ""
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "CAKE",
+              "address": {
+                "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+              },
+              "decimals": 18
+            },
+            {
+              "symbol": "WBNB",
+              "projectLink": "https://www.binance.com/",
+              "address": {
+                "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+              }
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 19,
+    "lpSymbol": "BNB-XRP LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "BNB-XRP LP",
+      "address": {
+        "56": "0x03F18135c44C64ebFdCBad8297fe5bDafdBbdd86",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x158522242FD31385F2DdF6762c6d32b337274775",
+      "97": ""
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 20,
+    "lpSymbol": "BNB-BAND LP",
+    "rewardsToken": {
+      "symbol": "BNB-BAND LP",
+      "address": {
+        "56": "0x168B273278F3A8d302De5E879aA30690B7E6c28f",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "BNB-BAND LP",
+      "address": {
+        "56": "0x168B273278F3A8d302De5E879aA30690B7E6c28f",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0xDe5bA75b008e93B04Ef1b516f93D1D466e6Dd392",
+      "97": ""
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "BNB-BAND LP",
+          "address": {
+            "56": "0x168B273278F3A8d302De5E879aA30690B7E6c28f",
+            "97": ""
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "CAKE",
+              "address": {
+                "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+              },
+              "decimals": 18
+            },
+            {
+              "symbol": "WBNB",
+              "projectLink": "https://www.binance.com/",
+              "address": {
+                "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+              }
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 21,
+    "lpSymbol": "BNB-BAND LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "BNB-BAND LP",
+      "address": {
+        "56": "0x168B273278F3A8d302De5E879aA30690B7E6c28f",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0xdc09704Bf547B6639D5911504bC3111Aec8e97Fc",
+      "97": ""
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 22,
+    "lpSymbol": "BNB-UNI LP",
+    "rewardsToken": {
+      "symbol": "BNB-UNI LP",
+      "address": {
+        "56": "0x014608E87AF97a054C9a49f81E1473076D51d9a3",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "BNB-UNI LP",
+      "address": {
+        "56": "0x014608E87AF97a054C9a49f81E1473076D51d9a3",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x680A8a7E94d1EcA0cF651b174727ac5DF36E85c8",
+      "97": ""
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "BNB-UNI LP",
+          "address": {
+            "56": "0x014608E87AF97a054C9a49f81E1473076D51d9a3",
+            "97": ""
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "CAKE",
+              "address": {
+                "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+              },
+              "decimals": 18
+            },
+            {
+              "symbol": "WBNB",
+              "projectLink": "https://www.binance.com/",
+              "address": {
+                "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+              }
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 23,
+    "lpSymbol": "BNB-UNI LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "BNB-UNI LP",
+      "address": {
+        "56": "0x014608E87AF97a054C9a49f81E1473076D51d9a3",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x4fcB41f71E31437419ce3Dee4e9c1092cA9cDE1F",
+      "97": ""
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 24,
+    "lpSymbol": "BNB-LINK LP",
+    "rewardsToken": {
+      "symbol": "BNB-LINK LP",
+      "address": {
+        "56": "0x824eb9faDFb377394430d2744fa7C42916DE3eCe",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "BNB-LINK LP",
+      "address": {
+        "56": "0x824eb9faDFb377394430d2744fa7C42916DE3eCe",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0xA37d23D2192a4A61949e3E8339E6B5453FDB2Ae1",
+      "97": ""
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "BNB-LINK LP",
+          "address": {
+            "56": "0x824eb9faDFb377394430d2744fa7C42916DE3eCe",
+            "97": ""
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "CAKE",
+              "address": {
+                "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+                "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+              },
+              "decimals": 18
+            },
+            {
+              "symbol": "WBNB",
+              "projectLink": "https://www.binance.com/",
+              "address": {
+                "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+                "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+              }
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 25,
+    "lpSymbol": "BNB-LINK LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "BNB-LINK LP",
+      "address": {
+        "56": "0x824eb9faDFb377394430d2744fa7C42916DE3eCe",
+        "97": ""
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        {
+          "symbol": "WBNB",
+          "projectLink": "https://www.binance.com/",
+          "address": {
+            "56": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "97": "0xE9a839450c999757cd648D2e806485376Ed488D4"
+          }
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x758C6c9731Ee68aD278f8C2F2f27b84aCB092649",
+      "97": ""
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 4,
+    "lpSymbol": "VAI-BUSD LP",
+    "rewardsToken": {
+      "symbol": "VAI-BUSD LP",
+      "address": {
+        "56": "0x133ee93FE93320e1182923E1a640912eDE17C90C",
+        "97": "0x5dEe33AC808F4A86BEC1EFD74224E6205E4B9846"
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "VAI",
+          "address": {
+            "56": "0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7",
+            "97": "0xCa5bb3e3D57FF2823b86E0c1865B0aB574016226"
+          },
+          "decimals": 18,
+          "projectLink": "https://pancakeswap.finance/"
+        },
+        {
+          "symbol": "BUSD",
+          "address": {
+            "56": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+            "97": "0x38790571CD4868bC58af9c2C600aC580e02822D6"
+          },
+          "decimals": 18,
+          "projectLink": "https://www.paxos.com/busd/"
+        }
+      ]
+    },
+    "stakingToken": {
+      "symbol": "VAI-BUSD LP",
+      "address": {
+        "56": "0x133ee93FE93320e1182923E1a640912eDE17C90C",
+        "97": "0x5dEe33AC808F4A86BEC1EFD74224E6205E4B9846"
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "VAI",
+          "address": {
+            "56": "0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7",
+            "97": "0xCa5bb3e3D57FF2823b86E0c1865B0aB574016226"
+          },
+          "decimals": 18,
+          "projectLink": "https://pancakeswap.finance/"
+        },
+        {
+          "symbol": "BUSD",
+          "address": {
+            "56": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+            "97": "0x38790571CD4868bC58af9c2C600aC580e02822D6"
+          },
+          "decimals": 18,
+          "projectLink": "https://www.paxos.com/busd/"
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0xB6B4417552145C197B060e1CD617e8f1B016c84a",
+      "97": "0x5cD4e55df8c07f113a0E1c3cE6C47adF432FA287"
+    },
+    "type": "lp",
+    "earns": [
+      {
+        "token": {
+          "symbol": "VAI-BUSD LP",
+          "address": {
+            "56": "0x133ee93FE93320e1182923E1a640912eDE17C90C",
+            "97": "0x5dEe33AC808F4A86BEC1EFD74224E6205E4B9846"
+          },
+          "decimals": 18,
+          "isLp": true,
+          "tokens": [
+            {
+              "symbol": "VAI",
+              "address": {
+                "56": "0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7",
+                "97": "0xCa5bb3e3D57FF2823b86E0c1865B0aB574016226"
+              },
+              "decimals": 18,
+              "projectLink": "https://pancakeswap.finance/"
+            },
+            {
+              "symbol": "BUSD",
+              "address": {
+                "56": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+                "97": "0x38790571CD4868bC58af9c2C600aC580e02822D6"
+              },
+              "decimals": 18,
+              "projectLink": "https://www.paxos.com/busd/"
+            }
+          ]
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  },
+  {
+    "id": 5,
+    "lpSymbol": "VAI-BUSD LP",
+    "rewardsToken": {
+      "symbol": "CAKE",
+      "address": {
+        "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+      },
+      "decimals": 18
+    },
+    "stakingToken": {
+      "symbol": "VAI-BUSD LP",
+      "address": {
+        "56": "0x133ee93FE93320e1182923E1a640912eDE17C90C",
+        "97": "0x5dEe33AC808F4A86BEC1EFD74224E6205E4B9846"
+      },
+      "decimals": 18,
+      "isLp": true,
+      "tokens": [
+        {
+          "symbol": "VAI",
+          "address": {
+            "56": "0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7",
+            "97": "0xCa5bb3e3D57FF2823b86E0c1865B0aB574016226"
+          },
+          "decimals": 18,
+          "projectLink": "https://pancakeswap.finance/"
+        },
+        {
+          "symbol": "BUSD",
+          "address": {
+            "56": "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+            "97": "0x38790571CD4868bC58af9c2C600aC580e02822D6"
+          },
+          "decimals": 18,
+          "projectLink": "https://www.paxos.com/busd/"
+        }
+      ]
+    },
+    "vaultAddress": {
+      "56": "0x3f6919f676d5C7d2A65984dbdf5ae35254be1683",
+      "97": "0x906Ec49F2546226C225e04d97Be22E6E70C8A819"
+    },
+    "type": "lp-maximiser",
+    "earns": [
+      {
+        "token": {
+          "symbol": "CAKE",
+          "address": {
+            "56": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+            "97": "0x0e5C9A50CdbeA90bad6CfEf6093E7Cb05E8EF49E"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pBASE"
+      },
+      {
+        "token": {
+          "symbol": "MERL",
+          "address": {
+            "56": "0xDA360309C59CB8C434b28A91b823344a96444278",
+            "97": "0x7dC6bD9e75dA02B00DA7B674F9E84b6D9cc20aDB"
+          },
+          "decimals": 18
+        },
+        "amountPropNameInInfo": "pMERL"
+      }
+    ],
+    "earnsRelationship": "and"
+  }
+]

@@ -118,8 +118,9 @@ node src/index.js
 
 
 ```
-node src/command/farm_fetcher.js <masterChefAddress>
+node src/command/farm_fetcher.js <masterChefAddress> <chain: bsc (default), polygon>
 node src/command/farm_fetcher.js 0x76FCeffFcf5325c6156cA89639b17464ea833ECd
+node src/command/farm_fetcher.js 0xC8Bd86E5a132Ac0bf10134e270De06A8Ba317BFe polygon
 ```
 
 ### Farm / Pool Contract ###

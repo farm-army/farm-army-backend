@@ -139,7 +139,7 @@ module.exports = class PriceOracle {
     await this.tokenMaps();
 
     const bPrices = await Promise.allSettled([
-      this.getPancakeswapPrices(),
+      // this.getPancakeswapPrices(),
       this.getCoingeckoPrices(),
       this.getBeefyPrices(),
       this.updateBDollarPrices(),
@@ -337,6 +337,7 @@ module.exports = class PriceOracle {
   }
 
   async updateBDollarPrices() {
+    return []
     const pricesCalls = (await Promise.allSettled([
       this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=BDO'),
       this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=bBDO'),

@@ -129,8 +129,12 @@ module.exports = class FarmFetcher {
     }
   }
 
-  async fetchForMasterChef(masterChef) {
-    const abi = await this.contractAbiFetcher.getAbiForContractAddress(masterChef);
+  async fetchForMasterChef(masterChef, chain = 'bsc') {
+    return (await this.fetchForMasterChefWithMeta(masterChef, chain)).pools || [];
+  }
+
+  async fetchForMasterChefWithMeta(masterChef, chain = 'bsc') {
+    const abi = await this.contractAbiFetcher.getAbiForContractAddress(masterChef, chain);
 
     const {
       poolInfoFunctionName,
@@ -176,11 +180,11 @@ module.exports = class FarmFetcher {
       masterInfoCall.poolLength = web3EthContract1.methods[poolLengthFunctionName]()
     }
 
-    const masterInfo = await Utils.multiCall([masterInfoCall]);
+    const masterInfo = await Utils.multiCall([masterInfoCall], chain);
     let poolLength = masterInfo[0].poolLength;
 
     if (!poolLength) {
-      poolLength = await this.findPoolLengthViaPoolInfo(web3EthContract1, poolInfoFunctionName);
+      poolLength = await this.findPoolLengthViaPoolInfo(web3EthContract1, poolInfoFunctionName, chain);
     }
 
     if (!poolLength) {
@@ -213,7 +217,7 @@ module.exports = class FarmFetcher {
         pid: id.toString(),
         poolInfo: new Web3EthContract(abi, masterChef).methods[poolInfoFunctionName](id),
       };
-    }));
+    }), chain);
 
     const methods = abi.find(f => f.name === poolInfoFunctionName).outputs.map(o => o.name);
     const pools = poolsRaw.map(p => {
@@ -222,7 +226,7 @@ module.exports = class FarmFetcher {
     });
 
     // lpToken or single token
-    const lpTokens = await Utils.multiCallIndexBy('pid', pools.filter(p => p.poolInfoObject && p.poolInfoObject.getLpToken()).map(p => {
+    const lpTokens = await Utils.multiCallIndexBy('pid', pools.filter(p => p.poolInfoObject && p.poolInfoObject.getLpToken(), chain).map(p => {
       const lpToken = p.poolInfoObject.getLpToken();
 
       const web3EthContract = new Web3EthContract(TokenABI, lpToken);
@@ -259,7 +263,7 @@ module.exports = class FarmFetcher {
         symbol: web3EthContract.methods.symbol(),
         decimals: web3EthContract.methods.decimals(),
       }
-    }));
+    }), chain);
 
     const tokens = {}
     for (const [key, value] of Object.entries(tokensRaw)) {
@@ -388,10 +392,13 @@ module.exports = class FarmFetcher {
       all.push(item)
     });
 
-    return all;
+    return {
+      abi: abi,
+      pools: all,
+    };
   }
 
-  async findPoolLengthViaPoolInfo(web3EthContract, poolInfoFunctionName) {
+  async findPoolLengthViaPoolInfo(web3EthContract, poolInfoFunctionName, chain) {
     const calls = [];
 
     for(let id = 1; id < 1000; id += 10){
@@ -401,7 +408,7 @@ module.exports = class FarmFetcher {
       });
     }
 
-    const tokensRaw = await Utils.multiCall(calls);
+    const tokensRaw = await Utils.multiCall(calls, chain);
 
     const results = tokensRaw.filter(p => p.poolInfo).map(p => parseInt(p.pid))
     if (results.length === 0) {

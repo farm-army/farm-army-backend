@@ -2,7 +2,6 @@
 
 const fs = require("fs");
 const path = require("path");
-const request = require("async-request");
 const Web3EthContract = require("web3-eth-contract");
 const BigNumber = require("bignumber.js");
 const Utils = require("../../utils");
@@ -47,8 +46,8 @@ module.exports = class valuedefi {
 
   async getRawPools() {
     try {
-      const text = await request("https://api.vswap.fi/api/farm/pool-info");
-      return JSON.parse(text.body).data;
+      const json = await Utils.requestJsonGet("https://api.vswap.fi/api/farm/pool-info");
+      return json.data;
     } catch (e) {
       console.log('error: https://api.vswap.fi/api/farm/pool-info')
       return []
@@ -56,19 +55,16 @@ module.exports = class valuedefi {
   }
 
   async getCouncilVerified() {
-    const text = await request(
-      "https://api.vswap.fi/api/faas/get-stats?whitelistedBy=ALL"
-    );
-    return JSON.parse(text.body).data.filter(
+    const json = await Utils.requestJsonGet("https://api.vswap.fi/api/faas/get-stats?whitelistedBy=ALL");
+
+    return json.data.filter(
       v => v.verifiedBy && v.verifiedBy.length > 0
     );
   }
 
   async getRawVSafe() {
-    const text = await request(
-      "https://api-vfarm.vswap.fi/api/farming-scan/get-farming-scans?farming_name=vsafe"
-    );
-    return JSON.parse(text.body).data;
+    const content = await Utils.requestJsonGet("https://api-vfarm.vswap.fi/api/farming-scan/get-farming-scans?farming_name=vsafe");
+    return content.data;
   }
 
   async getAddressFarms(address) {

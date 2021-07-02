@@ -2,7 +2,6 @@
 
 const _ = require("lodash");
 const Web3EthContract = require("web3-eth-contract");
-const request = require("async-request");
 const BigNumber = require("bignumber.js");
 const Utils = require("../../utils");
 var crypto = require('crypto');
@@ -136,8 +135,7 @@ module.exports = class acryptos {
 
     let response;
     try {
-      const text = await request("https://raw.githubusercontent.com/alpaca-finance/bsc-alpaca-contract/main/.mainnet.json");
-      response = JSON.parse(text.body);
+      response = await Utils.requestJsonGet("https://raw.githubusercontent.com/alpaca-finance/bsc-alpaca-contract/main/.mainnet.json");
     } catch (e) {
       console.log(`github bsc-alpaca-contract vault fetch error: ${String(e)}`);
       response = _.cloneDeep(FallbackVaults)

@@ -1,5 +1,5 @@
-const request = require("async-request");
 const PromiseThrottle = require('promise-throttle');
+const Utils = require("../utils");
 
 module.exports = class BscscanRequest {
     constructor(apiKey) {
@@ -14,7 +14,7 @@ module.exports = class BscscanRequest {
     async get(url) {
         // 5 sec limit; also need some window
         return this.promiseThrottle.add(async () => {
-            return await request(url + `&apikey=${encodeURIComponent(this.apiKey)}`)
+            return await Utils.requestJsonGet(url + `&apikey=${encodeURIComponent(this.apiKey)}`)
         });
     }
 }

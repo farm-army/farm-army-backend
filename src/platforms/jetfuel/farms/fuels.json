@@ -1,6 +1,319 @@
 [
   {
     "id": 0,
+    "name": "WINGS-BNB",
+    "img": "asset",
+    "route": "/wings-bnb",
+    "asset": {
+      "symbol": "WINGS-BNB",
+      "label": "WINGS-BNB",
+      "decimals": 18,
+      "address": "0x1CD0fe829d83Fb49c8831Ae860d19c6062adA6e9",
+      "pid": 3,
+      "addLiquidityLink": "https://exchange.jetswap.finance/#/add/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c/0x0487b824c8261462f88940f97053e65bdb498446",
+      "infoLink": "https://info.jetswap.finance/pair/0x1CD0fe829d83Fb49c8831Ae860d19c6062adA6e9",
+      "otherAssetSymbol": "WINGS",
+      "type": "lp",
+      "provider": {
+        "value": "jetswap",
+        "label": "JetSwap",
+        "masterAddress": "0x63d6EC1cDef04464287e2af710FFef9780B6f9F5"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "WINGS-BNB-WINGS-VAULT",
+      "label": "WINGS-BNB-WINGS-VAULT",
+      "decimals": 18,
+      "address": "0x465A5e8501Bf38898A8AeAd87f0d864AdCc826a4",
+      "type": "vault"
+    },
+    "strategyAddress": "0xAD74C817Ca4b1c302baE6FcDFa743709E07cbAe8"
+  },
+  {
+    "id": 1,
+    "name": "WINGS-BUSD",
+    "img": "asset",
+    "route": "/wings-busd",
+    "asset": {
+      "symbol": "WINGS-BUSD",
+      "label": "WINGS-BUSD",
+      "decimals": 18,
+      "address": "0xFBa740304f3fc39d0e79703a5D7788E13f877DC0",
+      "pid": 4,
+      "addLiquidityLink": "https://exchange.jetswap.finance/#/add/0xe9e7cea3dedca5984780bafc599bd69add087d56/0x0487b824c8261462f88940f97053e65bdb498446",
+      "infoLink": "https://info.jetswap.finance/pair/0xFBa740304f3fc39d0e79703a5D7788E13f877DC0",
+      "firstAssetSymbol": "WBUSD",
+      "otherAssetSymbol": "WINGS",
+      "type": "lp",
+      "provider": {
+        "value": "jetswap",
+        "label": "JetSwap",
+        "masterAddress": "0x63d6EC1cDef04464287e2af710FFef9780B6f9F5"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "WINGS-BUSD-WINGS-VAULT",
+      "label": "WINGS-BUSD-WINGS-VAULT",
+      "decimals": 18,
+      "address": "0xED2097330741aC6AA574C0EDa26A7ad41c976fb0",
+      "type": "vault"
+    },
+    "strategyAddress": "0x5D9EBDe919f6ee1a37263EE9d7bBdC5821707ad8"
+  },
+  {
+    "id": 2,
+    "name": "WINGS Best",
+    "img": "asset",
+    "route": "/wings",
+    "asset": {
+      "symbol": "WINGS",
+      "label": "WINGS",
+      "decimals": 18,
+      "address": "0x0487b824c8261462f88940f97053e65bdb498446",
+      "pid": 0,
+      "type": "single",
+      "priceLpAsset": "WINGS-BNB",
+      "addLiquidityLink": "https://exchange.jetswap.finance/#/swap?outputCurrency=0x0487b824c8261462f88940f97053e65bdb498446",
+      "infoLink": "https://info.jetswap.finance/token/0x0487b824c8261462f88940f97053e65bdb498446",
+      "provider": {
+        "value": "jetswap",
+        "label": "JetSwap",
+        "masterAddress": "0x63d6EC1cDef04464287e2af710FFef9780B6f9F5"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "WINGS-VAULT",
+      "label": "WINGS-VAULT",
+      "decimals": 18,
+      "address": "0x184BA48939c49f54b0aa31F76177ebA40130b7BA",
+      "type": "vault"
+    },
+    "strategyAddress": "0xf150Fd19a8f88668099eaB23291162124F24E06f"
+  },
+  {
+    "id": 3,
+    "name": "FTS-BNB",
+    "img": "asset",
+    "route": "/fts-bnb",
+    "asset": {
+      "symbol": "FTS-BNB-JETSWAP",
+      "label": "FTS-BNB",
+      "decimals": 18,
+      "address": "0xbd22832367bcb71b8d2030cf3110ec2f9b63a240",
+      "pid": 6,
+      "addLiquidityLink": "https://exchange.jetswap.finance/#/add/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c/0x4437743ac02957068995c48e08465e0ee1769fbe",
+      "infoLink": "https://info.jetswap.finance/pair/0xbd22832367bcb71b8d2030cf3110ec2f9b63a240",
+      "otherAssetSymbol": "FTS",
+      "type": "lp",
+      "provider": {
+        "value": "jetswap",
+        "label": "JetSwap",
+        "masterAddress": "0x63d6EC1cDef04464287e2af710FFef9780B6f9F5"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "FTS-BNB-WINGS-VAULT",
+      "label": "FTS-BNB-WINGS-VAULT",
+      "decimals": 18,
+      "address": "0xD0B1DC1B39A730D634902c01C61316A97afA31B5",
+      "type": "vault"
+    },
+    "strategyAddress": "0x70Ed4836E746547fB0e910aCE95fa545CB9D8A30"
+  },
+  {
+    "id": 4,
+    "name": "FUEL-BNB",
+    "img": "asset",
+    "route": "/fuel-bnb",
+    "asset": {
+      "symbol": "FUEL-BNB-JETSWAP",
+      "label": "FUEL-BNB",
+      "decimals": 18,
+      "address": "0xFD6583Aea0978158349d45740d1B1BC2bC223391",
+      "pid": 5,
+      "addLiquidityLink": "https://exchange.jetswap.finance/#/add/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c/0x2090c8295769791ab7A3CF1CC6e0AA19F35e441A",
+      "infoLink": "https://info.jetswap.finance/pair/0xFD6583Aea0978158349d45740d1B1BC2bC223391",
+      "otherAssetSymbol": "FUEL",
+      "type": "lp",
+      "provider": {
+        "value": "jetswap",
+        "label": "JetSwap",
+        "masterAddress": "0x63d6EC1cDef04464287e2af710FFef9780B6f9F5"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "FUEL-BNB-WINGS-VAULT",
+      "label": "FUEL-BNB-WINGS-VAULT",
+      "decimals": 18,
+      "address": "0x755aAC39603599D2a10C407C3D06deE96999Ae90",
+      "type": "vault"
+    },
+    "strategyAddress": "0xa22DbbA46780fF55eba4662393D9a17568F2e0b6"
+  },
+  {
+    "id": 5,
+    "name": "GFCEV2-BNB",
+    "img": "asset",
+    "route": "/gfcev2-bnb",
+    "asset": {
+      "symbol": "GFCEV2-BNB-JETSWAP",
+      "label": "GFCEV2-BNB",
+      "decimals": 18,
+      "address": "0x7BFc36EA42907B5BFC951639259F0aeD71Ffe9Fe",
+      "pid": 5,
+      "addLiquidityLink": "https://exchange.jetswap.finance/#/add/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c/0x5f136383E230F972739FaE2E81E7E774AfE64c66",
+      "infoLink": "https://info.jetswap.finance/pair/0x7BFc36EA42907B5BFC951639259F0aeD71Ffe9Fe",
+      "otherAssetSymbol": "GFCEV2",
+      "type": "lp",
+      "provider": {
+        "value": "jetswap",
+        "label": "JetSwap",
+        "masterAddress": "0x63d6EC1cDef04464287e2af710FFef9780B6f9F5"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "GFCEV2-BNB-WINGS-VAULT",
+      "label": "GFCEV2-BNB-WINGS-VAULT",
+      "decimals": 18,
+      "address": "0xF2F11389cE9cf23c37B03131Df914772BA17e664",
+      "type": "vault"
+    },
+    "strategyAddress": "0xD962D17807693b1Cd32ec76d811f1dC8E184f3C8"
+  },
+  {
+    "id": 6,
+    "name": "BNB-BUSD",
+    "img": "asset",
+    "route": "/bnb-busd",
+    "asset": {
+      "symbol": "BNB-BUSD-JETSWAP",
+      "label": "BNB-BUSD",
+      "decimals": 18,
+      "address": "0xc53eE6446101F2128f887b8c75083E74dca3e973",
+      "pid": 7,
+      "addLiquidityLink": "https://exchange.jetswap.finance/#/add/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c/0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "infoLink": "https://info.jetswap.finance/pair/0xc53eE6446101F2128f887b8c75083E74dca3e973",
+      "otherAssetSymbol": "WBUSD",
+      "type": "lp",
+      "provider": {
+        "value": "jetswap",
+        "label": "JetSwap",
+        "masterAddress": "0x63d6EC1cDef04464287e2af710FFef9780B6f9F5"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "BNB-BUSD-WINGS-VAULT",
+      "label": "BNB-BUSD-WINGS-VAULT",
+      "decimals": 18,
+      "address": "0x7F2E9e374E97f171c9eD3E0910111b15B9045644",
+      "type": "vault"
+    },
+    "strategyAddress": "0x0d9AB0182A8004014DD22B7b6F614D07d13EeDb6"
+  },
+  {
+    "id": 7,
+    "name": "BUSD-USDC",
+    "img": "asset",
+    "route": "/busd-usdc",
+    "asset": {
+      "symbol": "BUSD-USDC-JETSWAP",
+      "label": "BUSD-USDC",
+      "decimals": 18,
+      "address": "0xB3D117C8cC60Abd83F0d946d85f3B67c972196dd",
+      "pid": 8,
+      "addLiquidityLink": "https://exchange.jetswap.finance/#/add/0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d/0xe9e7cea3dedca5984780bafc599bd69add087d56",
+      "infoLink": "https://info.jetswap.finance/pair/0xB3D117C8cC60Abd83F0d946d85f3B67c972196dd",
+      "firstAssetSymbol": "WBUSD",
+      "otherAssetSymbol": "USDC",
+      "type": "lp",
+      "provider": {
+        "value": "jetswap",
+        "label": "JetSwap",
+        "masterAddress": "0x63d6EC1cDef04464287e2af710FFef9780B6f9F5"
+      }
+    },
+    "vaultAsset": {
+      "symbol": "BUSD-USDC-WINGS-VAULT",
+      "label": "BUSD-USDC-WINGS-VAULT",
+      "decimals": 18,
+      "address": "0x06FD5CaB123990a0dd0Ba2130Bfa76Da26C91b43",
+      "type": "vault"
+    },
+    "strategyAddress": "0x24Bb788B3631d833642FD177d6774428BE5a63cE"
+  },
+  {
+    "id": 8,
+    "name": "BTCB",
+    "img": "asset",
+    "route": "/btcb-fortress",
+    "asset": {
+      "symbol": "FBTCB",
+      "label": "BTCB",
+      "decimals": 18,
+      "address": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+      "fortressAsset": "BTCB-FORTRESS",
+      "type": "single",
+      "priceLpAsset": "BTCB-BNB-CAKE",
+      "smallNum": true
+    },
+    "vaultAsset": {
+      "symbol": "BTCB-FORTRESS-VAULT",
+      "label": "BTCB-FORTRESS-VAULT",
+      "decimals": 18,
+      "address": "0xeaa8234D9bf8Dfc6C8c24D3d24BE3cAd256450EF",
+      "type": "vault"
+    },
+    "strategyAddress": "0xE545721E35Ad2Cd9F1616b22509dE643eB0De789"
+  },
+  {
+    "id": 9,
+    "name": "ETH",
+    "img": "asset",
+    "route": "/eth-fortress",
+    "asset": {
+      "symbol": "FETH",
+      "label": "ETH",
+      "decimals": 18,
+      "address": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+      "fortressAsset": "ETH-FORTRESS",
+      "type": "single",
+      "priceLpAsset": "ETH-BNB",
+      "smallNum": true
+    },
+    "vaultAsset": {
+      "symbol": "ETH-FORTRESS-VAULT",
+      "label": "ETH-FORTRESS-VAULT",
+      "decimals": 18,
+      "address": "0x647db6Dce3C36Ac1a3BA48f0F6B767A6c73E22D2",
+      "type": "vault"
+    },
+    "strategyAddress": "0xDC012eE194179ceb4f5431015148B0DA1f964E1A"
+  },
+  {
+    "id": 10,
+    "name": "BNB",
+    "img": "asset",
+    "route": "/bnb-fortress",
+    "asset": {
+      "symbol": "FBNB",
+      "label": "BNB",
+      "decimals": 18,
+      "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      "fortressAsset": "BNB-FORTRESS",
+      "priceLpAsset": "WBNB",
+      "type": "single"
+    },
+    "vaultAsset": {
+      "symbol": "BNB-FORTRESS-VAULT",
+      "label": "BNB-FORTRESS-VAULT",
+      "decimals": 18,
+      "address": "0x15e84D6eD8997590E02b25d3D3CeEe9686753306",
+      "type": "vault"
+    },
+    "strategyAddress": "0x58B8B3430c70e76a33E91a6c942078b8f88c506D"
+  },
+  {
+    "id": 11,
     "name": "B-29 Superfortress v2",
     "img": "superfortress.png",
     "route": "/b-29-superfortress-v2",
@@ -29,10 +342,12 @@
       "type": "vault"
     },
     "strategyAddress": "0x4C3B71f7233dF55c7a865544107a4D9c694C2107",
-    "highlighted": true
+    "disabled": true,
+    "migrate": true,
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 22,
+    "id": 12,
     "name": "BALBT-BNB v2",
     "img": "asset",
     "route": "/balbt-bnb-v2",
@@ -62,7 +377,7 @@
     "strategyAddress": "0x507B16b0907E102E50379c11F571Bdb8024D5A50"
   },
   {
-    "id": 43,
+    "id": 13,
     "name": "BDIGG-BTCB v2",
     "img": "asset",
     "route": "/bdigg-btcb-v2",
@@ -93,7 +408,7 @@
     "strategyAddress": "0x744140BB9c86BB30B9aCc291063E377dd7173D17"
   },
   {
-    "id": 42,
+    "id": 14,
     "name": "BEL-BNB v2",
     "img": "asset",
     "route": "/bel-bnb-v2",
@@ -123,7 +438,7 @@
     "strategyAddress": "0x7266cF2770A2E849A5329004Ac52e128Ca7f9902"
   },
   {
-    "id": 24,
+    "id": 15,
     "name": "blink-BNB v2",
     "img": "asset",
     "route": "/blink-bnb-v2",
@@ -154,7 +469,7 @@
     "strategyAddress": "0x6B8596CF499725E29A56BC9d7b7867d16aD55313"
   },
   {
-    "id": 44,
+    "id": 16,
     "name": "BTCB-BNB v2",
     "img": "asset",
     "route": "/btcb-bnb-v2",
@@ -184,7 +499,7 @@
     "strategyAddress": "0xf08FE1CEbCD8B683a78fbef1F102F8a7728DA9b1"
   },
   {
-    "id": 25,
+    "id": 17,
     "name": "BUSD-BNB v2",
     "img": "asset",
     "route": "/busd-bnb-v2",
@@ -214,7 +529,7 @@
     "strategyAddress": "0x4E41ddED925bB4a388fa74348E66BCC82A304cB5"
   },
   {
-    "id": 6,
+    "id": 18,
     "name": "CAKE-BNB v2",
     "img": "asset",
     "route": "/cake-bnb-v2",
@@ -244,7 +559,7 @@
     "strategyAddress": "0xd0Fb241B29cf122fD5EAaA856e457e6728181a0c"
   },
   {
-    "id": 20,
+    "id": 19,
     "name": "DAI-BUSD v2",
     "img": "asset",
     "route": "/dai-busd-v2",
@@ -275,7 +590,7 @@
     "strategyAddress": "0x747b6BBbE0Aaa71bA225C4373a1A79d7770A4338"
   },
   {
-    "id": 5,
+    "id": 20,
     "name": "DITTO-BNB v2",
     "img": "asset",
     "route": "/ditto-bnb-new-v2",
@@ -306,7 +621,7 @@
     "strategyAddress": "0xA6Fd773FC1AdE5980b2Cdb08643A7409bb0825cC"
   },
   {
-    "id": 17,
+    "id": 21,
     "name": "Helmet-BNB v2",
     "img": "asset",
     "route": "/helmet-bnb-v2",
@@ -336,7 +651,7 @@
     "strategyAddress": "0xF1ffdb8c5219386780294a55065292Fd41b39958"
   },
   {
-    "id": 18,
+    "id": 22,
     "name": "LTC-BNB v2",
     "img": "asset",
     "route": "/ltc-bnb-v2",
@@ -366,7 +681,7 @@
     "strategyAddress": "0x75edc51307B3c378028E6d891F4C3D97B5757E5B"
   },
   {
-    "id": 30,
+    "id": 23,
     "name": "mAMZN-UST v2",
     "img": "asset",
     "route": "/mamzn-ust-v2",
@@ -394,10 +709,12 @@
       "address": "0xbf964f5518ffdF499047947ae3FDB209DB4E42Cc",
       "type": "vault"
     },
-    "strategyAddress": "0xCA3A76DBEbe2Fea192b79074Fd72617C97b1c0c7"
+    "strategyAddress": "0xCA3A76DBEbe2Fea192b79074Fd72617C97b1c0c7",
+    "depositIssue": true,
+    "disabled": true
   },
   {
-    "id": 31,
+    "id": 24,
     "name": "mGOOGL-UST v2",
     "img": "asset",
     "route": "/mgoogl-ust-v2",
@@ -425,10 +742,12 @@
       "address": "0x3AA4BC2820c238E843A7397Fa7D5b3C944fAcD93",
       "type": "vault"
     },
-    "strategyAddress": "0x7ed59eFEf194101c64d535f81DB42c0F2f87AC6F"
+    "strategyAddress": "0x7ed59eFEf194101c64d535f81DB42c0F2f87AC6F",
+    "depositIssue": true,
+    "disabled": true
   },
   {
-    "id": 32,
+    "id": 25,
     "name": "mNFLX-UST v2",
     "img": "asset",
     "route": "/mnflx-ust-v2",
@@ -456,10 +775,12 @@
       "address": "0xE2859C4E50Bbd88bDEb4988869BFDE3d78fE14fB",
       "type": "vault"
     },
-    "strategyAddress": "0x187C1Df868af511bbd19575471CbaD979a44b3b7"
+    "strategyAddress": "0x187C1Df868af511bbd19575471CbaD979a44b3b7",
+    "depositIssue": true,
+    "disabled": true
   },
   {
-    "id": 33,
+    "id": 26,
     "name": "mTSLA-UST v2",
     "img": "asset",
     "route": "/mtsla-ust-v2",
@@ -487,10 +808,12 @@
       "address": "0x3A795A0C7Ba98d965982c6150977258ef9197225",
       "type": "vault"
     },
-    "strategyAddress": "0x1a78CCA3d9eA2129cBB9964865e8C63CF4046A13"
+    "strategyAddress": "0x1a78CCA3d9eA2129cBB9964865e8C63CF4046A13",
+    "depositIssue": true,
+    "disabled": true
   },
   {
-    "id": 21,
+    "id": 27,
     "name": "TEN-BNB v2",
     "img": "asset",
     "route": "/ten-bnb-v2",
@@ -520,7 +843,7 @@
     "strategyAddress": "0xbe79DE07D9c150f6Cb5Bd16817F753f052c49B7d"
   },
   {
-    "id": 19,
+    "id": 28,
     "name": "USDC-BUSD v2",
     "img": "asset",
     "route": "/usdc-busd-v2",
@@ -582,7 +905,7 @@
     "strategyAddress": "0x5D7E7989ab83914c593219E1fBfbe36D184C9374"
   },
   {
-    "id": 34,
+    "id": 30,
     "name": "wSOTE-BNB v2",
     "img": "asset",
     "route": "/wsote-bnb-v2",
@@ -612,7 +935,7 @@
     "strategyAddress": "0x62F5e2E719DEBE918E092AD79DEe9617E1D36346"
   },
   {
-    "id": 0,
+    "id": 31,
     "name": "B-29 Superfortress",
     "img": "superfortress.png",
     "route": "/b-29-superfortress",
@@ -643,11 +966,10 @@
     "strategyAddress": "0x40fA8ABE4150b6d9D3D6cC16Ec7a4F5503dae662",
     "disabled": true,
     "migrate": true,
-    "isKeep": true,
-    "migrateText": "vaults.fuel_bnb_v2_notice"
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 1,
+    "id": 32,
     "name": "F-16C Fighting Falcon",
     "img": "falcon.png",
     "route": "/f-16c-fighting-falcon",
@@ -675,10 +997,12 @@
       "type": "vault"
     },
     "strategyAddress": "0x63F04Fa44E5Df591fbc093CA4A72b45E7809e392",
-    "highlighted": true
+    "disabled": true,
+    "migrate": true,
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 2,
+    "id": 33,
     "name": "Cake Best",
     "img": "asset",
     "route": "/cake",
@@ -710,7 +1034,7 @@
     "strategyAddress": "0xDcc5953161D3872F96a560b496419A597231444B"
   },
   {
-    "id": 3,
+    "id": 34,
     "name": "BTCB",
     "img": "asset",
     "route": "/btcb-venus",
@@ -736,7 +1060,7 @@
     "disabled": true
   },
   {
-    "id": 4,
+    "id": 35,
     "name": "DITTO-BNB",
     "img": "asset",
     "route": "/ditto-bnb",
@@ -770,7 +1094,7 @@
     "migrateText": "vaults.ditto_v2_notice"
   },
   {
-    "id": 5,
+    "id": 36,
     "name": "DITTO-BNB V2",
     "img": "asset",
     "route": "/ditto-bnb-v2",
@@ -803,7 +1127,7 @@
     "disabled": true
   },
   {
-    "id": 6,
+    "id": 37,
     "name": "CAKE-BNB",
     "img": "asset",
     "route": "/cake-bnb",
@@ -835,7 +1159,7 @@
     "disabled": true
   },
   {
-    "id": 7,
+    "id": 38,
     "name": "Boeing AH-64 Apache",
     "img": "boeing-AH-64-apache.png",
     "route": "/boeing-AH-64-apache",
@@ -869,7 +1193,7 @@
     "disabled": true
   },
   {
-    "id": 8,
+    "id": 39,
     "name": "F35 Lightning",
     "img": "f35.svg",
     "route": "/f35-lightning",
@@ -898,10 +1222,13 @@
       "address": "0x1d149c549A88035334B9829FEd0172641e2a50eC",
       "type": "vault"
     },
-    "strategyAddress": "0x69B30f5d9dC7503aA4c2C1CAB78a5E2d7872940c"
+    "strategyAddress": "0x69B30f5d9dC7503aA4c2C1CAB78a5E2d7872940c",
+    "disabled": true,
+    "migrate": true,
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 9,
+    "id": 40,
     "name": "USS Enterprise",
     "img": "uss-enterprise.svg",
     "route": "/uss-enterprise",
@@ -935,7 +1262,7 @@
     "disabled": true
   },
   {
-    "id": 10,
+    "id": 41,
     "name": "Embraer Lineage 1000E",
     "img": "embraer-lineage-1000E.png",
     "route": "/embraer-lineage-1000E",
@@ -962,10 +1289,13 @@
       "address": "0x88C30C134A980e2314EdBC622a2418a2Dfa69d71",
       "type": "vault"
     },
-    "strategyAddress": "0xBFBEa46ecd61eE1F7d5D1E765E2548eDa0d25819"
+    "strategyAddress": "0xBFBEa46ecd61eE1F7d5D1E765E2548eDa0d25819",
+    "disabled": true,
+    "migrate": true,
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 11,
+    "id": 42,
     "name": "F22 Raptor",
     "img": "raptor.png",
     "route": "/f22-raptor",
@@ -993,10 +1323,13 @@
       "address": "0x0f65639De6a3285191b8e308FCc0dEC734aD75FD",
       "type": "vault"
     },
-    "strategyAddress": "0x5F07C5Ce9B6756B91e31365dfb2f1cA20558787D"
+    "strategyAddress": "0x5F07C5Ce9B6756B91e31365dfb2f1cA20558787D",
+    "disabled": true,
+    "migrate": true,
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 12,
+    "id": 43,
     "name": "MiG-15",
     "img": "mig.png",
     "route": "/mig-15",
@@ -1025,10 +1358,13 @@
       "address": "0xe4647bb421e81491529fe204eb7f442d025a6e7d",
       "type": "vault"
     },
-    "strategyAddress": "0x87af253a602f4f1373f0c8285d1b7496f2ad6898"
+    "strategyAddress": "0x87af253a602f4f1373f0c8285d1b7496f2ad6898",
+    "disabled": true,
+    "migrate": true,
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 13,
+    "id": 44,
     "name": "KC-135 Stratotanker",
     "img": "stratotanker.png",
     "route": "/kc-125-stratotanker",
@@ -1056,10 +1392,13 @@
       "address": "0x4e6aabB2850f948f9b2e4b2634F6747bb8eF8eC9",
       "type": "vault"
     },
-    "strategyAddress": "0xd02cc0a97dcf693c55865a56609d6b196a2466b2"
+    "strategyAddress": "0xd02cc0a97dcf693c55865a56609d6b196a2466b2",
+    "disabled": true,
+    "migrate": true,
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 14,
+    "id": 45,
     "name": "F18 Super Hornet",
     "img": "hornet.png",
     "route": "/f18-super-hornet",
@@ -1087,10 +1426,13 @@
       "address": "0xaef5365b8868a5766e42df5c095c61dc6013c946",
       "type": "vault"
     },
-    "strategyAddress": "0xF6fdBa39344f72b57EDCD4E9EAa83caF765140d0"
+    "strategyAddress": "0xF6fdBa39344f72b57EDCD4E9EAa83caF765140d0",
+    "disabled": true,
+    "migrate": true,
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 15,
+    "id": 46,
     "name": "747 MAXX",
     "img": "maxx.png",
     "route": "/747-maxx",
@@ -1118,10 +1460,13 @@
       "address": "0x47D8D83f7FB66855BE4fe3Bc3517F0eD29b55D70",
       "type": "vault"
     },
-    "strategyAddress": "0xf0674c8da9fe50907230f7e6ce4fde6901456cf7"
+    "strategyAddress": "0xf0674c8da9fe50907230f7e6ce4fde6901456cf7",
+    "disabled": true,
+    "migrate": true,
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 16,
+    "id": 47,
     "name": "Airbus A380",
     "img": "airbus.png",
     "route": "/airbus-a380",
@@ -1149,10 +1494,13 @@
       "address": "0x7603b766c9398624dc714cd3326618019963ecab",
       "type": "vault"
     },
-    "strategyAddress": "0xA2b7BEF45CA795Ffae4ec5197e86492d2f7D86A8"
+    "strategyAddress": "0xA2b7BEF45CA795Ffae4ec5197e86492d2f7D86A8",
+    "disabled": true,
+    "migrate": true,
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 17,
+    "id": 48,
     "name": "Helmet-BNB",
     "img": "asset",
     "route": "/helmet-bnb",
@@ -1184,7 +1532,7 @@
     "disabled": true
   },
   {
-    "id": 18,
+    "id": 49,
     "name": "LTC-BNB",
     "img": "asset",
     "route": "/ltc-bnb",
@@ -1216,7 +1564,7 @@
     "disabled": true
   },
   {
-    "id": 19,
+    "id": 50,
     "name": "USDC-BUSD",
     "img": "asset",
     "route": "/usdc-busd",
@@ -1249,7 +1597,7 @@
     "disabled": true
   },
   {
-    "id": 20,
+    "id": 51,
     "name": "DAI-BUSD",
     "img": "asset",
     "route": "/dai-busd",
@@ -1282,7 +1630,7 @@
     "disabled": true
   },
   {
-    "id": 21,
+    "id": 52,
     "name": "TEN-BNB",
     "img": "asset",
     "route": "/ten-bnb",
@@ -1314,7 +1662,7 @@
     "disabled": true
   },
   {
-    "id": 22,
+    "id": 53,
     "name": "BALBT-BNB",
     "img": "asset",
     "route": "/balbt-bnb",
@@ -1346,7 +1694,7 @@
     "disabled": true
   },
   {
-    "id": 23,
+    "id": 54,
     "name": "VAI-BUSD",
     "img": "asset",
     "route": "/vai-busd",
@@ -1379,7 +1727,7 @@
     "disabled": true
   },
   {
-    "id": 24,
+    "id": 55,
     "name": "blink-BNB",
     "img": "asset",
     "route": "/blink-bnb",
@@ -1412,7 +1760,7 @@
     "disabled": true
   },
   {
-    "id": 25,
+    "id": 56,
     "name": "BUSD-BNB",
     "img": "asset",
     "route": "/busd-bnb",
@@ -1444,7 +1792,7 @@
     "disabled": true
   },
   {
-    "id": 26,
+    "id": 57,
     "name": "BSCX-BUSD",
     "img": "asset",
     "route": "/bscx-busd-bscx",
@@ -1476,7 +1824,7 @@
     "disabled": true
   },
   {
-    "id": 27,
+    "id": 58,
     "name": "BSCX-BNB",
     "img": "asset",
     "route": "/bscx-bnb-bscx",
@@ -1507,7 +1855,7 @@
     "disabled": true
   },
   {
-    "id": 28,
+    "id": 59,
     "name": "AUTO-BNB V2",
     "img": "asset",
     "route": "/auto-bnb-v2",
@@ -1538,7 +1886,7 @@
     "strategyAddress": "0x87b7972453D03e344D4fdf8Dd5bef6cA692352f1"
   },
   {
-    "id": 29,
+    "id": 60,
     "name": "UST-BUSD",
     "img": "asset",
     "route": "/ust-busd",
@@ -1571,7 +1919,7 @@
     "disabled": true
   },
   {
-    "id": 30,
+    "id": 61,
     "name": "mAMZN-UST",
     "img": "asset",
     "route": "/mamzn-ust",
@@ -1604,7 +1952,7 @@
     "disabled": true
   },
   {
-    "id": 31,
+    "id": 62,
     "name": "mGOOGL-UST",
     "img": "asset",
     "route": "/mgoogl-ust",
@@ -1637,7 +1985,7 @@
     "disabled": true
   },
   {
-    "id": 32,
+    "id": 63,
     "name": "mNFLX-UST",
     "img": "asset",
     "route": "/mnflx-ust",
@@ -1670,7 +2018,7 @@
     "disabled": true
   },
   {
-    "id": 33,
+    "id": 64,
     "name": "mTSLA-UST",
     "img": "asset",
     "route": "/mtsla-ust",
@@ -1703,7 +2051,7 @@
     "disabled": true
   },
   {
-    "id": 34,
+    "id": 65,
     "name": "wSOTE-BNB",
     "img": "asset",
     "route": "/wsote-bnb",
@@ -1735,7 +2083,7 @@
     "disabled": true
   },
   {
-    "id": 35,
+    "id": 66,
     "name": "XRP V2",
     "img": "asset",
     "route": "/xrp-venus-v2",
@@ -1760,7 +2108,7 @@
     "disabled": true
   },
   {
-    "id": 36,
+    "id": 67,
     "name": "WBNB V2",
     "img": "asset",
     "route": "/bnb-venus-v2",
@@ -1783,7 +2131,7 @@
     "strategyAddress": "0x956BcE4F086dC4579B960ED80336Ef79737cDaa3"
   },
   {
-    "id": 37,
+    "id": 68,
     "name": "ETH V2",
     "img": "asset",
     "route": "/eth-venus-v2",
@@ -1809,7 +2157,7 @@
     "disabled": true
   },
   {
-    "id": 38,
+    "id": 69,
     "name": "D100-BNB",
     "img": "asset",
     "route": "/bake-d100-bnb",
@@ -1839,7 +2187,7 @@
     "strategyAddress": "0xcf2F2c16F2cC5B36d85f2C2c062AebF04F60a8Fb"
   },
   {
-    "id": 39,
+    "id": 70,
     "name": "BANANA",
     "img": "asset",
     "route": "/banana",
@@ -1869,7 +2217,7 @@
     "strategyAddress": "0x7b9Ec0d578230f252F332B8B2c632f4467f7c2B8"
   },
   {
-    "id": 40,
+    "id": 71,
     "name": "GFCE-BNB",
     "img": "asset",
     "route": "/gfce-bnb",
@@ -1899,7 +2247,7 @@
     "strategyAddress": "0xD76eAf7EA4dd631eBF3e4269086DF9d0B024f5A0"
   },
   {
-    "id": 41,
+    "id": 72,
     "name": "GFCE-BANANA",
     "img": "asset",
     "route": "/gfce-banana",
@@ -1932,7 +2280,7 @@
     "disabled": true
   },
   {
-    "id": 42,
+    "id": 73,
     "name": "BEL-BNB",
     "img": "asset",
     "route": "/bel-bnb",
@@ -1964,7 +2312,7 @@
     "disabled": true
   },
   {
-    "id": 43,
+    "id": 74,
     "name": "BDIGG-BTCB",
     "img": "asset",
     "route": "/bdigg-btcb",
@@ -1997,7 +2345,7 @@
     "disabled": true
   },
   {
-    "id": 44,
+    "id": 75,
     "name": "BTCB-BNB",
     "img": "asset",
     "route": "/btcb-bnb",
@@ -2029,7 +2377,7 @@
     "disabled": true
   },
   {
-    "id": 45,
+    "id": 76,
     "name": "Space Shuttle Atlantis v2",
     "img": "rocket.svg",
     "route": "/space-shuttle-atlantis-v2",
@@ -2059,10 +2407,13 @@
       "address": "0xA10983a758DbD8998215dB48b44A0aDa77C5f7DB",
       "type": "vault"
     },
-    "strategyAddress": "0x01588b79B8B9c5DFd4d7199a978C4404D5daF7fC"
+    "strategyAddress": "0x01588b79B8B9c5DFd4d7199a978C4404D5daF7fC",
+    "disabled": true,
+    "migrate": true,
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 45,
+    "id": 77,
     "name": "Space Shuttle Atlantis",
     "img": "rocket.svg",
     "route": "/space-shuttle-atlantis",
@@ -2094,11 +2445,10 @@
     "strategyAddress": "0x7aC6832E4AD2105aE4888D8BF93636f377830be9",
     "disabled": true,
     "migrate": true,
-    "isKeep": true,
-    "migrateText": "vaults.tryon_bnb_v2_notice"
+    "migrateText": "vaults.fuel_emission_ended"
   },
   {
-    "id": 46,
+    "id": 78,
     "name": "BANANA-BNB",
     "img": "asset",
     "route": "/banana-bnb",
@@ -2128,7 +2478,7 @@
     "strategyAddress": "0xD43ccd89278D9f5a1ab38117F13618F63344b705"
   },
   {
-    "id": 47,
+    "id": 79,
     "name": "BANANA-BUSD",
     "img": "asset",
     "route": "/banana-busd",
@@ -2159,7 +2509,7 @@
     "strategyAddress": "0xfDB06Ec9bA5F475eDa37Ef47206BbC7cae3DeE04"
   },
   {
-    "id": 48,
+    "id": 80,
     "name": "Lockheed SR-71 Blackbird",
     "img": "lockheedsr-71blackbird.svg",
     "route": "/lockheed-sr-71-blackbird",
@@ -2187,77 +2537,9 @@
       "address": "0x24EBDb0e354C36F50979bA68c13eCA9F59151ac4",
       "type": "vault"
     },
-    "strategyAddress": "0x394639FcA6eEB4279BeF71cbd9B7C988a211eAFF"
-  },
-  {
-    "id": 49,
-    "name": "BTCB",
-    "img": "asset",
-    "route": "/btcb-fortress",
-    "asset": {
-      "symbol": "FBTCB",
-      "label": "BTCB",
-      "decimals": 18,
-      "address": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
-      "fortressAsset": "BTCB-FORTRESS",
-      "type": "single",
-      "priceLpAsset": "BTCB-BNB-CAKE",
-      "smallNum": true
-    },
-    "vaultAsset": {
-      "symbol": "BTCB-FORTRESS-VAULT",
-      "label": "BTCB-FORTRESS-VAULT",
-      "decimals": 18,
-      "address": "0xeaa8234D9bf8Dfc6C8c24D3d24BE3cAd256450EF",
-      "type": "vault"
-    },
-    "strategyAddress": "0xE545721E35Ad2Cd9F1616b22509dE643eB0De789"
-  },
-  {
-    "id": 50,
-    "name": "ETH",
-    "img": "asset",
-    "route": "/eth-fortress",
-    "asset": {
-      "symbol": "FETH",
-      "label": "ETH",
-      "decimals": 18,
-      "address": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
-      "fortressAsset": "ETH-FORTRESS",
-      "type": "single",
-      "priceLpAsset": "ETH-BNB",
-      "smallNum": true
-    },
-    "vaultAsset": {
-      "symbol": "ETH-FORTRESS-VAULT",
-      "label": "ETH-FORTRESS-VAULT",
-      "decimals": 18,
-      "address": "0x647db6Dce3C36Ac1a3BA48f0F6B767A6c73E22D2",
-      "type": "vault"
-    },
-    "strategyAddress": "0xDC012eE194179ceb4f5431015148B0DA1f964E1A"
-  },
-  {
-    "id": 51,
-    "name": "BNB",
-    "img": "asset",
-    "route": "/bnb-fortress",
-    "asset": {
-      "symbol": "FBNB",
-      "label": "BNB",
-      "decimals": 18,
-      "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-      "fortressAsset": "BNB-FORTRESS",
-      "priceLpAsset": "WBNB",
-      "type": "single"
-    },
-    "vaultAsset": {
-      "symbol": "BNB-FORTRESS-VAULT",
-      "label": "BNB-FORTRESS-VAULT",
-      "decimals": 18,
-      "address": "0x15e84D6eD8997590E02b25d3D3CeEe9686753306",
-      "type": "vault"
-    },
-    "strategyAddress": "0x58B8B3430c70e76a33E91a6c942078b8f88c506D"
+    "strategyAddress": "0x394639FcA6eEB4279BeF71cbd9B7C988a211eAFF",
+    "disabled": true,
+    "migrate": true,
+    "migrateText": "vaults.fuel_emission_ended"
   }
 ]

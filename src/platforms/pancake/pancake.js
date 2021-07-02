@@ -5,7 +5,6 @@ const fs = require("fs");
 const path = require("path");
 const BigNumber = require("bignumber.js");
 const Web3EthContract = require("web3-eth-contract");
-const request = require("async-request");
 const Utils = require("../../utils");
 
 const masterChefAddress = "0x73feaa1eE314F8c655E354234017bE2193C9E24E";
@@ -116,8 +115,7 @@ module.exports = class pancake {
 
   async getApy() {
     try {
-      const response = await request("https://api.beefy.finance/apy");
-      return JSON.parse(response.body);
+      return await Utils.requestJsonGet("https://api.beefy.finance/apy");
     } catch (e) {
       console.error("pancake: https://api.beefy.finance/apy", e.message);
     }
@@ -518,8 +516,7 @@ module.exports = class pancake {
       return cache;
     }
 
-    const response = await request("https://raw.githubusercontent.com/pancakeswap/pancake-frontend/develop/src/config/constants/pools.ts");
-    const body = response.body;
+    const body = await Utils.requestGet("https://raw.githubusercontent.com/pancakeswap/pancake-frontend/develop/src/config/constants/pools.ts");
 
     let blockNumber = await Utils.getWeb3().eth.getBlockNumber();
 

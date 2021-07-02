@@ -6,9 +6,10 @@ const _ = require("lodash");
 const timeout = require('connect-timeout');
 
 module.exports = class Http {
-  constructor(priceOracle, platforms, balances, addressTransactions, tokenCollector, liquidityTokenCollector, tokenInfo) {
+  constructor(priceOracle, platforms, platformsPolygon, balances, addressTransactions, tokenCollector, liquidityTokenCollector, tokenInfo) {
     this.priceOracle = priceOracle;
     this.platforms = platforms;
+    this.platformsPolygon = platformsPolygon;
     this.balances = balances;
     this.addressTransactions = addressTransactions;
     this.tokenCollector = tokenCollector;
@@ -106,6 +107,20 @@ module.exports = class Http {
       res.json(result);
     });
 
+    app.get("/polygon/farms", async (req, res) => {
+      const items = await Promise.all(
+        await this.platformsPolygon.getFunctionAwaits("getFarms")
+      );
+
+      const result = items.flat().map(f => {
+        const item = _.cloneDeep(f);
+        delete item.raw;
+        return item;
+      });
+
+      res.json(result);
+    });
+
     app.get("/yield/:address", async (req, res) => {
       if (!req.query.p) {
         res.status(400).json({error: 'missing "p" query parameter'});
@@ -122,6 +137,50 @@ module.exports = class Http {
       }
 
       let functionAwaitsForPlatforms = this.platforms.getFunctionAwaitsForPlatforms(platforms, 'getYields', [address]);
+
+      const awaits = await Promise.allSettled([...functionAwaitsForPlatforms]);
+
+      const response = {}
+      awaits.forEach(v => {
+        if (!v.value) {
+          console.error(v);
+          return;
+        }
+
+        v.value.forEach(vault => {
+          const item = _.cloneDeep(vault);
+          delete item.farm.raw;
+
+          if (!response[vault.farm.provider]) {
+            response[vault.farm.provider] = [];
+          }
+
+          response[vault.farm.provider].push(item);
+        });
+      });
+
+      timer += performance.now();
+      console.log(`${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: ${(timer / 1000).toFixed(3)} sec`);
+
+      res.json(response);
+    });
+
+    app.get("/polygon/yield/:address", async (req, res) => {
+      if (!req.query.p) {
+        res.status(400).json({error: 'missing "p" query parameter'});
+        return;
+      }
+
+      let timer = -performance.now();
+      const {address} = req.params;
+
+      let platforms = _.uniq(req.query.p.split(',').filter(e => e.match(/^[\w]+$/g)));
+      if (platforms.length === 0) {
+        res.json({});
+        return;
+      }
+
+      let functionAwaitsForPlatforms = this.platformsPolygon.getFunctionAwaitsForPlatforms(platforms, 'getYields', [address]);
 
       const awaits = await Promise.allSettled([...functionAwaitsForPlatforms]);
 

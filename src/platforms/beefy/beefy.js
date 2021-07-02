@@ -3,7 +3,6 @@
 const _ = require("lodash");
 const fs = require("fs");
 const path = require("path");
-const request = require("async-request");
 const BigNumber = require("bignumber.js");
 const Web3EthContract = require("web3-eth-contract");
 const Utils = require("../../utils");
@@ -35,12 +34,11 @@ module.exports = class beefy {
       return cacheItem;
     }
 
-    const poolsResponse = await request(
-      "https://raw.githubusercontent.com/beefyfinance/beefy-app/master/src/features/configure/vault/bsc_pools.js"
-    );
+    const poolsResponse = await Utils.requestGet("https://raw.githubusercontent.com/beefyfinance/beefy-app/master/src/features/configure/vault/bsc_pools.js");
+
     const pools = Object.freeze(
       eval(
-        poolsResponse.body.replace(/export\s+const\s+bscPools\s+=\s+/, "")
+        poolsResponse.replace(/export\s+const\s+bscPools\s+=\s+/, "")
       ).filter(p => {
         return p.status === "active" || p.depositsPaused !== false;
       })
@@ -89,8 +87,7 @@ module.exports = class beefy {
 
     let apys = {};
     try {
-      const text = await request("https://api.beefy.finance/apy");
-      apys = JSON.parse(text.body);
+      apys = await Utils.requestJsonGet("https://api.beefy.finance/apy");
     } catch (e) {
       console.error("https://api.beefy.finance/apy", e.message);
     }

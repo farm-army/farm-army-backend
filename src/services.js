@@ -60,6 +60,10 @@ const Biswap = require("./platforms/biswap/biswap");
 const Evodefi = require("./platforms/evodefi/evodefi");
 const Eleven = require("./platforms/eleven/eleven");
 const Coinswap = require("./platforms/coinswap/coinswap");
+const Merlin = require("./platforms/merlin/merlin");
+
+const Pwault = require("./platforms/polygon/pwault/pwault");
+const Polycat = require("./platforms/polygon/polycat/polycat");
 
 let pancake;
 let swamp;
@@ -85,6 +89,12 @@ let biswap;
 let evodefi;
 let eleven;
 let coinswap;
+let merlin;
+
+let pwault;
+let polycat;
+
+let platformsPolygon;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -129,6 +139,7 @@ module.exports = {
       return platforms;
     }
 
+    let folder = path.resolve(__dirname, "./platforms");
     return (platforms = new Platforms(
         [
           this.getPancake(),
@@ -155,10 +166,28 @@ module.exports = {
           this.getEvodefi(),
           this.getEleven(),
           this.getCoinswap(),
+          this.getMerlin()
         ],
         this.getCache(),
         this.getPriceOracle(),
         this.getTokenCollector(),
+        folder
+    ));
+  },
+
+  getPlatformsPolygon() {
+    if (platformsPolygon) {
+      return platformsPolygon;
+    }
+
+    return (platformsPolygon = new Platforms(
+      [
+        this.getPwault(),
+        this.getPolycat(),
+      ],
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
     ));
   },
 
@@ -176,12 +205,54 @@ module.exports = {
     ));
   },
 
+  getMerlin() {
+    if (merlin) {
+      return merlin;
+    }
+
+    return (merlin = new Merlin(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
   getSwamp() {
     if (swamp) {
       return swamp;
     }
 
     return (swamp = new Swamp(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getPwault() {
+    if (pwault) {
+      return pwault;
+    }
+
+    return (pwault = new Pwault(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getPolycat() {
+    if (polycat) {
+      return polycat;
+    }
+
+    return (polycat = new Polycat(
       this.getCache(),
       this.getPriceOracle(),
       this.getTokenCollector(),
@@ -621,6 +692,7 @@ module.exports = {
     return (http = new Http(
       this.getPriceOracle(),
       this.getPlatforms(),
+      this.getPlatformsPolygon(),
       this.getBalances(),
       this.getAddressTransactions(),
       this.getTokenCollector(),
@@ -647,6 +719,7 @@ module.exports = {
     return (contractAbiFetcher = new ContractAbiFetcher(
       this.getBscscanRequest(),
       this.getCacheManager(),
+      module.exports.CONFIG['BSCSCAN_API_KEY'],
     ));
   },
 

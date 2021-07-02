@@ -1,7 +1,6 @@
 "use strict";
 
 const _ = require("lodash");
-const request = require("async-request");
 const BigNumber = require("bignumber.js");
 const Web3EthContract = require("web3-eth-contract");
 const Utils = require("../../utils");
@@ -34,11 +33,7 @@ module.exports = class eleven {
       return cacheItem;
     }
 
-    const poolsResponse = await request(
-      "https://raw.githubusercontent.com/Eleven-Finance/elevenfinance/main/src/features/configure/pools.js"
-    );
-
-    let body = poolsResponse.body;
+    let body = await Utils.requestGet("https://raw.githubusercontent.com/Eleven-Finance/elevenfinance/main/src/features/configure/pools.js");
 
     let pools = [];
 
@@ -110,8 +105,7 @@ module.exports = class eleven {
 
     let apys = {};
     try {
-      const text = await request("https://eleven.finance/api.json");
-      apys = JSON.parse(text.body);
+      apys = await Utils.requestJsonGet("https://eleven.finance/api.json");
     } catch (e) {
       console.error("https://eleven.finance/api.json", e.message);
     }

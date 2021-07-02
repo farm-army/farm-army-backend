@@ -258,8 +258,14 @@ module.exports = class acryptos {
         item.earns.push("acsi");
       }
 
-      if (i.tags && i.tags.includes("pancake")) {
+      if (i.tags && (i.tags.includes("pancake") || i.tags.includes("pancakeV2"))) {
         item.platform = "pancake";
+      } else if (i.tags && i.tags.includes("mdex")) {
+        item.platform = "venus";
+      } else if (i.tags && i.tags.includes("venus")) {
+        item.platform = "venus";
+      } else if (i.tags && i.tags.includes("swipeswap")) {
+        item.platform = "swipe";
       }
 
       if (i.vault && i.vault.token && farmTvls[i.vault.token]) {

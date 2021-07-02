@@ -23,8 +23,7 @@ module.exports = class AddressTransactions {
 
     let response = {};
     try {
-      const responseBody = await this.bscscanRequest.get(myUrl);
-      response = JSON.parse(responseBody.body);
+      response = await this.bscscanRequest.get(myUrl);
     } catch (e) {
       console.error(myUrl, e.message);
       return [];

@@ -286,7 +286,11 @@ module.exports = class Balances {
       {
         "token": "css",
         "contract": "0x3bc5798416c1122BcFd7cb0e055d50061F23850d",
-      }
+      },
+      {
+        "token": "merl",
+        "contract": "0xDA360309C59CB8C434b28A91b823344a96444278",
+      },
     ];
   }
 
