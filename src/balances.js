@@ -132,6 +132,10 @@ module.exports = class Balances {
         contract: "0xa184088a740c695e156f91f5cc086a06bb78b827"
       },
       {
+        token: "aDGNZ",
+        contract: "0xe8b9b396c59a6bc136cf1f05c4d1a68a0f7c2dd7"
+      },
+      {
         token: "cake",
         contract: "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82"
       },
