@@ -3,12 +3,15 @@
 const STATIC_TOKENS = Object.freeze(require('./token_collector_static.json'))
 
 module.exports = class TokenCollector {
-  constructor(cacheManager) {
+  constructor(cacheManager, chain = undefined) {
     this.cacheManager = cacheManager;
+    this.chain = chain;
     this.tokens = {};
     this.tokenSymbols = {};
 
-    STATIC_TOKENS.forEach(i => this.add(i))
+    if (chain === 'bsc') {
+      STATIC_TOKENS.forEach(i => this.add(i))
+    }
 
     // init data
     setTimeout(async () => {
@@ -22,7 +25,9 @@ module.exports = class TokenCollector {
         this.tokens = addresses;
       }
 
-      STATIC_TOKENS.forEach(i => this.add(i))
+      if (chain === 'bsc') {
+        STATIC_TOKENS.forEach(i => this.add(i))
+      }
     }, 1)
   }
 

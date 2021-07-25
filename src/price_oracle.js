@@ -17,61 +17,14 @@ const lpAbi = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, "lpAbi.json"), "utf8")
 );
 
-const pricesLpAddressMap = {};
 const fetch = require("node-fetch");
 
-const myManagedLp = [];
-
-//   const tokenPairContract = await new web3.eth.Contract(ERC20, lpToken.address);
-//   const token0Contract = await new web3.eth.Contract(ERC20, lpToken.lp0.address);
-//   const token1Contract = await new web3.eth.Contract(ERC20, lpToken.lp1.address);
-//
-//   let [totalSupply, reserve0, reserve1, token0Price, token1Price] = await Promise.all([
-//     tokenPairContract.methods.totalSupply().call(),
-//     token0Contract.methods.balanceOf(lpToken.address).call(),
-//     token1Contract.methods.balanceOf(lpToken.address).call(),
-//     fetchPrice({ oracle: lpToken.lp0.oracle, id: lpToken.lp0.oracleId }),
-//     fetchPrice({ oracle: lpToken.lp1.oracle, id: lpToken.lp1.oracleId }),
-//   ]);
-//
-//   reserve0 = new BigNumber(reserve0);
-//   reserve1 = new BigNumber(reserve1);
-//
-//   const token0StakedInUsd = reserve0.div(lpToken.lp0.decimals).times(token0Price);
-//   const token1StakedInUsd = reserve1.div(lpToken.lp1.decimals).times(token1Price);
-//
-//   const totalStakedInUsd = token0StakedInUsd.plus(token1StakedInUsd);
-//   const lpTokenPrice = totalStakedInUsd.dividedBy(totalSupply).times(lpToken.decimals);
-//
-//   return Number(lpTokenPrice);
-//   also:https://github.com/npty/lp-inspector
-
 module.exports = class PriceOracle {
-  constructor(services, tokenCollector, lpTokenCollector, priceCollector, cacheManager) {
-    this.services = services;
+  constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager) {
     this.tokenCollector = tokenCollector;
     this.lpTokenCollector = lpTokenCollector;
     this.priceCollector = priceCollector;
     this.cacheManager = cacheManager;
-  }
-
-  addLps(addresses) {
-    addresses.forEach(a => {
-      const a1 = a.toLowerCase();
-
-      if (!myManagedLp.includes(a)) {
-        myManagedLp.push(a1);
-      }
-    });
-  }
-
-  async cronInterval() {
-    const lps = (await Promise.all(this.services.getPlatforms().getFunctionAwaits('getLbAddresses'))).flat()
-    await this.updateTokens();
-
-    await Promise.allSettled(_.chunk(_.uniq(lps), 75).map(chunk => {
-      return this.fetch(chunk);
-    }));
   }
 
   /**
@@ -110,24 +63,6 @@ module.exports = class PriceOracle {
 
   getAllPrices() {
     return this.priceCollector.getSymbolMap();
-  }
-
-  getAllLpAddressInfo() {
-    return pricesLpAddressMap;
-  }
-
-  getLpToken0Token1SplitAmount(address, amount) {
-    if (!pricesLpAddressMap[address.toLowerCase()]) {
-      return;
-    }
-
-    return pricesLpAddressMap[address.toLowerCase()].map(i => {
-      return {
-        address: i.address,
-        symbol: i.symbol,
-        amount: i.amount * amount
-      };
-    });
   }
 
   async jsonRequest(url) {
@@ -379,7 +314,7 @@ module.exports = class PriceOracle {
       };
     });
 
-    console.log("lp address update", lpAddress.length);
+    console.log("bsc: lp address update", lpAddress.length);
 
     const vaultCalls = await Utils.multiCall(v);
 
@@ -389,7 +324,7 @@ module.exports = class PriceOracle {
 
     vaultCalls.forEach(v => {
       if (!v.getReserves) {
-        console.log("Missing reserve:", v._address);
+        console.log("bsc: Missing reserve:", v._address);
         return;
       }
 
@@ -450,7 +385,7 @@ module.exports = class PriceOracle {
       const token0Price = this.priceCollector.getPrice(c.token0, token0.symbol);
       const token1Price = this.priceCollector.getPrice(c.token1, token1.symbol);
 
-      pricesLpAddressMap[c.address.toLowerCase()] = Object.freeze([
+      const pricesLpAddress = Object.freeze([
         {
           address: c.token0.toLowerCase(),
           symbol: token0.symbol.toLowerCase(),
@@ -463,10 +398,10 @@ module.exports = class PriceOracle {
         }
       ]);
 
-      this.lpTokenCollector.add(c.address, pricesLpAddressMap[c.address.toLowerCase()]);
+      this.lpTokenCollector.add(c.address, pricesLpAddress);
 
       if (!token0Price || !token1Price) {
-        console.log("Missing price:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+        console.log("bsc: Missing price:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
 
         return;
       }
@@ -479,7 +414,7 @@ module.exports = class PriceOracle {
 
       const number = (x0p + x1p) / c.totalSupply * (10 ** c.decimals);
       if (number <= 0) {
-        console.log("Missing lp price:", token0.symbol.toLowerCase(), token1.symbol.toLowerCase());
+        console.log("bsc: Missing lp price:", token0.symbol.toLowerCase(), token1.symbol.toLowerCase());
 
         return;
       }
@@ -829,16 +764,13 @@ module.exports = class PriceOracle {
         && yieldFarm.deposit.amount;
 
     if (isLpSplitFarm) {
-      const lpSplitAddressPrices = this.getLpToken0Token1SplitAmount(
-          farm.extra.lpAddress,
-          yieldFarm.deposit.amount
-      );
+      const lpSplitAddressPrices = this.lpTokenCollector.get(farm.extra.lpAddress);
 
-      if (lpSplitAddressPrices) {
-        return lpSplitAddressPrices.map(i => {
+      if (lpSplitAddressPrices && lpSplitAddressPrices.tokens) {
+        return lpSplitAddressPrices.tokens.map(i => {
           return {
             symbol: i.symbol,
-            amount: i.amount
+            amount: i.amount * yieldFarm.deposit.amount
           };
         });
       }

@@ -1,13 +1,15 @@
 "use strict";
 
 const _ = require("lodash");
-const fs = require("fs");
-const path = require("path");
 const Utils = require("../../services").Utils;
 const Web3EthContract = require("web3-eth-contract");
 
-const b3c9 = require('./abi/0xb3c96d3c3d643c2318e4cdd0a9a48af53131f5f4.json');
-const Abi0xe375a1 = require('./abi/0xe375a12a556e954ccd48c0e0d3943f160d45ac2e.json');
+const BALANCES_ADDRESS = "0xb3c96d3c3d643c2318e4cdd0a9a48af53131f5f4";
+const ASSET_ADDRESS = "0xe375a12a556e954ccd48c0e0d3943f160d45ac2e";
+
+const BALANCES_ABI = require(`./abi/balances.json`);
+const ASSET_ABI = require(`./abi/asset.json`);
+
 const Farms = require('./farms.json');
 
 module.exports = class pancakebunny {
@@ -36,8 +38,8 @@ module.exports = class pancakebunny {
   async getBalancedAddressPoolInfo(address, pools) {
     const calls = await Utils.multiCallRpcIndex([{
       reference: 'poolsOf',
-      contractAddress: "0xb3c96d3c3d643c2318e4cdd0a9a48af53131f5f4",
-      abi: b3c9,
+      contractAddress: BALANCES_ADDRESS,
+      abi: BALANCES_ABI,
       calls: [
         {
           reference: "poolsOf",
@@ -374,14 +376,9 @@ module.exports = class pancakebunny {
   }
 
   async getTokenPrices() {
-    const farms = JSON.parse(
-      fs.readFileSync(path.resolve(__dirname, "farms.json"), "utf8")
-    );
+    const farms = _.cloneDeep(Farms);
 
-    const token = new Web3EthContract(
-      Abi0xe375a1,
-      "0xe375a12a556e954ccd48c0e0d3943f160d45ac2e"
-    );
+    const token = new Web3EthContract(ASSET_ABI, ASSET_ADDRESS);
 
     const tokenCalls = [];
     for (const key of Object.keys(farms)) {
@@ -407,19 +404,15 @@ module.exports = class pancakebunny {
   }
 
   async getOverall() {
-    const farms = JSON.parse(
-      fs.readFileSync(path.resolve(__dirname, "farms.json"), "utf8")
-    );
-
     const calls = await Utils.multiCallRpcIndex([{
       reference: 'poolsOf',
-      contractAddress: "0xb3c96d3c3d643c2318e4cdd0a9a48af53131f5f4",
-      abi: b3c9,
+      contractAddress: BALANCES_ADDRESS,
+      abi: BALANCES_ABI,
       calls: [
         {
           reference: "poolsOf",
           method: "poolsOf",
-          parameters: ['0x0000000000000000000000000000000000000000', Object.values(farms).filter(farm => farm.address).map(farm => farm.address)]
+          parameters: ['0x0000000000000000000000000000000000000000', Object.values(Farms).slice().filter(farm => farm.address).map(farm => farm.address)]
         }
       ]
     }]);

@@ -1,0 +1,223 @@
+{
+  "polyBUNNY Maximizer": {
+    "address": "0x4Ad69DC9eA7Cc01CE13A37F20817baC4bF0De1ba",
+    "token": "0x4C16f69302CcB511c5Fac682c7626B9eF0Dc126a",
+    "deposit": "polyBUNNY",
+    "earn": "polyBUNNY",
+    "summary": "Auto-Compounding",
+    "description": "Auto-Compounding polyBUNNY",
+    "type": "bunnyToBunny"
+  },
+  "polyBUNNY-ETH": {
+    "address": "0x7a526d4679cDe16641411cA813eAf7B33422501D",
+    "token": "0x62052b489Cb5bC72a9DC8EEAE4B24FD50639921a",
+    "deposit": "polyBUNNY-ETH LP",
+    "earn": "polyBUNNY",
+    "summary": "Time to Boost polyBUNNY",
+    "description": "Time to Boost polyBUNNY",
+    "exchange": "https://quickswap.exchange/#/add/0x4C16f69302CcB511c5Fac682c7626B9eF0Dc126a/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+    "type": "BunnyETH",
+    "swap": "QuickSwap"
+  },
+  "polyBUNNY-QUICK": {
+    "address": "0x6b86aB330F18E8FcC4FB214C91b1080577df3513",
+    "token": "0x976b7B7fE4293111CaCd946C422a64f24A223564",
+    "deposit": "polyBUNNY-QUICK LP",
+    "earn": "polyBUNNY",
+    "summary": "Time to Boost polyBUNNY",
+    "description": "Time to Boost polyBUNNY",
+    "exchange": "https://quickswap.exchange/#/add/0x4C16f69302CcB511c5Fac682c7626B9eF0Dc126a/0x831753DD7087CaC61aB5644b308642cc1c33Dc13",
+    "type": "BunnyETH",
+    "swap": "QuickSwap"
+  },
+  "USDC-ETH LP": {
+    "address": "0x4beB900C3a642c054CA57EfCA7090464082e904F",
+    "token": "0x853Ee4b2A13f8a742d64C8F088bE7bA2131f670d",
+    "earn": "USDC-ETH LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "USDC-ETH LP ": {
+    "address": "0x16CeE21c231E2c3cf2778Fe568230c145C8591cA",
+    "token": "0x34965ba0ac2451A34a0471F04CCa3F990b8dea27",
+    "earn": "USDC-ETH LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://app.sushi.com/add/0x2791bca1f2de4661ed88a30c99a7a9449aa84174/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+    "type": "flipToFlip",
+    "swap": "SushiSwap"
+  },
+  "wBTC-ETH LP": {
+    "address": "0x54E1feE2182d0d96D0D8e592CbFd4debC8EEf7Df",
+    "token": "0xdC9232E2Df177d7a12FdFf6EcBAb114E2231198D",
+    "earn": "wBTC-ETH LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "wBTC-ETH LP ": {
+    "address": "0x45F10bAE59Ff9D4Be78eD20F0AAfDE532b254707",
+    "token": "0xE62Ec2e799305E0D367b0Cc3ee2CdA135bF89816",
+    "earn": "wBTC-ETH LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://app.sushi.com/add/0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+    "type": "flipToFlip",
+    "swap": "SushiSwap"
+  },
+  "ETH-MATIC LP": {
+    "address": "0x3cba7b58b4430794fa7a37F042bd54E3C2A351A8",
+    "token": "0xadbF1854e5883eB8aa7BAf50705338739e558E5b",
+    "earn": "ETH-MATIC LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/ETH",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "ETH-MATIC LP ": {
+    "address": "0x87c743C1418864c9799FdE4C8612D1Ba64188ECe",
+    "token": "0xc4e595acDD7d12feC385E5dA5D43160e8A0bAC0E",
+    "earn": "ETH-MATIC LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://app.sushi.com/add/0x7ceb23fd6bc0add59e62ac25578270cff1b9f619/ETH",
+    "type": "flipToFlip",
+    "swap": "SushiSwap"
+  },
+  "MATIC-QUICK LP": {
+    "address": "0x4964e4d8E17B86e15A2f0a4D8a43D8E4AbeC3E78",
+    "token": "0x019ba0325f1988213D448b3472fA1cf8D07618d7",
+    "earn": "MATIC-QUICK LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/0x831753DD7087CaC61aB5644b308642cc1c33Dc13/ETH",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "ETH-AAVE LP": {
+    "address": "0xf066208Fb16Dc1A06e31e104bEDb187468206a92",
+    "token": "0x90bc3E68Ba8393a3Bf2D79309365089975341a43",
+    "earn": "ETH-AAVE LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/0xD6DF932A45C0f255f85145f286eA0b292B21C90B",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "ETH-USDT LP": {
+    "address": "0x29270e0bb9bD89ce4febc2fBd72Cd7EB53C0aDD7",
+    "token": "0xF6422B997c7F54D1c6a6e103bcb1499EeA0a7046",
+    "earn": "ETH-USDT LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "wBTC-USDC LP": {
+    "address": "0xE94096Fb06f60C7FC0d122A352154842384F80bd",
+    "token": "0xF6a637525402643B0654a54bEAd2Cb9A83C8B498",
+    "earn": "wBTC-USDC LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "MATIC-USDC LP": {
+    "address": "0x58918F94C14dD657f0745f8a5599190f5baDFa05",
+    "token": "0x6e7a5FAFcec6BB1e78bAE2A1F0B612012BF14827",
+    "earn": "MATIC-USDC LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/ETH/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "ETH-DAI LP": {
+    "address": "0x4ee929E9b25d00E6C7FCAa513C01311Da40462F2",
+    "token": "0x4A35582a710E1F4b2030A3F826DA20BfB6703C09",
+    "earn": "ETH-DAI LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "ETH-QUICK LP": {
+    "address": "0x560F866fE4e1E6EA20701B9dCc9555486E1B84c2",
+    "token": "0x1Bd06B96dd42AdA85fDd0795f3B4A79DB914ADD5",
+    "earn": "ETH-QUICK LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619/0x831753DD7087CaC61aB5644b308642cc1c33Dc13",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "USDC-QUICK LP": {
+    "address": "0x470Be517cBd063265c1A519aE186ae82d10dD360",
+    "token": "0x1F1E4c845183EF6d50E9609F16f6f9cAE43BC9Cb",
+    "earn": "USDC-QUICK LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/0x831753DD7087CaC61aB5644b308642cc1c33Dc13",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "USDC-USDT LP": {
+    "address": "0xB0621a46aFd14C0D1a1F8d3E1021C4aBCcd02F5b",
+    "token": "0x2cF7252e74036d1Da831d11089D326296e64a728",
+    "earn": "USDC-USDT LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "USDC-USDT LP ": {
+    "address": "0xdF0BE663C84322f55aD7b40A4120CdECBa4C4B45",
+    "token": "0x4B1F1e2435A9C96f7330FAea190Ef6A7C8D70001",
+    "earn": "USDC-USDT LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://app.sushi.com/add/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+    "type": "flipToFlip",
+    "swap": "SushiSwap"
+  },
+  "DAI-USDC LP": {
+    "address": "0x95aF402e9751f665617c3F9037f00f91ec00F7b6",
+    "token": "0xf04adBF75cDFc5eD26eeA4bbbb991DB002036Bdd",
+    "earn": "USDC-DAI LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://quickswap.exchange/#/add/0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+    "type": "flipToFlip",
+    "swap": "QuickSwap"
+  },
+  "wBTC-ibBTC LP": {
+    "address": "0x39D28Db6742a457BCfB927D4539bEea55Dc5Dd87",
+    "token": "0x8F8e95Ff4B4c5E354ccB005c6B0278492D7B5907",
+    "earn": "wBTC-ibBTC LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://app.sushi.com/add/0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6/0x4EaC4c4e9050464067D673102F8E24b2FccEB350",
+    "type": "flipToFlip",
+    "swap": "SushiSwap"
+  },
+  "FRAX-USDC LP": {
+    "address": "0x51C30ee94052baAABA60Db6b931c1f4657FFe174",
+    "token": "0x9e20a8d3501BF96EDA8e69b96DD84840058a1cB0",
+    "earn": "FRAX-USDC LP + polyBUNNY",
+    "summary": "Auto-Compounding LP to LP",
+    "description": "Auto-Compounding LP to LP",
+    "exchange": "https://app.sushi.com/add/0x104592a158490a9228070E0A8e5343B499e125D0/0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+    "type": "flipToFlip",
+    "swap": "SushiSwap"
+  }
+}

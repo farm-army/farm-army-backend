@@ -1,8 +1,10 @@
 # farm.army - Backend #
 
-Track your farming and pool performance on the Binance Chain
+Track your farming and pool performance on the Binance Chain, Polygon, Fantom
 
 ### Platforms ###
+
+_(outdated list)_
 
 | Platform  | Auto Fetch | Done | Notes |  
 |---|---|---|---|  
@@ -100,14 +102,20 @@ node src/index.js
 
 ```
   /farms
+  /polygon/farms
+  /fantom/farms
 ```
 
 ```
   /yield/:address?p=autofarm,pancake
+  /polygon/yield/:address?p=polycat
+  /fantom/yield/:address?p=spiritswap
 ```
 
 ```
   /wallet/:address
+  /polygon/wallet/:address
+  /fantom/wallet/:address
 ```
 
 ```
@@ -121,6 +129,7 @@ node src/index.js
 node src/command/farm_fetcher.js <masterChefAddress> <chain: bsc (default), polygon>
 node src/command/farm_fetcher.js 0x76FCeffFcf5325c6156cA89639b17464ea833ECd
 node src/command/farm_fetcher.js 0xC8Bd86E5a132Ac0bf10134e270De06A8Ba317BFe polygon
+node src/command/farm_fetcher.js 0x9083EA3756BDE6Ee6f27a6e996806FBD37F6F093 fantom
 ```
 
 ### Farm / Pool Contract ###
@@ -133,7 +142,14 @@ Every farm contract should be converted / provided in a common format. Still fea
     "name": "Syrup-BNB", // required
     "token": "syrup-bnb", // optional (fallback on "name" if not given, eg for icon)
     "platform": "pancake", // required
-    "earns": ["bake"], // optional
+    "earns": ["bake"], // optional (deprecated)
+    "earn": [
+      {
+         "address": "0x1234ABC...",
+         "symbol": "foo",
+         "decimals": 18
+      }
+    ], // optional
     "link": "https:\/\/pancakeswap.finance\/farms", // required
     "has_details": true, // optional provide a detail link in frontend
     "notes": ['note_1', 'note_1'] // optional note of the farm; will be join in frontend

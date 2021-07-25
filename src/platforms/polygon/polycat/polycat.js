@@ -59,7 +59,7 @@ module.exports = class polycat extends PancakePlatformFork {
   }
 
   getFarmLink(farm) {
-    return 'https://polycat.finance/';
+    return 'https://polycat.finance/?ref=0k898r99681P29479o86304292o03071P80N57948S';
   }
 
   getFarmEarns(farm) {

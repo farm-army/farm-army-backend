@@ -4,7 +4,7 @@ const MasterChefAbi = require('./abi/masterchef.json');
 const PancakePlatformFork = require("../common").PancakePlatformFork;
 
 module.exports = class evodefi extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0xF1F8E3ff67E386165e05b2B795097E95aaC899F0"
+  static MASTER_ADDRESS = "0xbb093349b248c8EDb20b6d846a25bF4c21d46a3d"
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     super(cache, priceOracle);
@@ -55,8 +55,8 @@ module.exports = class evodefi extends PancakePlatformFork {
 
   getFarmLink(farm) {
     return farm.isTokenOnly === true
-      ? 'https://evodefi.com/pools'
-      : 'https://evodefi.com/farms';
+      ? 'https://evodefi.com/pools?ref=r75LG2b3kxfwOPDaLJ3JF1w2dQdXW2TgPaE'
+      : 'https://evodefi.com/farms?ref=r75LG2b3kxfwOPDaLJ3JF1w2dQdXW2TgPaE';
   }
 
   getFarmEarns(farm) {
@@ -66,7 +66,7 @@ module.exports = class evodefi extends PancakePlatformFork {
   }
 
   getPendingRewardContractMethod() {
-    return 'pendingGen';
+    return 'pendingGenX';
   }
 
   getSousAbi() {

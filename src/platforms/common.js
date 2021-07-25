@@ -16,9 +16,10 @@ module.exports = {
   },
 
   PancakePlatformFork: class PancakePlatformFork {
-    constructor(cache, priceOracle) {
+    constructor(cache, priceOracle, tokenCollector) {
       this.cache = cache;
       this.priceOracle = priceOracle;
+      this.tokenCollector = tokenCollector;
     }
 
     async getRawFarms() {
@@ -178,6 +179,14 @@ module.exports = {
           item.earns = farmEarns;
         }
 
+        if (item.raw && item.raw.earns && item.raw.earns.length > 0) {
+          item.earn = item.raw.earns.map(e => ({
+            'address': e.address.toLowerCase(),
+            'symbol': e.symbol.toLowerCase(),
+            'decimals': e.decimals,
+          }))
+        }
+
         item.extra.transactionAddress = this.getMasterChefAddress();
 
         const link = this.getFarmLink(item);
@@ -187,7 +196,7 @@ module.exports = {
 
         if (item.extra.transactionToken && farmBalances[item.extra.transactionToken] && farmBalances[item.extra.transactionToken].balance && farmBalances[item.extra.transactionToken].balance > 0) {
           item.tvl = {
-            amount: farmBalances[item.extra.transactionToken].balance / 1e18
+            amount: farmBalances[item.extra.transactionToken].balance / (10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
           };
 
           const addressPrice = this.priceOracle.findPrice(item.extra.transactionToken);
@@ -239,7 +248,7 @@ module.exports = {
 
         if (item.extra.transactionAddress && poolBalance[item.extra.transactionAddress] && poolBalance[item.extra.transactionAddress].balance) {
           item.tvl = {
-            amount: poolBalance[item.extra.transactionAddress].balance / 1e18
+            amount: poolBalance[item.extra.transactionAddress].balance / (10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
           };
 
           const addressPrice = this.priceOracle.findPrice(item.extra.transactionToken);
@@ -322,9 +331,14 @@ module.exports = {
 
         const result = {};
 
+        let depositDecimals = 18;
+        if (farm.extra && farm.extra.transactionToken) {
+          depositDecimals = this.tokenCollector.getDecimals(farm.extra.transactionToken);
+        }
+
         result.deposit = {
           symbol: "?",
-          amount: amount / 1e18
+          amount: amount / (10 ** depositDecimals)
         };
 
         let price;
@@ -337,19 +351,35 @@ module.exports = {
         }
 
         if (rewards > 0) {
-          const reward = {
-            symbol: farm.earns && farm.earns[0] ? farm.earns[0] : '?',
-            amount: rewards / 1e18
-          };
+          let reward = undefined;
 
-          if (farm.earns && farm.earns[0]) {
+          if (farm.earn1111 && farm.earn[0]) {
+            // new
+            reward = {
+              symbol: farm.earn[0].symbol,
+              amount: rewards / (10 ** farm.earn[0].decimals)
+            };
+
+            const priceReward = this.priceOracle.getAddressPrice(farm.earn[0].address);
+            if (priceReward) {
+              reward.usd = reward.amount * priceReward;
+            }
+          } else if (farm.earns && farm.earns[0]) {
+            // old
+            reward = {
+              symbol: farm.earns && farm.earns[0] ? farm.earns[0] : '?',
+              amount: rewards / 1e18
+            };
+
             const priceReward = this.priceOracle.findPrice(farm.earns[0]);
             if (priceReward) {
               reward.usd = reward.amount * priceReward;
             }
           }
 
-          result.rewards = [reward];
+          if (reward) {
+            result.rewards = [reward];
+          }
         }
 
         result.farm = farm;
@@ -368,7 +398,8 @@ module.exports = {
         return Utils.getTransactions(
           farm.extra.transactionAddress,
           farm.extra.transactionToken,
-          address
+          address,
+          this.getChain()
         );
       }
 

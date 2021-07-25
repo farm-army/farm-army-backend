@@ -19,29 +19,39 @@
     "type": "event"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "pool",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "compound",
-        "type": "uint256"
-      }
-    ],
-    "name": "apyOfPool",
+    "inputs": [],
+    "name": "BUNNY",
     "outputs": [
       {
-        "internalType": "uint256",
-        "name": "apyPool",
-        "type": "uint256"
-      },
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "ETH",
+    "outputs": [
       {
-        "internalType": "uint256",
-        "name": "apyBunny",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "WMATIC",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -51,20 +61,25 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "account",
+        "name": "pool",
         "type": "address"
       },
       {
-        "internalType": "address[]",
-        "name": "pools",
-        "type": "address[]"
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
       }
     ],
-    "name": "evaluate",
+    "name": "calculateProfit",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "deposits",
+        "name": "profit",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "profitInETH",
         "type": "uint256"
       }
     ],
@@ -110,37 +125,17 @@
           },
           {
             "internalType": "uint256",
-            "name": "apyPool",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "apyBunny",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "tvl",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "pUSD",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "pBNB",
+            "name": "pBASE",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
             "name": "pBUNNY",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "pCAKE",
             "type": "uint256"
           },
           {
@@ -157,9 +152,14 @@
             "internalType": "uint256",
             "name": "feePercentage",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "portfolio",
+            "type": "uint256"
           }
         ],
-        "internalType": "struct PoolConstant.PoolInfoBSC",
+        "internalType": "struct PoolConstant.PoolInfo",
         "name": "",
         "type": "tuple"
       }
@@ -188,26 +188,19 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "priceOfBNB",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "address",
         "name": "",
-        "type": "uint256"
+        "type": "address"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "priceOfBunny",
+    "name": "perfExemptions",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "bool",
         "name": "",
-        "type": "uint256"
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -216,17 +209,154 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      }
+    ],
+    "name": "poolTypeOf",
+    "outputs": [
+      {
+        "internalType": "enum PoolConstant.PoolTypes",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "poolTypes",
+    "outputs": [
+      {
+        "internalType": "enum PoolConstant.PoolTypes",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
         "internalType": "address[]",
-        "name": "assets",
+        "name": "pools",
         "type": "address[]"
       }
     ],
-    "name": "pricesInUSD",
+    "name": "poolsOf",
     "outputs": [
       {
-        "internalType": "uint256[]",
+        "components": [
+          {
+            "internalType": "address",
+            "name": "pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "balance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "principal",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "available",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tvl",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pBASE",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pBUNNY",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "depositedAt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "feeDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "feePercentage",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "portfolio",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct PoolConstant.PoolInfo[]",
         "name": "",
-        "type": "uint256[]"
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "pools",
+        "type": "address[]"
+      }
+    ],
+    "name": "portfolioOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "deposits",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceCalculator",
+    "outputs": [
+      {
+        "internalType": "contract IPriceCalculator",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -249,22 +379,12 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "usd",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "bnb",
+        "name": "profit",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
         "name": "bunny",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "cake",
         "type": "uint256"
       }
     ],
@@ -282,47 +402,16 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_bankBNBAddress",
-        "type": "address"
-      }
-    ],
-    "name": "setBankBNBAddress",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "pair",
-        "type": "address"
-      }
-    ],
-    "name": "setPairAddress",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "pool",
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "pid",
-        "type": "uint256"
+        "internalType": "bool",
+        "name": "exemption",
+        "type": "bool"
       }
     ],
-    "name": "setPoolId",
+    "name": "setPerfExemption",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -370,7 +459,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "tvl",
         "type": "uint256"
       }
     ],
@@ -381,25 +470,20 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "asset",
+        "name": "pool",
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
       }
     ],
-    "name": "valueOfAsset",
+    "name": "withdrawableOf",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "valueInBNB",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "valueInUSD",
+        "name": "",
         "type": "uint256"
       }
     ],

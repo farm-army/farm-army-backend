@@ -2,10 +2,10 @@
 
 const BigNumber = require("bignumber.js");
 const _ = require("lodash");
-const fs = require("fs");
-const path = require("path");
 const Utils = require("../../utils");
 const Web3EthContract = require("web3-eth-contract");
+
+const MASTERCHEF_ABI = require("./abi/masterchef.json");
 
 module.exports = class autofarm {
   constructor(cache, priceOracle) {
@@ -13,10 +13,8 @@ module.exports = class autofarm {
     this.priceOracle = priceOracle;
   }
 
-  static MASTER_CHEF = "0x0895196562C7868C5Be92459FaE7f877ED450452"
-
   async getLbAddresses() {
-    const response = await Utils.requestJsonGet('https://static.autofarm.network/bsc/farm_data.json');
+    const response = await Utils.requestJsonGet(this.getFarmDataUrl());
 
     return Object.values(response.pools)
       .filter(f => f.wantIsLP && f.wantAddress)
@@ -24,33 +22,23 @@ module.exports = class autofarm {
   }
 
   async getAddressFarms(address) {
-    const cacheKey = `getAddressFarms-autofarm-${address}`;
+    const cacheKey = `getAddressFarms-${this.getName()}-${address}`;
     const cacheItem = this.cache.get(cacheKey);
     if (cacheItem) {
       return cacheItem;
     }
 
-    const abi = JSON.parse(
-      fs.readFileSync(
-        path.resolve(
-          __dirname,
-          "abi/0x0895196562C7868C5Be92459FaE7f877ED450452.json"
-        ),
-        "utf8"
-      )
-    );
-
     const farms = await this.getFarms();
 
     const tokenCalls = farms.map(farm => {
-      const contract = new Web3EthContract(abi, autofarm.MASTER_CHEF);
+      const contract = new Web3EthContract(MASTERCHEF_ABI, this.getMasterChefAddress());
       return {
         id: farm.id,
         stakedWantTokens: contract.methods.stakedWantTokens(farm.raw.id, address)
       };
     });
 
-    const calls = await Utils.multiCall(tokenCalls);
+    const calls = await Utils.multiCall(tokenCalls, this.getChain());
 
     const response = calls
       .filter(
@@ -65,7 +53,7 @@ module.exports = class autofarm {
   }
 
   async getFarms(refresh = false) {
-    const cacheKey = "getFarms-autofarm";
+    const cacheKey = `getFarms-${this.getName()}`;
 
     if (!refresh) {
       const cacheItem = this.cache.get(cacheKey);
@@ -74,11 +62,11 @@ module.exports = class autofarm {
       }
     }
 
-    const response = await Utils.requestJsonGet('https://static.autofarm.network/bsc/farm_data.json');
+    const response = await Utils.requestJsonGet(this.getFarmDataUrl());
 
     const farms = [];
 
-    for (const key of Object.keys(response.pools)) {
+    for (const key of Object.keys(response.pools || {})) {
       const farm = response.pools[key];
 
       if (!farm.display || farm.display !== true) {
@@ -90,14 +78,16 @@ module.exports = class autofarm {
       let platform = farm.farmName;
       if (platform && platform.toLowerCase() === "pcs") {
         platform = "pancake";
+      } else if(platform && platform.toLowerCase() === "pancake (v2)") {
+        platform = "pancake";
       }
 
       const item = {
-        id: `autofarm_${key}`,
+        id: `${this.getName()}_${key}`,
         name: farm.wantName,
         platform: platform,
         raw: Object.freeze(response.pools[key]),
-        provider: "autofarm",
+        provider: this.getName(),
         has_details: true,
         yield: {
           apr: farm.APR * 100,
@@ -121,7 +111,7 @@ module.exports = class autofarm {
         item.extra.transactionToken = farm.wantAddress;
       }
 
-      item.extra.transactionAddress = autofarm.MASTER_CHEF;
+      item.extra.transactionAddress = this.getMasterChefAddress();
 
       const notes = [];
       if (farm.notes) {
@@ -168,7 +158,7 @@ module.exports = class autofarm {
 
     this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
 
-    console.log("autofarm updated");
+    console.log(`${this.getName()} updated`);
 
     return farms;
   }
@@ -189,20 +179,10 @@ module.exports = class autofarm {
 
     const farms = await this.getFarms();
 
-    const abi = JSON.parse(
-      fs.readFileSync(
-        path.resolve(
-          __dirname,
-          "abi/0x0895196562C7868C5Be92459FaE7f877ED450452.json"
-        ),
-        "utf8"
-      )
-    );
-
     const tokenCalls = addressFarms.map(id => {
       const farm = farms.find(f => f.id === id);
 
-      const contract = new Web3EthContract(abi, autofarm.MASTER_CHEF);
+      const contract = new Web3EthContract(MASTERCHEF_ABI, this.getMasterChefAddress());
       return {
         id: farm.id,
         pendingAUTO: contract.methods.pendingAUTO(farm.raw.id, address),
@@ -211,7 +191,7 @@ module.exports = class autofarm {
       };
     });
 
-    const calls = await Utils.multiCall(tokenCalls);
+    const calls = await Utils.multiCall(tokenCalls, this.getChain());
 
     const results = [];
     calls.forEach(call => {
@@ -236,7 +216,7 @@ module.exports = class autofarm {
 
       if (new BigNumber(call.stakedWantTokens).isGreaterThan(0)) {
         const deposit = {
-          symbol: "auto",
+          symbol: "?",
           amount: call.stakedWantTokens / 1e18
         };
 
@@ -273,7 +253,8 @@ module.exports = class autofarm {
       return Utils.getTransactions(
         farm.extra.transactionAddress,
         farm.extra.transactionToken,
-        address
+        address,
+        this.getChain()
       );
     }
 
@@ -313,5 +294,21 @@ module.exports = class autofarm {
     }
 
     return result;
+  }
+
+  getFarmDataUrl() {
+    return 'https://static.autofarm.network/bsc/farm_data.json';
+  }
+
+  getMasterChefAddress() {
+    return '0x0895196562C7868C5Be92459FaE7f877ED450452';
+  }
+
+  getName() {
+    return 'autofarm';
+  }
+
+  getChain() {
+    return 'bsc';
   }
 };

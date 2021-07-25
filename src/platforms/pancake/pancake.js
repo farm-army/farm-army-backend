@@ -595,7 +595,7 @@ module.exports = class pancake {
         const item = {
           sousId: line.address,
           stakingToken: {
-            symbol: lpTokenSymbol.toLowerCase(),
+            symbol: lpTokenSymbol ? lpTokenSymbol.toLowerCase() : '?',
             address: line.lpToken,
           },
           earningToken: {

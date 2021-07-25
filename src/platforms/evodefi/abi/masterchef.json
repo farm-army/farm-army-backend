@@ -2,8 +2,8 @@
   {
     "inputs": [
       {
-        "internalType": "contract GenToken",
-        "name": "_gen",
+        "internalType": "contract GenXToken",
+        "name": "_genx",
         "type": "address"
       },
       {
@@ -12,13 +12,13 @@
         "type": "address"
       },
       {
-        "internalType": "contract IGenNFT",
+        "internalType": "contract IERC721",
         "name": "_nft",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_busdGenLP",
+        "name": "_usdcGenXLP",
         "type": "address"
       },
       {
@@ -38,7 +38,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_genPerBlock",
+        "name": "_genxPerBlock",
         "type": "uint256"
       },
       {
@@ -97,7 +97,7 @@
         "type": "uint256"
       }
     ],
-    "name": "EmergencyWithdraw",
+    "name": "EmergenxcyWithdraw",
     "type": "event"
   },
   {
@@ -200,7 +200,7 @@
   },
   {
     "inputs": [],
-    "name": "busdGenLP",
+    "name": "busdGenXLP",
     "outputs": [
       {
         "internalType": "address",
@@ -222,6 +222,11 @@
         "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "ref",
+        "type": "address"
       }
     ],
     "name": "deposit",
@@ -296,10 +301,10 @@
   },
   {
     "inputs": [],
-    "name": "gen",
+    "name": "genx",
     "outputs": [
       {
-        "internalType": "contract GenToken",
+        "internalType": "contract GenXToken",
         "name": "",
         "type": "address"
       }
@@ -309,7 +314,7 @@
   },
   {
     "inputs": [],
-    "name": "genPerBlock",
+    "name": "genxPerBlock",
     "outputs": [
       {
         "internalType": "uint256",
@@ -345,7 +350,7 @@
     "name": "nft",
     "outputs": [
       {
-        "internalType": "contract IGenNFT",
+        "internalType": "contract IERC721",
         "name": "",
         "type": "address"
       }
@@ -413,7 +418,7 @@
         "type": "address"
       }
     ],
-    "name": "pendingGen",
+    "name": "pendingGenX",
     "outputs": [
       {
         "internalType": "uint256",
@@ -456,7 +461,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "accGenPerPower",
+        "name": "accGenXPerPower",
         "type": "uint256"
       },
       {
@@ -497,6 +502,87 @@
     "name": "powerUpWithNFTs",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "name": "referrals",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "referrer",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "referrerReward",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "referrerRewardRate",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -646,7 +732,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_genPerBlock",
+        "name": "_genxPerBlock",
         "type": "uint256"
       }
     ],
@@ -664,19 +750,6 @@
       }
     ],
     "name": "updatePool",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_pid",
-        "type": "uint256"
-      }
-    ],
-    "name": "updatePower",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

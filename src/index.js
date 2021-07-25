@@ -2,18 +2,22 @@ Error.stackTraceLimit = 30;
 
 "use strict";
 
-const _ = require("lodash");
-
-const Utils = require("./services").Utils;
 const services = require("./services");
 
 async function farmUpdater() {
-  await Promise.all(services.getPlatforms().getFunctionAwaits('getFarms', [true]));
-  await Promise.all(services.getPlatformsPolygon().getFunctionAwaits('getFarms', [true]));
+  await Promise.allSettled([
+    Promise.all(services.getPlatforms().getFunctionAwaits('getFarms', [true])),
+    Promise.all(services.getPolygonPlatforms().getFunctionAwaits('getFarms', [true])),
+    Promise.all(services.getFantomPlatforms().getFunctionAwaits('getFarms', [true])),
+  ]);
 }
 
 async function priceUpdater() {
-  await services.getPriceOracle().cronInterval();
+  await Promise.allSettled([
+    services.getCronjobs().cronInterval(),
+    services.getCronjobs().polygonCronInterval(),
+    services.getCronjobs().fantomCronInterval(),
+  ]);
 }
 
 // warmup
@@ -41,6 +45,12 @@ setInterval(async () => {
   await Promise.allSettled([
     services.getDb().updateFarmPrices(),
     services.getDb().updateAddressMaps(),
-    services.getDb().updateLpInfoMaps()
+    services.getDb().updateLpInfoMaps(),
+    services.getPolygonDb().updateFarmPrices(),
+    services.getPolygonDb().updateAddressMaps(),
+    services.getPolygonDb().updateLpInfoMaps(),
+    services.getFantomDb().updateFarmPrices(),
+    services.getFantomDb().updateAddressMaps(),
+    services.getFantomDb().updateLpInfoMaps(),
   ]);
 }, 1000 * 60 * 4);

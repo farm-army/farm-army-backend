@@ -1,17 +1,18 @@
 "use strict";
 
 const _ = require("lodash");
-const Utils = require("../../utils");
+const Utils = require("../../../utils");
 const Web3EthContract = require("web3-eth-contract");
 
-const DASHBOARD_ABI = require('./abi/dashboard.json');
-const PRICECALC_ABI = require('./abi/pricecalc.json');
+const DASHBOARD_ADDRESS = "0xFA71FD547A6654b80c47DC0CE16EA46cECf93C02";
+const PRICE_CALCULATOR_ADDRESS = "0xE3B11c3Bd6d90CfeBBb4FB9d59486B0381D38021";
+
+const DASHBOARD_ABI = require(`./abi/dashboard.json`);
+const PRICE_CALCULATOR_ABI = require(`./abi/price_calculator.json`);
+
 const Farms = require('./farms.json');
 
-const DASHBOARD_ADDRESS = '0x5666FCA30Ea32B7b9aCab96cfB81bDD3ae287A80';
-const PRICECALC_ADDRESS = '0x63F9a843c1faBEFd10fF2A603c1777b6c5E6D225';
-
-module.exports = class merlin {
+module.exports = class ppancakebunny {
   constructor(cache, priceOracle, tokenCollector) {
     this.cache = cache;
     this.priceOracle = priceOracle;
@@ -19,7 +20,19 @@ module.exports = class merlin {
   }
 
   async getLbAddresses() {
-    return [];
+    const response = _.cloneDeep(Farms);
+
+    const lpAddresses = [];
+    for (const key of Object.keys(response)) {
+      const farm = response[key];
+
+      // lpAddress
+      if (farm.token && key.match(/([\w]{0,4})-([\w]{0,4})\s*/g)) {
+        lpAddresses.push(farm.token);
+      }
+    }
+
+    return _.uniq(lpAddresses);
   }
 
   async getBalancedAddressPoolInfo(address, pools) {
@@ -34,14 +47,14 @@ module.exports = class merlin {
           parameters: [address, pools]
         }
       ]
-    }]);
+    }], 'polygon');
 
     return (calls && calls.poolsOf && calls.poolsOf.poolsOf ? calls.poolsOf.poolsOf : [])
       .filter(p => p.balance.gt(0))
   }
 
   async getAddressFarms(address) {
-    const cacheItem = this.cache.get(`getAddressFarms-merlin-${address}`);
+    const cacheItem = this.cache.get(`getAddressFarms-ppancakebunny-${address}`);
     if (cacheItem) {
       return cacheItem;
     }
@@ -53,7 +66,7 @@ module.exports = class merlin {
       farms.filter(farm => farm.raw.address).map(farm => farm.raw.address)
     )
 
-    this.cache.put(`getAddressFarms-all-merlin-${address}`, poolsOf, {
+    this.cache.put(`getAddressFarms-all-ppancakebunny-${address}`, poolsOf, {
       ttl: 60 * 1000
     });
 
@@ -63,7 +76,7 @@ module.exports = class merlin {
         farms.find(f => f.raw.address.toLowerCase() === p.pool.toLowerCase()).id
       )
 
-    this.cache.put(`getAddressFarms-merlin-${address}`, result, {
+    this.cache.put(`getAddressFarms-ppancakebunny-${address}`, result, {
       ttl: 300 * 1000
     });
 
@@ -71,7 +84,7 @@ module.exports = class merlin {
   }
 
   async getFarms(refresh = false) {
-    const cacheKey = "getFarms-merlin";
+    const cacheKey = "getFarms-ppancakebunny";
 
     if (!refresh) {
       const cacheItem = this.cache.get(cacheKey);
@@ -83,8 +96,8 @@ module.exports = class merlin {
     const response = _.cloneDeep(Farms);
 
     const [prices, overall] = await Promise.all([
-      this.getTokenPrices(response),
-      this.getOverall(response),
+      this.getTokenPrices(),
+      this.getOverall()
     ]);
 
     const farms = [];
@@ -96,49 +109,79 @@ module.exports = class merlin {
         continue;
       }
 
-      let tokenSymbol = farm.lpSymbol.toLowerCase()
-        .replace(/\s+v\d+$/, '')
-        .replace(/\s+\w*lp$/, '')
+      farm.id = key;
+
+      let tokenSymbol = key.toLowerCase()
+        .trim()
         .replace('boost', '')
         .replace('flip', '')
         .replace('cake maximizer', '')
         .replace('maximizer', '')
         .replace('flip', '')
         .replace('v2', '')
+        .replace(/\s+\w*lp$/, '')
         .replace(/\s/g, '')
         .trim();
 
+      if (farm.token) {
+        const lpSymbol = this.tokenCollector.getSymbolByAddress(farm.token);
+        if (lpSymbol) {
+          tokenSymbol = lpSymbol;
+        }
+      }
+
       const items = {
-        id: `merlin_${farm.id}`,
-        name: tokenSymbol.toUpperCase(),
+        id: `ppancakebunny_${key.toLowerCase().replace(/\s/g, '-')}`,
+        name: key,
         token: tokenSymbol,
-        raw: Object.freeze({
-          address: farm.vaultAddress[56]
-        }),
-        provider: "merlin",
-        link: `https://www.merlinlab.com/farm`,
+        raw: Object.freeze(farm),
+        provider: "ppancakebunny",
+        link: `https://polygon.pancakebunny.finance/farm/${encodeURI(key)}`,
         has_details: true,
         extra: {}
       };
 
-      if (farm.stakingToken.address[56]) {
-        items.extra.transactionToken = farm.stakingToken.address[56];
+      if (farm.swap) {
+        items.platform = farm.swap;
       }
 
       // lpAddress
-      if (tokenSymbol.match(/([\w]{0,4})-([\w]{0,4})\s*/g)) {
-        items.extra.lpAddress = items.extra.transactionToken;
+      if (key.match(/([\w]{0,4})-([\w]{0,4})\s*/g)) {
+        items.extra.lpAddress = farm.token;
       }
 
-      if (farm.vaultAddress[56]) {
-        items.extra.transactionAddress = farm.vaultAddress[56];
+      if (farm.address) {
+        items.extra.transactionAddress = farm.address;
+      }
+
+      if (farm.token) {
+        items.extra.transactionToken = farm.token;
       }
 
       if (prices[key]) {
         items.extra.tokenPrice = prices[key];
       }
 
-      let infoPool = overall[farm.vaultAddress[56].toLowerCase()];
+      const notes = [];
+      if (farm.summary) {
+        notes.push(farm.summary);
+      }
+
+      if (farm.description) {
+        notes.push(farm.description);
+      }
+
+      const finalNotes = _.uniq(
+        notes
+          .map(b => b.replace(/<\/?[^>]+(>|$)/g, "").trim())
+          .filter(b => b.length > 0)
+      );
+
+      if (finalNotes.length > 0) {
+        items.notes = finalNotes;
+      }
+
+      let infoPool = overall[farm.address.toLowerCase()];
       if (infoPool) {
 
         if (infoPool.tvl > 0) {
@@ -154,18 +197,15 @@ module.exports = class merlin {
         }
       }
 
-
-      if (farm.earns) {
-        farm.earns.forEach(earn => {
-          if (earn.amountPropNameInInfo && earn.amountPropNameInInfo.toLowerCase() === 'pbase') {
-            return;
-          }
-
+      if (farm.earn) {
+        const earn = farm.earn.toLowerCase().replace(/ /g, '');
+        earn.split("+").filter(e => e.match(/^[\w]{1,10}$/g)).forEach(e => {
+          const token = e.trim();
           if (!items.earns) {
             items.earns = [];
           }
 
-          items.earns.push(earn.token.symbol.toLowerCase());
+          items.earns.push(token);
         });
       }
 
@@ -174,7 +214,7 @@ module.exports = class merlin {
 
     this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
 
-    console.log("merlin updated");
+    console.log("ppancakebunny updated");
 
     return farms;
   }
@@ -189,7 +229,8 @@ module.exports = class merlin {
       return Utils.getTransactions(
         farm.extra.transactionAddress,
         farm.extra.transactionToken,
-        address
+        address,
+        'polygon'
       );
     }
 
@@ -212,7 +253,7 @@ module.exports = class merlin {
 
     const farms = await this.getFarms();
 
-    let poolsOfCalls = this.cache.get(`getAddressFarms-all-merlin-${address}`);
+    let poolsOfCalls = this.cache.get(`getAddressFarms-all-ppancakebunny-${address}`);
     if (!poolsOfCalls) {
       const poolsOfAddresses = addressFarms
         .map(farmId => farms.find(f => f.id === farmId))
@@ -249,9 +290,14 @@ module.exports = class merlin {
           amount: balance / 1e18
         };
 
-        let price = this.priceOracle.getAddressPrice(farm.extra.transactionToken);
+        let price = (farm.extra && farm.extra.tokenPrice) ? farm.extra.tokenPrice : undefined;
+
+        if (!price && farm.raw.token) {
+          price = this.priceOracle.getAddressPrice(farm.raw.token);
+        }
+
         if (price) {
-          result.deposit.usd = result.deposit.amount * price;
+          result.deposit.usd = (result.deposit.amount * price) / (10 ** this.tokenCollector.getDecimals(farm.raw.token));
         }
       }
 
@@ -260,64 +306,29 @@ module.exports = class merlin {
         continue;
       }
 
-      let pendingUSD
-      let pendingBNB
-      let pendingMERL
-      let pendingCAKE
+      let pendingBUNNY;
 
       // ???
       let poolsOfElement = poolsOf[farm.raw.address.toLowerCase()];
 
       if (poolsOfElement) {
-        const { pMERL, pBASE } = poolsOfElement;
+        const { pBUNNY, pBASE } = poolsOfElement;
 
-        pendingMERL = pMERL;
-
-        if (farm.raw.type === 'flipToCake') {
-          pendingCAKE = pBASE;
-        }
+        pendingBUNNY = pBUNNY;
       }
 
-      if (pendingUSD || pendingBNB || pendingMERL || pendingCAKE) {
+      if ( pendingBUNNY) {
         result.rewards = [];
 
-        if (pendingMERL && pendingMERL.gt(0)) {
+        if (pendingBUNNY && pendingBUNNY.gt(0)) {
           const item = {
-            symbol: "merl",
-            amount: pendingMERL.toString() / 1e18
+            symbol: "polybunny",
+            amount: pendingBUNNY.toString() / 1e18
           };
 
-          const merlPrice = this.priceOracle.findPrice("0xDA360309C59CB8C434b28A91b823344a96444278")
-          if (merlPrice) {
-            item.usd = item.amount * merlPrice;
-          }
-
-          result.rewards.push(item);
-        }
-
-        if (pendingBNB && pendingBNB.gt(0)) {
-          const item = {
-            symbol: "bnb",
-            amount: pendingBNB.toString() / 1e18
-          };
-
-          const bnbPrice = this.priceOracle.findPrice("bnb");
-          if (bnbPrice) {
-            item.usd = item.amount * bnbPrice;
-          }
-
-          result.rewards.push(item);
-        }
-
-        if (pendingCAKE && pendingCAKE.gt(0)) {
-          const item = {
-            symbol: "cake",
-            amount: pendingCAKE.toString() / 1e18
-          };
-
-          const cakePrice = this.priceOracle.findPrice("cake")
-          if (cakePrice) {
-            item.usd = item.amount * cakePrice;
+          const bunnyPrice = this.priceOracle.findPrice("0x4c16f69302ccb511c5fac682c7626b9ef0dc126a")
+          if (bunnyPrice) {
+            item.usd = item.amount * bunnyPrice;
           }
 
           result.rewards.push(item);
@@ -330,18 +341,22 @@ module.exports = class merlin {
     return results;
   }
 
-  async getTokenPrices(farms) {
-    const token = new Web3EthContract(PRICECALC_ABI, PRICECALC_ADDRESS);
+  async getTokenPrices() {
+    const farms = _.cloneDeep(Farms);
+
+    const token = new Web3EthContract(PRICE_CALCULATOR_ABI, PRICE_CALCULATOR_ADDRESS);
 
     const tokenCalls = [];
-    farms.forEach(farm => {
-      tokenCalls.push({
-        valueOfAsset: token.methods.valueOfAsset(farm.stakingToken.address[56], (1e18).toString()),
-        id: farm.vaultAddress[56]
-      });
-    })
+    for (const key of Object.keys(farms)) {
+      const farm = farms[key];
 
-    const calls = await Utils.multiCall(tokenCalls);
+      tokenCalls.push({
+        valueOfAsset: token.methods.valueOfAsset(farm.token, (1e18).toString()),
+        id: key
+      });
+    }
+
+    const calls = await Utils.multiCall(tokenCalls, 'polygon');
 
     const tokenPrices = {};
 
@@ -354,23 +369,8 @@ module.exports = class merlin {
     return tokenPrices;
   }
 
-  async getApy(farms) {
-    let vaults = Object.values(farms).filter(farm => farm.vaultAddress[56]).map(farm => farm.vaultAddress[56]);
-
-    const token = new Web3EthContract(DASHBOARD_ABI, DASHBOARD_ADDRESS);
-
-    const tokenCalls = vaults.map(vault => ({
-      apyOfPool: token.methods.apyOfPool(vault, '365'),
-      pool: vault
-    }));
-
-    return Utils.multiCall(tokenCalls)
-  }
-
-  async getOverall(farms) {
-    let vaults = Object.values(farms).filter(farm => farm.vaultAddress[56]).map(farm => farm.vaultAddress[56]);
-
-    const tvl = Utils.multiCallRpcIndex([{
+  async getOverall() {
+    const calls = await Utils.multiCallRpcIndex([{
       reference: 'poolsOf',
       contractAddress: DASHBOARD_ADDRESS,
       abi: DASHBOARD_ABI,
@@ -378,15 +378,10 @@ module.exports = class merlin {
         {
           reference: "poolsOf",
           method: "poolsOf",
-          parameters: ['0x0000000000000000000000000000000000000000', vaults]
+          parameters: ['0x0000000000000000000000000000000000000000', Object.values(Farms).slice().filter(farm => farm.address).map(farm => farm.address)]
         }
       ]
-    }]);
-
-    const [calls, apy] = await Promise.all([
-      tvl,
-      this.getApy(farms)
-    ]);
+    }], 'polygon');
 
     const poolsOf = {};
     if (calls.poolsOf && calls.poolsOf.poolsOf) {
@@ -397,14 +392,15 @@ module.exports = class merlin {
       })
     }
 
-    apy.forEach(c => {
-      let pool = c.pool.toLowerCase();
-      if (!poolsOf[pool]) {
-        poolsOf[pool] = {};
+    const response = await Utils.requestJsonGet('https://us-central1-bunny-polygon.cloudfunctions.net/api-bunnyData/api-bunnyData');
+
+    for (const [pool, value] of Object.entries(response.apy || {})) {
+      if (!poolsOf[pool.toLowerCase()]) {
+        poolsOf[pool.toLowerCase()] = {};
       }
 
-      poolsOf[pool].apy = (c.apyOfPool[0] / 1e16) + (c.apyOfPool[1] / 1e16);
-    })
+      poolsOf[pool.toLowerCase()].apy = parseFloat(value.apy);
+    }
 
     return poolsOf
   }

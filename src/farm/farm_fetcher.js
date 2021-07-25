@@ -83,9 +83,9 @@ module.exports = class FarmFetcher {
       }
     }
 
-    // same have a "st" method
+    // same have a "st" or "erc20" method
     if (!rewardTokenFunctionName) {
-      const stFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase() === 'st');
+      const stFunction = abi.find(f => f.name && f.type === 'function' && f.name && (f.name.toLowerCase() === 'st' || f.name.toLowerCase() === 'erc20'));
       if (stFunction && stFunction.outputs && stFunction.outputs[0] && stFunction.outputs[0].type === 'address') {
         rewardTokenFunctionName = stFunction.name
       }
@@ -109,7 +109,11 @@ module.exports = class FarmFetcher {
     let totalAllocPointFunctionName = undefined;
     const totalAllocPointFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase().includes('totalallocpoint'));
     if (totalAllocPointFunction && totalAllocPointFunction.name) {
-      totalAllocPointFunctionName = totalAllocPointFunction.name;
+      const hasInput = totalAllocPointFunction.inputs && totalAllocPointFunction.inputs.length > 0;
+
+      if (!hasInput) {
+        totalAllocPointFunctionName = totalAllocPointFunction.name;
+      }
     }
 
     // poolLength
@@ -129,12 +133,12 @@ module.exports = class FarmFetcher {
     }
   }
 
-  async fetchForMasterChef(masterChef, chain = 'bsc') {
-    return (await this.fetchForMasterChefWithMeta(masterChef, chain)).pools || [];
+  async fetchForMasterChef(masterChef, chain = 'bsc', options = {}) {
+    return (await this.fetchForMasterChefWithMeta(masterChef, chain, options)).pools || [];
   }
 
-  async fetchForMasterChefWithMeta(masterChef, chain = 'bsc') {
-    const abi = await this.contractAbiFetcher.getAbiForContractAddress(masterChef, chain);
+  async fetchForMasterChefWithMeta(masterChef, chain = 'bsc', options = {}) {
+    const abi = await this.contractAbiFetcher.getAbiForContractAddress(masterChef, chain, options);
 
     const {
       poolInfoFunctionName,
@@ -226,7 +230,7 @@ module.exports = class FarmFetcher {
     });
 
     // lpToken or single token
-    const lpTokens = await Utils.multiCallIndexBy('pid', pools.filter(p => p.poolInfoObject && p.poolInfoObject.getLpToken(), chain).map(p => {
+    let vaultCalls = pools.filter(p => p.poolInfoObject && p.poolInfoObject.getLpToken()).map(p => {
       const lpToken = p.poolInfoObject.getLpToken();
 
       const web3EthContract = new Web3EthContract(TokenABI, lpToken);
@@ -238,7 +242,9 @@ module.exports = class FarmFetcher {
         token0: web3EthContract.methods.token0(),
         token1: web3EthContract.methods.token1(),
       };
-    }));
+    });
+
+    const lpTokens = await Utils.multiCallIndexBy('pid', vaultCalls, chain);
 
     // resolve token symbols
     const tokenAddresses = [];

@@ -16,6 +16,7 @@ const { MulticallProvider } = require("@0xsequence/multicall").providers;
 const MULTI_CALL_CONTRACT = {
   bsc: '0xB94858b0bB5437498F5453A16039337e5Fdc269C',
   polygon: '0x13E5407E38860A743E025A8834934BEA0264A8c1',
+  fantom: '0xe6cd57c490cdc698aa6df974b207c4c044818d5a'
 }
 
 const HOSTS = Object.freeze([
@@ -39,11 +40,17 @@ const HOSTS = Object.freeze([
 
 const HOSTS_POLYGON = Object.freeze([
   // Recommend
-  'https://rpc-mainnet.matic.network',
+  // 'https://rpc-mainnet.matic.network',
   'https://rpc-mainnet.maticvigil.com',
   'https://rpc-mainnet.matic.quiknode.pro',
   'https://matic-mainnet.chainstacklabs.com',
   'https://matic-mainnet-full-rpc.bwarelabs.com',
+]);
+
+const HOSTS_FANTOM = Object.freeze([
+  // Recommend
+  'https://rpc.ftm.tools',
+  'https://rpcapi.fantom.network',
 ]);
 
 const ENDPOINTS_MULTICALL = {};
@@ -100,6 +107,33 @@ HOSTS_POLYGON.forEach(url => {
 
 const ENDPOINTS_POLYGON = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_POLYGON));
 
+const ENDPOINTS_MULTICALL_FANTOM = {};
+const ENDPOINTS_RPC_WRAPPER_FANTOM = {};
+
+HOSTS_FANTOM.forEach(url => {
+  ENDPOINTS_MULTICALL_FANTOM[url] = new MulticallProvider(
+    new providers.StaticJsonRpcProvider({
+      url: url,
+      timeout: 10000,
+    }),
+    {
+      contract: MULTI_CALL_CONTRACT.fantom,
+      batchSize: 50,
+      timeWindow: 50,
+    }
+  )
+
+  const f1 = new Web3.providers.HttpProvider(url, {
+      keepAlive: true,
+      timeout: 10000,
+    }
+  )
+
+  ENDPOINTS_RPC_WRAPPER_FANTOM[url] = new Web3(f1)
+});
+
+const ENDPOINTS_FANTOM = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_FANTOM));
+
 module.exports = {
   PRICES: {},
   BITQUERY_TRANSACTIONS: fs.readFileSync(
@@ -129,7 +163,21 @@ module.exports = {
     }
 
     const promises = [];
-    const endpoints = _.shuffle(chain === 'polygon' ? ENDPOINTS_POLYGON.slice() : ENDPOINTS.slice());
+
+    let selectedEndpoints = [];
+    switch (chain) {
+      case 'polygon':
+        selectedEndpoints = ENDPOINTS_POLYGON.slice();
+        break;
+      case 'fantom':
+        selectedEndpoints = ENDPOINTS_FANTOM.slice();
+        break;
+      case 'bsc':
+      default:
+        selectedEndpoints = ENDPOINTS.slice();
+    }
+
+    const endpoints = _.shuffle(selectedEndpoints);
 
     let i = 0;
 
@@ -165,10 +213,18 @@ module.exports = {
           try {
             done.push(endpointInner);
 
-            const [foo] = await new MultiCall(
-              chain === 'polygon' ? ENDPOINTS_RPC_WRAPPER_POLYGON[endpointInner] : ENDPOINTS_RPC_WRAPPER[endpointInner],
-              MULTI_CALL_CONTRACT[chain]
-            ).all([chunk]);
+
+            let web3
+            if (chain === 'polygon') {
+              web3 = ENDPOINTS_RPC_WRAPPER_POLYGON[endpointInner]
+            } else if(chain === 'fantom') {
+              web3 = ENDPOINTS_RPC_WRAPPER_FANTOM[endpointInner]
+            } else {
+              web3 = ENDPOINTS_RPC_WRAPPER[endpointInner]
+            }
+
+            const [foo] = await new MultiCall(web3, MULTI_CALL_CONTRACT[chain]).all([chunk]);
+
             return foo;
           } catch (e) {
             console.error("failed", "multiCall", endpointInner, chunk.length, e.message);
@@ -220,15 +276,40 @@ module.exports = {
   },
 
   multiCallRpcIndexInner: async (calls, chain = 'bsc') => {
-    const endpoints = _.shuffle(chain === 'polygon' ? ENDPOINTS_POLYGON.slice() : ENDPOINTS.slice());
+    let selectedEndpoints = [];
+    switch (chain) {
+      case 'polygon':
+        selectedEndpoints = ENDPOINTS_POLYGON.slice();
+        break;
+      case 'fantom':
+        selectedEndpoints = ENDPOINTS_FANTOM.slice();
+        break;
+      case 'bsc':
+      default:
+        selectedEndpoints = ENDPOINTS.slice();
+    }
+
+    const endpoints = _.shuffle(selectedEndpoints);
 
     const promises = [];
 
     calls.forEach(group => {
+      let options;
+
+      if (chain === 'polygon') {
+        options = ENDPOINTS_MULTICALL_POLYGON[endpoints[0]];
+      } else if (chain === 'fantom') {
+        options = ENDPOINTS_MULTICALL_FANTOM[endpoints[0]];
+      } else if (chain === 'bsc') {
+        options = ENDPOINTS_MULTICALL[endpoints[0]];
+      } else {
+        options = ENDPOINTS_MULTICALL[endpoints[0]];
+      }
+
       const contract = new ethers.Contract(
         group.contractAddress,
         group.abi,
-        chain === 'polygon' ? ENDPOINTS_MULTICALL_POLYGON[endpoints[0]] : ENDPOINTS_MULTICALL[endpoints[0]]
+        options
       );
 
       group.calls.forEach(call => {
@@ -345,14 +426,32 @@ module.exports = {
     };
   },
 
-  getTransactionsViaBsc: async (contract, lpAddress, address) => {
+  getTransactionsViaBsc: async (contract, lpAddress, address, chain = 'bsc') => {
+    let host;
+    let apiKey;
+
+    if (chain === 'bsc') {
+      host = 'api.bscscan.com';
+      apiKey = module.exports.CONFIG['BSCSCAN_API_KEY'];
+    } else if (chain === 'polygon') {
+      host = 'api.polygonscan.com';
+      apiKey = module.exports.CONFIG['POLYGOnSCAN_API_KEY'];
+    } else if (chain === 'fantom') {
+      host = 'api.ftmscan.com';
+      apiKey = module.exports.CONFIG['FANTOMSCAN_API_KEY'];
+    } else {
+      host = 'api.bscscan.com';
+      apiKey = module.exports.CONFIG['BSCSCAN_API_KEY'];
+    }
+
     const url =
-      "https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=%contractaddress%&address=%address%&page=1&sort=asc&apikey=%apikey%";
+      "https://%host%/api?module=account&action=tokentx&contractaddress=%contractaddress%&address=%address%&page=1&sort=asc&apikey=%apikey%";
 
     const myUrl = url
-        .replace("%contractaddress%", lpAddress)
-        .replace("%address%", address)
-        .replace("%apikey%", module.exports.CONFIG['BSCSCAN_API_KEY']);
+      .replace("%host%", host)
+      .replace("%contractaddress%", lpAddress)
+      .replace("%address%", address)
+      .replace("%apikey%", apiKey);
 
     let response = {};
     try {
@@ -395,36 +494,40 @@ module.exports = {
     });
   },
 
-  getTransactions: async (contract, lpAddress, address) => {
+  getTransactions: async (contract, lpAddress, address, chain = 'bsc') => {
     try {
       return await module.exports.getTransactionsViaBsc(
         contract,
         lpAddress,
-        address
+        address,
+        chain
       );
     } catch (e) {
       console.log("transactions failed bsc", e.message);
     }
 
-    try {
-      return await module.exports.getTransactionsViaBitquery(
-        contract,
-        lpAddress,
-        address
-      );
-    } catch (e) {
-      console.log("transactions retry via bitquery", e.message);
+    if (chain === 'bsc') {
+      try {
+        return await module.exports.getTransactionsViaBitquery(
+          contract,
+          lpAddress,
+          address
+        );
+      } catch (e) {
+        console.log("transactions retry via bitquery", e.message);
+      }
+
+      try {
+        return await module.exports.getTransactionsViaBitquery(
+          contract,
+          lpAddress,
+          address
+        );
+      } catch (e) {
+        console.log("transactions retry via bitquery failed also", e.message);
+      }
     }
 
-    try {
-      return await module.exports.getTransactionsViaBitquery(
-        contract,
-        lpAddress,
-        address
-      );
-    } catch (e) {
-      console.log("transactions retry via bitquery failed also", e.message);
-    }
 
     return [];
   },

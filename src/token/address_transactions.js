@@ -10,20 +10,31 @@ module.exports = class AddressTransactions {
     this.priceCollector = priceCollector;
   }
 
-  async getTransactions(address) {
-    const cacheKey = `all-v3-transactions-${address}`
+  async getTransactions(address, chain = 'bsc') {
+    const cacheKey = `all-v3-transactions-${chain}-${address}`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
       return cache;
     }
 
-    const myUrl = 'https://api.bscscan.com/api?module=account&action=tokentx&address=%address%&page=1&offset=300&sort=desc'
+    let host;
+    if (chain === 'bsc') {
+      host = 'api.bscscan.com';
+    } else if(chain === 'polygon') {
+      host = 'api.polygonscan.com';
+    } else if (chain === 'fantom') {
+      host = 'api.ftmscan.com';
+    } else {
+      host = 'api.bscscan.com';
+    }
+
+    const myUrl = 'https://' + host + '/api?module=account&action=tokentx&address=%address%&page=1&offset=300&sort=desc'
       .replace("%address%", address);
 
     let response = {};
     try {
-      response = await this.bscscanRequest.get(myUrl);
+      response = await this.bscscanRequest.get(myUrl, chain);
     } catch (e) {
       console.error(myUrl, e.message);
       return [];

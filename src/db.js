@@ -3,11 +3,12 @@
 const batchCandleJSON = require("candlestick-convert").batchCandleJSON;
 
 module.exports = class Db {
-  constructor(database, priceOracle, platforms, priceCollector) {
+  constructor(database, priceOracle, platforms, priceCollector, lpPriceCollector) {
     this.database = database;
     this.priceOracle = priceOracle;
     this.platforms = platforms;
     this.priceCollector = priceCollector;
+    this.lpPriceCollector = lpPriceCollector;
   }
 
   async updateAddressMaps() {
@@ -24,15 +25,16 @@ module.exports = class Db {
 
   async updateLpInfoMaps() {
     const inserts = [];
-    for (const [key, value] of Object.entries(
-        this.priceOracle.getAllLpAddressInfo()
-    )) {
-      inserts.push({
-        token: key,
-        token0: value[0].amount,
-        token1: value[1].amount
-      });
-    }
+
+    this.lpPriceCollector.all().forEach(i => {
+      if (i.tokens.length === 2) {
+        inserts.push({
+          token: i.address.toLowerCase(),
+          token0: i.tokens[0].amount,
+          token1: i.tokens[1].amount
+        });
+      }
+    });
 
     return this.insertLpInfo(inserts);
   }

@@ -112,13 +112,18 @@ module.exports = class bdollar {
       }
     }
 
-    const text = await request("https://api.bdollar.fi/api/bvault/get-vaults");
-    const response = JSON.parse(text.body);
-
     const data = {};
-    Object.values(response.data.vaultInfos).forEach(v => {
-      data[v.pid] = v;
-    });
+
+    try {
+      const text = await request("https://api.bdollar.fi/api/bvault/get-vaults");
+      const response = JSON.parse(text.body);
+
+      Object.values(response.data.vaultInfos).forEach(v => {
+        data[v.pid] = v;
+      });
+    } catch (e) {
+      console.log('error api.bdollar.fi/api/bvault/get-vaults')
+    }
 
     const rawPools = this.getRawPools();
 

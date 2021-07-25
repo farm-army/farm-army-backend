@@ -1,22 +1,17 @@
 "use strict";
 
-const _ = require("lodash");
-const fs = require("fs");
-const path = require("path");
 const BigNumber = require("bignumber.js");
 const Web3EthContract = require("web3-eth-contract");
 const Utils = require("../../utils");
-const ABI = require("./abi/abi");
+
+const VAULT_ABI = require('./abi/vault.json');
 
 module.exports = class beefy {
-  constructor(cache, priceOracle) {
+  constructor(cache, priceOracle, tokenCollector) {
     this.cache = cache;
     this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector;
   }
-
-  static ABI = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, "abi/balance.json"), "utf8")
-  )
 
   async getLbAddresses() {
     return (await this.getRawFarms())
@@ -27,18 +22,18 @@ module.exports = class beefy {
   }
 
   async getRawFarms() {
-    const cacheKey = "getAddressFarms-github-beefy";
+    const cacheKey = `getAddressFarms-github-${this.getName()}`;
 
     const cacheItem = this.cache.get(cacheKey);
     if (cacheItem) {
       return cacheItem;
     }
 
-    const poolsResponse = await Utils.requestGet("https://raw.githubusercontent.com/beefyfinance/beefy-app/master/src/features/configure/vault/bsc_pools.js");
+    const poolsResponse = await Utils.requestGet(this.getGithubFarmsUrl());
 
     const pools = Object.freeze(
       eval(
-        poolsResponse.replace(/export\s+const\s+bscPools\s+=\s+/, "")
+        poolsResponse.replace(/export\s+const\s+\w+Pools\s+=\s+/, "")
       ).filter(p => {
         return p.status === "active" || p.depositsPaused !== false;
       })
@@ -50,7 +45,9 @@ module.exports = class beefy {
   }
 
   async getAddressFarms(address) {
-    const cacheItem = this.cache.get(`getAddressFarms-beefy-${address}`);
+    let cacheKey = `getAddressFarms-${this.getName()}-${address}`;
+
+    const cacheItem = this.cache.get(cacheKey);
     if (cacheItem) {
       return cacheItem;
     }
@@ -58,7 +55,7 @@ module.exports = class beefy {
     const pools = await this.getFarms();
 
     const tokenCalls = pools.map(myPool => {
-      const token = new Web3EthContract(beefy.ABI, myPool.raw.earnedTokenAddress);
+      const token = new Web3EthContract(VAULT_ABI, myPool.raw.earnedTokenAddress);
 
       return {
         id: myPool.id,
@@ -66,20 +63,22 @@ module.exports = class beefy {
       };
     });
 
-    const calls = await Utils.multiCall(tokenCalls);
+    const calls = await Utils.multiCall(tokenCalls, this.getChain());
 
     const result = calls
       .filter(v => new BigNumber(v.balanceOf).isGreaterThan(0))
       .map(v => v.id);
 
-    this.cache.put(`getAddressFarms-beefy-${address}`, result, { ttl: 300 * 1000 });
+    this.cache.put(cacheKey, result, { ttl: 300 * 1000 });
 
     return result;
   }
 
   async getFarms(refresh = false) {
+    let cacheKey = `getFarms-${this.getName()}`;
+
     if (!refresh) {
-      const cacheItem = this.cache.get("getFarms-beefy");
+      const cacheItem = this.cache.get(cacheKey);
       if (cacheItem) {
         return cacheItem;
       }
@@ -95,7 +94,7 @@ module.exports = class beefy {
     const pools = await this.getRawFarms();
 
     const vaultCalls = pools.map(pool => {
-      const vault = new Web3EthContract(ABI.vaultABI, pool.earnedTokenAddress);
+      const vault = new Web3EthContract(VAULT_ABI, pool.earnedTokenAddress);
 
       return {
         id: pool.id,
@@ -105,16 +104,16 @@ module.exports = class beefy {
       };
     });
 
-    const vault = await Utils.multiCallIndexBy("id", vaultCalls);
+    const vault = await Utils.multiCallIndexBy("id", vaultCalls, this.getChain());
 
     const farms = [];
     pools.forEach(farm => {
       const item = {
-        id: `beefy_${farm.id}`,
+        id: `${this.getName()}_${farm.id}`,
         name: farm.name,
         token: farm.token,
         platform: farm.platform,
-        provider: "beefy",
+        provider: this.getName(),
         has_details: !!(farm.earnedTokenAddress && farm.tokenAddress),
         raw: Object.freeze(farm),
         extra: {}
@@ -131,7 +130,6 @@ module.exports = class beefy {
 
       if (farm.earnedTokenAddress) {
         item.extra.transactionAddress = farm.earnedTokenAddress;
-
         item.extra.pricePerFullShareToken = farm.earnedTokenAddress;
       }
 
@@ -144,7 +142,7 @@ module.exports = class beefy {
         }
 
         item.tvl = {
-          amount: vaultElement.tvl / 1e18
+          amount: vaultElement.tvl / (10 ** this.tokenCollector.getDecimals(vaultElement.tokenAddress))
         };
 
         if (price) {
@@ -161,9 +159,9 @@ module.exports = class beefy {
       farms.push(Object.freeze(item));
     });
 
-    this.cache.put("getFarms-beefy", farms, { ttl: 1000 * 60 * 30 });
+    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
 
-    console.log("beefy updated");
+    console.log(`${this.getName()}  updated`);
 
     return farms;
   }
@@ -187,17 +185,15 @@ module.exports = class beefy {
     const tokenCalls = addressFarms.map(a => {
       const farm = farms.filter(f => f.id === a)[0];
 
-      const token = new Web3EthContract(
-        beefy.ABI,
-        farm.raw.earnedTokenAddress
-      );
+      const token = new Web3EthContract(VAULT_ABI, farm.raw.earnedTokenAddress);
+
       return {
         id: farm.id,
         balanceOf: token.methods.balanceOf(address)
       };
     });
 
-    const calls = await Utils.multiCall(tokenCalls);
+    const calls = await Utils.multiCall(tokenCalls, this.getChain());
 
     return calls.map(call => {
       const farm = farms.find(f => f.id === call.id);
@@ -215,10 +211,10 @@ module.exports = class beefy {
       if (farm.raw.tokenAddress) {
         let price = this.priceOracle.findPrice(farm.raw.tokenAddress, farm.raw.oracleId.toLowerCase());
         if (price) {
-          result.deposit.usd = (amount / 1e18) * price;
+          result.deposit.usd = result.deposit.amount * price;
         }
       } else {
-        console.log("beefy no tokenAddress", farm.id);
+        console.log(`${this.getName()} no tokenAddress`, farm.id);
       }
 
       result.rewards = [];
@@ -237,7 +233,8 @@ module.exports = class beefy {
       return Utils.getTransactions(
         farm.extra.transactionAddress,
         farm.extra.transactionToken,
-        address
+        address,
+        this.getChain()
       );
     }
 
@@ -277,5 +274,17 @@ module.exports = class beefy {
     }
 
     return result;
+  }
+
+  getGithubFarmsUrl() {
+    return 'https://raw.githubusercontent.com/beefyfinance/beefy-app/master/src/features/configure/vault/bsc_pools.js';
+  }
+
+  getName() {
+    return 'beefy';
+  }
+
+  getChain() {
+    return 'bsc';
   }
 };
