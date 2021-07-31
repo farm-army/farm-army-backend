@@ -122,7 +122,9 @@ module.exports = class pswamp extends PancakePlatformFork {
         provider: this.getName(),
         raw: Object.freeze(farm),
         has_details: true,
-        extra: {}
+        extra: {},
+        chain: this.getChain(),
+        compound: true,
       };
 
       if (farm.isTokenOnly !== true) {

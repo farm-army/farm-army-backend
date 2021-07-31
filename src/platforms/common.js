@@ -4,17 +4,9 @@ const Web3EthContract = require("web3-eth-contract");
 const BigNumber = require("bignumber.js");
 const Utils = require("../utils");
 const erc20Abi = require("../abi/erc20.json");
+const MASTERCHEF_COMPOUND_STRAT_ABI = require('../abi/mini_masterchef_compound_strat.json');
 
 module.exports = {
-  PancakePlatformForkAuto: class PancakePlatformForkAuto {
-    constructor(cache, priceOracle) {
-      this.cache = cache;
-      this.priceOracle = priceOracle;
-    }
-
-
-  },
-
   PancakePlatformFork: class PancakePlatformFork {
     constructor(cache, priceOracle, tokenCollector) {
       this.cache = cache;
@@ -235,6 +227,7 @@ module.exports = {
           has_details: true,
           extra: {},
           chain: this.getChain(),
+          compound: true,
         };
 
         item.earns = [earningToken.toLowerCase()];
@@ -485,5 +478,296 @@ module.exports = {
         throw new Error(`Invalid ${findName} ${JSON.stringify(object)}`);
       }
     }
-  }
+  },
+
+  MasterChefWithAutoCompoundAndRewards: class MasterChefWithAutoCompoundAndRewards {
+    constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver) {
+      this.cache = cache;
+      this.priceOracle = priceOracle;
+      this.tokenCollector = tokenCollector;
+      this.farmCollector = farmCollector;
+      this.cacheManager = cacheManager;
+      this.farmPlatformResolver = farmPlatformResolver;
+    }
+
+    async getMatcherChefMeta() {
+      const cacheKey = `${this.getName()}-v3-master-meta`
+
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
+      }
+
+      const foo = (await this.farmCollector.fetchForMasterChefWithMeta(this.getMasterChefAddress(), this.getChain()));
+
+      await this.cacheManager.set(cacheKey, foo, {ttl: 60 * 30})
+
+      return foo;
+    }
+
+    async getFarms(refresh = false) {
+      const cacheKey = `getFarms-${this.getName()}`;
+
+      if (!refresh) {
+        const cacheItem = this.cache.get(cacheKey);
+        if (cacheItem) {
+          return cacheItem;
+        }
+      }
+
+      let matcherChefMeta = await this.getMatcherChefMeta();
+
+      let pools = matcherChefMeta.pools.filter(f => f.isFinished !== true);
+
+      const farmBalanceCalls = [];
+      pools.forEach(farm => {
+        if (!farm.raw.lpToken || !farm.raw.poolInfoNormalized || !farm.raw.poolInfoNormalized.strategy) {
+          return;
+        }
+
+        const token = new Web3EthContract(MASTERCHEF_COMPOUND_STRAT_ABI, farm.raw.poolInfoNormalized.strategy);
+        farmBalanceCalls.push({
+          pid: farm.pid.toString(),
+          balance: token.methods.sharesTotal(),
+        });
+      });
+
+      const farmBalances = await Utils.multiCallIndexBy('pid', farmBalanceCalls, this.getChain());
+
+      const farms = pools.map(farm => {
+        const item = {
+          id: `${this.getName()}_farm_${farm.pid}`,
+          name: farm.lpSymbol.toUpperCase(),
+          token: farm.lpSymbol.toLowerCase(),
+          provider: this.getName(),
+          raw: Object.freeze(farm),
+          has_details: true,
+          extra: {},
+          compound: true
+        };
+
+        const link = this.getFarmLink(item);
+        if (link) {
+          item.link = link;
+        }
+
+        item.extra.transactionToken = farm.lpAddress;
+        item.extra.transactionAddress = this.getMasterChefAddress();
+
+        const platform = this.farmPlatformResolver.findMainPlatformNameForTokenAddress(item.extra.transactionToken);
+        if (platform) {
+          item.platform = platform;
+        }
+
+
+        if (farm.isTokenOnly !== true) {
+          item.extra.lpAddress = item.extra.transactionToken;
+        }
+
+        if (farm.raw.earns) {
+          item.earns = farm.raw.earns.map(i => i.symbol.toLowerCase());
+
+          item.earn = farm.raw.earns.map(e => ({
+            'address': e.address.toLowerCase(),
+            'symbol': e.symbol.toLowerCase(),
+            'decimals': e.decimals,
+          }))
+        }
+
+        if (farmBalances[farm.pid] && farmBalances[farm.pid].balance  && farmBalances[farm.pid].balance > 0) {
+          item.tvl = {
+            amount: farmBalances[farm.pid].balance / (10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
+          };
+
+          const addressPrice = this.priceOracle.getAddressPrice(item.extra.transactionToken);
+          if (addressPrice) {
+            item.tvl.usd = item.tvl.amount * addressPrice;
+          }
+        }
+
+        return Object.freeze(item);
+      });
+
+      this.cache.put(cacheKey, farms, {ttl: 1000 * 60 * 30});
+
+      console.log(`${this.getName()} updated`);
+
+      return farms;
+    }
+
+    async getAddressFarms(address) {
+      const cacheItem = this.cache.get(`getAddressFarms-${this.getName()}-${address}`);
+      if (cacheItem) {
+        return cacheItem;
+      }
+
+      let farmings = await this.getFarms();
+      const masterChefMeta = await this.getMatcherChefMeta();
+
+      const vaultCalls = farmings.map(farm => {
+        const contract = new Web3EthContract(masterChefMeta.abi, this.getMasterChefAddress());
+        return {
+          id: farm.id.toString(),
+          userInfo: contract.methods.userInfo(farm.raw.pid, address),
+          pendingReward: masterChefMeta.methods.pendingRewardsFunctionName ? contract.methods[masterChefMeta.methods.pendingRewardsFunctionName](farm.raw.pid, address) : '0'
+        };
+      });
+
+      const farms = await Utils.multiCall(vaultCalls, this.getChain());
+
+      const result = farms.filter(v =>
+        new BigNumber((v.userInfo && v.userInfo[0]) ? v.userInfo[0] : 0).isGreaterThan(0) ||
+        new BigNumber(v.pendingReward || 0).isGreaterThan(0)
+      ).map(v => v.id);
+
+      this.cache.put(`getAddressFarms-${this.getName()}-${address}`, result, { ttl: 300 * 1000 });
+
+      return result;
+    }
+
+    async getYields(address) {
+      const addressFarms = await this.getAddressFarms(address);
+      if (addressFarms.length === 0) {
+        return [];
+      }
+
+      return await this.getYieldsInner(address, addressFarms);
+    }
+
+    async getYieldsInner(address, addressFarms) {
+      if (addressFarms.length === 0) {
+        return [];
+      }
+
+      const farms = await this.getFarms();
+      const masterChefMeta = await this.getMatcherChefMeta();
+
+      const tokenCalls = addressFarms.map(id => {
+        const farm = farms.find(f => f.id === id);
+
+        const contract = new Web3EthContract(masterChefMeta.abi, this.getMasterChefAddress());
+        return {
+          id: farm.id,
+          pendingReward: masterChefMeta.methods.pendingRewardsFunctionName ? contract.methods[masterChefMeta.methods.pendingRewardsFunctionName](farm.raw.pid, address) : '0',
+          stakedWantTokens: contract.methods.stakedWantTokens(farm.raw.pid, address)
+        };
+      });
+
+      const calls = await Utils.multiCall(tokenCalls, this.getChain());
+
+      const results = [];
+      calls.forEach(call => {
+        const farm = farms.find(f => f.id === call.id);
+
+        const result = {};
+        result.farm = farm;
+
+        if (new BigNumber(call.stakedWantTokens).isGreaterThan(0)) {
+          const deposit = {
+            symbol: "?",
+            amount: call.stakedWantTokens / (10 ** this.tokenCollector.getDecimals(farm.extra.transactionToken)),
+          };
+
+          const price = this.priceOracle.getAddressPrice(farm.extra.transactionToken);
+          if (price) {
+            deposit.usd = deposit.amount * price;
+
+            // dust
+            if (deposit.usd < 0.01) {
+              return;
+            }
+          }
+
+          result.deposit = deposit;
+
+          if (new BigNumber(call.pendingReward).isGreaterThan(0) && farm.earn && farm.earn[0]) {
+            const reward = {
+              symbol: farm.earn[0].symbol.toLowerCase(),
+              amount: call.pendingReward / ( 10 ** farm.earn[0].decimals),
+            };
+
+            const price = this.priceOracle.findPrice(farm.earn[0].address);
+            if (price) {
+              reward.usd = reward.amount * price;
+            }
+
+            result.rewards = [reward];
+          }
+        }
+
+        results.push(result);
+      });
+
+      return results;
+    }
+
+    getName() {
+      return this.constructor.name;
+    }
+
+    async getTransactions(address, id) {
+      const farm = (await this.getFarms()).find(f => f.id === id);
+      if (!farm) {
+        return {};
+      }
+
+      if (farm.extra.transactionAddress && farm.extra.transactionToken) {
+        return Utils.getTransactions(
+          farm.extra.transactionAddress,
+          farm.extra.transactionToken,
+          address,
+          this.getChain()
+        );
+      }
+
+      return [];
+    }
+
+    async getDetails(address, id) {
+      const farm = (await this.getFarms()).find(f => f.id === id);
+      if (!farm) {
+        return {};
+      }
+
+      const [yieldFarms, transactions] = await Promise.all([
+        this.getYieldsInner(address, [farm.id]),
+        this.getTransactions(address, id)
+      ]);
+
+      const result = {};
+
+      let lpTokens = [];
+      if (yieldFarms[0]) {
+        result.farm = yieldFarms[0];
+        lpTokens = this.priceOracle.getLpSplits(farm, yieldFarms[0]);
+      }
+
+      if (transactions && transactions.length > 0) {
+        result.transactions = transactions;
+      }
+
+      if (lpTokens && lpTokens.length > 0) {
+        result.lpTokens = lpTokens;
+      }
+
+      const yieldDetails = Utils.findYieldForDetails(result);
+      if (yieldDetails) {
+        result.yield = yieldDetails;
+      }
+
+      return result;
+    }
+
+    getMasterChefAddress() {
+      throw new Error('not implemented');
+    }
+
+    getChain() {
+      throw new Error('not implemented');
+    }
+
+    getFarmLink(farm) {
+      throw new Error('not implemented');
+    }
+  },
 };

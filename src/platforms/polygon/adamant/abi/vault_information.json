@@ -1,0 +1,134 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IVault[]",
+        "name": "vaults",
+        "type": "address[]"
+      }
+    ],
+    "name": "getInfoForVaults",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "amountUserStaked",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalShares",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ratio",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pendingAddyReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewardMultiplier",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "strategy",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "stakingRewards",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "stakingToken",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct VaultInfo.VaultData[]",
+        "name": "vaultData",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IVault",
+        "name": "jar",
+        "type": "address"
+      }
+    ],
+    "name": "getVaultInfoFor",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "amountUserStaked",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalShares",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ratio",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pendingAddyReward",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewardMultiplier",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "strategy",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "stakingRewards",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "stakingToken",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct VaultInfo.VaultData",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

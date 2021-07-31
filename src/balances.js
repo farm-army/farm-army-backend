@@ -88,7 +88,7 @@ module.exports = class Balances {
     const balances = [];
 
     let [nativeBalance, allBalances] = await Promise.all([
-      utils.getWeb3().eth.getBalance(address),
+      utils.getWeb3(this.chain).eth.getBalance(address),
       utils.multiCall(balancesCalls, this.chain),
     ]);
 

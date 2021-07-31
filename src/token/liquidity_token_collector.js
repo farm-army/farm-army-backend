@@ -30,7 +30,7 @@ module.exports = class LiquidityTokenCollector {
       throw new Error(`Invalid token: ${JSON.stringify([lpToken])}`)
     }
 
-    return this.tokens[lpToken.toLowerCase()]
+    return this.tokens[lpToken.toLowerCase()] || undefined
   }
 
   getSymbolNames(lpToken) {

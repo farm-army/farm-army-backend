@@ -116,7 +116,9 @@ module.exports = class beefy {
         provider: this.getName(),
         has_details: !!(farm.earnedTokenAddress && farm.tokenAddress),
         raw: Object.freeze(farm),
-        extra: {}
+        extra: {},
+        chain: this.getChain(),
+        compound: true,
       };
 
       const vaultElement = vault[farm.id];
@@ -161,7 +163,7 @@ module.exports = class beefy {
 
     this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
 
-    console.log(`${this.getName()}  updated`);
+    console.log(`${this.getName()} updated`);
 
     return farms;
   }

@@ -84,4 +84,11 @@ module.exports = class apeswap extends PancakePlatformFork {
   getMasterChefAddress() {
     return apeswap.MASTER_ADDRESS;
   }
+
+  async onFarmsBuild(farms) {
+    farms.forEach(farm => {
+      farm.main_platform = 'apeswap';
+      farm.platform = 'apeswap';
+    });
+  }
 };

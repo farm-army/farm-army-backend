@@ -89,7 +89,7 @@ module.exports = class mdex {
 
     const rawFarms = await this.getFetchedFarms()
 
-    const blockNumber = await Utils.getWeb3().eth.getBlockNumber();
+    const blockNumber = await Utils.getWeb3('bsc').eth.getBlockNumber();
 
     let web3EthContract = new Web3EthContract(MasterAbi, '0xc48fe252aa631017df253578b1405ea399728a50');
     const [reward] = await Utils.multiCall([
@@ -118,6 +118,8 @@ module.exports = class mdex {
         link: `https://mdex.com/#/pool/liquidity/mdx/${encodeURIComponent(farm.pid.toString())}`,
         extra: {},
         earns: ['mdx'],
+        chain: 'bsc',
+        main_platform: 'mdex'
       };
 
       item.extra.transactionToken = farm.lpAddress

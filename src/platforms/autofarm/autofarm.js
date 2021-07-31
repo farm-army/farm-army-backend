@@ -96,7 +96,9 @@ module.exports = class autofarm {
         tvl: {
           usd: farm.poolWantTVL
         },
-        extra: {}
+        extra: {},
+        chain: this.getChain(),
+        compound: true,
       };
 
       if (farm.wantPrice) {

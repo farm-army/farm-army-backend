@@ -442,7 +442,7 @@ module.exports = class PolygonPriceOracle {
     const prices = [];
 
     vaultCalls.forEach(call => {
-      const inNative = call.amountsOut[1] / 10 ** call.decimals;
+      const inNative = call.amountsOut[1] / (10 ** call.decimals);
       const usdPrice = nativePrice / inNative;
 
       prices.push({

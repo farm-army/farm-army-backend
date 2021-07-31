@@ -83,4 +83,11 @@ module.exports = class spookyswap extends PancakePlatformFork {
   getMasterChefAddress() {
     return spookyswap.MASTER_ADDRESS;
   }
+
+  async onFarmsBuild(farms) {
+    farms.forEach(farm => {
+      farm.main_platform = 'spookyswap';
+      farm.platform = 'spookyswap';
+    });
+  }
 };

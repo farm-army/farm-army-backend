@@ -153,8 +153,16 @@ module.exports = {
   DUST_FILTER: 0.00000000001 * 1e18,
 
 
-  getWeb3: () => {
-    return ENDPOINTS_RPC_WRAPPER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER))[0]];
+  getWeb3: (chain = 'bsc') => {
+    switch (chain) {
+      case 'polygon':
+        return ENDPOINTS_RPC_WRAPPER_POLYGON[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_POLYGON))[0]];
+      case 'fantom':
+        return ENDPOINTS_RPC_WRAPPER_FANTOM[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_FANTOM))[0]];
+      case 'bsc':
+      default:
+        return ENDPOINTS_RPC_WRAPPER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER))[0]];
+    }
   },
 
   multiCall: async (vaultCalls, chain = 'bsc') => {
@@ -354,8 +362,8 @@ module.exports = {
     return final;
   },
 
-  multiCallRpc: async calls => {
-    return Object.values(await module.exports.multiCallRpcIndex(calls));
+  multiCallRpc: async (calls, chain = 'bsc') => {
+    return Object.values(await module.exports.multiCallRpcIndex(calls, chain));
   },
 
   findYieldForDetails: result => {

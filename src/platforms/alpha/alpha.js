@@ -12,9 +12,10 @@ const AbortController = require("abort-controller")
 const ibBNBAbi = require('./abi/ibBNBAbi.json');
 
 module.exports = class alpha {
-  constructor(cache, priceOracle) {
+  constructor(cache, priceOracle, farmPlatformResolver) {
     this.cache = cache;
     this.priceOracle = priceOracle;
+    this.farmPlatformResolver = farmPlatformResolver;
   }
 
   async getAddressFarms(address) {
@@ -121,7 +122,12 @@ module.exports = class alpha {
       }
 
       if (farm.lpTokenAddress) {
-        item.extra.lpAddress = farm.lpTokenAddress
+        item.extra.lpAddress = farm.lpTokenAddress;
+
+        const platform = this.farmPlatformResolver.findMainPlatformNameForTokenAddress(farm.lpTokenAddress);
+        if (platform) {
+          item.platform = platform;
+        }
       }
 
       farms.push(item);

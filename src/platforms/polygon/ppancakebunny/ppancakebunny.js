@@ -138,7 +138,9 @@ module.exports = class ppancakebunny {
         provider: "ppancakebunny",
         link: `https://polygon.pancakebunny.finance/farm/${encodeURI(key)}`,
         has_details: true,
-        extra: {}
+        extra: {},
+        compound: true,
+        chain: 'polygon',
       };
 
       if (farm.swap) {

@@ -9,7 +9,6 @@ const erc20Abi = require("../../abi/erc20.json");
 const MasterchefAbi = require("./abi/masterchef.json");
 
 module.exports = class eleven {
-  static MASTER_CHEF = '0x1ac6C0B955B6D7ACb61c9Bdf3EE98E0689e07B8A';
   static ELEVEN_TOKEN = '0xAcD7B3D9c10e97d0efA418903C0c7669E702E4C0';
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager, liquidityTokenCollector) {
@@ -25,36 +24,25 @@ module.exports = class eleven {
     return [];
   }
 
+  getMasterChefAddress() {
+    return '0x1ac6C0B955B6D7ACb61c9Bdf3EE98E0689e07B8A';
+  }
+
   async getRawFarms() {
-    const cacheKey = "getAddressFarms-github-eleven";
+    const require1 = require('./farms.json')
+      .filter(f => {
+        if (f.network !== this.getChain()) {
+          return false;
+        }
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
-    }
+        return true;
+      });
 
-    let body = await Utils.requestGet("https://raw.githubusercontent.com/Eleven-Finance/elevenfinance/main/src/features/configure/pools.js");
-
-    let pools = [];
-
-    const match = /export\s+const\s+pools\s+=\s+/.exec(body);
-    if (match) {
-      pools = Object.freeze(
-        eval(
-          body.substr(match.index).replace(/export\s+const\s+pools\s+=\s+/, "")
-        ).filter(p => {
-          return p.network.toLowerCase() === "bsc";
-        })
-      );
-
-      this.cache.put(cacheKey, pools, { ttl: 600 * 1000 });
-    }
-
-    return pools;
+    return require1;
   }
 
   async getAddressFarms(address) {
-    const cacheItem = this.cache.get(`getAddressFarms-eleven-${address}`);
+    const cacheItem = this.cache.get(`getAddressFarms-${this.getName()}-${address}`);
     if (cacheItem) {
       return cacheItem;
     }
@@ -65,7 +53,7 @@ module.exports = class eleven {
 
     farms.forEach(farm => {
       if (farm.raw.farm && farm.raw.farm.masterchefPid) {
-        const contract = new Web3EthContract(MasterchefAbi, eleven.MASTER_CHEF);
+        const contract = new Web3EthContract(MasterchefAbi, this.getMasterChefAddress());
         tokenCalls.push({
           id: farm.id,
           userInfo: contract.methods.userInfo(farm.raw.farm.masterchefPid, address)
@@ -81,7 +69,7 @@ module.exports = class eleven {
       }
     });
 
-    const calls = await Utils.multiCall(tokenCalls);
+    const calls = await Utils.multiCall(tokenCalls, this.getChain());
 
     const result = _.uniq(calls
       .filter(v =>
@@ -96,8 +84,10 @@ module.exports = class eleven {
   }
 
   async getFarms(refresh = false) {
+    let cacheKey = `getFarms-${this.getName()}`;
+
     if (!refresh) {
-      const cacheItem = this.cache.get("getFarms-eleven");
+      const cacheItem = this.cache.get(cacheKey);
       if (cacheItem) {
         return cacheItem;
       }
@@ -122,7 +112,7 @@ module.exports = class eleven {
       };
     });
 
-    const vault = await Utils.multiCallIndexBy("id", vaultCalls);
+    const vault = await Utils.multiCallIndexBy("id", vaultCalls, this.getChain());
 
     const farms = [];
     pools.forEach(farm => {
@@ -131,14 +121,16 @@ module.exports = class eleven {
         .replace(/\s+\w*lp$/, '');
 
       const item = {
-        id: `eleven_${farm.id.toLowerCase()}`,
+        id: `${this.getName()}_${farm.id.toLowerCase()}`,
         name: token.toUpperCase(),
         token: token,
         platform: farm.platform,
-        provider: "eleven",
+        provider: this.getName(),
         has_details: !!(farm.earnedTokenAddress && farm.tokenAddress),
         raw: Object.freeze(farm),
         extra: {},
+        chain: this.getChain(),
+        compound: true,
       };
 
       if (farm.farm && farm.farm.earnedToken) {
@@ -196,9 +188,9 @@ module.exports = class eleven {
       farms.push(Object.freeze(item));
     });
 
-    this.cache.put("getFarms-eleven", farms, { ttl: 1000 * 60 * 30 });
+    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
 
-    console.log("eleven updated");
+    console.log(`${this.getName()} updated`);
 
     return farms;
   }
@@ -226,7 +218,7 @@ module.exports = class eleven {
       const farm = farms.find(f => f.id === id);
 
       if (farm.raw.farm && farm.raw.farm.masterchefPid) {
-        const contract = new Web3EthContract(MasterchefAbi, eleven.MASTER_CHEF);
+        const contract = new Web3EthContract(MasterchefAbi, this.getMasterChefAddress());
 
         callsPromise.push({
           id: farm.id.toString(),
@@ -244,8 +236,8 @@ module.exports = class eleven {
     });
 
     const [userInfo, balanceOf] = await Promise.all([
-      Utils.multiCallIndexBy('id', callsPromise),
-      Utils.multiCallIndexBy('id', calls2Promise),
+      Utils.multiCallIndexBy('id', callsPromise, this.getChain()),
+      Utils.multiCallIndexBy('id', calls2Promise, this.getChain()),
     ])
 
     const result = _.uniq([...Object.values(userInfo), ...Object.values(balanceOf)]
@@ -310,7 +302,8 @@ module.exports = class eleven {
       return Utils.getTransactions(
         farm.extra.transactionAddress,
         farm.extra.transactionToken,
-        address
+        address,
+        this.getChain()
       );
     }
 
@@ -350,5 +343,13 @@ module.exports = class eleven {
     }
 
     return result;
+  }
+
+  getName() {
+    return 'eleven';
+  }
+
+  getChain() {
+    return 'bsc';
   }
 };

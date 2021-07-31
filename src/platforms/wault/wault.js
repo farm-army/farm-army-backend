@@ -52,6 +52,9 @@ module.exports = class wault extends PancakePlatformFork {
     const poolInfos = await this.getPoolInfo();
 
     farms.forEach(farm => {
+      farm.main_platform = 'wault';
+      farm.platform = 'wault';
+
       let poolInfo = poolInfos[farm.raw.pid.toString()];
       if (poolInfo && poolInfo.apy) {
         farm.yield = {

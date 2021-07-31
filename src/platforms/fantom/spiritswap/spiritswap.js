@@ -83,4 +83,11 @@ module.exports = class spiritswap extends PancakePlatformFork {
   getMasterChefAddress() {
     return spiritswap.MASTER_ADDRESS;
   }
+
+  async onFarmsBuild(farms) {
+    farms.forEach(farm => {
+      farm.main_platform = 'spiritswap';
+      farm.platform = 'spiritswap';
+    });
+  }
 };

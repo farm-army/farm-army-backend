@@ -136,7 +136,9 @@ module.exports = class pancakebunny {
         provider: "pancakebunny",
         link: `https://pancakebunny.finance/farm/${encodeURI(key)}`,
         has_details: true,
-        extra: {}
+        extra: {},
+        chain: 'bsc',
+        compound: true,
       };
 
       if ((farm.exchange && farm.exchange.toLowerCase().includes('pancakeswap')) || (farm.type && farm.type.toLowerCase().includes('cakestake'))) {

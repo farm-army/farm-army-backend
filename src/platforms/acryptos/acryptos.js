@@ -248,7 +248,9 @@ module.exports = class acryptos {
         link: "https://app.acryptos.com/",
         has_details: true,
         extra: {},
-        earns: []
+        earns: [],
+        chain: 'bsc',
+        compound: true,
       };
 
       const tags = i.tags || [];

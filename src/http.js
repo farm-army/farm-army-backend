@@ -13,6 +13,8 @@ module.exports = class Http {
     platformsFantom,
     balances,
     addressTransactions,
+    polygonAddressTransactions,
+    fantomAddressTransactions,
     tokenCollector,
     liquidityTokenCollector,
     tokenInfo,
@@ -32,7 +34,11 @@ module.exports = class Http {
     this.platformsPolygon = platformsPolygon;
     this.platformsFantom = platformsFantom;
     this.balances = balances;
+
     this.addressTransactions = addressTransactions;
+    this.polygonAddressTransactions = polygonAddressTransactions;
+    this.fantomAddressTransactions = fantomAddressTransactions;
+
     this.tokenCollector = tokenCollector;
     this.liquidityTokenCollector = liquidityTokenCollector;
     this.tokenInfo = tokenInfo;
@@ -224,7 +230,7 @@ module.exports = class Http {
       let address = req.params.address;
 
       try {
-        res.json(await this.addressTransactions.getTransactions(address, 'polygon'));
+        res.json(await this.polygonAddressTransactions.getTransactions(address, 'polygon'));
       } catch (e) {
         console.error(e);
         res.status(500).json({message: e.message});
@@ -239,7 +245,7 @@ module.exports = class Http {
       let address = req.params.address;
 
       try {
-        res.json(await this.addressTransactions.getTransactions(address, 'fantom'));
+        res.json(await this.fantomAddressTransactions.getTransactions(address, 'fantom'));
       } catch (e) {
         console.error(e);
         res.status(500).json({message: e.message});

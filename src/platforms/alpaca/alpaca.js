@@ -14,21 +14,30 @@ const FallbackVaults = require('./farms/fallback.json');
 const fetch = require("node-fetch");
 const AbortController = require("abort-controller")
 
-module.exports = class acryptos {
+module.exports = class alpaca {
   ibTokenMapping = {
     // ibWBNB => BNB
     ['0xd7D069493685A581d27824Fc46EdA46B7EfC0063'.toLowerCase()]: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
     // ibBUSD => BUSD
     ['0x7C9e73d4C71dae564d41F78d56439bB4ba87592f'.toLowerCase()]: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
-    // ibETH => BUSD
+    // ibETH => ETH
     ['0xbfF4a34A4644a113E8200D7F1D79b3555f723AfE'.toLowerCase()]: '0x2170ed0880ac9a755fd29b2688956bd959f933f8',
     // ibALPACA => ALPACA
     ['0xf1bE8ecC990cBcb90e166b71E368299f0116d421'.toLowerCase()]: '0x8F0528cE5eF7B51152A59745bEfDD91D97091d2F',
+    // ibBTCB => BTCB
+    ['0x08FC9Ba2cAc74742177e0afC3dC8Aed6961c24e7'.toLowerCase()]: '0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c',
+    // ibTUSD => TUSD
+    ['0x3282d2a151ca00BfE7ed17Aa16E42880248CD3Cd'.toLowerCase()]: '0x14016e85a25aeb13065688cafb43044c2ef86784',
+    // ibUSDT => USDT
+    ['0x158Da805682BdC8ee32d52833aD41E74bb951E59'.toLowerCase()]: '0x55d398326f99059ff775485246999027b3197955',
   }
 
-  constructor(cache, priceOracle) {
+  constructor(cache, priceOracle, tokenCollector, liquidityTokenCollector, farmPlatformResolver) {
     this.cache = cache;
     this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector;
+    this.liquidityTokenCollector = liquidityTokenCollector;
+    this.farmPlatformResolver = farmPlatformResolver;
   }
 
   async getAddressFarms(address) {
@@ -215,11 +224,25 @@ module.exports = class acryptos {
           platform: 'pancake',
           raw: Object.freeze(vault),
           provider: "alpaca",
-          has_details: false,
+          has_details: true,
           link: 'https://app.alpacafinance.org/farm',
           extra: {},
           earns: ['alpaca'],
+          chain: 'bsc',
         };
+
+        if (vault.stakingToken && this.liquidityTokenCollector.get(vault.stakingToken)) {
+          item.extra.lpAddress = vault.stakingToken
+        } else if(vault.name.match(/^([\w]{0,9})-([\w]{0,9})\s*/g)) {
+          item.extra.lpAddress = vault.stakingToken
+        }
+
+        if (vault.stakingToken) {
+          const platform = this.farmPlatformResolver.findMainPlatformNameForTokenAddress(vault.stakingToken);
+          if (platform) {
+            item.platform = platform;
+          }
+        }
 
         farms.push(item);
       })
@@ -359,6 +382,27 @@ module.exports = class acryptos {
   }
 
   async getDetails(address, id) {
-    return [];
+    const farm = (await this.getFarms()).find(f => f.id === id);
+    if (!farm) {
+      return {};
+    }
+
+    const [yieldFarms] = await Promise.all([
+      this.getYieldsInner(address, [farm.id]),
+    ]);
+
+    const result = {};
+
+    let lpTokens = [];
+    if (yieldFarms[0]) {
+      result.farm = yieldFarms[0];
+      lpTokens = this.priceOracle.getLpSplits(farm, yieldFarms[0]);
+    }
+
+    if (lpTokens && lpTokens.length > 0) {
+      result.lpTokens = lpTokens;
+    }
+
+    return result;
   }
 };

@@ -163,7 +163,9 @@ module.exports = class pancake {
         earns: ["cake"],
         link: "https://pancakeswap.finance/farms",
         has_details: true,
-        extra: {}
+        extra: {},
+        chain: 'bsc',
+        main_platform: 'pancake',
       };
 
       let lpAddress = this.getAddress(farm.lpAddresses);
@@ -262,7 +264,8 @@ module.exports = class pancake {
         earns: [symbol.toLowerCase()],
         link: "https://pancakeswap.finance/pools",
         has_details: true,
-        extra: {}
+        extra: {},
+        chain: 'bsc',
       };
 
       item.extra.transactionToken = this.getAddress(pool.stakingToken.address);
@@ -518,7 +521,7 @@ module.exports = class pancake {
 
     const body = await Utils.requestGet("https://raw.githubusercontent.com/pancakeswap/pancake-frontend/develop/src/config/constants/pools.ts");
 
-    let blockNumber = await Utils.getWeb3().eth.getBlockNumber();
+    let blockNumber = await Utils.getWeb3('bsc').eth.getBlockNumber();
 
     const calls = [...body.matchAll(/contractAddress:\s+{\s*.*?\s*.*?56:\s*['](.*)[']/gm)]
         .map(match => match && match[1])

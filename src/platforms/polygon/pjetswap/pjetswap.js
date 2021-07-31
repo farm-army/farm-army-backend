@@ -83,4 +83,11 @@ module.exports = class pjetswap extends PancakePlatformFork {
   getMasterChefAddress() {
     return pjetswap.MASTER_ADDRESS;
   }
+
+  async onFarmsBuild(farms) {
+    farms.forEach(farm => {
+      farm.main_platform = 'jetswap';
+      farm.platform = 'jetswap';
+    });
+  }
 };

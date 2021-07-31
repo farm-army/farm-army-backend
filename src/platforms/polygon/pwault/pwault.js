@@ -83,4 +83,11 @@ module.exports = class pwault extends PancakePlatformFork {
   getMasterChefAddress() {
     return pwault.MASTER_ADDRESS;
   }
+
+  async onFarmsBuild(farms) {
+    farms.forEach(farm => {
+      farm.main_platform = 'wault';
+      farm.platform = 'wault';
+    });
+  }
 };
