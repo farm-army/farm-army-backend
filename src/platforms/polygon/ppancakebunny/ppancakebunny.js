@@ -10,7 +10,8 @@ const PRICE_CALCULATOR_ADDRESS = "0xE3B11c3Bd6d90CfeBBb4FB9d59486B0381D38021";
 const DASHBOARD_ABI = require(`./abi/dashboard.json`);
 const PRICE_CALCULATOR_ABI = require(`./abi/price_calculator.json`);
 
-const Farms = require('./farms.json');
+const walk = require("acorn-walk");
+const acorn = require("acorn");
 
 module.exports = class ppancakebunny {
   constructor(cache, priceOracle, tokenCollector) {
@@ -20,7 +21,7 @@ module.exports = class ppancakebunny {
   }
 
   async getLbAddresses() {
-    const response = _.cloneDeep(Farms);
+    const response = _.cloneDeep(await this.getFarmsViaHtml());
 
     const lpAddresses = [];
     for (const key of Object.keys(response)) {
@@ -93,11 +94,11 @@ module.exports = class ppancakebunny {
       }
     }
 
-    const response = _.cloneDeep(Farms);
+    const response = _.cloneDeep(await this.getFarmsViaHtml());
 
     const [prices, overall] = await Promise.all([
-      this.getTokenPrices(),
-      this.getOverall()
+      this.getTokenPrices(response),
+      this.getOverall(response)
     ]);
 
     const farms = [];
@@ -343,9 +344,7 @@ module.exports = class ppancakebunny {
     return results;
   }
 
-  async getTokenPrices() {
-    const farms = _.cloneDeep(Farms);
-
+  async getTokenPrices(farms) {
     const token = new Web3EthContract(PRICE_CALCULATOR_ABI, PRICE_CALCULATOR_ADDRESS);
 
     const tokenCalls = [];
@@ -371,7 +370,7 @@ module.exports = class ppancakebunny {
     return tokenPrices;
   }
 
-  async getOverall() {
+  async getOverall(farms) {
     const calls = await Utils.multiCallRpcIndex([{
       reference: 'poolsOf',
       contractAddress: DASHBOARD_ADDRESS,
@@ -380,7 +379,7 @@ module.exports = class ppancakebunny {
         {
           reference: "poolsOf",
           method: "poolsOf",
-          parameters: ['0x0000000000000000000000000000000000000000', Object.values(Farms).slice().filter(farm => farm.address).map(farm => farm.address)]
+          parameters: ['0x0000000000000000000000000000000000000000', Object.values(farms).slice().filter(farm => farm.address).map(farm => farm.address)]
         }
       ]
     }], 'polygon');
@@ -440,5 +439,35 @@ module.exports = class ppancakebunny {
     }
 
     return result;
+  }
+
+  async getFarmsViaHtml() {
+    const cacheKey = "getFarmsViaHtml-ppancakebunny";
+    const cacheItem = this.cache.get(cacheKey);
+    if (cacheItem) {
+      return cacheItem;
+    }
+
+    const javascriptFiles = await Utils.getJavascriptFiles('https://polygon.pancakebunny.finance/pool');
+
+    let rawFarms = undefined;
+
+    Object.values(javascriptFiles).forEach(body => {
+      walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
+        Literal(node) {
+          if (node.value && node.value.toString().startsWith('{') && (node.value.toString().toLowerCase().includes('fliptoflip') || node.value.toString().toLowerCase().includes('bunnytobunny'))) {
+            try {
+              rawFarms = JSON.parse(node.value);
+            } catch (e) {
+              console.log('invalid farm json')
+            }
+          }
+        }
+      })
+    });
+
+    this.cache.put(cacheKey, rawFarms, { ttl: 1000 * 60 * 30 });
+
+    return Object.freeze(rawFarms);
   }
 };

@@ -11,6 +11,9 @@ const { ethers } = require("ethers");
 const { providers } = require("ethers");
 const fetch = require("node-fetch");
 const AbortController = require("abort-controller");
+const walk = require("acorn-walk");
+const acorn = require("acorn");
+const JSDOM = require("jsdom").JSDOM;
 const { MulticallProvider } = require("@0xsequence/multicall").providers;
 
 const MULTI_CALL_CONTRACT = {
@@ -684,5 +687,65 @@ module.exports = {
     }
 
     return undefined;
+  },
+
+  getJavascriptFiles: async (url) => {
+    const urlObject = new URL(url);
+
+    const jsdom = await JSDOM.fromURL(url);
+    const document = jsdom.window.document
+
+    const result = document.evaluate("//script", jsdom.window.document, null, jsdom.window.XPathResult.ANY_TYPE, null);
+
+    let node;
+    const javascriptFiles = {};
+    while (node = result.iterateNext()) {
+      const src = node.getAttribute("src");
+
+      if (src) {
+        let srcUrl = new URL(src, url);
+        if (urlObject.hostname === srcUrl.hostname) {
+          javascriptFiles[srcUrl] = await module.exports.requestGet(srcUrl.href)
+        }
+      }
+    }
+
+    return javascriptFiles;
+  },
+
+  getPoolsFromJavascript: async (url) => {
+    const files = await module.exports.getJavascriptFiles(url);
+
+    const pools = [];
+
+    Object.values(files).forEach(body => {
+      walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
+        ArrayExpression(node) {
+          if (node.elements[0] && node.elements[0].properties) {
+            const keys = node.elements[0].properties.map(p => (p.key && p.key.name) ? p.key.name.toLowerCase() : '');
+
+            if (keys.includes('contractaddress') && (keys.includes('sousid') || keys.includes('stakingtoken') || keys.includes('stakingtokenname'))) {
+              node.elements.forEach(element => {
+                if (!element.properties) {
+                  return;
+                }
+
+                const contractAddressNode = element.properties.find(p => p.key && p.key.name.toLowerCase() === 'contractaddress');
+                if (contractAddressNode && contractAddressNode.value && contractAddressNode.value.type === 'ObjectExpression' && contractAddressNode.value.properties) {
+                  const contractAddressChain = contractAddressNode.value.properties.find(p => p.key && p.key.value && ['56', '137'].includes(p.key.value.toString()) && p.value && p.value.value && p.value.value.toString().startsWith('0x'));
+                  if (contractAddressChain) {
+                    pools.push({
+                      contractAddress: contractAddressChain.value.value.toString()
+                    });
+                  }
+                }
+              })
+            }
+          }
+        }
+      })
+    })
+
+    return pools;
   }
 };

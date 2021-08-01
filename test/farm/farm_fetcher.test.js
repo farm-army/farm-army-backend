@@ -16,6 +16,8 @@ describe('#test farm fetcher for masterchef', function () {
       rewardTokenFunctionName: "cake",
       tokenPerBlockFunctionName: "cakePerBlock",
       totalAllocPointFunctionName: "totalAllocPoint",
+      tokenPerSecondFunctionName: undefined,
+      pendingRewardsFunctionName: "pendingCake"
     });
   });
 
@@ -31,6 +33,8 @@ describe('#test farm fetcher for masterchef', function () {
       rewardTokenFunctionName: "ccake",
       tokenPerBlockFunctionName: "ccakePerBlock",
       totalAllocPointFunctionName: "totalAllocPoint",
+      tokenPerSecondFunctionName: undefined,
+      pendingRewardsFunctionName: "pendingCcake"
     });
   });
 
@@ -46,6 +50,8 @@ describe('#test farm fetcher for masterchef', function () {
       rewardTokenFunctionName: undefined,
       tokenPerBlockFunctionName: "mdxPerBlock",
       totalAllocPointFunctionName: "totalAllocPoint",
+      tokenPerSecondFunctionName: undefined,
+      pendingRewardsFunctionName: "pending"
     });
   });
 
@@ -61,6 +67,8 @@ describe('#test farm fetcher for masterchef', function () {
       rewardTokenFunctionName: 'polar',
       tokenPerBlockFunctionName: "polarPerBlock",
       totalAllocPointFunctionName: "totalAllocPoint",
+      tokenPerSecondFunctionName: undefined,
+      pendingRewardsFunctionName: "pendingPolar"
     });
   });
 
@@ -76,6 +84,8 @@ describe('#test farm fetcher for masterchef', function () {
       rewardTokenFunctionName: 'cake',
       tokenPerBlockFunctionName: "cakePerBlock",
       totalAllocPointFunctionName: "totalAllocPoint",
+      tokenPerSecondFunctionName: undefined,
+      pendingRewardsFunctionName: "pendingCake"
     });
   });
 
@@ -91,6 +101,8 @@ describe('#test farm fetcher for masterchef', function () {
       rewardTokenFunctionName: 'xBLZD',
       tokenPerBlockFunctionName: "xBLZDPerBlock",
       totalAllocPointFunctionName: "totalAllocPoint",
+      tokenPerSecondFunctionName: undefined,
+      pendingRewardsFunctionName: "pendingxBLZD"
     });
   });
 });

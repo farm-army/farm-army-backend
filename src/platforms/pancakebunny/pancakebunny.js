@@ -1,7 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
-const Utils = require("../../services").Utils;
+const Utils = require("../../utils");
 const Web3EthContract = require("web3-eth-contract");
 
 const BALANCES_ADDRESS = "0xb3c96d3c3d643c2318e4cdd0a9a48af53131f5f4";
@@ -10,7 +10,8 @@ const ASSET_ADDRESS = "0xe375a12a556e954ccd48c0e0d3943f160d45ac2e";
 const BALANCES_ABI = require(`./abi/balances.json`);
 const ASSET_ABI = require(`./abi/asset.json`);
 
-const Farms = require('./farms.json');
+const acorn = require("acorn")
+const walk = require("acorn-walk");
 
 module.exports = class pancakebunny {
   constructor(cache, priceOracle, tokenCollector) {
@@ -20,7 +21,7 @@ module.exports = class pancakebunny {
   }
 
   async getLbAddresses() {
-    const response = _.cloneDeep(Farms);
+    const response = _.cloneDeep(await this.getFarmsViaHtml());
 
     const lpAddresses = [];
     for (const key of Object.keys(response)) {
@@ -84,7 +85,7 @@ module.exports = class pancakebunny {
   }
 
   async getFarms(refresh = false) {
-    const cacheKey = "getFarms-pancakebunny";
+    const cacheKey = "getFarms-v2-pancakebunny";
 
     if (!refresh) {
       const cacheItem = this.cache.get(cacheKey);
@@ -93,11 +94,11 @@ module.exports = class pancakebunny {
       }
     }
 
-    const response = _.cloneDeep(Farms);
+    const response = _.cloneDeep(await this.getFarmsViaHtml());
 
     const [prices, overall] = await Promise.all([
-      this.getTokenPrices(),
-      this.getOverall()
+      this.getTokenPrices(response),
+      this.getOverall(response)
     ]);
 
     const farms = [];
@@ -377,9 +378,7 @@ module.exports = class pancakebunny {
     return results;
   }
 
-  async getTokenPrices() {
-    const farms = _.cloneDeep(Farms);
-
+  async getTokenPrices(farms) {
     const token = new Web3EthContract(ASSET_ABI, ASSET_ADDRESS);
 
     const tokenCalls = [];
@@ -397,7 +396,7 @@ module.exports = class pancakebunny {
     const tokenPrices = {};
 
     calls.forEach(c => {
-      if (c.valueOfAsset[1]) {
+      if (c.valueOfAsset && c.valueOfAsset[1]) {
         tokenPrices[c.id] = c.valueOfAsset[1];
       }
     });
@@ -405,7 +404,12 @@ module.exports = class pancakebunny {
     return tokenPrices;
   }
 
-  async getOverall() {
+  async getOverall(farms) {
+    const addresses = Object.values(farms)
+      .slice()
+      .filter(farm => farm.address && farm.address.toLowerCase() !== '0xf84E3809971798Bd372aecdC03aE977759A619aB'.toLowerCase()) // filter compensate pool: breaks all
+      .map(farm => farm.address);
+
     const calls = await Utils.multiCallRpcIndex([{
       reference: 'poolsOf',
       contractAddress: BALANCES_ADDRESS,
@@ -414,7 +418,7 @@ module.exports = class pancakebunny {
         {
           reference: "poolsOf",
           method: "poolsOf",
-          parameters: ['0x0000000000000000000000000000000000000000', Object.values(Farms).slice().filter(farm => farm.address).map(farm => farm.address)]
+          parameters: ['0x0000000000000000000000000000000000000000', addresses]
         }
       ]
     }]);
@@ -477,5 +481,42 @@ module.exports = class pancakebunny {
     }
 
     return result;
+  }
+
+  async getFarmsViaHtml() {
+    const cacheKey = "getFarmsViaHtml-v2-pancakebunny";
+    const cacheItem = this.cache.get(cacheKey);
+    if (cacheItem) {
+      return cacheItem;
+    }
+
+    const javascriptFiles = await Utils.getJavascriptFiles("https://pancakebunny.finance/pool");
+
+    let rawFarms = undefined;
+
+    Object.values(javascriptFiles).forEach(body => {
+      walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
+        Literal(node) {
+          if (node.value && node.value.toString().startsWith('{') && (node.value.toString().toLowerCase().includes('fliptocake') || node.value.toString().toLowerCase().includes('fliptoflip'))) {
+            try {
+              rawFarms = JSON.parse(node.value);
+            } catch (e) {
+              console.log('invalid farm json')
+            }
+          }
+        }
+      })
+    });
+
+    const farms = {};
+    for (const [key, value] of Object.entries(rawFarms || {})) {
+      if (value.chainId.toString() === '56' && value.address && value.address.toLowerCase() !== '0xf84E3809971798Bd372aecdC03aE977759A619aB'.toLowerCase()) {
+        farms[key] = Object.freeze(value);
+      }
+    }
+
+    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+
+    return Object.freeze(farms);
   }
 };

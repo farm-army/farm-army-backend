@@ -6,6 +6,8 @@
   "dependencies": {
     "@0xsequence/multicall": "^0.15.1",
     "abort-controller": "^3.0.0",
+    "acorn": "^8.4.1",
+    "acorn-walk": "^8.1.1",
     "async-request": "^1.2.0",
     "better-sqlite3": "^7.1.2",
     "bignumber.js": "^9.0.1",

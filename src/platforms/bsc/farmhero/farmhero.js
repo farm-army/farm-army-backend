@@ -63,7 +63,7 @@ module.exports = class farmhero extends PancakePlatformFork {
   }
 
   getFarmLink(farm) {
-    return 'https://bsc.farmhero.io/';
+    return 'https://bsc.farmhero.io?r=f3rm3rmy';
   }
 
   getFarmEarns(farm) {

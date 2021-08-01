@@ -18,7 +18,7 @@ module.exports = {
       throw new Error('not implemented');
     }
 
-    getRawPools() {
+    async getRawPools() {
       throw new Error('not implemented');
     }
 
@@ -133,7 +133,7 @@ module.exports = {
         };
       });
 
-      const poolBalanceCalls = this.getRawPools().map(farm => {
+      const poolBalanceCalls = (await this.getRawPools()).map(farm => {
         let address = this.guessValue(farm, 'stakingTokenAddress');
 
         const token = new Web3EthContract(erc20Abi, address);
@@ -215,19 +215,18 @@ module.exports = {
         return item;
       });
 
-      const souses = this.getRawPools().map(farm => {
+      const souses = (await this.getRawPools()).map(farm => {
         const earningToken = this.guessValue(farm, 'earningToken');
 
         const item = {
           id: `${this.getName()}_sous_${farm.sousId}`,
-          name: `${earningToken} Pool`,
+          name: `${earningToken.toUpperCase()} Pool`,
           token: this.guessValue(farm, 'stakingTokenName').toLowerCase(),
           provider: this.getName(),
           raw: Object.freeze(farm),
           has_details: true,
           extra: {},
           chain: this.getChain(),
-          compound: true,
         };
 
         item.earns = [earningToken.toLowerCase()];
