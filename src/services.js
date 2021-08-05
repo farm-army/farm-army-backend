@@ -41,6 +41,16 @@ let fantomTokenInfo;
 let fantomDb;
 let fantomFarmPlatformResolver;
 
+let kccPriceOracle;
+let kccTokenCollector;
+let kccPriceCollector;
+let kccLiquidityTokenCollector;
+let kccCacheManager;
+let kccBalances;
+let kccTokenInfo;
+let kccDb;
+let kccFarmPlatformResolver;
+
 const Cache = require("timed-cache");
 const Sqlite = require("better-sqlite3");
 const Http = require("./http");
@@ -62,6 +72,7 @@ const BscscanRequest = require("./utils/bscscan_request");
 const Cronjobs = require("./cronjobs");
 const PolygonPriceOracle = require("./chains/polygon/polygon_price_oracle");
 const FantomPriceOracle = require("./chains/fantom/fantom_price_oracle");
+const KccPriceOracle = require("./chains/kcc/kcc_price_oracle");
 const FarmPlatformResolver = require("./farm/farm_platform_resolver");
 
 const Pancake = require("./platforms/pancake/pancake");
@@ -127,6 +138,11 @@ const Fcurve = require("./platforms/fantom/fcurve/fcurve");
 const Ester = require("./platforms/fantom/ester/ester");
 const Frankenstein = require("./platforms/fantom/frankenstein/frankenstein");
 
+const Kuswap = require("./platforms/kcc/kuswap/kuswap");
+const Kudex = require("./platforms/kcc/kudex/kudex");
+const Kukafe = require("./platforms/kcc/kukafe/kukafe");
+const Boneswap = require("./platforms/kcc/boneswap/boneswap");
+
 let pancake;
 let swamp;
 let blizzard;
@@ -190,8 +206,14 @@ let fcurve;
 let ester;
 let frankenstein;
 
+let kuswap;
+let kudex;
+let kukafe;
+let boneswap;
+
 let polygonPlatform;
 let fantomPlatform;
+let kccPlatform;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -232,6 +254,9 @@ module.exports = {
       this.getFarmPlatformResolver(),
       this.getPolygonFarmPlatformResolver(),
       this.getFantomFarmPlatformResolver(),
+      this.getKccPlatforms(),
+      this.getKccPriceOracle(),
+      this.getKccFarmPlatformResolver(),
     ));
   },
 
@@ -274,6 +299,19 @@ module.exports = {
     ));
   },
 
+  getKccPriceOracle() {
+    if (kccPriceOracle) {
+      return kccPriceOracle;
+    }
+
+    return (kccPriceOracle = new KccPriceOracle(
+      this.getKccTokenCollector(),
+      this.getKccLiquidityTokenCollector(),
+      this.getKccPriceCollector(),
+      this.getKccCacheManager(),
+    ));
+  },
+
   getFarmPlatformResolver() {
     if (farmPlatformResolver) {
       return farmPlatformResolver;
@@ -301,6 +339,16 @@ module.exports = {
 
     return (fantomFarmPlatformResolver = new FarmPlatformResolver(
       this.getFantomCacheManager(),
+    ));
+  },
+
+  getKccFarmPlatformResolver() {
+    if (kccFarmPlatformResolver) {
+      return kccFarmPlatformResolver;
+    }
+
+    return (kccFarmPlatformResolver = new FarmPlatformResolver(
+      this.getKccCacheManager(),
     ));
   },
 
@@ -403,6 +451,24 @@ module.exports = {
       this.getCache(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
+    ));
+  },
+
+  getKccPlatforms() {
+    if (kccPlatform) {
+      return kccPlatform;
+    }
+
+    return (kccPlatform = new Platforms(
+      [
+        this.getKuswap(),
+        this.getKudex(),
+        this.getKukafe(),
+        this.getBoneswap(),
+      ],
+      this.getCache(),
+      this.getKccPriceOracle(),
+      this.getKccTokenCollector(),
     ));
   },
 
@@ -1227,6 +1293,66 @@ module.exports = {
     ));
   },
 
+  getKuswap() {
+    if (kuswap) {
+      return kuswap;
+    }
+
+    return (kuswap = new Kuswap(
+      this.getCache(),
+      this.getKccPriceOracle(),
+      this.getKccTokenCollector(),
+      this.getFarmFetcher(),
+      this.getKccCacheManager(),
+      this.getKccFarmPlatformResolver(),
+    ));
+  },
+
+  getKudex() {
+    if (kudex) {
+      return kudex;
+    }
+
+    return (kudex = new Kudex(
+      this.getCache(),
+      this.getKccPriceOracle(),
+      this.getKccTokenCollector(),
+      this.getFarmFetcher(),
+      this.getKccCacheManager(),
+      this.getKccFarmPlatformResolver(),
+    ));
+  },
+
+  getKukafe() {
+    if (kukafe) {
+      return kukafe;
+    }
+
+    return (kukafe = new Kukafe(
+      this.getCache(),
+      this.getKccPriceOracle(),
+      this.getKccTokenCollector(),
+      this.getFarmFetcher(),
+      this.getKccCacheManager(),
+      this.getKccFarmPlatformResolver(),
+    ));
+  },
+
+  getBoneswap() {
+    if (boneswap) {
+      return boneswap;
+    }
+
+    return (boneswap = new Boneswap(
+      this.getCache(),
+      this.getKccPriceOracle(),
+      this.getKccTokenCollector(),
+      this.getFarmFetcher(),
+      this.getKccCacheManager(),
+      this.getKccFarmPlatformResolver(),
+    ));
+  },
+
   getCache() {
     if (cache) {
       return cache;
@@ -1310,6 +1436,16 @@ module.exports = {
     ));
   },
 
+  getKccLiquidityTokenCollector() {
+    if (kccLiquidityTokenCollector) {
+      return kccLiquidityTokenCollector;
+    }
+
+    return (kccLiquidityTokenCollector = new LiquidityTokenCollector(
+      this.getKccCacheManager(),
+    ));
+  },
+
   getCacheManager() {
     if (cacheManager) {
       return cacheManager;
@@ -1368,6 +1504,26 @@ module.exports = {
     });
 
     return fantomCacheManager = diskCache;
+  },
+
+  getKccCacheManager() {
+    if (kccCacheManager) {
+      return kccCacheManager;
+    }
+
+    const cacheDir = path.resolve(__dirname, '../var/cache_kcc')
+
+    const diskCache = cacheManagerInstance.caching({
+      store: fsStore,
+      options: {
+        path: cacheDir,
+        ttl: 60 * 60 * 24 * 30,
+        subdirs: true,
+        zip: false,
+      }
+    });
+
+    return kccCacheManager = diskCache;
   },
 
   getUserCacheManager() {
@@ -1432,6 +1588,20 @@ module.exports = {
     ));
   },
 
+  getKccBalances() {
+    if (kccBalances) {
+      return kccBalances;
+    }
+
+    return (kccBalances = new Balances(
+      this.getKccCacheManager(),
+      this.getKccPriceOracle(),
+      this.getKccTokenCollector(),
+      this.getKccLiquidityTokenCollector(),
+      'kcc'
+    ));
+  },
+
   getTokenCollector() {
     if (tokenCollector) {
       return tokenCollector;
@@ -1456,6 +1626,14 @@ module.exports = {
     return (fantomTokenCollector = new TokenCollector(this.getFantomCacheManager(), 'fantom'));
   },
 
+  getKccTokenCollector() {
+    if (kccTokenCollector) {
+      return kccTokenCollector;
+    }
+
+    return (kccTokenCollector = new TokenCollector(this.getKccCacheManager(), 'kcc'));
+  },
+
   getPriceCollector() {
     if (priceCollector) {
       return priceCollector;
@@ -1478,6 +1656,14 @@ module.exports = {
     }
 
     return (fantomPriceCollector = new PriceCollector(this.getFantomCacheManager()));
+  },
+
+  getKccPriceCollector() {
+    if (kccPriceCollector) {
+      return kccPriceCollector;
+    }
+
+    return (kccPriceCollector = new PriceCollector(this.getKccCacheManager()));
   },
 
   getDb() {
@@ -1522,6 +1708,20 @@ module.exports = {
     ));
   },
 
+  getKccDb() {
+    if (kccDb) {
+      return kccDb;
+    }
+
+    return (kccDb = new Db(
+      this.getDatabase(),
+      this.getKccPriceOracle(),
+      this.getKccPlatforms(),
+      this.getKccPriceCollector(),
+      this.getKccLiquidityTokenCollector(),
+    ));
+  },
+
   getHttp() {
     if (http) {
       return http;
@@ -1532,6 +1732,7 @@ module.exports = {
       this.getPlatforms(),
       this.getPolygonPlatforms(),
       this.getFantomPlatforms(),
+      this.getKccPlatforms(),
       this.getBalances(),
       this.getAddressTransactions(),
       this.getPolygonAddressTransactions(),
@@ -1549,6 +1750,11 @@ module.exports = {
       this.getFantomTokenCollector(),
       this.getFantomBalances(),
       this.getFantomTokenInfo(),
+      this.getKccPriceOracle(),
+      this.getKccLiquidityTokenCollector(),
+      this.getKccTokenCollector(),
+      this.getKccBalances(),
+      this.getKccTokenInfo()
     ));
   },
 
@@ -1570,7 +1776,6 @@ module.exports = {
     return (contractAbiFetcher = new ContractAbiFetcher(
       this.getBscscanRequest(),
       this.getCacheManager(),
-      module.exports.CONFIG['BSCSCAN_API_KEY'],
     ));
   },
 
@@ -1613,6 +1818,20 @@ module.exports = {
       this.getFantomLiquidityTokenCollector(),
       this.getFantomPriceCollector(),
       this.getFantomDb(),
+    ));
+  },
+
+  getKccTokenInfo() {
+    if (kccTokenInfo) {
+      return kccTokenInfo;
+    }
+
+    return (kccTokenInfo = new TokenInfo(
+      this.getKccCacheManager(),
+      this.getKccTokenCollector(),
+      this.getKccLiquidityTokenCollector(),
+      this.getKccPriceCollector(),
+      this.getKccDb(),
     ));
   },
 

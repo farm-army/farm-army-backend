@@ -2,9 +2,9 @@ PRAGMA auto_vacuum = INCREMENTAL;
 
 CREATE TABLE IF NOT EXISTS token_price (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    token   VARCHAR(255) NOT NULL,
-    price   VARCHAR(255) NOT NULL,
-    price_usd   VARCHAR(255) NULL,
+    token   VARCHAR(42) NOT NULL,
+    price   VARCHAR(64) NOT NULL,
+    price_usd   VARCHAR(64) NULL,
     created_at INT NOT NULL
 );
 
@@ -13,9 +13,9 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_token_created_at ON token_price (token, cr
 
 CREATE TABLE IF NOT EXISTS lp_token_history (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    token   VARCHAR(255) NOT NULL,
-    token0   VARCHAR(255) NOT NULL,
-    token1   VARCHAR(255) NULL,
+    token   VARCHAR(42) NOT NULL,
+    token0   VARCHAR(42) NOT NULL,
+    token1   VARCHAR(42) NULL,
     created_at INT NOT NULL
 );
 

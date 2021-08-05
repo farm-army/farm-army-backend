@@ -9,6 +9,7 @@ async function farmUpdater() {
     Promise.all(services.getPlatforms().getFunctionAwaits('getFarms', [true])),
     Promise.all(services.getPolygonPlatforms().getFunctionAwaits('getFarms', [true])),
     Promise.all(services.getFantomPlatforms().getFunctionAwaits('getFarms', [true])),
+    Promise.all(services.getKccPlatforms().getFunctionAwaits('getFarms', [true])),
   ]);
 }
 
@@ -17,6 +18,7 @@ async function priceUpdater() {
     services.getCronjobs().cronInterval(),
     services.getCronjobs().polygonCronInterval(),
     services.getCronjobs().fantomCronInterval(),
+    services.getCronjobs().kccCronInterval(),
   ]);
 }
 
@@ -46,11 +48,17 @@ setInterval(async () => {
     services.getDb().updateFarmPrices(),
     services.getDb().updateAddressMaps(),
     services.getDb().updateLpInfoMaps(),
+
     services.getPolygonDb().updateFarmPrices(),
     services.getPolygonDb().updateAddressMaps(),
     services.getPolygonDb().updateLpInfoMaps(),
+
     services.getFantomDb().updateFarmPrices(),
     services.getFantomDb().updateAddressMaps(),
     services.getFantomDb().updateLpInfoMaps(),
+
+    services.getKccDb().updateFarmPrices(),
+    services.getKccDb().updateAddressMaps(),
+    services.getKccDb().updateLpInfoMaps(),
   ]);
 }, 1000 * 60 * 4);

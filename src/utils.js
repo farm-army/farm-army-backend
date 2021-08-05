@@ -19,7 +19,8 @@ const { MulticallProvider } = require("@0xsequence/multicall").providers;
 const MULTI_CALL_CONTRACT = {
   bsc: '0xB94858b0bB5437498F5453A16039337e5Fdc269C',
   polygon: '0x13E5407E38860A743E025A8834934BEA0264A8c1',
-  fantom: '0xe6cd57c490cdc698aa6df974b207c4c044818d5a'
+  fantom: '0xe6cd57c490cdc698aa6df974b207c4c044818d5a',
+  kcc: '0xae49c2836d060bD7F4ed6566626b52cF4991B172'
 }
 
 const HOSTS = Object.freeze([
@@ -54,6 +55,11 @@ const HOSTS_FANTOM = Object.freeze([
   // Recommend
   'https://rpc.ftm.tools',
   'https://rpcapi.fantom.network',
+]);
+
+const HOSTS_KCC = Object.freeze([
+  // Recommend
+  'https://rpc-mainnet.kcc.network',
 ]);
 
 const ENDPOINTS_MULTICALL = {};
@@ -137,6 +143,33 @@ HOSTS_FANTOM.forEach(url => {
 
 const ENDPOINTS_FANTOM = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_FANTOM));
 
+const ENDPOINTS_MULTICALL_KCC = {};
+const ENDPOINTS_RPC_WRAPPER_KCC = {};
+
+HOSTS_KCC.forEach(url => {
+  ENDPOINTS_MULTICALL_KCC[url] = new MulticallProvider(
+    new providers.StaticJsonRpcProvider({
+      url: url,
+      timeout: 10000,
+    }),
+    {
+      contract: MULTI_CALL_CONTRACT.kcc,
+      batchSize: 50,
+      timeWindow: 50,
+    }
+  )
+
+  const f1 = new Web3.providers.HttpProvider(url, {
+      keepAlive: true,
+      timeout: 10000,
+    }
+  )
+
+  ENDPOINTS_RPC_WRAPPER_KCC[url] = new Web3(f1)
+});
+
+const ENDPOINTS_KCC = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_KCC));
+
 module.exports = {
   PRICES: {},
   BITQUERY_TRANSACTIONS: fs.readFileSync(
@@ -162,6 +195,8 @@ module.exports = {
         return ENDPOINTS_RPC_WRAPPER_POLYGON[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_POLYGON))[0]];
       case 'fantom':
         return ENDPOINTS_RPC_WRAPPER_FANTOM[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_FANTOM))[0]];
+      case 'kcc':
+        return ENDPOINTS_RPC_WRAPPER_KCC[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_KCC))[0]];
       case 'bsc':
       default:
         return ENDPOINTS_RPC_WRAPPER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER))[0]];
@@ -182,6 +217,9 @@ module.exports = {
         break;
       case 'fantom':
         selectedEndpoints = ENDPOINTS_FANTOM.slice();
+        break;
+      case 'kcc':
+        selectedEndpoints = ENDPOINTS_KCC.slice();
         break;
       case 'bsc':
       default:
@@ -230,6 +268,8 @@ module.exports = {
               web3 = ENDPOINTS_RPC_WRAPPER_POLYGON[endpointInner]
             } else if(chain === 'fantom') {
               web3 = ENDPOINTS_RPC_WRAPPER_FANTOM[endpointInner]
+            } else if(chain === 'kcc') {
+              web3 = ENDPOINTS_RPC_WRAPPER_KCC[endpointInner]
             } else {
               web3 = ENDPOINTS_RPC_WRAPPER[endpointInner]
             }
@@ -295,6 +335,9 @@ module.exports = {
       case 'fantom':
         selectedEndpoints = ENDPOINTS_FANTOM.slice();
         break;
+      case 'kcc':
+        selectedEndpoints = ENDPOINTS_KCC.slice();
+        break;
       case 'bsc':
       default:
         selectedEndpoints = ENDPOINTS.slice();
@@ -311,6 +354,8 @@ module.exports = {
         options = ENDPOINTS_MULTICALL_POLYGON[endpoints[0]];
       } else if (chain === 'fantom') {
         options = ENDPOINTS_MULTICALL_FANTOM[endpoints[0]];
+      } else if (chain === 'kcc') {
+        options = ENDPOINTS_MULTICALL_KCC[endpoints[0]];
       } else if (chain === 'bsc') {
         options = ENDPOINTS_MULTICALL[endpoints[0]];
       } else {
@@ -450,6 +495,9 @@ module.exports = {
     } else if (chain === 'fantom') {
       host = 'api.ftmscan.com';
       apiKey = module.exports.CONFIG['FANTOMSCAN_API_KEY'];
+    } else if (chain === 'kcc') {
+      host = 'api.ftmscan.com';
+      apiKey = module.exports.CONFIG['KCCSCAN_API_KEY'];
     } else {
       host = 'api.bscscan.com';
       apiKey = module.exports.CONFIG['BSCSCAN_API_KEY'];

@@ -3,8 +3,8 @@
 const MasterChefAbi = require('./abi/masterchef.json');
 const PancakePlatformFork = require("../../common").PancakePlatformFork;
 
-module.exports = class pfarmhero extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0x8e5860DF653A467D1cC5b6160Dd340E8D475724E"
+module.exports = class kukafe extends PancakePlatformFork {
+  static MASTER_ADDRESS = "0x3cd0651a06b293e6c21c894afb71cc8251802fc5"
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     super(cache, priceOracle);
@@ -14,7 +14,6 @@ module.exports = class pfarmhero extends PancakePlatformFork {
     this.tokenCollector = tokenCollector;
     this.farmCollector = farmCollector;
     this.cacheManager = cacheManager;
-    this.masterAbi = {};
   }
 
   async getFetchedFarms() {
@@ -28,7 +27,9 @@ module.exports = class pfarmhero extends PancakePlatformFork {
     const foo = (await this.farmCollector.fetchForMasterChef(
       this.getMasterChefAddress(),
       this.getChain(),
-      {'proxy': '0x1e63d579c96d291f61322f7f636b4bf1768a5f5b'}
+      {
+        abi: MasterChefAbi
+      }
     )).filter(f => f.isFinished !== true);
 
     const reformat = foo.map(f => {
@@ -55,15 +56,15 @@ module.exports = class pfarmhero extends PancakePlatformFork {
   }
 
   getName() {
-    return 'pfarmhero';
+    return 'kukafe';
   }
 
   getChain() {
-    return 'polygon';
+    return 'kcc';
   }
 
   getFarmLink(farm) {
-    return 'https://polygon.farmhero.io/?r=f3rm3rmy';
+    return 'https://kukafe.finance/#/';
   }
 
   getFarmEarns(farm) {
@@ -73,7 +74,7 @@ module.exports = class pfarmhero extends PancakePlatformFork {
   }
 
   getPendingRewardContractMethod() {
-    return 'pendingHERO';
+    return 'pendingKafe';
   }
 
   getSousAbi() {
@@ -85,6 +86,6 @@ module.exports = class pfarmhero extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return pfarmhero.MASTER_ADDRESS;
+    return kukafe.MASTER_ADDRESS;
   }
 };

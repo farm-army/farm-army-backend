@@ -1,7 +1,7 @@
 const _ = require("lodash");
 
 module.exports = class Cronjobs {
-  constructor(platforms, priceOracle, polygonPlatforms, polygonPriceOracle, fantomPlatforms, fantomPriceOracle, farmPlatformResolver, polygonFarmPlatformResolver, fantomFarmPlatformResolver) {
+  constructor(platforms, priceOracle, polygonPlatforms, polygonPriceOracle, fantomPlatforms, fantomPriceOracle, farmPlatformResolver, polygonFarmPlatformResolver, fantomFarmPlatformResolver, kccPlatforms, kccPriceOracle, kccFarmPlatformResolver) {
     this.platforms = platforms;
     this.priceOracle = priceOracle;
     this.farmPlatformResolver = farmPlatformResolver;
@@ -13,6 +13,10 @@ module.exports = class Cronjobs {
     this.fantomPlatforms = fantomPlatforms;
     this.fantomPriceOracle = fantomPriceOracle;
     this.fantomFarmPlatformResolver = fantomFarmPlatformResolver;
+
+    this.kccPlatforms = kccPlatforms;
+    this.kccPriceOracle = kccPriceOracle;
+    this.kccFarmPlatformResolver = kccFarmPlatformResolver;
   }
 
   async cronInterval() {
@@ -49,5 +53,17 @@ module.exports = class Cronjobs {
     }));
 
     await this.fantomFarmPlatformResolver.buildPlatformList((await Promise.all(this.fantomPlatforms.getFunctionAwaits('getFarms'))).flat());
+  }
+
+  async kccCronInterval() {
+    const lps = (await Promise.all(this.kccPlatforms.getFunctionAwaits('getLbAddresses'))).flat()
+    await this.kccPriceOracle.updateTokens();
+
+    const addresses = _.uniqWith(lps, (a, b) => a.toLowerCase() === b.toLowerCase());
+    await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
+      return this.kccPriceOracle.fetch(chunk);
+    }));
+
+    await this.kccFarmPlatformResolver.buildPlatformList((await Promise.all(this.kccPlatforms.getFunctionAwaits('getFarms'))).flat());
   }
 }

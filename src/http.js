@@ -11,6 +11,7 @@ module.exports = class Http {
     platforms,
     platformsPolygon,
     platformsFantom,
+    platformsKcc,
     balances,
     addressTransactions,
     polygonAddressTransactions,
@@ -27,12 +28,18 @@ module.exports = class Http {
     fantomLiquidityTokenCollector,
     fantomTokenCollector,
     fantomBalances,
-    fantomTokenInfo
+    fantomTokenInfo,
+    kccPriceOracle,
+    kccLiquidityTokenCollector,
+    kccTokenCollector,
+    kccBalances,
+    kccTokenInfo    
   ) {
     this.priceOracle = priceOracle;
     this.platforms = platforms;
     this.platformsPolygon = platformsPolygon;
     this.platformsFantom = platformsFantom;
+    this.platformsKcc = platformsKcc;
     this.balances = balances;
 
     this.addressTransactions = addressTransactions;
@@ -54,6 +61,12 @@ module.exports = class Http {
     this.fantomTokenCollector = fantomTokenCollector;
     this.fantomBalances = fantomBalances;
     this.fantomTokenInfo = fantomTokenInfo;
+
+    this.kccPriceOracle = kccPriceOracle;
+    this.kccLiquidityTokenCollector = kccLiquidityTokenCollector;
+    this.kccTokenCollector = kccTokenCollector;
+    this.kccBalances = kccBalances;
+    this.kccTokenInfo = kccTokenInfo;
 
     this.app = express();
   }
@@ -83,6 +96,10 @@ module.exports = class Http {
       res.json(this.fantomPriceOracle.getAllPrices());
     });
 
+    app.get("/kcc/prices", async (req, res) => {
+      res.json(this.kccPriceOracle.getAllPrices());
+    });
+
     app.get("/token/:address", async (req, res) => {
       const {address} = req.params;
 
@@ -110,6 +127,15 @@ module.exports = class Http {
       console.log(`fantom: ${new Date().toISOString()}: token ${address} - ${(timer / 1000).toFixed(3)} sec`);
     });
 
+    app.get("/kcc/token/:address", async (req, res) => {
+      const {address} = req.params;
+
+      let timer = -performance.now();
+      res.json(await this.kccTokenInfo.getTokenInfo(address));
+      timer += performance.now();
+      console.log(`kcc: ${new Date().toISOString()}: token ${address} - ${(timer / 1000).toFixed(3)} sec`);
+    });
+
     app.get("/tokens", async (req, res) => {
       res.json(this.tokenCollector.all());
     });
@@ -120,6 +146,10 @@ module.exports = class Http {
 
     app.get("/fantom/tokens", async (req, res) => {
       res.json(this.fantomTokenCollector.all());
+    });
+
+    app.get("/kcc/tokens", async (req, res) => {
+      res.json(this.kccTokenCollector.all());
     });
 
     app.get("/liquidity-tokens", async (req, res) => {
@@ -133,6 +163,10 @@ module.exports = class Http {
 
     app.get("/fantom/liquidity-tokens", async (req, res) => {
       res.json(this.fantomLiquidityTokenCollector.all());
+    });
+
+    app.get("/kcc/liquidity-tokens", async (req, res) => {
+      res.json(this.kccLiquidityTokenCollector.all());
     });
 
     app.get("/details/:address/:farm_id", async (req, res) => {
@@ -210,6 +244,31 @@ module.exports = class Http {
       }
     });
 
+    app.get("/kcc/details/:address/:farm_id", async (req, res) => {
+      try {
+        const farmId = req.params.farm_id;
+        const {address} = req.params;
+
+        const [platformName] = farmId.split("_");
+
+        const instance = this.platformsKcc.getPlatformByName(platformName);
+        if (!instance) {
+          res.status(404).json({message: "not found"});
+          return;
+        }
+
+        let timer = -performance.now();
+        res.json(await instance.getDetails(address, farmId));
+
+        timer += performance.now();
+        console.log(`kcc: ${new Date().toISOString()}: detail ${address} - ${farmId} - ${(timer / 1000).toFixed(3)} sec`);
+
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({message: e.message});
+      }
+    });
+
     app.get("/transactions/:address", async (req, res) => {
       let timer = -performance.now();
       let address = req.params.address;
@@ -255,6 +314,21 @@ module.exports = class Http {
       console.log(`fantom: ${new Date().toISOString()}: transactions ${address} - ${(timer / 1000).toFixed(3)} sec`);
     });
 
+    app.get("/kcc/transactions/:address", async (req, res) => {
+      let timer = -performance.now();
+      let address = req.params.address;
+
+      try {
+        res.json(await this.kccAddressTransactions.getTransactions(address, 'kcc'));
+      } catch (e) {
+        console.error(e);
+        res.status(500).json({message: e.message});
+      }
+
+      timer += performance.now();
+      console.log(`kcc: ${new Date().toISOString()}: transactions ${address} - ${(timer / 1000).toFixed(3)} sec`);
+    });
+
     app.get("/farms", async (req, res) => {
       const items = await Promise.all(
         await this.platforms.getFunctionAwaits("getFarms")
@@ -286,6 +360,20 @@ module.exports = class Http {
     app.get("/fantom/farms", async (req, res) => {
       const items = await Promise.all(
         await this.platformsFantom.getFunctionAwaits("getFarms")
+      );
+
+      const result = items.flat().map(f => {
+        const item = _.cloneDeep(f);
+        delete item.raw;
+        return item;
+      });
+
+      res.json(result);
+    });
+
+    app.get("/kcc/farms", async (req, res) => {
+      const items = await Promise.all(
+        await this.platformsKcc.getFunctionAwaits("getFarms")
       );
 
       const result = items.flat().map(f => {
@@ -429,6 +517,50 @@ module.exports = class Http {
       res.json(response);
     });
 
+    app.get("/kcc/yield/:address", async (req, res) => {
+      if (!req.query.p) {
+        res.status(400).json({error: 'missing "p" query parameter'});
+        return;
+      }
+
+      let timer = -performance.now();
+      const {address} = req.params;
+
+      let platforms = _.uniq(req.query.p.split(',').filter(e => e.match(/^[\w]+$/g)));
+      if (platforms.length === 0) {
+        res.json({});
+        return;
+      }
+
+      let functionAwaitsForPlatforms = this.platformsKcc.getFunctionAwaitsForPlatforms(platforms, 'getYields', [address]);
+
+      const awaits = await Promise.allSettled([...functionAwaitsForPlatforms]);
+
+      const response = {}
+      awaits.forEach(v => {
+        if (!v.value) {
+          console.error(v);
+          return;
+        }
+
+        v.value.forEach(vault => {
+          const item = _.cloneDeep(vault);
+          delete item.farm.raw;
+
+          if (!response[vault.farm.provider]) {
+            response[vault.farm.provider] = [];
+          }
+
+          response[vault.farm.provider].push(item);
+        });
+      });
+
+      timer += performance.now();
+      console.log(`kcc: ${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: ${(timer / 1000).toFixed(3)} sec`);
+
+      res.json(response);
+    });
+
     app.get("/wallet/:address", async (req, res) => {
       let timer = -performance.now();
       const { address } = req.params;
@@ -476,6 +608,24 @@ module.exports = class Http {
 
       timer += performance.now();
       console.log(`fantom: ${new Date().toISOString()}: wallet ${address} - ${(timer / 1000).toFixed(3)} sec`);
+
+      res.json({
+        tokens: tokens.value ? tokens.value : [],
+        liquidityPools: liquidityPools.value ? liquidityPools.value : [],
+      });
+    });
+
+    app.get("/kcc/wallet/:address", async (req, res) => {
+      let timer = -performance.now();
+      const {address} = req.params;
+
+      const [tokens, liquidityPools] = await Promise.allSettled([
+        this.kccBalances.getAllTokenBalances(address),
+        this.kccBalances.getAllLpTokenBalances(address)
+      ]);
+
+      timer += performance.now();
+      console.log(`kcc: ${new Date().toISOString()}: wallet ${address} - ${(timer / 1000).toFixed(3)} sec`);
 
       res.json({
         tokens: tokens.value ? tokens.value : [],

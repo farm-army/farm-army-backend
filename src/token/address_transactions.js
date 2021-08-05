@@ -25,6 +25,8 @@ module.exports = class AddressTransactions {
       host = 'api.polygonscan.com';
     } else if (chain === 'fantom') {
       host = 'api.ftmscan.com';
+    } else if (chain === 'kcc') {
+      host = 'api.explorer.kcc.io';
     } else {
       host = 'api.bscscan.com';
     }

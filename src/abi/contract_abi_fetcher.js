@@ -1,10 +1,9 @@
 const crypto = require('crypto');
 
 module.exports = class ContractAbiFetcher {
-  constructor(bscscanRequest, cacheManager, bscApiKey) {
+  constructor(bscscanRequest, cacheManager) {
     this.bscscanRequest = bscscanRequest;
     this.cacheManager = cacheManager;
-    this.bscApiKey = bscApiKey;
   }
 
   async getAbiForContractAddress(address, chain = 'bsc', options = {}) {
@@ -31,6 +30,9 @@ module.exports = class ContractAbiFetcher {
       case 'fantom':
         url = `https://api.ftmscan.com/api?module=contract&action=getabi&address=${address}`;
         break;
+      case 'kcc':
+        url = `https://api.explorer.kcc.io/api?module=contract&action=getabi&address=${address}`;
+        break;
       default:
         throw new Error('Invalid chain');
     }
@@ -45,7 +47,7 @@ module.exports = class ContractAbiFetcher {
     }
 
     const abi = JSON.parse(parse.result);
-    await this.cacheManager.set(cacheKey, abi, {ttl: 60 * 24 * 7})
+    await this.cacheManager.set(cacheKey, abi, {ttl: 60 * 60 * 24 * 7})
 
     return abi;
   }

@@ -91,10 +91,12 @@ module.exports = class FarmFetcher {
     if (pendingFunction && pendingFunction.name) {
       const pendingFunctionName = pendingFunction.name;
 
-      const func = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase() === pendingFunctionName.replace('pending', '').toLowerCase());
-
-      if (func && func.name) {
-        rewardTokenFunctionName = func.name;
+      const pendingFunc = pendingFunctionName.replace('pending', '').toLowerCase();
+      if (pendingFunc.length > 0) {
+        const func = abi.find(f => f.name && f.type === 'function' && f.name && (f.name.toLowerCase() === pendingFunc || f.name.toLowerCase() === pendingFunc + 'token'));
+        if (func && func.name) {
+          rewardTokenFunctionName = func.name;
+        }
       }
     }
 
@@ -162,7 +164,9 @@ module.exports = class FarmFetcher {
   }
 
   async fetchForMasterChefWithMeta(masterChef, chain = 'bsc', options = {}) {
-    const abi = await this.contractAbiFetcher.getAbiForContractAddress(masterChef, chain, options);
+    const abi = options.abi
+      ? options.abi
+      : await this.contractAbiFetcher.getAbiForContractAddress(masterChef, chain, options);
 
     const {
       poolInfoFunctionName,
@@ -501,6 +505,8 @@ module.exports = class FarmFetcher {
         return 2.1
       case 'fantom':
         return 2.1
+      case 'kcc':
+        return 3;
       case 'bsc':
         return 3;
     }

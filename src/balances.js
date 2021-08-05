@@ -120,6 +120,14 @@ module.exports = class Balances {
         };
 
         nativePrice = this.priceOracle.findPrice('0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83');
+      } else if(this.chain === 'kcc') {
+        item = {
+          token: '0x4446fc4eb47f2f6586f9faab68b3498f86c07521',
+          symbol: 'kcs',
+          amount: nativeBalance / 1e18
+        };
+
+        nativePrice = this.priceOracle.findPrice('0x4446fc4eb47f2f6586f9faab68b3498f86c07521');
       } else {
         throw new Error('invalid chain');
       }
