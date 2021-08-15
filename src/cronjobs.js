@@ -39,8 +39,6 @@ module.exports = class Cronjobs {
     await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
       return this.polygonPriceOracle.fetch(chunk);
     }));
-
-    await this.polygonFarmPlatformResolver.buildPlatformList((await Promise.all(this.polygonPlatforms.getFunctionAwaits('getFarms'))).flat());
   }
 
   async fantomCronInterval() {
@@ -51,8 +49,6 @@ module.exports = class Cronjobs {
     await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
       return this.fantomPriceOracle.fetch(chunk);
     }));
-
-    await this.fantomFarmPlatformResolver.buildPlatformList((await Promise.all(this.fantomPlatforms.getFunctionAwaits('getFarms'))).flat());
   }
 
   async kccCronInterval() {
@@ -63,7 +59,13 @@ module.exports = class Cronjobs {
     await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
       return this.kccPriceOracle.fetch(chunk);
     }));
+  }
 
-    await this.kccFarmPlatformResolver.buildPlatformList((await Promise.all(this.kccPlatforms.getFunctionAwaits('getFarms'))).flat());
+  async cronPlatforms() {
+    Promise.allSettled([
+      this.fantomFarmPlatformResolver.buildPlatformList((await Promise.all(this.fantomPlatforms.getFunctionAwaits('getFarms'))).flat()),
+      this.kccFarmPlatformResolver.buildPlatformList((await Promise.all(this.kccPlatforms.getFunctionAwaits('getFarms'))).flat()),
+      this.polygonFarmPlatformResolver.buildPlatformList((await Promise.all(this.polygonPlatforms.getFunctionAwaits('getFarms'))).flat())
+    ]);
   }
 }

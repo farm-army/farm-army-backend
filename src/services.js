@@ -20,6 +20,7 @@ let tokenInfo;
 let bscscanRequest;
 let cronjobs;
 let farmPlatformResolver;
+let farmAuto;
 
 let polygonPriceOracle;
 let polygonTokenCollector;
@@ -30,6 +31,7 @@ let polygonBalances;
 let polygonTokenInfo;
 let polygonDb;
 let polygonFarmPlatformResolver;
+let polygonFarmAuto;
 
 let fantomPriceOracle;
 let fantomTokenCollector;
@@ -40,6 +42,7 @@ let fantomBalances;
 let fantomTokenInfo;
 let fantomDb;
 let fantomFarmPlatformResolver;
+let fantomFarmAuto;
 
 let kccPriceOracle;
 let kccTokenCollector;
@@ -75,6 +78,8 @@ const FantomPriceOracle = require("./chains/fantom/fantom_price_oracle");
 const KccPriceOracle = require("./chains/kcc/kcc_price_oracle");
 const FarmPlatformResolver = require("./farm/farm_platform_resolver");
 
+const FarmAuto = require("./farm/farm_auto");
+
 const Pancake = require("./platforms/pancake/pancake");
 const Swamp = require("./platforms/swamp/swamp");
 const Blizzard = require("./platforms/blizzard/blizzard");
@@ -105,6 +110,8 @@ const Farmhero = require("./platforms/bsc/farmhero/farmhero");
 const Alpaca = require("./platforms/alpaca/alpaca");
 const Yieldparrot = require("./platforms/bsc/yieldparrot/yieldparrot");
 const Alpha = require("./platforms/alpha/alpha");
+const Honeyfarm = require("./platforms/bsc/honeyfarm/honeyfarm");
+const Rabbit = require("./platforms/bsc/rabbit/rabbit");
 
 const Pwault = require("./platforms/polygon/pwault/pwault");
 const Polycat = require("./platforms/polygon/polycat/polycat");
@@ -125,10 +132,12 @@ const Papeswap = require("./platforms/polygon/papeswap/papeswap");
 const Psushi = require("./platforms/polygon/psushi/psushi");
 const Pcurve = require("./platforms/polygon/pcurve/pcurve");
 const PolycatCompound = require("./platforms/polygon/polycat/polycat_compound");
+const PolycatPaw = require("./platforms/polygon/polycat/polycat_paw");
 const PolycatDecorator = require("./platforms/polygon/polycat/polycat_decorator");
 const Peleven = require("./platforms/polygon/peleven/peleven");
 const Adamant = require("./platforms/polygon/adamant/adamant");
 const Quickswap = require("./platforms/polygon/quickswap/quickswap");
+const Pearzap = require("./platforms/polygon/pearzap/pearzap");
 
 const Spookyswap = require("./platforms/fantom/spookyswap/spookyswap");
 const Spiritswap = require("./platforms/fantom/spiritswap/spiritswap");
@@ -141,6 +150,8 @@ const Frankenstein = require("./platforms/fantom/frankenstein/frankenstein");
 const Kuswap = require("./platforms/kcc/kuswap/kuswap");
 const Kudex = require("./platforms/kcc/kudex/kudex");
 const Kukafe = require("./platforms/kcc/kukafe/kukafe");
+const KukafeCompound = require("./platforms/kcc/kukafe/kukafe_compound");
+const KukafeDecorator = require("./platforms/kcc/kukafe/kukafe_decorator");
 const Boneswap = require("./platforms/kcc/boneswap/boneswap");
 
 let pancake;
@@ -173,6 +184,8 @@ let farmhero;
 let alpaca;
 let yieldparrot;
 let alpha;
+let honeyfarm;
+let rabbit;
 
 let pwault;
 let polycat;
@@ -193,10 +206,12 @@ let papeswap;
 let psushi;
 let pcurve;
 let polycatCompound;
+let polycatPaw;
 let polycatDecorator;
 let peleven;
 let adamant;
 let quickswap;
+let pearzap;
 
 let spookyswap;
 let spiritswap;
@@ -210,6 +225,8 @@ let kuswap;
 let kudex;
 let kukafe;
 let boneswap;
+let kukafeCompound;
+let kukafeDecorator;
 
 let polygonPlatform;
 let fantomPlatform;
@@ -257,6 +274,48 @@ module.exports = {
       this.getKccPlatforms(),
       this.getKccPriceOracle(),
       this.getKccFarmPlatformResolver(),
+    ));
+  },
+
+  getFarmAuto() {
+    if (farmAuto) {
+      return farmAuto;
+    }
+
+    return (farmAuto = new FarmAuto(
+      this.getPriceOracle(),
+      this.getFarmFetcher(),
+      this.getTokenCollector(),
+      this.getCacheManager(),
+      'bsc'
+    ));
+  },
+
+  getPolygonFarmAuto() {
+    if (polygonFarmAuto) {
+      return polygonFarmAuto;
+    }
+
+    return (polygonFarmAuto = new FarmAuto(
+      this.getPolygonPriceOracle(),
+      this.getFarmFetcher(),
+      this.getPolygonTokenCollector(),
+      this.getPolygonCacheManager(),
+      'polygon'
+    ));
+  },
+
+  getFantomFarmAuto() {
+    if (fantomFarmAuto) {
+      return fantomFarmAuto;
+    }
+
+    return (fantomFarmAuto = new FarmAuto(
+      this.getFantomPriceOracle(),
+      this.getFarmFetcher(),
+      this.getFantomTokenCollector(),
+      this.getFantomCacheManager(),
+      'fantom'
     ));
   },
 
@@ -390,6 +449,8 @@ module.exports = {
           this.getAlpaca(),
           this.getYieldparrot(),
           this.getAlpha(),
+          this.getHoneyfarm(),
+          this.getRabbit(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -426,6 +487,7 @@ module.exports = {
         this.getPeleven(),
         this.getAdamant(),
         this.getQuickswap(),
+        this.getPearzap(),
       ],
       this.getCache(),
       this.getPolygonPriceOracle(),
@@ -463,7 +525,7 @@ module.exports = {
       [
         this.getKuswap(),
         this.getKudex(),
-        this.getKukafe(),
+        this.getKukafeDecorator(),
         this.getBoneswap(),
       ],
       this.getCache(),
@@ -528,6 +590,20 @@ module.exports = {
     ));
   },
 
+  getPolycatPaw() {
+    if (polycatPaw) {
+      return polycatPaw;
+    }
+
+    return (polycatPaw = new PolycatPaw(
+      this.getCache(),
+      this.getPolygonPriceOracle(),
+      this.getPolygonTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
   getPjetswap() {
     if (pjetswap) {
       return pjetswap;
@@ -556,6 +632,20 @@ module.exports = {
     ));
   },
 
+  getPearzap() {
+    if (pearzap) {
+      return pearzap;
+    }
+
+    return (pearzap = new Pearzap(
+      this.getCache(),
+      this.getPolygonPriceOracle(),
+      this.getPolygonTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
   getPolycatCompound() {
     if (polycatCompound) {
       return polycatCompound;
@@ -567,6 +657,7 @@ module.exports = {
       this.getPolygonTokenCollector(),
       this.getFarmFetcher(),
       this.getCacheManager(),
+      this.getPolygonFarmPlatformResolver(),
     ));
   },
 
@@ -578,6 +669,7 @@ module.exports = {
     return (polycatDecorator = new PolycatDecorator(
       this.getPolycat(),
       this.getPolycatCompound(),
+      this.getPolycatPaw(),
     ));
   },
 
@@ -1184,6 +1276,20 @@ module.exports = {
     ));
   },
 
+  getHoneyfarm() {
+    if (honeyfarm) {
+      return honeyfarm;
+    }
+
+    return (honeyfarm = new Honeyfarm(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
   getCoinswap() {
     if (coinswap) {
       return coinswap;
@@ -1261,6 +1367,22 @@ module.exports = {
       this.getCache(),
       this.getPriceOracle(),
       this.getFarmPlatformResolver(),
+      this.getTokenCollector(),
+    ));
+  },
+
+  getRabbit() {
+    if (rabbit) {
+      return rabbit;
+    }
+
+    return (rabbit = new Rabbit(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getCacheManager(),
+      this.getLiquidityTokenCollector(),
+      this.getFarmPlatformResolver(),
     ));
   },
 
@@ -1323,12 +1445,38 @@ module.exports = {
     ));
   },
 
+  getKukafeDecorator() {
+    if (kukafeDecorator) {
+      return kukafeDecorator;
+    }
+
+    return (kukafeDecorator = new KukafeDecorator(
+      this.getKukafe(),
+      this.getKukafeCompound(),
+    ));
+  },
+
   getKukafe() {
     if (kukafe) {
       return kukafe;
     }
 
     return (kukafe = new Kukafe(
+      this.getCache(),
+      this.getKccPriceOracle(),
+      this.getKccTokenCollector(),
+      this.getFarmFetcher(),
+      this.getKccCacheManager(),
+      this.getKccFarmPlatformResolver(),
+    ));
+  },
+
+  getKukafeCompound() {
+    if (kukafeCompound) {
+      return kukafeCompound;
+    }
+
+    return (kukafeCompound = new KukafeCompound(
       this.getCache(),
       this.getKccPriceOracle(),
       this.getKccTokenCollector(),
@@ -1740,16 +1888,19 @@ module.exports = {
       this.getTokenCollector(),
       this.getLiquidityTokenCollector(),
       this.getTokenInfo(),
+      this.getFarmAuto(),
       this.getPolygonPriceOracle(),
       this.getPolygonLiquidityTokenCollector(),
       this.getPolygonTokenCollector(),
       this.getPolygonBalances(),
       this.getPolygonTokenInfo(),
+      this.getPolygonFarmAuto(),
       this.getFantomPriceOracle(),
       this.getFantomLiquidityTokenCollector(),
       this.getFantomTokenCollector(),
       this.getFantomBalances(),
       this.getFantomTokenInfo(),
+      this.getFantomFarmAuto(),
       this.getKccPriceOracle(),
       this.getKccLiquidityTokenCollector(),
       this.getKccTokenCollector(),

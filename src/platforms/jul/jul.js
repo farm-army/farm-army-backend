@@ -99,7 +99,8 @@ module.exports = class jul {
         link: "https://info.julswap.com/staking",
         has_details: true,
         extra: {},
-        earns: []
+        earns: [],
+        chain: 'bsc',
       };
 
       item.extra.transactionToken = call.stakingToken;

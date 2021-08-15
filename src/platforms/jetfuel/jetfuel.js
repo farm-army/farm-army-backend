@@ -133,7 +133,9 @@ module.exports = class jetfuel {
         provider: "jetfuel",
         raw: Object.freeze(i),
         has_details: true,
-        extra: {}
+        extra: {},
+        compound: true,
+        chain: 'bsc',
       };
 
       if (i.asset.provider && i.asset.provider.value) {
@@ -200,7 +202,8 @@ module.exports = class jetfuel {
           has_details: true,
           earns: ["fuel"],
           link: `https://jetfuel.finance/fuels/${i.route}`,
-          extra: {}
+          extra: {},
+          chain: 'bsc',
         };
 
         // ony lp

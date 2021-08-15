@@ -1,10 +1,70 @@
 "use strict";
 
+const Utils = require("../../../utils");
+const AstParser = require("../../../utils/ast_parser");
 const MasterChefWithAutoCompoundAndRewards = require("../../common").MasterChefWithAutoCompoundAndRewards;
 
 module.exports = class yieldparrot extends MasterChefWithAutoCompoundAndRewards {
+  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver) {
+    super(cache, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver);
+
+    this.cache = cache;
+    this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector;
+    this.farmCollector = farmCollector;
+    this.cacheManager = cacheManager;
+    this.farmPlatformResolver = farmPlatformResolver;
+  }
+
   getFarmLink() {
     return 'https://app.yieldparrot.finance/';
+  }
+
+  async farmInfo() {
+    const cacheKey = `${this.getName()}-v1-farm-info`
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
+    }
+
+    const files = await Utils.getJavascriptFiles('https://app.yieldparrot.finance/');
+
+    const rows = [];
+    Object.values(files).forEach(f => {
+      rows.push(...AstParser.createJsonFromObjectExpression(f, keys => keys.includes('strategyContractAddress') && keys.includes('token')));
+    });
+
+    if (rows.length === 0) {
+      await this.cacheManager.set(cacheKey, [], {ttl: 60 * 30});
+      return [];
+    }
+
+    let apys = undefined;
+    try {
+      apys = await Utils.requestJsonGet('https://api.yieldparrot.finance/apy');
+    } catch (e) {
+      await this.cacheManager.set(cacheKey, [], {ttl: 60 * 30});
+
+      return [];
+    }
+
+    const map = [];
+    rows.forEach(r => {
+      const apy = apys[r.apiIndexApy];
+      if (!apy || apy <= 0) {
+        return;
+      }
+
+      map.push({
+        id: r.farm.masterchefPid,
+        apy: apy * 100,
+      });
+    });
+
+    await this.cacheManager.set(cacheKey, map, {ttl: 60 * 30});
+
+    return map;
   }
 
   getMasterChefAddress() {
@@ -13,5 +73,9 @@ module.exports = class yieldparrot extends MasterChefWithAutoCompoundAndRewards 
 
   getChain() {
     return 'bsc';
+  }
+
+  getTvlFunction() {
+    return 'wantLockedTotal';
   }
 };

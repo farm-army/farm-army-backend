@@ -22,7 +22,7 @@ module.exports = class biswap extends PancakePlatformFork {
   }
 
   async getFetchedFarms() {
-    const cacheKey = `biswap-v1-master-farms`
+    const cacheKey = `biswap-v2-master-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -51,7 +51,7 @@ module.exports = class biswap extends PancakePlatformFork {
   }
 
   async getRawPools() {
-    const cacheKey = `biswap-v1-getRawPools`
+    const cacheKey = `biswap-v2-getRawPools`
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
       return cache;

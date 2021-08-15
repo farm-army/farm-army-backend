@@ -205,9 +205,11 @@ module.exports = class beefy {
       const result = {};
       result.farm = farm;
 
+      let decimals = farm.raw.tokenAddress ? this.tokenCollector.getDecimals(farm.raw.tokenAddress) : 18;
+
       result.deposit = {
         symbol: "?",
-        amount: amount / 1e18
+        amount: amount  / (10 ** decimals)
       };
 
       if (farm.raw.tokenAddress) {

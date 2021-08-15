@@ -6,12 +6,11 @@ const Web3EthContract = require("web3-eth-contract");
 const BigNumber = require("bignumber.js");
 
 const Utils = require("../../../utils");
-const erc20Abi = require("../../../abi/erc20.json");
 
 module.exports = class polycat_compound extends PancakePlatformFork {
   static MASTER_ADDRESS = "0xBdA1f897E851c7EF22CD490D2Cf2DAce4645A904"
 
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
+  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver) {
     super(cache, priceOracle);
 
     this.cache = cache;
@@ -19,6 +18,7 @@ module.exports = class polycat_compound extends PancakePlatformFork {
     this.tokenCollector = tokenCollector;
     this.farmCollector = farmCollector;
     this.cacheManager = cacheManager;
+    this.farmPlatformResolver = farmPlatformResolver;
   }
 
   async getFarms(refresh = false) {
@@ -40,7 +40,6 @@ module.exports = class polycat_compound extends PancakePlatformFork {
         has_details: true,
         link: 'https://polycat.finance/vaults?ref=0k898r99681P29479o86304292o03071P80N57948S',
         extra: {},
-        notes: ['auto-compound'],
         chain: this.getChain(),
         compound: true,
       };
@@ -58,6 +57,11 @@ module.exports = class polycat_compound extends PancakePlatformFork {
       }
 
       item.extra.transactionAddress = this.getMasterChefAddress();
+
+      const platform = this.farmPlatformResolver.findMainPlatformNameForTokenAddress(item.extra.transactionToken);
+      if (platform) {
+        item.platform = platform;
+      }
 
       return Object.freeze(item);
     });

@@ -19,22 +19,28 @@ module.exports = class Http {
     tokenCollector,
     liquidityTokenCollector,
     tokenInfo,
+    autoFarm,
     polygonPriceOracle,
     polygonLiquidityTokenCollector,
     polygonTokenCollector,
     polygonBalances,
     polygonTokenInfo,
+    polygonAutoFarm,
     fantomPriceOracle,
     fantomLiquidityTokenCollector,
     fantomTokenCollector,
     fantomBalances,
     fantomTokenInfo,
+    fantomAutoFarm,
     kccPriceOracle,
     kccLiquidityTokenCollector,
     kccTokenCollector,
     kccBalances,
-    kccTokenInfo    
+    kccTokenInfo
   ) {
+
+    this.chains = {};
+
     this.priceOracle = priceOracle;
     this.platforms = platforms;
     this.platformsPolygon = platformsPolygon;
@@ -50,23 +56,64 @@ module.exports = class Http {
     this.liquidityTokenCollector = liquidityTokenCollector;
     this.tokenInfo = tokenInfo;
 
+    this.chains.bsc = {
+      platforms: platforms,
+      priceOracle: priceOracle,
+      liquidityTokenCollector: liquidityTokenCollector,
+      tokenCollector: tokenCollector,
+      balances: balances,
+      tokenInfo: tokenInfo,
+      addressTransactions: addressTransactions,
+      autoFarm: autoFarm,
+    }
+
     this.polygonPriceOracle = polygonPriceOracle;
     this.polygonLiquidityTokenCollector = polygonLiquidityTokenCollector;
     this.polygonTokenCollector = polygonTokenCollector;
     this.polygonBalances = polygonBalances;
     this.polygonTokenInfo = polygonTokenInfo;
+    this.chains.polygon = {
+      platforms: platformsPolygon,
+      priceOracle: polygonPriceOracle,
+      liquidityTokenCollector: polygonLiquidityTokenCollector,
+      tokenCollector: polygonTokenCollector,
+      balances: polygonBalances,
+      tokenInfo: polygonTokenInfo,
+      addressTransactions: polygonAddressTransactions,
+      autoFarm: polygonAutoFarm,
+    }
 
     this.fantomPriceOracle = fantomPriceOracle;
     this.fantomLiquidityTokenCollector = fantomLiquidityTokenCollector;
     this.fantomTokenCollector = fantomTokenCollector;
     this.fantomBalances = fantomBalances;
     this.fantomTokenInfo = fantomTokenInfo;
+    this.chains.fantom = {
+      platforms: platformsFantom,
+      priceOracle: fantomPriceOracle,
+      liquidityTokenCollector: fantomLiquidityTokenCollector,
+      tokenCollector: fantomTokenCollector,
+      balances: fantomBalances,
+      tokenInfo: fantomTokenInfo,
+      addressTransactions: fantomAddressTransactions,
+      autoFarm: fantomAutoFarm,
+    }
 
     this.kccPriceOracle = kccPriceOracle;
     this.kccLiquidityTokenCollector = kccLiquidityTokenCollector;
     this.kccTokenCollector = kccTokenCollector;
     this.kccBalances = kccBalances;
     this.kccTokenInfo = kccTokenInfo;
+    this.chains.kcc = {
+      platforms: platformsKcc,
+      priceOracle: kccPriceOracle,
+      liquidityTokenCollector: kccLiquidityTokenCollector,
+      tokenCollector: kccTokenCollector,
+      balances: kccBalances,
+      tokenInfo: kccTokenInfo,
+      addressTransactions: {}, // not supported
+      autoFarm: {}, // not supported
+    }
 
     this.app = express();
   }
@@ -84,124 +131,65 @@ module.exports = class Http {
   routes() {
     const { app } = this;
 
-    app.get("/prices", async (req, res) => {
-      res.json(this.priceOracle.getAllPrices());
+    app.get("/:chain/prices", async (req, res) => {
+      const {chain} = req.params;
+      const priceOracle = this.chains[chain].priceOracle;
+      res.json(priceOracle.getAllPrices());
     });
 
-    app.get("/polygon/prices", async (req, res) => {
-      res.json(this.polygonPriceOracle.getAllPrices());
-    });
-
-    app.get("/fantom/prices", async (req, res) => {
-      res.json(this.fantomPriceOracle.getAllPrices());
-    });
-
-    app.get("/kcc/prices", async (req, res) => {
-      res.json(this.kccPriceOracle.getAllPrices());
-    });
-
-    app.get("/token/:address", async (req, res) => {
-      const {address} = req.params;
-
+    app.get("/:chain/autofarm", async (req, res) => {
       let timer = -performance.now();
-      res.json(await this.tokenInfo.getTokenInfo(address));
-      timer += performance.now();
-      console.log(`bsc: ${new Date().toISOString()}: token ${address} - ${(timer / 1000).toFixed(3)} sec`);
-    });
 
-    app.get("/polygon/token/:address", async (req, res) => {
-      const {address} = req.params;
-
-      let timer = -performance.now();
-      res.json(await this.polygonTokenInfo.getTokenInfo(address));
-      timer += performance.now();
-      console.log(`polygon: ${new Date().toISOString()}: token ${address} - ${(timer / 1000).toFixed(3)} sec`);
-    });
-
-    app.get("/fantom/token/:address", async (req, res) => {
-      const {address} = req.params;
-
-      let timer = -performance.now();
-      res.json(await this.fantomTokenInfo.getTokenInfo(address));
-      timer += performance.now();
-      console.log(`fantom: ${new Date().toISOString()}: token ${address} - ${(timer / 1000).toFixed(3)} sec`);
-    });
-
-    app.get("/kcc/token/:address", async (req, res) => {
-      const {address} = req.params;
-
-      let timer = -performance.now();
-      res.json(await this.kccTokenInfo.getTokenInfo(address));
-      timer += performance.now();
-      console.log(`kcc: ${new Date().toISOString()}: token ${address} - ${(timer / 1000).toFixed(3)} sec`);
-    });
-
-    app.get("/tokens", async (req, res) => {
-      res.json(this.tokenCollector.all());
-    });
-
-    app.get("/polygon/tokens", async (req, res) => {
-      res.json(this.polygonTokenCollector.all());
-    });
-
-    app.get("/fantom/tokens", async (req, res) => {
-      res.json(this.fantomTokenCollector.all());
-    });
-
-    app.get("/kcc/tokens", async (req, res) => {
-      res.json(this.kccTokenCollector.all());
-    });
-
-    app.get("/liquidity-tokens", async (req, res) => {
-      res.json(this.liquidityTokenCollector.all());
-    });
-
-    app.get("/polygon/liquidity-tokens", async (req, res) => {
-      res.json(this.polygonLiquidityTokenCollector.all());
-    });
-
-
-    app.get("/fantom/liquidity-tokens", async (req, res) => {
-      res.json(this.fantomLiquidityTokenCollector.all());
-    });
-
-    app.get("/kcc/liquidity-tokens", async (req, res) => {
-      res.json(this.kccLiquidityTokenCollector.all());
-    });
-
-    app.get("/details/:address/:farm_id", async (req, res) => {
-      try {
-        const farmId = req.params.farm_id;
-        const { address } = req.params;
-
-        const [platformName] = farmId.split("_");
-
-        const instance = this.platforms.getPlatformByName(platformName);
-        if (!instance) {
-          res.status(404).json({ message: "not found" });
-          return;
-        }
-
-        let timer = -performance.now();
-        res.json(await instance.getDetails(address, farmId));
-
-        timer += performance.now();
-        console.log(`bsc: ${new Date().toISOString()}: detail ${address} - ${farmId} - ${(timer / 1000).toFixed(3)} sec`);
-
-      } catch (e) {
-        console.error(e);
-        res.status(500).json({ message: e.message });
+      if (!req.query.masterchef) {
+        res.status(400).json({error: 'missing "masterchef" query parameter'});
+        return;
       }
+
+      const {chain} = req.params;
+
+      try {
+        res.json(await this.chains[chain].autoFarm.getAutoAddressFarms(req.query.masterchef, req.query.address));
+      } catch (e) {
+        res.status(400).json({error: e.message});
+      }
+
+      timer += performance.now();
+      console.log(`${chain}: ${new Date().toISOString()}: autofarm masterchef ${req.query.masterchef} - ${(timer / 1000).toFixed(3)} sec`);
     });
 
-    app.get("/polygon/details/:address/:farm_id", async (req, res) => {
+    app.get("/:chain/token/:address", async (req, res) => {
+      const {chain, address} = req.params;
+      const tokenInfo = this.chains[chain].tokenInfo;
+
+      let timer = -performance.now();
+      res.json(await tokenInfo.getTokenInfo(address));
+      timer += performance.now();
+      console.log(`${chain}: ${new Date().toISOString()}: token ${address} - ${(timer / 1000).toFixed(3)} sec`);
+    });
+
+    app.get("/:chain/tokens", async (req, res) => {
+      const {chain} = req.params;
+      const tokenCollector = this.chains[chain].tokenCollector;
+      res.json(tokenCollector.all());
+    });
+
+    app.get("/:chain/liquidity-tokens", async (req, res) => {
+      const {chain} = req.params;
+      const liquidityTokenCollector = this.chains[chain].liquidityTokenCollector;
+      res.json(liquidityTokenCollector.all());
+    });
+
+    app.get("/:chain/details/:address/:farm_id", async (req, res) => {
+      const {address, chain} = req.params;
+
       try {
         const farmId = req.params.farm_id;
-        const {address} = req.params;
 
         const [platformName] = farmId.split("_");
 
-        const instance = this.platformsPolygon.getPlatformByName(platformName);
+        const platformsChain = this.chains[chain].platforms;
+
+        const instance = platformsChain.getPlatformByName(platformName);
         if (!instance) {
           res.status(404).json({message: "not found"});
           return;
@@ -211,7 +199,7 @@ module.exports = class Http {
         res.json(await instance.getDetails(address, farmId));
 
         timer += performance.now();
-        console.log(`polygon: ${new Date().toISOString()}: detail ${address} - ${farmId} - ${(timer / 1000).toFixed(3)} sec`);
+        console.log(`${chain}: ${new Date().toISOString()}: detail ${address} - ${farmId} - ${(timer / 1000).toFixed(3)} sec`);
 
       } catch (e) {
         console.error(e);
@@ -219,120 +207,32 @@ module.exports = class Http {
       }
     });
 
-    app.get("/fantom/details/:address/:farm_id", async (req, res) => {
-      try {
-        const farmId = req.params.farm_id;
-        const {address} = req.params;
+    app.get("/:chain/transactions/:address", async (req, res) => {
+      const {address, chain} = req.params;
 
-        const [platformName] = farmId.split("_");
-
-        const instance = this.platformsFantom.getPlatformByName(platformName);
-        if (!instance) {
-          res.status(404).json({message: "not found"});
-          return;
-        }
-
-        let timer = -performance.now();
-        res.json(await instance.getDetails(address, farmId));
-
-        timer += performance.now();
-        console.log(`fantom: ${new Date().toISOString()}: detail ${address} - ${farmId} - ${(timer / 1000).toFixed(3)} sec`);
-
-      } catch (e) {
-        console.error(e);
-        res.status(500).json({message: e.message});
-      }
-    });
-
-    app.get("/kcc/details/:address/:farm_id", async (req, res) => {
-      try {
-        const farmId = req.params.farm_id;
-        const {address} = req.params;
-
-        const [platformName] = farmId.split("_");
-
-        const instance = this.platformsKcc.getPlatformByName(platformName);
-        if (!instance) {
-          res.status(404).json({message: "not found"});
-          return;
-        }
-
-        let timer = -performance.now();
-        res.json(await instance.getDetails(address, farmId));
-
-        timer += performance.now();
-        console.log(`kcc: ${new Date().toISOString()}: detail ${address} - ${farmId} - ${(timer / 1000).toFixed(3)} sec`);
-
-      } catch (e) {
-        console.error(e);
-        res.status(500).json({message: e.message});
-      }
-    });
-
-    app.get("/transactions/:address", async (req, res) => {
       let timer = -performance.now();
-      let address = req.params.address;
+
+      let addressTransactions = this.chains[chain].addressTransactions;
 
       try {
-        res.json(await this.addressTransactions.getTransactions(address, 'bsc'));
+        res.json(await addressTransactions.getTransactions(address, chain));
       } catch (e) {
         console.error(e);
         res.status(500).json({message: e.message});
       }
 
       timer += performance.now();
-      console.log(`bsc: ${new Date().toISOString()}: transactions ${address} - ${(timer / 1000).toFixed(3)} sec`);
+      console.log(`${chain}: ${new Date().toISOString()}: transactions ${address} - ${(timer / 1000).toFixed(3)} sec`);
     });
 
-    app.get("/polygon/transactions/:address", async (req, res) => {
-      let timer = -performance.now();
-      let address = req.params.address;
+    app.get("/:chain/farms", async (req, res) => {
+      const {chain} = req.params;
 
-      try {
-        res.json(await this.polygonAddressTransactions.getTransactions(address, 'polygon'));
-      } catch (e) {
-        console.error(e);
-        res.status(500).json({message: e.message});
-      }
+      let platformsChain = this.chains[chain].platforms;
 
-      timer += performance.now();
-      console.log(`polygon: ${new Date().toISOString()}: transactions ${address} - ${(timer / 1000).toFixed(3)} sec`);
-    });
-
-    app.get("/fantom/transactions/:address", async (req, res) => {
-      let timer = -performance.now();
-      let address = req.params.address;
-
-      try {
-        res.json(await this.fantomAddressTransactions.getTransactions(address, 'fantom'));
-      } catch (e) {
-        console.error(e);
-        res.status(500).json({message: e.message});
-      }
-
-      timer += performance.now();
-      console.log(`fantom: ${new Date().toISOString()}: transactions ${address} - ${(timer / 1000).toFixed(3)} sec`);
-    });
-
-    app.get("/kcc/transactions/:address", async (req, res) => {
-      let timer = -performance.now();
-      let address = req.params.address;
-
-      try {
-        res.json(await this.kccAddressTransactions.getTransactions(address, 'kcc'));
-      } catch (e) {
-        console.error(e);
-        res.status(500).json({message: e.message});
-      }
-
-      timer += performance.now();
-      console.log(`kcc: ${new Date().toISOString()}: transactions ${address} - ${(timer / 1000).toFixed(3)} sec`);
-    });
-
-    app.get("/farms", async (req, res) => {
-      const items = await Promise.all(
-        await this.platforms.getFunctionAwaits("getFarms")
-      );
+      const items = (await Promise.allSettled(
+        await platformsChain.getFunctionAwaits("getFarms")
+      )).filter(i => i.value).map(i => i.value);
 
       const result = items.flat().map(f => {
         const item = _.cloneDeep(f);
@@ -343,56 +243,14 @@ module.exports = class Http {
       res.json(result);
     });
 
-    app.get("/polygon/farms", async (req, res) => {
-      const items = await Promise.all(
-        await this.platformsPolygon.getFunctionAwaits("getFarms")
-      );
-
-      const result = items.flat().map(f => {
-        const item = _.cloneDeep(f);
-        delete item.raw;
-        return item;
-      });
-
-      res.json(result);
-    });
-
-    app.get("/fantom/farms", async (req, res) => {
-      const items = await Promise.all(
-        await this.platformsFantom.getFunctionAwaits("getFarms")
-      );
-
-      const result = items.flat().map(f => {
-        const item = _.cloneDeep(f);
-        delete item.raw;
-        return item;
-      });
-
-      res.json(result);
-    });
-
-    app.get("/kcc/farms", async (req, res) => {
-      const items = await Promise.all(
-        await this.platformsKcc.getFunctionAwaits("getFarms")
-      );
-
-      const result = items.flat().map(f => {
-        const item = _.cloneDeep(f);
-        delete item.raw;
-        return item;
-      });
-
-      res.json(result);
-    });
-
-    app.get("/yield/:address", async (req, res) => {
+    app.get("/:chain/yield/:address", async (req, res) => {
       if (!req.query.p) {
         res.status(400).json({error: 'missing "p" query parameter'});
         return;
       }
 
       let timer = -performance.now();
-      const { address } = req.params;
+      const {address, chain} = req.params;
 
       let platforms = _.uniq(req.query.p.split(',').filter(e => e.match(/^[\w]+$/g)));
       if (platforms.length === 0) {
@@ -400,7 +258,9 @@ module.exports = class Http {
         return;
       }
 
-      let functionAwaitsForPlatforms = this.platforms.getFunctionAwaitsForPlatforms(platforms, 'getYields', [address]);
+      let platformsChain = this.chains[chain].platforms;
+
+      let functionAwaitsForPlatforms = platformsChain.getFunctionAwaitsForPlatforms(platforms, 'getYields', [address]);
 
       const awaits = await Promise.allSettled([...functionAwaitsForPlatforms]);
 
@@ -424,154 +284,24 @@ module.exports = class Http {
       });
 
       timer += performance.now();
-      console.log(`bsc: ${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: ${(timer / 1000).toFixed(3)} sec`);
+      console.log(`${chain}: ${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: ${(timer / 1000).toFixed(3)} sec`);
 
       res.json(response);
     });
 
-    app.get("/polygon/yield/:address", async (req, res) => {
-      if (!req.query.p) {
-        res.status(400).json({error: 'missing "p" query parameter'});
-        return;
-      }
-
+    app.get("/:chain/wallet/:address", async (req, res) => {
       let timer = -performance.now();
-      const {address} = req.params;
+      const {address, chain} = req.params;
 
-      let platforms = _.uniq(req.query.p.split(',').filter(e => e.match(/^[\w]+$/g)));
-      if (platforms.length === 0) {
-        res.json({});
-        return;
-      }
-
-      let functionAwaitsForPlatforms = this.platformsPolygon.getFunctionAwaitsForPlatforms(platforms, 'getYields', [address]);
-
-      const awaits = await Promise.allSettled([...functionAwaitsForPlatforms]);
-
-      const response = {}
-      awaits.forEach(v => {
-        if (!v.value) {
-          console.error(v);
-          return;
-        }
-
-        v.value.forEach(vault => {
-          const item = _.cloneDeep(vault);
-          delete item.farm.raw;
-
-          if (!response[vault.farm.provider]) {
-            response[vault.farm.provider] = [];
-          }
-
-          response[vault.farm.provider].push(item);
-        });
-      });
-
-      timer += performance.now();
-      console.log(`polygon: ${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: ${(timer / 1000).toFixed(3)} sec`);
-
-      res.json(response);
-    });
-
-    app.get("/fantom/yield/:address", async (req, res) => {
-      if (!req.query.p) {
-        res.status(400).json({error: 'missing "p" query parameter'});
-        return;
-      }
-
-      let timer = -performance.now();
-      const {address} = req.params;
-
-      let platforms = _.uniq(req.query.p.split(',').filter(e => e.match(/^[\w]+$/g)));
-      if (platforms.length === 0) {
-        res.json({});
-        return;
-      }
-
-      let functionAwaitsForPlatforms = this.platformsFantom.getFunctionAwaitsForPlatforms(platforms, 'getYields', [address]);
-
-      const awaits = await Promise.allSettled([...functionAwaitsForPlatforms]);
-
-      const response = {}
-      awaits.forEach(v => {
-        if (!v.value) {
-          console.error(v);
-          return;
-        }
-
-        v.value.forEach(vault => {
-          const item = _.cloneDeep(vault);
-          delete item.farm.raw;
-
-          if (!response[vault.farm.provider]) {
-            response[vault.farm.provider] = [];
-          }
-
-          response[vault.farm.provider].push(item);
-        });
-      });
-
-      timer += performance.now();
-      console.log(`fantom: ${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: ${(timer / 1000).toFixed(3)} sec`);
-
-      res.json(response);
-    });
-
-    app.get("/kcc/yield/:address", async (req, res) => {
-      if (!req.query.p) {
-        res.status(400).json({error: 'missing "p" query parameter'});
-        return;
-      }
-
-      let timer = -performance.now();
-      const {address} = req.params;
-
-      let platforms = _.uniq(req.query.p.split(',').filter(e => e.match(/^[\w]+$/g)));
-      if (platforms.length === 0) {
-        res.json({});
-        return;
-      }
-
-      let functionAwaitsForPlatforms = this.platformsKcc.getFunctionAwaitsForPlatforms(platforms, 'getYields', [address]);
-
-      const awaits = await Promise.allSettled([...functionAwaitsForPlatforms]);
-
-      const response = {}
-      awaits.forEach(v => {
-        if (!v.value) {
-          console.error(v);
-          return;
-        }
-
-        v.value.forEach(vault => {
-          const item = _.cloneDeep(vault);
-          delete item.farm.raw;
-
-          if (!response[vault.farm.provider]) {
-            response[vault.farm.provider] = [];
-          }
-
-          response[vault.farm.provider].push(item);
-        });
-      });
-
-      timer += performance.now();
-      console.log(`kcc: ${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: ${(timer / 1000).toFixed(3)} sec`);
-
-      res.json(response);
-    });
-
-    app.get("/wallet/:address", async (req, res) => {
-      let timer = -performance.now();
-      const { address } = req.params;
+      let chainBalances = this.chains[chain].balances;
 
       const [tokens, liquidityPools] = await Promise.allSettled([
-        this.balances.getAllTokenBalances(address),
-        this.balances.getAllLpTokenBalances(address)
+        chainBalances.getAllTokenBalances(address),
+        chainBalances.getAllLpTokenBalances(address)
       ]);
 
       timer += performance.now();
-      console.log(`bsc: ${new Date().toISOString()}: wallet ${address} - ${(timer / 1000).toFixed(3)} sec`);
+      console.log(`${chain}: ${new Date().toISOString()}: wallet ${address} - ${(timer / 1000).toFixed(3)} sec`);
 
       res.json({
         tokens: tokens.value ? tokens.value : [],
@@ -579,79 +309,28 @@ module.exports = class Http {
       });
     });
 
-    app.get("/polygon/wallet/:address", async (req, res) => {
-      let timer = -performance.now();
-      const {address} = req.params;
-
-      const [tokens, liquidityPools] = await Promise.allSettled([
-        this.polygonBalances.getAllTokenBalances(address),
-        this.polygonBalances.getAllLpTokenBalances(address)
-      ]);
-
-      timer += performance.now();
-      console.log(`polygon: ${new Date().toISOString()}: wallet ${address} - ${(timer / 1000).toFixed(3)} sec`);
-
-      res.json({
-        tokens: tokens.value ? tokens.value : [],
-        liquidityPools: liquidityPools.value ? liquidityPools.value : [],
-      });
-    });
-
-    app.get("/fantom/wallet/:address", async (req, res) => {
-      let timer = -performance.now();
-      const {address} = req.params;
-
-      const [tokens, liquidityPools] = await Promise.allSettled([
-        this.fantomBalances.getAllTokenBalances(address),
-        this.fantomBalances.getAllLpTokenBalances(address)
-      ]);
-
-      timer += performance.now();
-      console.log(`fantom: ${new Date().toISOString()}: wallet ${address} - ${(timer / 1000).toFixed(3)} sec`);
-
-      res.json({
-        tokens: tokens.value ? tokens.value : [],
-        liquidityPools: liquidityPools.value ? liquidityPools.value : [],
-      });
-    });
-
-    app.get("/kcc/wallet/:address", async (req, res) => {
-      let timer = -performance.now();
-      const {address} = req.params;
-
-      const [tokens, liquidityPools] = await Promise.allSettled([
-        this.kccBalances.getAllTokenBalances(address),
-        this.kccBalances.getAllLpTokenBalances(address)
-      ]);
-
-      timer += performance.now();
-      console.log(`kcc: ${new Date().toISOString()}: wallet ${address} - ${(timer / 1000).toFixed(3)} sec`);
-
-      res.json({
-        tokens: tokens.value ? tokens.value : [],
-        liquidityPools: liquidityPools.value ? liquidityPools.value : [],
-      });
-    });
-
-    app.get("/all/yield/:address", async (req, res) => {
-      const { address } = req.params;
+    app.get("/:chain/all/yield/:address", async (req, res) => {
+      const {address, chain} = req.params;
 
       let timer = -performance.now();
+
+      let chainBalances = this.chains[chain].balances;
+      let platformsChain = this.chains[chain].platforms;
 
       const platformResults = await Promise.allSettled([
-        this.balances.getAllTokenBalances(address),
-        this.balances.getAllLpTokenBalances(address),
-        ...this.platforms.getFunctionAwaits("getYields", [address])
+        chainBalances.getAllTokenBalances(address),
+        chainBalances.getAllLpTokenBalances(address),
+        ...platformsChain.getFunctionAwaits("getYields", [address])
       ]);
 
       timer += performance.now();
-      console.log(`bsc: ${new Date().toISOString()}: yield ${address}: ${(timer / 1000).toFixed(3)} sec`);
+      console.log(`${chain}: ${new Date().toISOString()}: yield ${address}: ${(timer / 1000).toFixed(3)} sec`);
 
       const response = {};
 
       if (platformResults[0].status === "fulfilled") {
         response.wallet = platformResults[0].value;
-        response.balances = await this.balances.getBalancesFormFetched(response.wallet);
+        response.balances = await chainBalances.getBalancesFormFetched(response.wallet);
       }
 
       if (platformResults[1].status === "fulfilled") {

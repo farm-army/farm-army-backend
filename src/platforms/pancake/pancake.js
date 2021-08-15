@@ -46,16 +46,22 @@ module.exports = class pancake {
   }
 
   async getFetchedFarms() {
-    const cacheKey = `pancake-v3-master-farms`
+    const cacheKey = `pancake-v4-master-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
       return cache;
     }
 
-    const foo = (await this.farmCollector.fetchForMasterChef(masterChefAddress)).filter(f => f.isFinished !== true);
+    // let error no break all
+    let farmsResult = [];
+    try {
+      farmsResult = (await this.farmCollector.fetchForMasterChef(masterChefAddress)).filter(f => f.isFinished !== true);
+    } catch (e) {
+      console.log('pancake error: ' + e.message)
+    }
 
-    const reformat = foo.map(f => {
+    const reformat = farmsResult.map(f => {
       f.lpAddresses = f.lpAddress
 
       return f
@@ -184,7 +190,7 @@ module.exports = class pancake {
 
       if (lpAddress && farmTvls[lpAddress]) {
         item.tvl = {
-          amount: farmTvls[lpAddress] / 1e18
+          amount: farmTvls[lpAddress] / (10 ** this.tokenCollector.getDecimals(lpAddress))
         };
 
         const addressPrice = this.priceOracle.getAddressPrice(lpAddress);
@@ -194,7 +200,7 @@ module.exports = class pancake {
       }
 
       if (item.tvl && item.tvl.usd && farm.raw.yearlyRewardsInToken) {
-        const yearlyRewardsInToken = farm.raw.yearlyRewardsInToken;
+        const yearlyRewardsInToken = farm.raw.yearlyRewardsInToken / (10 ** this.tokenCollector.getDecimals(item.raw.earns[0].address));
 
         if (item.raw.earns && item.raw.earns[0]) {
           const tokenPrice = this.priceOracle.getAddressPrice(item.raw.earns[0].address);
@@ -333,7 +339,9 @@ module.exports = class pancake {
       extra: {
         transactionToken: '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82',
         transactionAddress: cakeVaultAddress,
-      }
+      },
+      compound: true,
+      chain: 'bsc',
     });
 
     this.cache.put(cacheKey, result, { ttl: 300 * 1000 });

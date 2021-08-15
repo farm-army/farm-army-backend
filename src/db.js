@@ -3,6 +3,8 @@
 const batchCandleJSON = require("candlestick-convert").batchCandleJSON;
 
 module.exports = class Db {
+  static CANDLE_MINUTES_INTERVAL = 15;
+
   constructor(database, priceOracle, platforms, priceCollector, lpPriceCollector) {
     this.database = database;
     this.priceOracle = priceOracle;
@@ -77,7 +79,7 @@ module.exports = class Db {
           "ON CONFLICT(token, created_at) DO UPDATE SET price=$price, price_usd=$price_usd"
       );
 
-      const coff = 1000 * 60 * 5;
+      const coff = 1000 * 60 * Db.CANDLE_MINUTES_INTERVAL;
       const date = new Date();
       const timeNow = Math.round(
         new Date(Math.floor(date / coff) * coff).getTime() / 1000
@@ -109,7 +111,7 @@ module.exports = class Db {
           "ON CONFLICT(token, created_at) DO UPDATE SET token0=$token0, token1=token1"
       );
 
-      const coff = 1000 * 60 * 5;
+      const coff = 1000 * 60 * Db.CANDLE_MINUTES_INTERVAL;
       const date = new Date();
       const timeNow = Math.round(
         new Date(Math.floor(date / coff) * coff).getTime() / 1000
@@ -155,7 +157,7 @@ module.exports = class Db {
 
       const stmt = this.database.prepare('SELECT * FROM token_price WHERE token = ? AND created_at >= ? order by created_at ASC');
 
-      let number = now - (60 * 60 * 24 * 5);
+      let number = now - (60 * 60 * 24 * Db.CANDLE_MINUTES_INTERVAL);
       let all = stmt.all([token.toLowerCase(), number]);
 
       const candles = all.map(i => {
@@ -169,7 +171,7 @@ module.exports = class Db {
         }
       })
 
-      const baseFrame = 60 * 5; // 5 minutes
+      const baseFrame = 60 * Db.CANDLE_MINUTES_INTERVAL; // 5 minutes
       const newFrame = 60 * 60; // 1 hour
 
       resolve(batchCandleJSON(candles, baseFrame, newFrame).map(c => {

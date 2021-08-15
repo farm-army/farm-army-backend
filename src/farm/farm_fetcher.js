@@ -51,6 +51,7 @@ class PoolInfo {
       lastRewardBlock: undefined,
       accCakePerShare: undefined,
       strategy: undefined,
+      tvl: undefined,
     }
 
     if (this.input[0] && this.input[0].startsWith('0x')) {
@@ -58,7 +59,7 @@ class PoolInfo {
     }
 
     for (const name of this.methods) {
-      if (name.toLowerCase() === 'lptoken' || name.toLowerCase() === 'want') {
+      if (name.toLowerCase() === 'lptoken' || name.toLowerCase() === 'want' || name.toLowerCase() === 'staketoken') {
         result.lpToken = this.input[this.methods.indexOf(name)];
       } else if (name.toLowerCase() === 'allocpoint') {
         result.allocPoint = this.input[this.methods.indexOf(name)];
@@ -70,6 +71,8 @@ class PoolInfo {
         result.lastRewardTime = this.input[this.methods.indexOf(name)];
       } else if (name.toLowerCase() === 'strat') {
         result.strategy = this.input[this.methods.indexOf(name)];
+      } else if (name.toLowerCase() === 'totalstake') {
+        result.tvl = this.input[this.methods.indexOf(name)];
       }
     }
 
@@ -83,11 +86,11 @@ module.exports = class FarmFetcher {
   }
 
   extractFunctionsFromAbi(abi) {
-    const poolInfoFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase().startsWith('poolinfo'));
+    const poolInfoFunction = abi.find(f => f.name && f.type === 'function' && f.name && (f.name.toLowerCase().startsWith('poolinfo') || f.name.toLowerCase().startsWith('getpoolinfo')));
     const poolInfoFunctionName = poolInfoFunction.name;
 
     let rewardTokenFunctionName = undefined;
-    const pendingFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase() !== 'pendingowner' && f.name.toLowerCase().startsWith('pending'));
+    const pendingFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase() !== 'pendingowner' && f.name.toLowerCase() !== 'pendingadmin' && f.name.toLowerCase().startsWith('pending'));
     if (pendingFunction && pendingFunction.name) {
       const pendingFunctionName = pendingFunction.name;
 
@@ -102,7 +105,7 @@ module.exports = class FarmFetcher {
 
     // same have a "st" or "erc20" method
     if (!rewardTokenFunctionName) {
-      const stFunction = abi.find(f => f.name && f.type === 'function' && f.name && (f.name.toLowerCase() === 'st' || f.name.toLowerCase() === 'erc20'));
+      const stFunction = abi.find(f => f.name && f.type === 'function' && f.name && (f.name.toLowerCase() === 'st' || f.name.toLowerCase() === 'erc20' || f.name.toLowerCase() === 'earningtoken'));
       if (stFunction && stFunction.outputs && stFunction.outputs[0] && stFunction.outputs[0].type === 'address') {
         rewardTokenFunctionName = stFunction.name
       }
@@ -258,11 +261,12 @@ module.exports = class FarmFetcher {
       };
     }), chain);
 
+    // filter also: "0x0000000000000000000000000000000000000064" but no empty
     const methods = abi.find(f => f.name === poolInfoFunctionName).outputs.map(o => o.name);
     let pools = poolsRaw.map(p => {
       p.poolInfoObject = new PoolInfo(p.pid, Object.values(p.poolInfo).slice(0, -1), methods);
       return p;
-    });
+    }).filter(p => !p.poolInfoObject.getLpToken() || !p.poolInfoObject.getLpToken().startsWith('0x00000000000000000000'));
 
     // sushi: enrich lptoken
     const hasLpToken = pools.find(p => p.poolInfoObject.getLpToken());
@@ -278,7 +282,9 @@ module.exports = class FarmFetcher {
 
       lpTokens.forEach(lpTokenResult => {
         const pool = pools.find(p => p.poolInfoObject.getPid() === lpTokenResult.pid);
-        pool.poolInfoObject.appendInput(lpTokenResult.lptoken, 'lptoken');
+        if (pool) {
+          pool.poolInfoObject.appendInput(lpTokenResult.lptoken, 'lptoken');
+        }
       });
     }
 
@@ -346,7 +352,7 @@ module.exports = class FarmFetcher {
 
       let lastRewardSecondsAgo = undefined;
       if (lastRewardBlock) {
-        lastRewardSecondsAgo = (blockNumber - lastRewardBlock) * this.getChainSecondsPerBlock(chain);
+        lastRewardSecondsAgo = (blockNumber - lastRewardBlock) * Utils.getChainSecondsPerBlock(chain);
       } else if(lastRewardTime && lastRewardTime.length <= 10) {
         lastRewardSecondsAgo = Math.round(new Date().getTime() / 1000) - lastRewardTime
       }
@@ -383,19 +389,15 @@ module.exports = class FarmFetcher {
 
           const poolBlockRewards = (masterInfoCall.tokenPerBlock * multiplier * allocPoint) / totalAllocPoint;
 
-          const secondsPerBlock = this.getChainSecondsPerBlock(chain);
+          const secondsPerBlock = Utils.getChainSecondsPerBlock(chain);
           const secondsPerYear = 31536000;
-          const yearlyRewards = (poolBlockRewards / secondsPerBlock) * secondsPerYear;
-
-          item.raw.yearlyRewardsInToken = yearlyRewards / 1e18;
+          item.raw.yearlyRewardsInToken = (poolBlockRewards / secondsPerBlock) * secondsPerYear;
         } else if(masterInfoCall.totalAllocPoint && masterInfoCall.tokenPerSecond) {
           const totalAllocPoint = masterInfoCall.totalAllocPoint;
           const poolSecondsRewards = (masterInfoCall.tokenPerSecond * allocPoint) / totalAllocPoint;
 
           const secondsPerYear = 31536000;
-          const yearlyRewards = poolSecondsRewards * secondsPerYear;
-
-          item.raw.yearlyRewardsInToken = yearlyRewards / 1e18;
+          item.raw.yearlyRewardsInToken = poolSecondsRewards * secondsPerYear;
         }
       }
 
@@ -497,20 +499,5 @@ module.exports = class FarmFetcher {
     }
 
     return Math.max(...results);
-  }
-
-  getChainSecondsPerBlock(chain) {
-    switch (chain) {
-      case 'polygon':
-        return 2.1
-      case 'fantom':
-        return 2.1
-      case 'kcc':
-        return 3;
-      case 'bsc':
-        return 3;
-    }
-
-    throw new Error('Invalid chain: ' + chain);
   }
 }

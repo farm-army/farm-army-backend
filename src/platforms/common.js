@@ -121,7 +121,8 @@ module.exports = {
         }
       }
 
-      const farmBalanceCalls = (await this.getRawFarms()).map(farm => {
+      let rawFarms = await this.getRawFarms();
+      const farmBalanceCalls = rawFarms.map(farm => {
         let address = farm.isTokenOnly !== true
           ? this.getAddress(farm.lpAddresses)
           : this.getAddress(farm.tokenAddresses);
@@ -148,7 +149,11 @@ module.exports = {
         Utils.multiCallIndexBy('address', poolBalanceCalls, this.getChain()),
       ]);
 
-      const farms = (await this.getRawFarms()).map(farm => {
+      const moreInfo = typeof this.farmInfo !== "undefined"
+        ? await this.farmInfo(rawFarms)
+        : [];
+
+      const farms = rawFarms.map(farm => {
         const item = {
           id: `${this.getName()}_farm_${farm.pid}`,
           name: farm.lpSymbol,
@@ -186,9 +191,21 @@ module.exports = {
           item.link = link;
         }
 
+        let tvl = undefined;
         if (item.extra.transactionToken && farmBalances[item.extra.transactionToken] && farmBalances[item.extra.transactionToken].balance && farmBalances[item.extra.transactionToken].balance > 0) {
+          tvl = farmBalances[item.extra.transactionToken].balance;
+        }
+
+        const info = moreInfo.find(i => i.id.toString() === farm.pid.toString());
+        if (info && info.balance && info.balance > 0) {
+          tvl = info.balance;
+        } else if (farm.raw && farm.raw.poolInfoNormalized && farm.raw.poolInfoNormalized.tvl && farm.raw.poolInfoNormalized.tvl > 0) {
+          tvl = farm.raw.poolInfoNormalized.tvl;
+        }
+
+        if (item.extra.transactionToken && tvl) {
           item.tvl = {
-            amount: farmBalances[item.extra.transactionToken].balance / (10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
+            amount: tvl / (10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
           };
 
           const addressPrice = this.priceOracle.findPrice(item.extra.transactionToken);
@@ -198,7 +215,7 @@ module.exports = {
         }
 
         if (item.tvl && item.tvl.usd && farm.raw && farm.raw.yearlyRewardsInToken) {
-          const yearlyRewardsInToken = farm.raw.yearlyRewardsInToken;
+          const yearlyRewardsInToken = farm.raw.yearlyRewardsInToken / (10 ** this.tokenCollector.getDecimals(farm.raw.earns[0].address));
 
           if (item.raw.earns && item.raw.earns[0]) {
             const tokenPrice = this.priceOracle.getAddressPrice(item.raw.earns[0].address);
@@ -215,12 +232,29 @@ module.exports = {
         return item;
       });
 
-      const souses = (await this.getRawPools()).map(farm => {
-        const earningToken = this.guessValue(farm, 'earningToken');
+      const souses = [];
+      (await this.getRawPools()).forEach(farm => {
+        let earningTokenSymbol = undefined;
+
+        try {
+          earningTokenSymbol = this.guessValue(farm, 'earningToken');
+        } catch (e) {
+          return;
+        }
+
+        let stakingTokenAddress = this.guessValue(farm, 'stakingTokenAddress');
+        if (!earningTokenSymbol) {
+          earningTokenSymbol = this.tokenCollector.getSymbolByAddress(stakingTokenAddress);
+        }
+
+        if (!earningTokenSymbol) {
+          console.log(`${this.getName()}: invalid earningTokenSymbol:  ${JSON.stringify(farm)}`)
+          earningTokenSymbol = '?';
+        }
 
         const item = {
           id: `${this.getName()}_sous_${farm.sousId}`,
-          name: `${earningToken.toUpperCase()} Pool`,
+          name: `${earningTokenSymbol.toUpperCase()} Pool`,
           token: this.guessValue(farm, 'stakingTokenName').toLowerCase(),
           provider: this.getName(),
           raw: Object.freeze(farm),
@@ -229,9 +263,9 @@ module.exports = {
           chain: this.getChain(),
         };
 
-        item.earns = [earningToken.toLowerCase()];
+        item.earns = [earningTokenSymbol.toLowerCase()];
         item.extra.transactionAddress = this.getAddress(farm.contractAddress);
-        item.extra.transactionToken = this.guessValue(farm, 'stakingTokenAddress');
+        item.extra.transactionToken = stakingTokenAddress;
 
         const link = this.getFarmLink(item);
         if (link) {
@@ -249,7 +283,33 @@ module.exports = {
           }
         }
 
-        return item;
+        // APY on tvl
+        const secondsPerYear = 31536000;
+        let yearlyRewardsInToken = undefined;
+        if (farm.raw && farm.raw.rewardPerBlock) {
+          yearlyRewardsInToken = (farm.raw.rewardPerBlock / Utils.getChainSecondsPerBlock(this.getChain())) * secondsPerYear;
+        } else if(farm.raw && farm.raw.tokenPerSecond) {
+          yearlyRewardsInToken = farm.raw.tokenPerSecond * secondsPerYear;
+        }
+
+        if (item.tvl && item.tvl.usd && yearlyRewardsInToken) {
+          const earnTokenAddress = this.getAddress(farm.earningToken.address);
+          const tokenPrice = this.priceOracle.getAddressPrice(earnTokenAddress);
+
+          if (tokenPrice) {
+            const yearlyRewards = yearlyRewardsInToken / (10 ** this.tokenCollector.getDecimals(earnTokenAddress));
+            const dailyApr = (yearlyRewards * tokenPrice) / item.tvl.usd;
+
+            // ignore pool init with low tvl
+            if (dailyApr < 10) {
+              item.yield = {
+                apy: Utils.compoundCommon(dailyApr) * 100
+              };
+            }
+          }
+        }
+
+        souses.push(item);
       });
 
       const result = [...farms, ...souses];
@@ -345,7 +405,7 @@ module.exports = {
         if (rewards > 0) {
           let reward = undefined;
 
-          if (farm.earn1111 && farm.earn[0]) {
+          if (farm.earn && farm.earn[0]) {
             // new
             reward = {
               symbol: farm.earn[0].symbol,
@@ -527,11 +587,15 @@ module.exports = {
         const token = new Web3EthContract(MASTERCHEF_COMPOUND_STRAT_ABI, farm.raw.poolInfoNormalized.strategy);
         farmBalanceCalls.push({
           pid: farm.pid.toString(),
-          balance: token.methods.sharesTotal(),
+          balance: token.methods[this.getTvlFunction()](),
         });
       });
 
       const farmBalances = await Utils.multiCallIndexBy('pid', farmBalanceCalls, this.getChain());
+
+      const moreInfos = typeof this.farmInfo !== "undefined"
+        ? await this.farmInfo(pools)
+        : [];
 
       const farms = pools.map(farm => {
         const item = {
@@ -542,7 +606,8 @@ module.exports = {
           raw: Object.freeze(farm),
           has_details: true,
           extra: {},
-          compound: true
+          compound: true,
+          chain: this.getChain(),
         };
 
         const link = this.getFarmLink(item);
@@ -582,6 +647,30 @@ module.exports = {
           if (addressPrice) {
             item.tvl.usd = item.tvl.amount * addressPrice;
           }
+        }
+
+        let apy = 0;
+        const moreInfo = moreInfos.find(i => i.id.toString() === farm.pid.toString())
+        if (moreInfo && moreInfo.apy) {
+          apy += moreInfo.apy
+        }
+
+        if (item.tvl && item.tvl.usd && farm.raw && farm.raw.yearlyRewardsInToken) {
+          const yearlyRewardsInToken = farm.raw.yearlyRewardsInToken / (10 ** this.tokenCollector.getDecimals(farm.raw.earns[0].address));;
+
+          if (item.raw.earns && item.raw.earns[0]) {
+            const tokenPrice = this.priceOracle.getAddressPrice(item.raw.earns[0].address);
+            if (tokenPrice) {
+              const dailyApr = (yearlyRewardsInToken * tokenPrice) / item.tvl.usd;
+              apy += Utils.compoundCommon(dailyApr) * 100
+            }
+          }
+        }
+
+        if (apy > 0) {
+          item.yield = {
+            apy: apy
+          };
         }
 
         return Object.freeze(item);
@@ -767,6 +856,10 @@ module.exports = {
 
     getFarmLink(farm) {
       throw new Error('not implemented');
+    }
+
+    getTvlFunction() {
+      return 'sharesTotal';
     }
   },
 };

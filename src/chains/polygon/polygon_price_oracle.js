@@ -425,6 +425,12 @@ module.exports = class PolygonPriceOracle {
         symbol: 'banana',
         decimals: 18,
       },
+      {
+        router: '0x94930a328162957FF1dd48900aF67B5439336cBD', // polycat
+        address: '0xbc5b59ea1b6f8da8258615ee38d40e999ec5d74f',
+        symbol: 'paw',
+        decimals: 18,
+      },
     ];
 
     const calls = tokens.map(t => {

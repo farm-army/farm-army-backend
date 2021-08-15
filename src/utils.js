@@ -699,39 +699,45 @@ module.exports = {
     return (1 + (r * c) / n) ** (n * t) - 1;
   },
 
-  requestJsonGet: async (url, timeout = 10) => {
+  requestJsonGet: async (url, timeout = 25) => {
     const controller = new AbortController();
     setTimeout(() => controller.abort(), timeout * 1000);
 
     const opts = {
       method: "GET",
-      signal: controller.signal
+      signal: controller.signal,
+      headers: {
+        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0"
+      }
     };
 
     try {
       const foo = await fetch(url, opts);
       return await foo.json();
     } catch (e) {
-      console.error('error: ', url, e)
+      console.error('error: ', url, e.message)
     }
 
     return undefined;
   },
 
-  requestGet: async (url, timeout = 10) => {
+  requestGet: async (url, timeout = 25) => {
     const controller = new AbortController();
     setTimeout(() => controller.abort(), timeout * 1000);
 
     const opts = {
       method: "GET",
-      signal: controller.signal
+      signal: controller.signal,
+      headers: {
+        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0"
+      }
     };
 
     try {
       const foo = await fetch(url, opts);
       return await foo.text();
     } catch (e) {
-      console.error('error: ', url, e)
+      console.error('requestGet error: ', url, e.message)
     }
 
     return undefined;
@@ -753,7 +759,7 @@ module.exports = {
       if (src) {
         let srcUrl = new URL(src, url);
         if (urlObject.hostname === srcUrl.hostname) {
-          javascriptFiles[srcUrl] = await module.exports.requestGet(srcUrl.href)
+          javascriptFiles[srcUrl] = await module.exports.requestGet(srcUrl.href);
         }
       }
     }
@@ -795,5 +801,20 @@ module.exports = {
     })
 
     return pools;
+  },
+
+  getChainSecondsPerBlock: (chain) => {
+    switch (chain) {
+      case 'polygon':
+        return 2.1
+      case 'fantom':
+        return 2.1
+      case 'kcc':
+        return 3;
+      case 'bsc':
+        return 3;
+    }
+
+    throw new Error('Invalid chain: ' + chain);
   }
 };

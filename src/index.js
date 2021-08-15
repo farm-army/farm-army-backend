@@ -61,4 +61,6 @@ setInterval(async () => {
     services.getKccDb().updateAddressMaps(),
     services.getKccDb().updateLpInfoMaps(),
   ]);
-}, 1000 * 60 * 4);
+
+  await services.getCronjobs().cronPlatforms();
+}, 1000 * 60 * 7);

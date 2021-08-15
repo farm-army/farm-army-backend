@@ -2,18 +2,18 @@
 
 const _ = require("lodash");
 
-module.exports = class polycat_decorator {
-  static MASTER_ADDRESS = "0x8CFD1B9B7478E7B0422916B72d1DB6A9D513D734"
-
-  constructor(polycat, polycatCompound) {
+module.exports = class polycat {
+  constructor(polycat, polycatCompound, polycatPaw) {
     this.polycat = polycat;
     this.polycatCompound = polycatCompound;
+    this.polycatPaw = polycatPaw;
   }
 
   async getLbAddresses() {
     return _.uniq((await Promise.allSettled([
       this.polycat.getLbAddresses(),
       this.polycatCompound.getLbAddresses(),
+      this.polycatPaw.getLbAddresses(),
     ]))
       .filter(p => p.status === 'fulfilled')
       .map(p => p.value).flat());
@@ -23,6 +23,7 @@ module.exports = class polycat_decorator {
     return (await Promise.allSettled([
       this.polycat.getFarms(refresh),
       this.polycatCompound.getFarms(refresh),
+      this.polycatPaw.getFarms(refresh),
     ]))
       .filter(p => p.status === 'fulfilled')
       .map(p => p.value).flat();
@@ -31,6 +32,7 @@ module.exports = class polycat_decorator {
   async getYields(address) {
     return (await Promise.allSettled([
       this.polycat.getYields(address),
+      this.polycatPaw.getYields(address),
       this.polycatCompound.getYields(address),
     ]))
       .filter(p => p.status === 'fulfilled')
@@ -40,6 +42,10 @@ module.exports = class polycat_decorator {
   async getDetails(address, id) {
     if (id.includes('_compound_')) {
       return this.polycatCompound.getDetails(address, id);
+    }
+
+    if (id.includes('_paw_')) {
+      return this.polycatPaw.getDetails(address, id);
     }
 
     return this.polycat.getDetails(address, id);

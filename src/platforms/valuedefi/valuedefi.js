@@ -57,14 +57,14 @@ module.exports = class valuedefi {
   async getCouncilVerified() {
     const json = await Utils.requestJsonGet("https://api.vswap.fi/api/faas/get-stats?whitelistedBy=ALL");
 
-    return json.data.filter(
+    return (json.data || []).filter(
       v => v.verifiedBy && v.verifiedBy.length > 0
     );
   }
 
   async getRawVSafe() {
     const content = await Utils.requestJsonGet("https://api-vfarm.vswap.fi/api/farming-scan/get-farming-scans?farming_name=vsafe");
-    return content.data;
+    return content.data || [];
   }
 
   async getAddressFarms(address) {
@@ -165,7 +165,8 @@ module.exports = class valuedefi {
         has_details: true,
         extra: {
           type: "pool"
-        }
+        },
+        chain: 'bsc',
       };
 
       if (farm.lpToken) {
@@ -211,7 +212,8 @@ module.exports = class valuedefi {
         has_details: true,
         extra: {
           type: "vsafe"
-        }
+        },
+        chain: 'bsc',
       };
 
       if (farm.wantTokenSymbol) {
@@ -265,7 +267,8 @@ module.exports = class valuedefi {
         has_details: true,
         extra: {
           type: "council"
-        }
+        },
+        chain: 'bsc',
       };
 
       if (farm.poolTokens && farm.poolTokens.length === 2) {

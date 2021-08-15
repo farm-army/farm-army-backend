@@ -10,12 +10,14 @@ const FARMS = require('./farms/farms.json');
 const fetch = require("node-fetch");
 const AbortController = require("abort-controller")
 const ibBNBAbi = require('./abi/ibBNBAbi.json');
+const GoblinAbi = require('./abi/goblin.json');
 
 module.exports = class alpha {
-  constructor(cache, priceOracle, farmPlatformResolver) {
+  constructor(cache, priceOracle, farmPlatformResolver, tokenCollector) {
     this.cache = cache;
     this.priceOracle = priceOracle;
     this.farmPlatformResolver = farmPlatformResolver;
+    this.tokenCollector = tokenCollector;
   }
 
   async getAddressFarms(address) {
@@ -103,6 +105,21 @@ module.exports = class alpha {
 
     const farms = [];
 
+    const vaultConfigCalls = [];
+    FARMS.forEach(vault => {
+      if (vault.goblinAddress) {
+        const contract = new Web3EthContract(GoblinAbi, vault.goblinAddress);
+
+        vaultConfigCalls.push({
+          address: vault.goblinAddress.toLowerCase(),
+          shareToBalance: contract.methods.shareToBalance(1000),
+          totalShare: contract.methods.totalShare(),
+        });
+      }
+    })
+
+    const vaultConfig = await Utils.multiCallIndexBy('address', vaultConfigCalls);
+
     FARMS.forEach(farm => {
       const item = {
         id: `alpha_lp_${farm.id}`,
@@ -114,7 +131,9 @@ module.exports = class alpha {
         has_details: true,
         link: 'https://homora-bsc.alphafinance.io/farm',
         extra: {},
-        earns: ['cake', 'alpha']
+        earns: ['cake', 'alpha'],
+        leverage: true,
+        chain: 'bsc',
       };
 
       if (farm.leverages && farm.leverages.length > 1) {
@@ -122,11 +141,24 @@ module.exports = class alpha {
       }
 
       if (farm.lpTokenAddress) {
+        item.extra.transactionToken = farm.lpTokenAddress;
         item.extra.lpAddress = farm.lpTokenAddress;
 
         const platform = this.farmPlatformResolver.findMainPlatformNameForTokenAddress(farm.lpTokenAddress);
         if (platform) {
           item.platform = platform;
+        }
+      }
+
+      let vaultConfigFetch = vaultConfig[farm.goblinAddress.toLowerCase()];
+      if (vaultConfigFetch && vaultConfigFetch.totalShare > 0 && vaultConfigFetch.shareToBalance > 0) {
+        item.tvl = {
+          amount: (vaultConfigFetch.totalShare / (10 ** this.tokenCollector.getDecimals(farm.lpTokenAddress))) * (vaultConfigFetch.shareToBalance / 1000)
+        };
+
+        const addressPrice = this.priceOracle.getAddressPrice(farm.lpTokenAddress);
+        if (addressPrice) {
+          item.tvl.usd = item.tvl.amount * addressPrice;
         }
       }
 
@@ -161,6 +193,9 @@ module.exports = class alpha {
     const positionCalls = [];
     positions.forEach(position => {
       const farm = farms.find(f => f.raw.goblinAddress.toLowerCase() === position.goblin.toLowerCase());
+      if (!farm) {
+        return;
+      }
 
       const contract = new Web3EthContract(ibBNBAbi, '0x3bb5f6285c312fc7e1877244103036ebbeda193d');
 

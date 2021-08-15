@@ -101,25 +101,20 @@ node src/index.js
 ### Endpoints ###
 
 ```
-  /farms
+  /:chain/farms
   /polygon/farms
   /fantom/farms
+  /kcc/farms
 ```
 
 ```
-  /yield/:address?p=autofarm,pancake
-  /polygon/yield/:address?p=polycat
-  /fantom/yield/:address?p=spiritswap
+  /:chain/wallet/:address
 ```
 
-```
-  /wallet/:address
-  /polygon/wallet/:address
-  /fantom/wallet/:address
-```
+`:chain`: bsc, polygon, fantom, kcc
 
 ```
-  /all/yield/:address
+  /:chain/all/yield/:address
 ```
 
 ### Generate Farm ###
@@ -153,6 +148,9 @@ Every farm contract should be converted / provided in a common format. Still fea
     "link": "https:\/\/pancakeswap.finance\/farms", // required
     "has_details": true, // optional provide a detail link in frontend
     "notes": ['note_1', 'note_1'] // optional note of the farm; will be join in frontend
+    "compound": true|false // optional if auto-compounding
+    "leverage": true|false // optional if vault is leveraged
+    "chain": "bsc|polygon|kcc|fantom" the chain for this vault
     "extra": {
       "lpAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82", // to given hint about liquity split calculation
       "transactionToken": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82", // "in" and "out" transaction token

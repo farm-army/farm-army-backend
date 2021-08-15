@@ -167,6 +167,8 @@ module.exports = class alpaca {
           vaultConfigCalls.push({
             address: vault.address,
             lpToken: contract.methods.lpToken(),
+            shareToBalance: contract.methods.shareToBalance(1000),
+            totalShare: contract.methods.totalShare(),
           });
         }
       })
@@ -196,6 +198,7 @@ module.exports = class alpaca {
         link: 'https://app.alpacafinance.org/stake',
         extra: {},
         earns: ['alpaca'],
+        chain: 'bsc',
       };
 
       if (idMap[bearing.debtToken]) {
@@ -229,6 +232,8 @@ module.exports = class alpaca {
           extra: {},
           earns: ['alpaca'],
           chain: 'bsc',
+          leverage: true,
+          compound: true
         };
 
         if (vault.stakingToken && this.liquidityTokenCollector.get(vault.stakingToken)) {
@@ -241,6 +246,22 @@ module.exports = class alpaca {
           const platform = this.farmPlatformResolver.findMainPlatformNameForTokenAddress(vault.stakingToken);
           if (platform) {
             item.platform = platform;
+          }
+        }
+
+        if (vaultConfig.lpToken) {
+          item.extra.transactionToken = vaultConfig.lpToken;
+        }
+
+        let vaultConfigFetch = vaultConfig[vault.address];
+        if (vaultConfigFetch && vaultConfigFetch.lpToken && vaultConfigFetch.totalShare > 0 && vaultConfigFetch.shareToBalance > 0) {
+          item.tvl = {
+            amount: (vaultConfigFetch.totalShare / (10 ** this.tokenCollector.getDecimals(vaultConfigFetch.lpToken))) * (vaultConfigFetch.shareToBalance / 1000)
+          };
+
+          const addressPrice = this.priceOracle.getAddressPrice(vaultConfigFetch.lpToken);
+          if (addressPrice) {
+            item.tvl.usd = item.tvl.amount * addressPrice;
           }
         }
 
