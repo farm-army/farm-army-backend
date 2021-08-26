@@ -94,6 +94,7 @@ module.exports = class wault extends PancakePlatformFork {
   }
   
   getRawPools() {
+    // https://api.wault.finance/wpoolsData.js
     return [];
   }
 

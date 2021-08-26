@@ -20,9 +20,9 @@ module.exports = class Cronjobs {
   }
 
   async cronInterval() {
-    const lps = (await Promise.all(this.platforms.getFunctionAwaits('getLbAddresses'))).flat()
     await this.priceOracle.updateTokens();
 
+    const lps = (await Promise.all(this.platforms.getFunctionAwaits('getLbAddresses'))).flat()
     const addresses = _.uniqWith(lps, (a, b) => a.toLowerCase() === b.toLowerCase());
     await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
       return this.priceOracle.fetch(chunk);
@@ -32,9 +32,9 @@ module.exports = class Cronjobs {
   }
 
   async polygonCronInterval() {
-    const lps = (await Promise.all(this.polygonPlatforms.getFunctionAwaits('getLbAddresses'))).flat()
     await this.polygonPriceOracle.updateTokens();
 
+    const lps = (await Promise.all(this.polygonPlatforms.getFunctionAwaits('getLbAddresses'))).flat();
     const addresses = _.uniqWith(lps, (a, b) => a.toLowerCase() === b.toLowerCase());
     await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
       return this.polygonPriceOracle.fetch(chunk);
@@ -42,9 +42,9 @@ module.exports = class Cronjobs {
   }
 
   async fantomCronInterval() {
-    const lps = (await Promise.all(this.fantomPlatforms.getFunctionAwaits('getLbAddresses'))).flat()
     await this.fantomPriceOracle.updateTokens();
 
+    const lps = (await Promise.all(this.fantomPlatforms.getFunctionAwaits('getLbAddresses'))).flat();
     const addresses = _.uniqWith(lps, (a, b) => a.toLowerCase() === b.toLowerCase());
     await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
       return this.fantomPriceOracle.fetch(chunk);
@@ -52,9 +52,9 @@ module.exports = class Cronjobs {
   }
 
   async kccCronInterval() {
-    const lps = (await Promise.all(this.kccPlatforms.getFunctionAwaits('getLbAddresses'))).flat()
     await this.kccPriceOracle.updateTokens();
 
+    const lps = (await Promise.all(this.kccPlatforms.getFunctionAwaits('getLbAddresses'))).flat();
     const addresses = _.uniqWith(lps, (a, b) => a.toLowerCase() === b.toLowerCase());
     await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
       return this.kccPriceOracle.fetch(chunk);

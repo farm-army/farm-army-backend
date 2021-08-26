@@ -88,17 +88,6 @@ module.exports = class FantomPriceOracle {
         address: t.id,
         decimals: parseInt(t.decimals),
       })
-
-      // risky price catch; only what we really need: BHC token is really crazy!
-      if (t.derivedBNB) {
-        prices.push({
-          address: t.id,
-          symbol: t.symbol.toLowerCase(),
-          price: t.derivedBNB * bnbPrice,
-          source: 'hyperswap',
-        });
-      }
-
     });
 
     this.tokenCollector.save();

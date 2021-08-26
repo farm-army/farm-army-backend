@@ -23,6 +23,10 @@ module.exports = {
         row[property.key.name] = propertyValue.value;
       } else if (propertyValue.type === 'ObjectExpression') {
         row[property.key.name] = module.exports.parseObject(propertyValue);
+      } else if (propertyValue.type === 'UnaryExpression' && propertyValue.operator === '!') {
+        if (propertyValue.argument && typeof propertyValue.argument.value !== 'undefined' && ['0', '1'].includes(propertyValue.argument.value.toString())) {
+          row[property.key.name] = eval(`!${propertyValue.argument.value.toString()}`);
+        }
       }
     })
 

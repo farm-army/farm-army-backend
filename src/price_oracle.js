@@ -430,9 +430,8 @@ module.exports = class PriceOracle {
     const tokens = {};
 
     Object.values(await this.jsonRequest('https://tokens.1inch.exchange/v1.1/chain-56')).forEach(t => {
-      if (t.symbol && t.address && t.decimals) {
-        const symbol = t.symbol.toLowerCase();
-        tokens[t.address.toLowerCase()] = symbol;
+      if (t.symbol && t.address && t.decimals && !this.isBlocked(t)) {
+        tokens[t.address.toLowerCase()] = t.symbol.toLowerCase();
 
         this.tokenCollector.add({
           symbol: t.symbol,
@@ -487,6 +486,11 @@ module.exports = class PriceOracle {
     return tokens;
   }
 
+  isBlocked(t) {
+    return (t.symbol.startsWith('cr') && t.name.startsWith('Cream'))
+      || (t.symbol.startsWith('v') && t.name.startsWith('Venus'))
+  }
+
   async inchPricesAsBnb(bnbPrice) {
     if (!bnbPrice) {
       return [];
@@ -500,7 +504,13 @@ module.exports = class PriceOracle {
     const prices = [];
 
     for (const [key, value] of Object.entries(pricesMap)) {
-      if (tokens[key] && tokens[key].decimals && tokens[key].symbol && !['bnb', 'wbnb'].includes(tokens[key].symbol.toLowerCase())) {
+      let tokenInfo = tokens[key];
+
+      if (tokenInfo && tokenInfo.decimals && tokenInfo.symbol && !['bnb', 'wbnb'].includes(tokenInfo.symbol.toLowerCase())) {
+        if (this.isBlocked(tokenInfo)) {
+          continue;
+        }
+
         const price = (value / 10 ** 18) * bnbPrice;
 
         if (price > 1000000 || price < 0.0000000001) {
@@ -511,7 +521,7 @@ module.exports = class PriceOracle {
 
         prices.push({
           address: key,
-          symbol: tokens[key].symbol.toLowerCase(),
+          symbol: tokenInfo.symbol.toLowerCase(),
           price: price,
           source: '1inch',
         });
@@ -582,8 +592,20 @@ module.exports = class PriceOracle {
       },
       {
         router: '0x34DBe8E5faefaBF5018c16822e4d86F02d57Ec27', // coinswap
-        address: '0x3bc5798416c1122BcFd7cb0e055d50061F23850d', // bsw
+        address: '0x3bc5798416c1122BcFd7cb0e055d50061F23850d',
         symbol: 'css',
+        decimals: 18,
+      },
+      {
+        router: '0x10ED43C718714eb63d5aA57B78B54704E256024E', // pancakeswap v2
+        address: '0xc3EAE9b061Aa0e1B9BD3436080Dc57D2d63FEdc1',
+        symbol: 'bear',
+        decimals: 18,
+      },
+      {
+        router: '0x10ED43C718714eb63d5aA57B78B54704E256024E', // pancakeswap v2
+        address: '0x17B7163cf1Dbd286E262ddc68b553D899B93f526',
+        symbol: 'qbt',
         decimals: 18,
       }
     ];

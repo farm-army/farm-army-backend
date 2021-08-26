@@ -186,7 +186,7 @@ module.exports = {
       fs.existsSync(path.resolve(__dirname, "../config.json.local")) ? JSON.parse(fs.readFileSync(path.resolve(__dirname, "../config.json.local"), "utf8")) : {}
   ),
 
-  DUST_FILTER: 0.00000000001 * 1e18,
+  DUST_FILTER: 0.00000000000001 * 1e18,
 
 
   getWeb3: (chain = 'bsc') => {

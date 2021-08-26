@@ -5,21 +5,29 @@ Error.stackTraceLimit = 30;
 const services = require("./services");
 
 async function farmUpdater() {
-  await Promise.allSettled([
+  (await Promise.allSettled([
     Promise.all(services.getPlatforms().getFunctionAwaits('getFarms', [true])),
     Promise.all(services.getPolygonPlatforms().getFunctionAwaits('getFarms', [true])),
     Promise.all(services.getFantomPlatforms().getFunctionAwaits('getFarms', [true])),
     Promise.all(services.getKccPlatforms().getFunctionAwaits('getFarms', [true])),
-  ]);
+  ])).forEach(p => {
+    if (p.status !== 'fulfilled') {
+      console.error('farmUpdater error', p.reason)
+    }
+  });
 }
 
 async function priceUpdater() {
-  await Promise.allSettled([
+  (await Promise.allSettled([
     services.getCronjobs().cronInterval(),
     services.getCronjobs().polygonCronInterval(),
     services.getCronjobs().fantomCronInterval(),
     services.getCronjobs().kccCronInterval(),
-  ]);
+  ])).forEach(p => {
+    if (p.status !== 'fulfilled') {
+      console.error('priceUpdater error', p.reason)
+    }
+  });
 }
 
 // warmup
@@ -44,7 +52,7 @@ setInterval(async () => {
   await farmUpdater();
 
   // collecting farm data to have historically data
-  await Promise.allSettled([
+  (await Promise.allSettled([
     services.getDb().updateFarmPrices(),
     services.getDb().updateAddressMaps(),
     services.getDb().updateLpInfoMaps(),
@@ -60,7 +68,21 @@ setInterval(async () => {
     services.getKccDb().updateFarmPrices(),
     services.getKccDb().updateAddressMaps(),
     services.getKccDb().updateLpInfoMaps(),
-  ]);
+  ])).forEach(p => {
+    if (p.status !== 'fulfilled') {
+      console.error('farm update interval error', p.reason)
+    }
+  });
 
   await services.getCronjobs().cronPlatforms();
 }, 1000 * 60 * 7);
+
+
+// internal jobs
+setTimeout(async () => {
+  await services.getPelevenLeverage().cachePositions(true)
+}, 1070 * 60);
+
+setInterval(async () => {
+  await services.getPelevenLeverage().cachePositions(true)
+}, 1050 * 60 * 16);

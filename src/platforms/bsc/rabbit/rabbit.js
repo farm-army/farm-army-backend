@@ -320,7 +320,9 @@ module.exports = class rabbit {
   }
 
   async getRawFarms() {
-    const cache = await this.cacheManager.get('rabbit-farms-v3');
+    const cacheKey = 'rabbit-farms-v4';
+
+    const cache = await this.cacheManager.get(cacheKey);
     if (cache) {
       return cache;
     }
@@ -351,7 +353,7 @@ module.exports = class rabbit {
         liquidateFactor: p.pool[9],
       })).filter(p => p.isOpen === true);
 
-    await this.cacheManager.set(poolCalls, poolCalls, {ttl: 60 * 30});
+    await this.cacheManager.set(cacheKey, poolCalls, {ttl: 60 * 30});
 
     return poolCalls;
   }

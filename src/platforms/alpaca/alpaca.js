@@ -236,6 +236,8 @@ module.exports = class alpaca {
           compound: true
         };
 
+        item.extra.transactionToken = vault.stakingToken;
+
         if (vault.stakingToken && this.liquidityTokenCollector.get(vault.stakingToken)) {
           item.extra.lpAddress = vault.stakingToken
         } else if(vault.name.match(/^([\w]{0,9})-([\w]{0,9})\s*/g)) {
@@ -247,10 +249,6 @@ module.exports = class alpaca {
           if (platform) {
             item.platform = platform;
           }
-        }
-
-        if (vaultConfig.lpToken) {
-          item.extra.transactionToken = vaultConfig.lpToken;
         }
 
         let vaultConfigFetch = vaultConfig[vault.address];

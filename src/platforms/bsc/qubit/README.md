@@ -1,0 +1,1 @@
+https://bscscan.com/address/0xF70314eb9c7Fe7D88E6af5aa7F898b3A162dcd48#readProxyContract

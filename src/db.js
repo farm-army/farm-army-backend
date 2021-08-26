@@ -43,7 +43,7 @@ module.exports = class Db {
 
   async updateFarmPrices() {
     const items = (
-      await Promise.all(platforms.getFunctionAwaits('getFarms'))
+      await Promise.all(this.platforms.getFunctionAwaits('getFarms'))
     ).flat();
 
     const inserts = items
@@ -56,7 +56,7 @@ module.exports = class Db {
       .map(farm => {
         if (
           farm.extra.pricePerFullShare < 0.000001 ||
-          farm.extra.pricePerFullShare > 10000000000
+          farm.extra.pricePerFullShare > 5000000000000000
         ) {
           console.error(
             `possible wrong unit on farm price: ${farm.extra.pricePerFullShareToken} - ${farm.extra.pricePerFullShare}`

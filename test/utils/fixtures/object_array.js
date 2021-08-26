@@ -2,6 +2,8 @@ const foo = [
   {
     network: "bsc",
     id: "USDT-USDC LP",
+    idFoobarBool: true,
+    idFoobarBoolFalse: false,
     name: "USDT-USDC LP",
     token: "USDT-USDC LP",
     tokenDescription: "USDT-USDC LP",

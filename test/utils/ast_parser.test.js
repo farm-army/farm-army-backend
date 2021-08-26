@@ -15,6 +15,10 @@ describe('#ast parser utils functions', () => {
 
     assert.strictEqual(first.tokenDecimals, 18);
     assert.strictEqual(first.farm.earnedToken, 'LORY');
+    assert.strictEqual(first.isCompounding, true);
+    assert.strictEqual(first.claimable, false);
+    assert.strictEqual(first.idFoobarBool, true);
+    assert.strictEqual(first.idFoobarBoolFalse, false);
 
     const second = result.find(i => i.id === 'WINGS-BNB LP');
 

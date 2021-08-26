@@ -29,7 +29,7 @@ module.exports = class PriceCollector {
       throw new Error(`Invalid address: ${address}`)
     }
 
-    if (price > 5000000000 || price < 0.0000000001) {
+    if (price > 5000000000000000 || price < 0.0000000001) {
       // skipping invalid prices
       console.error('price issues:', address, price)
       return;
@@ -39,7 +39,7 @@ module.exports = class PriceCollector {
   }
 
   addForSymbol(symbol, price) {
-    if (price > 5000000000 || price < 0.0000000001) {
+    if (price > 5000000000000000 || price < 0.0000000001) {
       // skipping invalid prices
       console.error('price issues:', symbol, price)
       return;

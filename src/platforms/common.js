@@ -5,6 +5,7 @@ const BigNumber = require("bignumber.js");
 const Utils = require("../utils");
 const erc20Abi = require("../abi/erc20.json");
 const MASTERCHEF_COMPOUND_STRAT_ABI = require('../abi/mini_masterchef_compound_strat.json');
+const _ = require("lodash");
 
 module.exports = {
   PancakePlatformFork: class PancakePlatformFork {
@@ -100,9 +101,9 @@ module.exports = {
       const result = [...farms, ...pools]
         .filter(
           v =>
-            new BigNumber((v.userInfo && v.userInfo[0]) ? v.userInfo[0] : 0).isGreaterThan(0) ||
-            new BigNumber((v.userInfo && v.userInfo[1]) ? v.userInfo[0] : 0).isGreaterThan(0) ||
-            new BigNumber(v.pendingReward || 0).isGreaterThan(0)
+            new BigNumber((v.userInfo && v.userInfo[0]) ? v.userInfo[0] : 0).isGreaterThan(Utils.DUST_FILTER) ||
+            new BigNumber((v.userInfo && v.userInfo[1]) ? v.userInfo[0] : 0).isGreaterThan(Utils.DUST_FILTER) ||
+            new BigNumber(v.pendingReward || 0).isGreaterThan(Utils.DUST_FILTER)
         )
         .map(v => v.id);
 
@@ -375,7 +376,9 @@ module.exports = {
         Utils.multiCall(sousCalls, this.getChain()),
       ]);
 
-      return [...farmResults, ...sousResults].map(call => {
+      const results = [];
+
+      [...farmResults, ...sousResults].forEach(call => {
         const farm = farms.find(f => f.id === call.id);
 
         const amount = (call.userInfo && call.userInfo[0]) ? call.userInfo[0] : 0;
@@ -398,8 +401,11 @@ module.exports = {
           price = this.priceOracle.getAddressPrice(farm.extra.transactionToken);
         }
 
+        let usdValue = 0;
+
         if (price) {
           result.deposit.usd = result.deposit.amount * price;
+          usdValue += result.deposit.usd;
         }
 
         if (rewards > 0) {
@@ -415,6 +421,7 @@ module.exports = {
             const priceReward = this.priceOracle.getAddressPrice(farm.earn[0].address);
             if (priceReward) {
               reward.usd = reward.amount * priceReward;
+              usdValue += reward.usd;
             }
           } else if (farm.earns && farm.earns[0]) {
             // old
@@ -426,6 +433,7 @@ module.exports = {
             const priceReward = this.priceOracle.findPrice(farm.earns[0]);
             if (priceReward) {
               reward.usd = reward.amount * priceReward;
+              usdValue += reward.usd;
             }
           }
 
@@ -434,10 +442,16 @@ module.exports = {
           }
         }
 
+        if (usdValue > 0 && usdValue < 0.01) {
+          return;
+        }
+
         result.farm = farm;
 
-        return result;
+        results.push(result);
       });
+
+      return results;
     }
 
     async getTransactions(address, id) {
@@ -656,7 +670,7 @@ module.exports = {
         }
 
         if (item.tvl && item.tvl.usd && farm.raw && farm.raw.yearlyRewardsInToken) {
-          const yearlyRewardsInToken = farm.raw.yearlyRewardsInToken / (10 ** this.tokenCollector.getDecimals(farm.raw.earns[0].address));;
+          const yearlyRewardsInToken = farm.raw.yearlyRewardsInToken / (10 ** this.tokenCollector.getDecimals(farm.raw.earns[0].address));
 
           if (item.raw.earns && item.raw.earns[0]) {
             const tokenPrice = this.priceOracle.getAddressPrice(item.raw.earns[0].address);
@@ -704,8 +718,8 @@ module.exports = {
       const farms = await Utils.multiCall(vaultCalls, this.getChain());
 
       const result = farms.filter(v =>
-        new BigNumber((v.userInfo && v.userInfo[0]) ? v.userInfo[0] : 0).isGreaterThan(0) ||
-        new BigNumber(v.pendingReward || 0).isGreaterThan(0)
+        new BigNumber((v.userInfo && v.userInfo[0]) ? v.userInfo[0] : 0).isGreaterThan(Utils.DUST_FILTER) ||
+        new BigNumber(v.pendingReward || 0).isGreaterThan(Utils.DUST_FILTER)
       ).map(v => v.id);
 
       this.cache.put(`getAddressFarms-${this.getName()}-${address}`, result, { ttl: 300 * 1000 });
@@ -860,6 +874,302 @@ module.exports = {
 
     getTvlFunction() {
       return 'sharesTotal';
+    }
+  },
+
+  LendBorrowPlatform: class LendBorrowPlatform {
+    constructor(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver) {
+      this.priceOracle = priceOracle;
+      this.tokenCollector = tokenCollector;
+      this.cacheManager = cacheManager;
+      this.liquidityTokenCollector = liquidityTokenCollector;
+      this.farmPlatformResolver = farmPlatformResolver;
+    }
+
+    async getFarms(refresh) {
+      const cacheKey = `getFarms-${this.getName()}-v5`;
+
+      if (!refresh) {
+        const cache = await this.cacheManager.get(cacheKey);
+        if (cache) {
+          return cache;
+        }
+      }
+
+      const config = _.merge({
+        cashMethod: 'getCash',
+        exchangeRateMethod: 'exchangeRate',
+        underlyingMethod: 'underlying',
+      }, this.getConfig());
+
+      let rawFarms = await this.getTokens();
+
+      let tvlCalls = rawFarms.map(token => {
+        const contract = new Web3EthContract(this.getTokenAbi(), token.address);
+
+        return {
+          address: token.address.toLowerCase(),
+          tvl: contract.methods[config.cashMethod](),
+          exchangeRate: contract.methods[config.exchangeRateMethod](),
+          underlying: contract.methods[config.underlyingMethod](),
+        };
+      });
+
+      const tvl = await Utils.multiCallIndexBy('address', tvlCalls, this.getChain());
+
+      const farms = [];
+
+      rawFarms.forEach(token => {
+        const info = tvl[token.address.toLowerCase()];
+        if (!info) {
+          return;
+        }
+
+        // nativ chain token
+        if (!info.underlying && token.name && token.name.toLowerCase().includes('bnb')) {
+          info.underlying = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+        }
+
+        // 0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+        if (this.getChain() === 'bsc' && info.underlying && info.underlying.toLowerCase().includes('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb') && token.name && token.name.toLowerCase().includes('bnb')) {
+          info.underlying = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+        }
+
+        // 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE
+        if (this.getChain() === 'polygon' && info.underlying && info.underlying.toLowerCase().includes('eeeeeeeeeeeeeeeeeeeeeeeeeeeeee') && token.name && token.name.toLowerCase().includes('matic')) {
+          info.underlying = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
+        }
+
+        if (!info.underlying) {
+          console.log(`${this.getName()}: missing underlying ${JSON.stringify(info)}`)
+          return;
+        }
+
+        let isLiquidityPool = false;
+        let symbol = this.tokenCollector.getSymbolByAddress(info.underlying);
+        if (!symbol) {
+          symbol = this.liquidityTokenCollector.getSymbolNames(info.underlying);
+          isLiquidityPool = true;
+        }
+
+        if (!symbol && token.name) {
+          symbol = token.name;
+        }
+
+        if (!symbol) {
+          symbol = '?';
+        }
+
+        const item = {
+          id: `${this.getName()}_${token.address.toLowerCase()}`,
+          name: symbol.toUpperCase(),
+          token: symbol.toLowerCase(),
+          raw: Object.freeze(_.merge(token, {
+            exchangeRate: info.exchangeRate,
+            underlying: info.underlying,
+          })),
+          provider: this.getName(),
+          has_details: false,
+          extra: {},
+          chain: this.getChain(),
+          flags: ['lend', 'borrow'],
+        };
+
+        item.extra.transactionToken = info.underlying;
+        item.extra.transactionAddress = token.address;
+
+        if (isLiquidityPool) {
+          item.extra.lpAddress = item.extra.transactionToken;
+
+          const platform = this.farmPlatformResolver.findMainPlatformNameForTokenAddress(item.extra.lpAddress);
+          if (platform) {
+            item.platform = platform;
+          }
+        }
+
+        if (info && info.tvl) {
+          item.tvl = {
+            amount: info.tvl / (10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
+          };
+
+          const addressPrice = this.priceOracle.getAddressPrice(item.extra.transactionToken);
+          if (addressPrice) {
+            item.tvl.usd = item.tvl.amount * addressPrice;
+          }
+        }
+
+        const link = this.getFarmLink(item);
+        if (link) {
+          item.link = link;
+        }
+
+        const farmEarns = this.getFarmEarns(item);
+        if (farmEarns && farmEarns.length > 0) {
+          item.earns = farmEarns;
+        }
+
+        farms.push(item);
+      });
+
+      await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
+
+      console.log(`${this.getName()} updated`);
+
+      return farms;
+    }
+
+    async getAddressFarms(address) {
+      const cacheKey = `getAddressFarms-v1-${this.getName()}-${address}`;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
+      }
+
+      const config = _.merge({
+        balanceOfMethod: 'balanceOf',
+        borrowBalanceOfMethod: 'borrowBalanceOf',
+      }, this.getConfig());
+
+      let calls = Object.values(await this.getFarms()).map(farm => {
+        const contract = new Web3EthContract(this.getTokenAbi(), farm.raw.address);
+
+        return {
+          id: farm.id,
+          balanceOf: contract.methods[config.balanceOfMethod](address),
+          borrowBalanceOf: contract.methods[config.borrowBalanceOfMethod](address),
+        };
+      });
+
+      const result = (await Utils.multiCall(calls, this.getChain()))
+        .filter(c => c.balanceOf > 0 || c.borrowBalanceOf > 0)
+        .map(c => c.id);
+
+      await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
+
+      return result;
+    }
+
+    async getYields(address) {
+      const addressFarms = await this.getAddressFarms(address);
+      if (addressFarms.length === 0) {
+        return [];
+      }
+
+      return await this.getYieldsInner(address, addressFarms);
+    }
+
+    async getYieldsInner(address, farmIds) {
+      if (farmIds.length === 0) {
+        return [];
+      }
+
+      const config = _.merge({
+        balanceOfMethod: 'balanceOf',
+        borrowBalanceOfMethod: 'borrowBalanceOf',
+      }, this.getConfig());
+
+      const farms = await this.getFarms();
+
+      const callsPromises = await Utils.multiCall(farmIds.map(id => {
+        const farm = farms.find(f => f.id === id);
+        const contract = new Web3EthContract(this.getTokenAbi(), farm.raw.address);
+
+        return {
+          id: farm.id,
+          balanceOf: contract.methods[config.balanceOfMethod](address),
+          borrowBalanceOf: contract.methods[config.borrowBalanceOfMethod](address),
+        };
+      }), this.getChain());
+
+      const result = (await Utils.multiCall(callsPromises, this.getChain()))
+        .filter(c => c.balanceOf > 0 || c.borrowBalanceOf > 0)
+
+      const results = [];
+
+      result.forEach(call => {
+        const farm = farms.find(f => f.id === call.id);
+
+        if (call.balanceOf > 0) {
+          const result = {
+            farm: farm
+          };
+
+          const exchangeRate = farm.raw.exchangeRate ? farm.raw.exchangeRate / 1e18 : 1;
+
+          result.deposit = {
+            symbol: '?',
+            amount: (call.balanceOf / (10 ** this.tokenCollector.getDecimals(farm.extra.transactionToken))) * exchangeRate, // value in borrowToken token
+          };
+
+          const price = this.priceOracle.getAddressPrice(farm.extra.transactionToken);
+          if (price) {
+            result.deposit.usd = result.deposit.amount * price;
+          }
+
+          const isDust = 'usd' in result.deposit && result.deposit.usd < 0.02;
+          if (!isDust) {
+            results.push(Object.freeze(result));
+          }
+        }
+
+        if (call.borrowBalanceOf > 0) {
+          const result = {
+            farm: farm
+          };
+
+          result.deposit = {
+            symbol: '?',
+            amount: call.borrowBalanceOf / (10 ** this.tokenCollector.getDecimals(farm.extra.transactionToken)) * -1, // value in borrowToken token
+          };
+
+          const price = this.priceOracle.getAddressPrice(farm.extra.transactionToken); // bnb or busd
+          if (price) {
+            result.deposit.usd = result.deposit.amount * price;
+          }
+
+          const isDust = 'usd' in result.deposit && Math.abs(result.deposit.usd) < 0.02;
+          if (!isDust) {
+            results.push(Object.freeze(result));
+          }
+        }
+      })
+
+      return results;
+    }
+
+    getName() {
+      throw new Error('not implemented');
+    }
+
+    getChain() {
+      throw new Error('not implemented');
+    }
+
+    getTokenAbi() {
+      throw new Error('not implemented');
+    }
+
+    async getTokens() {
+      throw new Error('not implemented');
+    }
+
+    /**
+     * cashMethod: 'getCash',
+     * exchangeRateMethod: 'exchangeRate',
+     * underlyingMethod: 'underlying',
+     * balanceOfMethod: 'balanceOf',
+     * borrowBalanceOfMethod: 'borrowBalanceOf',
+     */
+    getConfig() {
+      throw new Error('not implemented');
+    }
+
+    getFarmLink(farm) {
+      throw new Error('not implemented');
+    }
+
+    getFarmEarns(farm) {
+      throw new Error('not implemented');
     }
   },
 };

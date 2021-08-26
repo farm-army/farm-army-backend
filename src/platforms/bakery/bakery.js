@@ -16,6 +16,7 @@ module.exports = class bakery {
     fs.readFileSync(path.resolve(__dirname, "abi/master.json"), "utf8")
   )
 
+  // https://bscscan.com/address/0x6a8DbBfbB5a57d07D14E63E757FB80B4a7494f81#readContract
   static MASTER_ADDRESS = '0x20eC291bB8459b6145317E7126532CE7EcE5056f'
 
   async getLbAddresses() {

@@ -21,6 +21,21 @@ module.exports = class beefy {
       .map(farm => farm.tokenAddress);
   }
 
+  async getLpPrices() {
+    const cacheKey = `beefy-lp-prices`;
+
+    const cacheItem = this.cache.get(cacheKey);
+    if (cacheItem) {
+      return cacheItem;
+    }
+
+    const prices = Utils.requestJsonGet('https://api.beefy.finance/lps');
+
+    this.cache.put(cacheKey, prices, { ttl: 1000 * 60 * 15 });
+
+    return prices;
+  }
+
   async getRawFarms() {
     const cacheKey = `getAddressFarms-github-${this.getName()}`;
 
@@ -104,7 +119,10 @@ module.exports = class beefy {
       };
     });
 
-    const vault = await Utils.multiCallIndexBy("id", vaultCalls, this.getChain());
+    const [vault, lpPrices] = await Promise.all([
+      Utils.multiCallIndexBy("id", vaultCalls, this.getChain()),
+      this.getLpPrices(),
+    ]);
 
     const farms = [];
     pools.forEach(farm => {
@@ -138,14 +156,14 @@ module.exports = class beefy {
       if (vaultElement.tokenAddress) {
         item.extra.transactionToken = vaultElement.tokenAddress
 
-        let price = this.priceOracle.findPrice(vaultElement.tokenAddress);
-        if (!price) {
-          price = this.priceOracle.findPrice(farm.id);
-        }
-
         item.tvl = {
           amount: vaultElement.tvl / (10 ** this.tokenCollector.getDecimals(vaultElement.tokenAddress))
         };
+
+        let price = this.priceOracle.findPrice(vaultElement.tokenAddress, farm.oracleId.toLowerCase());
+        if (!price && lpPrices[farm.id]) {
+          price = lpPrices[farm.id];
+        }
 
         if (price) {
           item.tvl.usd = item.tvl.amount * price;
@@ -195,7 +213,10 @@ module.exports = class beefy {
       };
     });
 
-    const calls = await Utils.multiCall(tokenCalls, this.getChain());
+    const [calls, lpPrices] = await Promise.all([
+      Utils.multiCall(tokenCalls, this.getChain()),
+      this.getLpPrices(),
+    ]);
 
     return calls.map(call => {
       const farm = farms.find(f => f.id === call.id);
@@ -213,12 +234,14 @@ module.exports = class beefy {
       };
 
       if (farm.raw.tokenAddress) {
-        let price = this.priceOracle.findPrice(farm.raw.tokenAddress, farm.raw.oracleId.toLowerCase());
+        const price = this.priceOracle.findPrice(farm.raw.tokenAddress, farm.raw.oracleId.toLowerCase());
         if (price) {
           result.deposit.usd = result.deposit.amount * price;
         }
-      } else {
-        console.log(`${this.getName()} no tokenAddress`, farm.id);
+      }
+
+      if (!result.deposit.usd && lpPrices[farm.raw.oracleId]) {
+        result.deposit.usd = result.deposit.amount * lpPrices[farm.raw.oracleId];
       }
 
       result.rewards = [];
