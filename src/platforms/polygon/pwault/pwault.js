@@ -73,7 +73,7 @@ module.exports = class pwault extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   async getMasterChefAbi() {

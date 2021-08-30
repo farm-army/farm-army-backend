@@ -73,7 +73,7 @@ module.exports = class polycrystal extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   async getMasterChefAbi() {

@@ -72,7 +72,7 @@ module.exports = class treedefi extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   async getMasterChefAbi() {

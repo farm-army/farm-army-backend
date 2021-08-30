@@ -95,7 +95,7 @@ module.exports = class honeyfarm extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   async getMasterChefAbi() {

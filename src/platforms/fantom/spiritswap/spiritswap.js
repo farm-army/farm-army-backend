@@ -73,7 +73,7 @@ module.exports = class spiritswap extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   async getMasterChefAbi() {

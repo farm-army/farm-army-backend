@@ -176,9 +176,6 @@ module.exports = {
     path.resolve(__dirname, "bitquery/transactions.txt"),
     "utf8"
   ),
-  erc20ABI: JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, "platforms/pancake/abi/erc20.json"), "utf8")
-  ),
 
   // @TODO: move it to somewhere else
   CONFIG: _.merge(

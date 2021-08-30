@@ -70,7 +70,7 @@ module.exports = class panther extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   getMasterChefAbi() {

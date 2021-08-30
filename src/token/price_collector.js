@@ -8,12 +8,24 @@ module.exports = class PriceCollector {
 
     // init data
     setTimeout(async () => {
-      const prices = await this.cacheManager.get('price-collector-addresses');
+      let prices = {}
+      try {
+        prices = await this.cacheManager.get('price-collector-addresses');
+      } catch (e) {
+        console.log('PriceCollector: "price-collector-addresses" json is broken');
+      }
+
       if (prices) {
         this.prices = prices;
       }
 
-      const pricesSymbols = await this.cacheManager.get('price-collector-symbols');
+      let pricesSymbols = {};
+      try {
+        pricesSymbols = await this.cacheManager.get('price-collector-symbols');
+      } catch (e) {
+        console.log('PriceCollector: "price-collector-symbols" json is broken');
+      }
+
       if (pricesSymbols) {
         this.pricesSymbols = pricesSymbols;
       }

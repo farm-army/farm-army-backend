@@ -73,7 +73,7 @@ module.exports = class cafeswap extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   getMasterChefAbi() {

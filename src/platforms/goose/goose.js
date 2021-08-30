@@ -70,7 +70,7 @@ module.exports = class goose extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   getMasterChefAbi() {

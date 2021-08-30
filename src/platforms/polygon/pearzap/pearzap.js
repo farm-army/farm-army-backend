@@ -73,7 +73,7 @@ module.exports = class pearzap extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   async getMasterChefAbi() {

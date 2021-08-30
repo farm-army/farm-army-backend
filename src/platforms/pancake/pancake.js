@@ -61,11 +61,14 @@ module.exports = class pancake {
       console.log('pancake error: ' + e.message)
     }
 
-    const reformat = farmsResult.map(f => {
-      f.lpAddresses = f.lpAddress
+    // 0 ist equal to the pool
+    const reformat = farmsResult
+      .filter(f => f.pid.toString() !== '0')
+      .map(f => {
+        f.lpAddresses = f.lpAddress
 
-      return f
-    })
+        return f
+      })
 
     await this.cacheManager.set(cacheKey, reformat, {ttl: 60 * 30})
 
@@ -148,12 +151,12 @@ module.exports = class pancake {
     (await Utils.multiCall((await this.getFetchedFarms()).map(farm => {
       let lpAddresses = this.getAddress(farm.lpAddresses);
       return {
-          totalSupply: new Web3EthContract(erc20ABI, lpAddresses).methods.totalSupply(),
+          tvl: new Web3EthContract(erc20ABI, lpAddresses).methods.balanceOf(masterChefAddress),
           lpAddress: lpAddresses
         };
       })
     )).forEach(call => {
-      farmTvls[call.lpAddress] = call.totalSupply;
+      farmTvls[call.lpAddress] = call.tvl;
     });
 
     const resultFarms = farms.map(farm => {

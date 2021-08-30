@@ -1,34 +1,91 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
 const Web3EthContract = require("web3-eth-contract");
 const BigNumber = require("bignumber.js");
 const Utils = require("../../utils");
+const ERC20Abi = require("../../abi/erc20.json");
+const MasterV2Abi = require("./abi/masterv2.json");
 
 module.exports = class bakery {
-  constructor(cache, priceOracle) {
+  constructor(cache, priceOracle, cacheManager, tokenCollector, liquidityTokenCollector) {
     this.cache = cache;
     this.priceOracle = priceOracle;
+    this.cacheManager = cacheManager;
+    this.tokenCollector = tokenCollector;
+    this.liquidityTokenCollector = liquidityTokenCollector;
   }
 
-  static MASTER_ABI = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, "abi/master.json"), "utf8")
-  )
-
-  // https://bscscan.com/address/0x6a8DbBfbB5a57d07D14E63E757FB80B4a7494f81#readContract
-  static MASTER_ADDRESS = '0x20eC291bB8459b6145317E7126532CE7EcE5056f'
+  static MASTER_ADDRESS_V2 = '0x6a8DbBfbB5a57d07D14E63E757FB80B4a7494f81'
 
   async getLbAddresses() {
-    return this.getRawPools()
+    return (await this.getRawPools())
       .filter(f => f.lpAddresses && f.lpAddresses[56])
       .map(farm => farm.lpAddresses[56]);
   }
 
-  getRawPools() {
-    return JSON.parse(
-      fs.readFileSync(path.resolve(__dirname, "farms/farms.json"), "utf8")
-    );
+  async getRawPools() {
+    const cacheKey = `${this.getName}-getRawPools-v1`
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
+    }
+
+    const masterchefInfo = await Utils.multiCall([{
+      poolLength: new Web3EthContract(MasterV2Abi, bakery.MASTER_ADDRESS_V2).methods.poolLength(),
+      token: new Web3EthContract(MasterV2Abi, bakery.MASTER_ADDRESS_V2).methods.token(),
+    }], this.getChain());
+
+    const addresses = await Utils.multiCall([...Array(parseInt(masterchefInfo[0].poolLength)).keys()].map(id => ({
+      poolAddress: new Web3EthContract(MasterV2Abi, bakery.MASTER_ADDRESS_V2).methods.poolAddresses(id),
+    })), this.getChain());
+
+    const poolInfos = (await Utils.multiCall(addresses.map(address => {
+      const contract = new Web3EthContract(MasterV2Abi, bakery.MASTER_ADDRESS_V2);
+
+      return {
+        address: address.poolAddress,
+        poolInfo: contract.methods.poolInfoMap(address.poolAddress),
+      };
+    }), this.getChain())).filter(p => p.poolInfo && p.poolInfo[2] && p.poolInfo[2] > 0);
+
+    const tokenNames = await Utils.multiCallIndexBy('address', poolInfos.map(p => p.address).map(address => {
+      const contract = new Web3EthContract(ERC20Abi, address);
+
+      return {
+        address: address.toLowerCase(),
+        name: contract.methods.name(),
+      };
+    }), this.getChain());
+
+    const pools = [];
+
+    poolInfos.forEach(info => {
+      const item = {};
+
+      item.id = info.address;
+
+      item.tokenSymbol = "BAKE";
+
+      item.lpAddresses = {
+        56: info.address
+      };
+
+      item.tokenAddresses = {
+        56: masterchefInfo[0].token
+      };
+
+      let tokenName = tokenNames[info.address.toLowerCase()];
+      if (tokenName && tokenName.name) {
+        item.name = tokenName.name
+      }
+
+      pools.push(item);
+    });
+
+    await this.cacheManager.set(cacheKey, Object.freeze(pools), {ttl: 60 * 60})
+
+    return Object.freeze(pools);
   }
 
   async getAddressFarms(address) {
@@ -40,31 +97,19 @@ module.exports = class bakery {
     const vaultCalls = (await this.getFarms())
       .filter(f => f.raw.lpAddresses && f.raw.lpAddresses[56])
       .map(farm => {
-        const vault = new Web3EthContract(
-          bakery.MASTER_ABI,
-          bakery.MASTER_ADDRESS
-        );
+        const vault = new Web3EthContract(MasterV2Abi, bakery.MASTER_ADDRESS_V2);
+
         return {
-          poolUserInfoMap: vault.methods.poolUserInfoMap(
-            farm.raw.lpAddresses[56],
-            address
-          ),
-          pendingBake: vault.methods.pendingBake(
-            farm.raw.lpAddresses[56],
-            address
-          ),
-          id: farm.id.toString()
+          id: farm.id.toString(),
+          poolUserInfoMap: vault.methods.poolUserInfoMap(farm.raw.lpAddresses[56], address)
         };
       });
 
     const farmCalls = await Utils.multiCall(vaultCalls);
 
     const result = farmCalls
-      .filter(
-        v =>
-          new BigNumber(v.poolUserInfoMap[0] || 0).isGreaterThan(0) ||
-          new BigNumber(v.poolUserInfoMap[1] || 0).isGreaterThan(0) ||
-          new BigNumber(v.pendingBake || 0).isGreaterThan(0)
+      .filter(v =>
+          new BigNumber(v.poolUserInfoMap[0] || 0).isGreaterThan(Utils.DUST_FILTER)
       )
       .map(v => v.id);
 
@@ -83,53 +128,70 @@ module.exports = class bakery {
       }
     }
 
-    const rawPools = this.getRawPools().filter(i => i.ended !== true);
+    const rawPools = (await this.getRawPools()).filter(i => i.ended !== true);
 
     // TVL USD
     const farmTvls = {};
-    (
-      await Utils.multiCall(
-        rawPools.map(farm => {
-          return {
-            totalSupply: new Web3EthContract(
-              Utils.erc20ABI,
-              farm.lpAddresses[56]
-            ).methods.totalSupply(),
-            lpAddress: farm.lpAddresses[56]
-          };
-        })
-      )
-    ).forEach(call => {
-      farmTvls[call.lpAddress] = call.totalSupply;
+    (await Utils.multiCall(
+      rawPools.map(farm => ({
+        lpAddress: farm.lpAddresses[56].toLowerCase(),
+        tvl: new Web3EthContract(ERC20Abi, farm.lpAddresses[56]).methods.balanceOf(bakery.MASTER_ADDRESS_V2),
+      }))
+    )).forEach(call => {
+      farmTvls[call.lpAddress] = call.tvl;
     });
 
     const result = rawPools.map(farm => {
+      let name = this.tokenCollector.getSymbolByAddress(farm.lpAddresses[56]);
+      if (!name) {
+        name = this.liquidityTokenCollector.getSymbolNames(farm.lpAddresses[56]);
+      }
+
+      if (!name && farm.name) {
+        name = farm.name;
+      } else {
+        // tokens are uppercase
+        name = name.toUpperCase();
+      }
+
+      if (!name) {
+        name = '?';
+      }
+
       const item = {
-        id: `bakery_${farm.pid}`,
-        name: farm.symbol,
-        token: farm.symbol.toLowerCase().replace(/(\s+blp)/, ""),
+        id: `bakery_${farm.id.toLowerCase()}`,
+        name: name,
+        token: name.toLowerCase(),
         provider: "bakery",
         raw: Object.freeze(farm),
         link: "https://www.bakeryswap.org/",
         has_details: true,
-        extra: {}
+        extra: {},
+        chain: 'bsc',
       };
 
-      if (farm.lpAddresses && farm.lpAddresses[56]) {
-        item.extra.lpAddress = farm.lpAddresses[56];
+      if (!item.name.toLowerCase().includes('stakingpower')) {
+        item.earns = ['bake'];
+      } else {
+        item.name = item.name
+          .replace('StakingPower', '')
+          .replace('NFT', '')
+          .replace('Mixer', '')
+          .trim()
 
-        item.extra.transactionToken = item.extra.lpAddress
+        item.token = item.name.toLowerCase();
+        item.name += ' NFT';
+        item.notes = ['NTF'];
       }
 
-      item.extra.transactionAddress = bakery.MASTER_ADDRESS
+      item.extra.lpAddress = farm.lpAddresses[56];
+      item.extra.transactionToken = item.extra.lpAddress;
+      item.extra.transactionAddress = bakery.MASTER_ADDRESS_V2;
 
-      if (farm.tokenSymbol) {
-        item.earns = ["bake"];
-      }
-
-      if (farmTvls[farm.lpAddresses[56]]) {
+      let farmTvl = farmTvls[item.extra.transactionToken.toLowerCase()];
+      if (farmTvl) {
         item.tvl = {
-          amount: farmTvls[farm.lpAddresses[56]] / 1e18
+          amount: farmTvl / 10 ** this.tokenCollector.getDecimals(item.extra.transactionToken)
         };
 
         const addressPrice = this.priceOracle.getAddressPrice(farm.lpAddresses[56]);
@@ -166,19 +228,12 @@ module.exports = class bakery {
 
     const vaultCalls = addresses.map(id => {
       const farm = farms.find(f => f.id === id);
-
-      const vault = new Web3EthContract(bakery.MASTER_ABI, bakery.MASTER_ADDRESS);
+      const vault = new Web3EthContract(MasterV2Abi, bakery.MASTER_ADDRESS_V2);
 
       return {
-        poolUserInfoMap: vault.methods.poolUserInfoMap(
-          farm.raw.lpAddresses[56],
-          address
-        ),
-        pendingBake: vault.methods.pendingBake(
-          farm.raw.lpAddresses[56],
-          address
-        ),
-        id: farm.id.toString()
+        id: farm.id.toString(),
+        poolUserInfoMap: vault.methods.poolUserInfoMap(farm.raw.lpAddresses[56], address),
+        pendingBake: vault.methods.pendingToken(farm.raw.lpAddresses[56], address)
       };
     });
 
@@ -187,8 +242,7 @@ module.exports = class bakery {
     const resultFarms = calls
       .filter(
         v =>
-          new BigNumber(v.poolUserInfoMap[0] || 0).isGreaterThan(0) ||
-          new BigNumber(v.poolUserInfoMap[1] || 0).isGreaterThan(0)
+          new BigNumber(v.poolUserInfoMap[0] || 0).isGreaterThan(0)
       )
       .map(call => {
         const farm = farms.find(f => f.id === call.id);
@@ -213,7 +267,7 @@ module.exports = class bakery {
         }
 
         if (price) {
-          result.deposit.usd = (amount / 1e18) * price;
+          result.deposit.usd = result.deposit.amount * price;
         }
 
         if (rewards > 0 && farm.raw.tokenSymbol) {
@@ -284,5 +338,13 @@ module.exports = class bakery {
     }
 
     return result;
+  }
+
+  getChain() {
+    return 'bsc';
+  }
+
+  getName() {
+    return 'wault';
   }
 };

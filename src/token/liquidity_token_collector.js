@@ -7,7 +7,14 @@ module.exports = class LiquidityTokenCollector {
 
     // init data
     setTimeout(async () => {
-      const addresses = await this.cacheManager.get('liquidity-token-collector-addresses');
+      let addresses = {};
+
+      try {
+        addresses = await this.cacheManager.get('liquidity-token-collector-addresses');
+      } catch (e) {
+        console.log('LiquidityTokenCollector: json is broken')
+      }
+
       if (addresses) {
         this.tokens = addresses;
       }

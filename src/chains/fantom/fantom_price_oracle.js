@@ -148,8 +148,8 @@ module.exports = class FantomPriceOracle {
     let nativePrice = this.priceCollector.getPrice('0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83');
 
     const bPrices = await Promise.allSettled([
-      this.updateCoinGeckoPrices(),
       this.updateTokensSpiritswap(nativePrice),
+      this.updateCoinGeckoPrices(),
     ])
 
     const addresses = [];
@@ -196,7 +196,7 @@ module.exports = class FantomPriceOracle {
   }
 
   async getCoinGeckoTokens() {
-    const cacheKey = `coingekko-fantom-v1-token-addresses`
+    const cacheKey = `coingekko-fantom-v2-token-addresses`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -207,9 +207,17 @@ module.exports = class FantomPriceOracle {
 
     const matches = {};
 
+    const known = {
+      'binance-usd': '0xc931f61b1534eb21d8c11b24f3f5ab2471d4ab50',
+      'dai': '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e',
+      'tether': '0x049d68029688eabf473097a2fc38ef61633a3c7a',
+    };
+
     tokens.forEach(token => {
       if (token['platforms'] && token['platforms']['fantom'] && token['platforms']['fantom'].startsWith('0x')) {
         matches[token['id']] = token['platforms']['fantom'];
+      } else if(known[token['id']]) {
+        matches[token['id']] = known[token['id']];
       }
     })
 

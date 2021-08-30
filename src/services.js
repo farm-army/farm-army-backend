@@ -117,6 +117,7 @@ const Cream = require("./platforms/bsc/cream/cream");
 const Venus = require("./platforms/bsc/venus/venus");
 const Fortress = require("./platforms/bsc/fortress/fortress");
 const Fortube = require("./platforms/bsc/fortube/fortube");
+const Bakery = require("./platforms/bakery/bakery");
 
 const Pwault = require("./platforms/polygon/pwault/pwault");
 const Polycat = require("./platforms/polygon/polycat/polycat");
@@ -203,6 +204,7 @@ let cream;
 let venus;
 let fortress;
 let fortube;
+let bakery;
 
 let pwault;
 let polycat;
@@ -480,6 +482,7 @@ module.exports = {
           this.getVenus(),
           this.getFortress(),
           this.getFortube(),
+          this.getBakery(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -1555,6 +1558,20 @@ module.exports = {
       this.getCacheManager(),
       this.getLiquidityTokenCollector(),
       this.getFarmPlatformResolver(),
+    ));
+  },
+
+  getBakery() {
+    if (bakery) {
+      return bakery;
+    }
+
+    return (bakery = new Bakery(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getCacheManager(),
+      this.getTokenCollector(),
+      this.getLiquidityTokenCollector(),
     ));
   },
 

@@ -78,7 +78,7 @@ module.exports = class kukafe extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   async getMasterChefAbi() {

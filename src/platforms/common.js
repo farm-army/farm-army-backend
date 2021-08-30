@@ -82,13 +82,16 @@ module.exports = {
           };
         });
 
+      const sousAbi = this.getSousAbi() || [];
+      const poolPendingRewardMethod = sousAbi.find(m => m.name && m.name.toLowerCase().startsWith('pendingreward') && m.inputs[0] && m.inputs[0].type === 'address' && !m.inputs[1]);
+
       const poolCalls = farmings
         .filter(p => p.id.startsWith(`${this.getName()}_sous_`))
         .map(farm => {
-          const contract = new Web3EthContract(this.getSousAbi(), this.getAddress(farm.raw.contractAddress));
+          const contract = new Web3EthContract(sousAbi, this.getAddress(farm.raw.contractAddress));
           return {
             userInfo: contract.methods.userInfo(address),
-            pendingReward: contract.methods.pendingReward(address),
+            pendingReward: contract.methods[poolPendingRewardMethod.name](address),
             id: farm.id.toString()
           };
         });
@@ -215,7 +218,7 @@ module.exports = {
           }
         }
 
-        if (item.tvl && item.tvl.usd && farm.raw && farm.raw.yearlyRewardsInToken) {
+        if (item.tvl && item.tvl.usd && farm.raw && farm.raw.yearlyRewardsInToken && farm.raw.earns[0]) {
           const yearlyRewardsInToken = farm.raw.yearlyRewardsInToken / (10 ** this.tokenCollector.getDecimals(farm.raw.earns[0].address));
 
           if (item.raw.earns && item.raw.earns[0]) {
@@ -358,15 +361,18 @@ module.exports = {
           };
         });
 
+      const sousAbi = this.getSousAbi();
+      const poolPendingRewardMethod = sousAbi.find(m => m.name && m.name.toLowerCase().startsWith('pendingreward') && m.inputs[0] && m.inputs[0].type === 'address' && !m.inputs[1]);
+
       const sousCalls = addresses
         .filter(address => address.startsWith(`${this.getName()}_sous_`))
         .map(id => {
           const farm = farms.find(f => f.id === id);
-          const contract = new Web3EthContract(this.getSousAbi(), this.getAddress(farm.raw.contractAddress));
+          const contract = new Web3EthContract(sousAbi, this.getAddress(farm.raw.contractAddress));
 
           return {
             userInfo: contract.methods.userInfo(address),
-            pendingReward: contract.methods.pendingReward(address),
+            pendingReward: contract.methods[poolPendingRewardMethod.name](address),
             id: farm.id.toString()
           };
         });

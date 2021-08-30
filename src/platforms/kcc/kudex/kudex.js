@@ -78,7 +78,7 @@ module.exports = class kudex extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   async getMasterChefAbi() {

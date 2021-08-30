@@ -78,7 +78,7 @@ module.exports = class boneswap extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   async getMasterChefAbi() {

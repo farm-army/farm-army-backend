@@ -73,7 +73,7 @@ module.exports = class psushi extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   async getMasterChefAbi() {

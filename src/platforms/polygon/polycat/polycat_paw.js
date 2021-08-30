@@ -73,7 +73,7 @@ module.exports = class polycat_paw extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   async getMasterChefAbi() {

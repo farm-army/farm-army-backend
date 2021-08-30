@@ -68,7 +68,7 @@ module.exports = class warden extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   getMasterChefAbi() {

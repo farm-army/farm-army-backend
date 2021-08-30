@@ -68,7 +68,7 @@ module.exports = class belt extends PancakePlatformFork {
   }
 
   getSousAbi() {
-    return {};
+    return [];
   }
 
   getMasterChefAbi() {
