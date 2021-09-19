@@ -148,6 +148,8 @@ const PelevenLeverage = require("./platforms/polygon/peleven/peleven_leverage");
 const PelevenDecorator = require("./platforms/polygon/peleven/peleven_decorator");
 const Pcream = require("./platforms/polygon/pcream/pcream");
 const Pfortube = require("./platforms/polygon/pfortube/pfortube");
+const Balancer = require("./platforms/polygon/balancer/balancer");
+const Impermax = require("./platforms/polygon/impermax/impermax");
 
 const Spookyswap = require("./platforms/fantom/spookyswap/spookyswap");
 const Spiritswap = require("./platforms/fantom/spiritswap/spiritswap");
@@ -158,6 +160,9 @@ const Ester = require("./platforms/fantom/ester/ester");
 const Frankenstein = require("./platforms/fantom/frankenstein/frankenstein");
 const Reaper = require("./platforms/fantom/reaper/reaper");
 const Fcream = require("./platforms/fantom/fcream/fcream");
+const Tarot = require("./platforms/fantom/tarot/tarot");
+const Fwaka = require("./platforms/fantom/fwaka/fwaka");
+const Fhyperjump = require("./platforms/fantom/fhyperjump/fhyperjump");
 
 const Kuswap = require("./platforms/kcc/kuswap/kuswap");
 const Kudex = require("./platforms/kcc/kudex/kudex");
@@ -235,6 +240,8 @@ let pelevenLeverage;
 let pelevenDecorator;
 let pcream;
 let pfortube;
+let balancer;
+let impermax;
 
 let spookyswap;
 let spiritswap;
@@ -246,6 +253,9 @@ let frankenstein;
 let reaper;
 let fcream;
 let scream;
+let tarot;
+let fwaka;
+let fhyperjump;
 
 let kuswap;
 let kudex;
@@ -522,6 +532,8 @@ module.exports = {
         this.getPearzap(),
         this.getPcream(),
         this.getPfortube(),
+        this.getBalancer(),
+        this.getImpermax(),
       ],
       this.getCache(),
       this.getPolygonPriceOracle(),
@@ -546,6 +558,9 @@ module.exports = {
         this.getReaper(),
         this.getFcream(),
         this.getScream(),
+        this.getTarot(),
+        this.getFwaka(),
+        this.getFhyperjump(),
       ],
       this.getCache(),
       this.getFantomPriceOracle(),
@@ -901,6 +916,34 @@ module.exports = {
     }
 
     return (spookyswap = new Spookyswap(
+      this.getCache(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getFwaka() {
+    if (fwaka) {
+      return fwaka;
+    }
+
+    return (fwaka = new Fwaka(
+      this.getCache(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
+  getFhyperjump() {
+    if (fhyperjump) {
+      return fhyperjump;
+    }
+
+    return (fhyperjump = new Fhyperjump(
       this.getCache(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
@@ -1519,6 +1562,18 @@ module.exports = {
     ));
   },
 
+  getBalancer() {
+    if (balancer) {
+      return balancer;
+    }
+
+    return (balancer = new Balancer(
+      this.getPolygonCacheManager(),
+      this.getPolygonPriceOracle(),
+      this.getPolygonTokenCollector(),
+    ));
+  },
+
   getFcream() {
     if (fcream) {
       return fcream;
@@ -1530,6 +1585,34 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomLiquidityTokenCollector(),
       this.getFantomFarmPlatformResolver(),
+    ));
+  },
+
+  getTarot() {
+    if (tarot) {
+      return tarot;
+    }
+
+    return (tarot = new Tarot(
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomCacheManager(),
+      this.getFantomLiquidityTokenCollector(),
+      this.getFantomFarmPlatformResolver(),
+    ));
+  },
+
+  getImpermax() {
+    if (impermax) {
+      return impermax;
+    }
+
+    return (impermax = new Impermax(
+      this.getPolygonPriceOracle(),
+      this.getPolygonTokenCollector(),
+      this.getPolygonCacheManager(),
+      this.getPolygonLiquidityTokenCollector(),
+      this.getPolygonFarmPlatformResolver(),
     ));
   },
 

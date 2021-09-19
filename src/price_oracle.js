@@ -3,7 +3,6 @@ const fs = require("fs");
 const path = require("path");
 
 const BigNumber = require("bignumber.js");
-const request = require("async-request");
 const Utils = require("./utils");
 const Web3EthContract = require("web3-eth-contract");
 
@@ -65,19 +64,12 @@ module.exports = class PriceOracle {
     return this.priceCollector.getSymbolMap();
   }
 
-  async jsonRequest(url) {
-    const pancakeResponse = await request(url);
-    return JSON.parse(pancakeResponse.body);
-  }
-
   async updateTokens() {
     await this.tokenMaps();
 
     const bPrices = await Promise.allSettled([
-      // this.getPancakeswapPrices(),
       this.getCoingeckoPrices(),
       this.getBeefyPrices(),
-      this.updateBDollarPrices(),
       this.updateFulcrumTokens(),
       this.updateCoinGeckoPrices(),
     ])
@@ -137,11 +129,11 @@ module.exports = class PriceOracle {
       return cache;
     }
 
-    const tokens = await this.jsonRequest('https://api.coingecko.com/api/v3/coins/list?include_platform=true');
+    const tokens = await Utils.requestJsonGet('https://api.coingecko.com/api/v3/coins/list?include_platform=true', 60);
 
     const matches = {};
 
-    tokens.forEach(token => {
+    (tokens || []).forEach(token => {
       if (token['platforms'] && token['platforms']['binance-smart-chain'] && token['platforms']['binance-smart-chain'].startsWith('0x')) {
         matches[token['id']] = token['platforms']['binance-smart-chain'];
       }
@@ -157,10 +149,11 @@ module.exports = class PriceOracle {
 
     const matches = [];
 
-    for (let chunk of _.chunk(Object.keys(tokens), 100)) {
-      const prices = await this.jsonRequest(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`);
+    for (let chunk of _.chunk(Object.keys(tokens), 75)) {
+      const prices = await Utils.requestJsonGet(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`, 60);
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      for (const [key, value] of Object.entries(prices)) {
+      for (const [key, value] of Object.entries(prices || [])) {
         if(tokens[key] && value.usd && value.usd > 0.0000001 && value.usd < 10000000) {
           let item = {
             address: tokens[key].toLowerCase(),
@@ -181,40 +174,10 @@ module.exports = class PriceOracle {
     return matches
   }
 
-  async getPancakeswapPrices() {
-    const prices = [];
-
-    // most useful
-    try {
-      const pancakeTokens = await this.jsonRequest("https://api.pancakeswap.com/api/v1/price", {
-        rejectUnauthorized: false,
-      });
-      for (const [key, value] of Object.entries(pancakeTokens.prices)) {
-        if (key.toLowerCase() === 'banana' || key === 'cCAKE' || key.length > 15) {
-          continue
-        }
-
-        if (value > 5000000000 || value < 0.0000000001) {
-          continue
-        }
-
-        prices.push({
-          symbol: key.toLowerCase(),
-          source: 'pancakeswap',
-          price: value
-        });
-      }
-    } catch (e) {
-      console.log('error https://api.pancakeswap.com/api/v1/price', e.message)
-    }
-
-    return prices;
-  }
-
   async getBeefyPrices() {
     const results = await Promise.allSettled([
-      this.jsonRequest('https://api.beefy.finance/prices'),
-      this.jsonRequest('https://api.beefy.finance/lps'),
+      Utils.requestJsonGet('https://api.beefy.finance/prices'),
+      Utils.requestJsonGet('https://api.beefy.finance/lps'),
     ]);
 
     const prices = [];
@@ -250,7 +213,7 @@ module.exports = class PriceOracle {
       'binancecoin': 'bnb',
     };
 
-    const coingeckoTokens = await this.jsonRequest(`https://api.coingecko.com/api/v3/simple/price?ids=${Object.keys(maps).join(',')}&vs_currencies=usd`);
+    const coingeckoTokens = await Utils.requestJsonGet(`https://api.coingecko.com/api/v3/simple/price?ids=${Object.keys(maps).join(',')}&vs_currencies=usd`);
 
     const prices = [];
 
@@ -267,36 +230,6 @@ module.exports = class PriceOracle {
         });
       }
     }
-
-    return prices;
-  }
-
-  async updateBDollarPrices() {
-    return []
-    const pricesCalls = (await Promise.allSettled([
-      this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=BDO'),
-      this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=bBDO'),
-      this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=sBDO'),
-      this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=bpDOT'),
-      this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=sBFI'),
-      this.jsonRequest('https://api.bdollar.fi/api/bdollar/get-token-info?token=BFI'),
-    ])).filter(r => r.value && r.value.data).map(r => r.value);
-
-    const prices = [];
-    [...pricesCalls].forEach(p => {
-      let item = {
-        symbol: p.data.token.toLowerCase(),
-        source: 'bdollar',
-        price: p.data.price
-      };
-
-      const address = this.tokenCollector.getAddressBySymbol(item.symbol);
-      if (address) {
-        item.address = address;
-      }
-
-      prices.push(item);
-    });
 
     return prices;
   }
@@ -429,7 +362,7 @@ module.exports = class PriceOracle {
   async tokenMaps() {
     const tokens = {};
 
-    Object.values(await this.jsonRequest('https://tokens.1inch.exchange/v1.1/chain-56')).forEach(t => {
+    Object.values(await Utils.requestJsonGet('https://tokens.1inch.exchange/v1.1/chain-56')).forEach(t => {
       if (t.symbol && t.address && t.decimals && !this.isBlocked(t)) {
         tokens[t.address.toLowerCase()] = t.symbol.toLowerCase();
 
@@ -441,27 +374,24 @@ module.exports = class PriceOracle {
       }
     })
 
-    const foo = await fetch(
-      "https://api.bscgraph.org/subgraphs/name/cakeswap",
-      {
-        credentials: "omit",
-        headers: {
-          "User-Agent":
-            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:85.0) Gecko/20100101 Firefox/85.0",
-          Accept: "application/json",
-          "Accept-Language": "en-US,en;q=0.5",
-          "Content-Type": "application/json"
-        },
-        body:
-          '{"query":"{\\n  tokens(first: 100, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    id,\\n    symbol, decimals,\\n    \\n  }\\n}\\n","variables":null,"operationName":null}',
-        method: "POST",
-        mode: "cors"
-      }
-    );
+    const foo = await Utils.request("POST", "https://api.bscgraph.org/subgraphs/name/cakeswap", {
+      credentials: "omit",
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:85.0) Gecko/20100101 Firefox/85.0",
+        Accept: "application/json",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Content-Type": "application/json"
+      },
+      body:
+        '{"query":"{\\n  tokens(first: 100, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    id,\\n    symbol, decimals,\\n    \\n  }\\n}\\n","variables":null,"operationName":null}',
+
+      mode: "cors"
+    });
 
     let result
     try {
-      result = await foo.json();
+      result = JSON.parse(foo);
     } catch (e) {
       console.error('cakeswap price fetch error', e.message)
       return [];
@@ -473,8 +403,7 @@ module.exports = class PriceOracle {
     }
 
     result.data.tokens.forEach(t => {
-      const symbol = t.symbol.toLowerCase();
-      tokens[t.id.toLowerCase()] = symbol;
+      tokens[t.id.toLowerCase()] = t.symbol.toLowerCase();
 
       this.tokenCollector.add({
         symbol: t.symbol,
@@ -497,8 +426,8 @@ module.exports = class PriceOracle {
     }
 
     let [tokens, pricesMap] = await Promise.all([
-      this.jsonRequest('https://tokens.1inch.exchange/v1.1/chain-56'),
-      this.jsonRequest('https://token-prices.1inch.exchange/v1.1/56'),
+      Utils.requestJsonGet('https://tokens.1inch.exchange/v1.1/chain-56'),
+      Utils.requestJsonGet('https://token-prices.1inch.exchange/v1.1/56'),
     ]);
 
     const prices = [];
@@ -532,25 +461,26 @@ module.exports = class PriceOracle {
   }
 
   async updateTokensVswap() {
-    const foo = await fetch(
-      "https://api.bscgraph.org/subgraphs/name/vswap/exchange-pair",
-      {
-        headers: {
-          accept: "*/*",
-          "accept-language": "en-US,en;q=0.9",
-          "content-type": "application/json",
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "cross-site"
-        },
-        body:
-          '{"operationName":"tokens","variables":{},"query":"fragment TokenFields on Token {\\n  id\\n  name\\n  symbol\\n  decimals\\n  tradeVolume\\n  tradeVolumeUSD\\n  totalLiquidity\\n  txCount\\n  priceUSD\\n  __typename\\n}\\n\\nquery tokens {\\n  tokens(first: 200, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    ...TokenFields\\n    __typename\\n  }\\n}\\n"}',
-        method: "POST",
-        mode: "cors"
-      }
-    );
+    const foo = await Utils.request("POST", "https://api.bscgraph.org/subgraphs/name/vswap/exchange-pair", {
+      headers: {
+        accept: "*/*",
+        "accept-language": "en-US,en;q=0.9",
+        "content-type": "application/json",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "cross-site"
+      },
+      body: '{"operationName":"tokens","variables":{},"query":"fragment TokenFields on Token {\\n  id\\n  name\\n  symbol\\n  decimals\\n  tradeVolume\\n  tradeVolumeUSD\\n  totalLiquidity\\n  txCount\\n  priceUSD\\n  __typename\\n}\\n\\nquery tokens {\\n  tokens(first: 200, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    ...TokenFields\\n    __typename\\n  }\\n}\\n"}',
+      mode: "cors"
+    });
 
-    const result = await foo.json();
+    let result
+    try {
+      result = JSON.parse(foo);
+    } catch (e) {
+      console.error('vswap price fetch error', e.message)
+      return [];
+    }
 
     const prices = [];
     result.data.tokens.forEach(t => {
@@ -640,8 +570,7 @@ module.exports = class PriceOracle {
   }
 
   async updateFulcrumTokens() {
-    const pancakeResponse = await request('https://api.bzx.network/v1/lending-info?networks=bsc');
-    const foo = JSON.parse(pancakeResponse.body);
+    const foo = await Utils.requestJsonGet('https://api.bzx.network/v1/lending-info?networks=bsc');
 
     const v = foo.data.bsc.map(token => {
       const vault = new Web3EthContract(FulcrumLendingTokenAbi, token.address);
@@ -683,29 +612,31 @@ module.exports = class PriceOracle {
   }
 
   async updateTokensBakery() {
-    const foo = await fetch(
-      "https://api.bscgraph.org/subgraphs/name/bakeryswap",
-      {
-        headers: {
-          accept: "application/json",
-          "accept-language": "en-US,en;q=0.9",
-          "content-type": "application/json",
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "same-origin"
-        },
-        referrer:
-          "https://api.bscgraph.org/subgraphs/name/bakeryswap/graphql?query=%7B%0A%20%20tokens(where%3A%20%7BtradeVolumeUSD_gt%3A%200%7D%2C%20first%3A%20100%2C%20orderBy%3A%20tradeVolumeUSD%2C%20orderDirection%3A%20desc)%20%7B%0A%20%20%20%20symbol%0A%20%20%20%20id%0A%20%20%20%20tokenDayData(first%3A%201%2C%20orderBy%3A%20date%2C%20orderDirection%3A%20desc)%20%7B%0A%20%20%20%20%20%20priceUSD%0A%20%20%20%20%20%20date%0A%20%20%20%20%7D%0A%20%20%20%20tradeVolumeUSD%0A%20%20%7D%0A%7D%0A",
-        referrerPolicy: "strict-origin-when-cross-origin",
-        body:
-          '{"query":"{\\n  tokens(where: {tradeVolumeUSD_gt: 0}, first: 100, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    symbol\\n  decimals\\n    id\\n    tokenDayData(first: 1, orderBy: date, orderDirection: desc) {\\n      priceUSD\\n      date\\n    }\\n    tradeVolumeUSD\\n  }\\n}\\n","variables":null,"operationName":null}',
-        method: "POST",
-        mode: "cors",
-        credentials: "omit"
-      }
-    );
+    const foo = await Utils.request("POST", "https://api.bscgraph.org/subgraphs/name/bakeryswap", {
+      headers: {
+        accept: "application/json",
+        "accept-language": "en-US,en;q=0.9",
+        "content-type": "application/json",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin"
+      },
+      referrer:
+        "https://api.bscgraph.org/subgraphs/name/bakeryswap/graphql?query=%7B%0A%20%20tokens(where%3A%20%7BtradeVolumeUSD_gt%3A%200%7D%2C%20first%3A%20100%2C%20orderBy%3A%20tradeVolumeUSD%2C%20orderDirection%3A%20desc)%20%7B%0A%20%20%20%20symbol%0A%20%20%20%20id%0A%20%20%20%20tokenDayData(first%3A%201%2C%20orderBy%3A%20date%2C%20orderDirection%3A%20desc)%20%7B%0A%20%20%20%20%20%20priceUSD%0A%20%20%20%20%20%20date%0A%20%20%20%20%7D%0A%20%20%20%20tradeVolumeUSD%0A%20%20%7D%0A%7D%0A",
+      referrerPolicy: "strict-origin-when-cross-origin",
+      body:
+        '{"query":"{\\n  tokens(where: {tradeVolumeUSD_gt: 0}, first: 100, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    symbol\\n  decimals\\n    id\\n    tokenDayData(first: 1, orderBy: date, orderDirection: desc) {\\n      priceUSD\\n      date\\n    }\\n    tradeVolumeUSD\\n  }\\n}\\n","variables":null,"operationName":null}',
+      mode: "cors",
+      credentials: "omit"
+    });
 
-    const result = await foo.json();
+    let result
+    try {
+      result = JSON.parse(foo);
+    } catch (e) {
+      console.error('bakeryswap price fetch error', e.message)
+      return [];
+    }
 
     const prices = [];
     result.data.tokens.forEach(t => {
@@ -737,7 +668,7 @@ module.exports = class PriceOracle {
       throw Error('Invalid bnb price')
     }
 
-    const foo = await fetch("https://subgraph.hyperswap.fi/subgraphs/name/theothug/swap-subgraph", {
+    const foo = await Utils.request("POST", "https://subgraph.hyperswap.fi/subgraphs/name/theothug/swap-subgraph", {
       "headers": {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9",
@@ -749,11 +680,16 @@ module.exports = class PriceOracle {
       "referrer": "https://info.hyperjump.fi/",
       "referrerPolicy": "strict-origin-when-cross-origin",
       "body": "{\"operationName\":\"tokens\",\"variables\":{},\"query\":\"fragment TokenFields on Token {\\n  id\\n  name\\n  symbol\\n decimals\\n derivedBNB\\n  tradeVolume\\n  tradeVolumeUSD\\n  untrackedVolumeUSD\\n  totalLiquidity\\n  txCount\\n  __typename\\n}\\n\\nquery tokens {\\n  tokens(first: 200, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    ...TokenFields\\n    __typename\\n  }\\n}\\n\"}",
-      "method": "POST",
       "mode": "cors"
     });
 
-    const result = await foo.json();
+    let result
+    try {
+      result = JSON.parse(foo);
+    } catch (e) {
+      console.error('theothug price fetch error', e.message)
+      return [];
+    }
 
     const prices = [];
     result.data.tokens

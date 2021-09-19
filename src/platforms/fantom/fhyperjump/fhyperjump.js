@@ -1,13 +1,10 @@
 "use strict";
 
 const MasterChefAbi = require('./abi/masterchef.json');
-const StrategyAbi = require('./abi/strategy.json');
-const Web3EthContract = require("web3-eth-contract");
-const Utils = require("../../../utils");
 const PancakePlatformFork = require("../../common").PancakePlatformFork;
 
-module.exports = class honeyfarm extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0x671e56C68047029F236f342b18632425C75885a3"
+module.exports = class fhyperjump extends PancakePlatformFork {
+  static MASTER_ADDRESS = "0x90Df158ff7c31aD1d81ddDb1D8ab9d0eCBCeDa20"
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     super(cache, priceOracle);
@@ -17,6 +14,7 @@ module.exports = class honeyfarm extends PancakePlatformFork {
     this.tokenCollector = tokenCollector;
     this.farmCollector = farmCollector;
     this.cacheManager = cacheManager;
+    this.masterAbi = {};
   }
 
   async getFetchedFarms() {
@@ -27,7 +25,9 @@ module.exports = class honeyfarm extends PancakePlatformFork {
       return cache;
     }
 
-    const foo = (await this.farmCollector.fetchForMasterChef(this.getMasterChefAddress(), this.getChain())).filter(f => f.isFinished !== true);
+    const foo = (await this.farmCollector.fetchForMasterChef(this.getMasterChefAddress(), this.getChain(), {
+      rewardTokenFunctionName: 'ori'
+    })).filter(f => f.isFinished !== true);
 
     const reformat = foo.map(f => {
       f.lpAddresses = f.lpAddress
@@ -44,26 +44,6 @@ module.exports = class honeyfarm extends PancakePlatformFork {
     return reformat;
   }
 
-  async farmInfo() {
-    const foo = await this.getFetchedFarms();
-
-    const callsPromise = [];
-
-    foo.forEach(i => {
-      if (i.raw.poolInfoNormalized && i.raw.poolInfoNormalized.strategy) {
-        // wantLockedTotal
-
-        const contract = new Web3EthContract(StrategyAbi, i.raw.poolInfoNormalized.strategy);
-        callsPromise.push({
-          id: i.pid.toString(),
-          balance: contract.methods.wantLockedTotal(),
-        });
-      }
-    });
-
-    return Utils.multiCall(callsPromise, this.getChain());
-  }
-
   getRawFarms() {
     return this.getFetchedFarms();
   }
@@ -73,15 +53,15 @@ module.exports = class honeyfarm extends PancakePlatformFork {
   }
 
   getName() {
-    return 'honeyfarm';
+    return 'fhyperjump';
   }
 
   getChain() {
-    return 'bsc';
+    return 'fantom';
   }
 
   getFarmLink(farm) {
-    return 'https://honeyfarm.finance/farms?ref=MHg4OThlOTk2ODFDMjk0NzliODYzMDQyOTJiMDMwNzFDODBBNTc5NDhG';
+    return 'https://ftm.hyperjump.app/farms';
   }
 
   getFarmEarns(farm) {
@@ -91,7 +71,7 @@ module.exports = class honeyfarm extends PancakePlatformFork {
   }
 
   getPendingRewardContractMethod() {
-    return 'pendingEarnings';
+    return 'pendingOrillium';
   }
 
   getSousAbi() {
@@ -103,6 +83,13 @@ module.exports = class honeyfarm extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return honeyfarm.MASTER_ADDRESS;
+    return fhyperjump.MASTER_ADDRESS;
+  }
+
+  async onFarmsBuild(farms) {
+    farms.forEach(farm => {
+      farm.main_platform = 'hyperjump';
+      farm.platform = 'hyperjump';
+    });
   }
 };

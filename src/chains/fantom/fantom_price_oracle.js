@@ -9,8 +9,6 @@ const UniswapRouter = require("../../abi/uniswap_router.json");
 const erc20ABI = require("../../platforms/pancake/abi/erc20.json");
 const lpAbi = require("../../lpAbi.json");
 
-const fetch = require("node-fetch");
-
 module.exports = class FantomPriceOracle {
   constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager) {
     this.tokenCollector = tokenCollector;
@@ -63,7 +61,7 @@ module.exports = class FantomPriceOracle {
   }
 
   async updateTokensSushiSwap() {
-    const foo = await fetch("https://api.thegraph.com/subgraphs/name/sushiswap/fantom-exchange", {
+    const foo = await Utils.request('POST', "https://api.thegraph.com/subgraphs/name/sushiswap/fantom-exchange", {
       "credentials": "omit",
       "headers": {
         "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0",
@@ -80,7 +78,7 @@ module.exports = class FantomPriceOracle {
       "mode": "cors"
     });
 
-    const result = await foo.json();
+    const result = JSON.parse(foo);
 
     result.data.tokens.forEach(t => {
       this.tokenCollector.add({
@@ -94,7 +92,7 @@ module.exports = class FantomPriceOracle {
   }
 
   async updateTokensSpiritswap(ftmPrice) {
-    const foo = await fetch("https://api.thegraph.com/subgraphs/name/layer3org/spiritswap-analytics", {
+    const foo = await Utils.request("https://api.thegraph.com/subgraphs/name/layer3org/spiritswap-analytics", {
       "headers": {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9",
@@ -113,7 +111,7 @@ module.exports = class FantomPriceOracle {
       "credentials": "omit"
     });
 
-    const result = await foo.json();
+    const result = JSON.parse(foo);
 
     const prices = [];
 
@@ -140,17 +138,21 @@ module.exports = class FantomPriceOracle {
   }
 
   async updateTokens() {
-    await Promise.allSettled([
+    (await Promise.allSettled([
       this.tokenMaps(),
       this.updateTokensSushiSwap(),
-    ])
+    ])).forEach(p => {
+      if (p.status !== 'fulfilled') {
+        console.error('fantom updateTokens error', p.reason)
+      }
+    });
 
     let nativePrice = this.priceCollector.getPrice('0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83');
 
     const bPrices = await Promise.allSettled([
       this.updateTokensSpiritswap(nativePrice),
       this.updateCoinGeckoPrices(),
-    ])
+    ]);
 
     const addresses = [];
 
@@ -203,7 +205,7 @@ module.exports = class FantomPriceOracle {
       return cache;
     }
 
-    const tokens = await this.jsonRequest('https://api.coingecko.com/api/v3/coins/list?include_platform=true');
+    const tokens = await Utils.requestJsonGet('https://api.coingecko.com/api/v3/coins/list?include_platform=true', 50);
 
     const matches = {};
 
@@ -213,7 +215,7 @@ module.exports = class FantomPriceOracle {
       'tether': '0x049d68029688eabf473097a2fc38ef61633a3c7a',
     };
 
-    tokens.forEach(token => {
+    (tokens || []).forEach(token => {
       if (token['platforms'] && token['platforms']['fantom'] && token['platforms']['fantom'].startsWith('0x')) {
         matches[token['id']] = token['platforms']['fantom'];
       } else if(known[token['id']]) {
@@ -255,10 +257,12 @@ module.exports = class FantomPriceOracle {
 
     this.tokenCollector.save();
 
-    for (let chunk of _.chunk(Object.keys(tokens), 100)) {
-      const prices = await this.jsonRequest(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`);
+    for (let chunk of _.chunk(Object.keys(tokens), 50)) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      for (const [key, value] of Object.entries(prices)) {
+      const prices = await Utils.requestJsonGet(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`, 50);
+
+      for (const [key, value] of Object.entries(prices || [])) {
         if (tokens[key] && value.usd && value.usd > 0.0000001 && value.usd < 10000000) {
           let item = {
             address: tokens[key].toLowerCase(),
@@ -424,6 +428,12 @@ module.exports = class FantomPriceOracle {
         router: '0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52', // spiritswap
         address: '0x5cc61a78f164885776aa610fb0fe1257df78e59b',
         symbol: 'spirit',
+        decimals: 18,
+      },
+      {
+        router: '0x53c153a0df7e050bbefbb70ee9632061f12795fb', // hyperjump
+        address: '0x0575f8738efda7f512e3654f277c77e80c7d2725',
+        symbol: 'ori',
         decimals: 18,
       },
     ];

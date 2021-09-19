@@ -126,10 +126,18 @@ module.exports = class beefy {
 
     const farms = [];
     pools.forEach(farm => {
+      const name = farm.name
+        .replace(/\//g, '-')
+        .replace(/\s+\w*lp$/i, '')
+        .trim();
+
       const item = {
         id: `${this.getName()}_${farm.id}`,
-        name: farm.name,
-        token: farm.token,
+        name: name,
+        token: farm.token.replace(/\//g, '-')
+          .replace(/\s+\w*lp$/i, '')
+          .trim()
+          .toLowerCase(),
         platform: farm.platform,
         provider: this.getName(),
         has_details: !!(farm.earnedTokenAddress && farm.tokenAddress),

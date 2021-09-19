@@ -1,7 +1,6 @@
 const _ = require("lodash");
 
 const BigNumber = require("bignumber.js");
-const request = require("async-request");
 const Utils = require("../../utils");
 const Web3EthContract = require("web3-eth-contract");
 
@@ -10,6 +9,10 @@ const erc20ABI = require("../../platforms/pancake/abi/erc20.json");
 const lpAbi = require("../../lpAbi.json");
 
 const fetch = require("node-fetch");
+
+
+// https://api.coingecko.com/api/v3/simple/token_price/polygon-pos?contract_addresses=0xD6DF932A45C0f255f85145f286eA0b292B21C90B,0x385Eeac5cB85A38A9a07A70c73e0a3271CfB54A7,0xc3FdbadC7c795EF1D6Ba111e06fF8F16A20Ea539,0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3,0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39,0x8505b9d2254A7Ae468c0E9dd10Ccea3A837aef5c,0x172370d5Cd63279eFa6d502DAB29171933a610AF,0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063,0x85955046DF4668e1DD369D2DE9f3AEB98DD2A369,0x2a93172c8DCCbfBC60a39d56183B7279a2F647b4,0xC8A94a3d3D2dabC3C1CaffFFDcA6A7543c3e3e65,0x5FFD62D3C3eE2E81C00A7b9079FB248e7dF024A8,0xa3Fa99A148fA48D14Ed51d610c367C61876997F1,0xF501dd45a1198C2E1b5aEF5314A68B9006D842E0,0x282d8efCe846A88B159800bd4130ad77443Fa1A1,0x263534a4Fe3cb249dF46810718B7B612a30ebbff,0x580A84C73811E1839F75d86d75d88cCa0c241fF4,0x831753DD7087CaC61aB5644b308642cc1c33Dc13,0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a,0x50B728D8D964fd00C2d0AAD81718b71311feF68a,0xdF7837DE1F2Fa4631D716CF2502f8b230F1dcc32,0xc2132D05D31c914a87C6611C10748AEb04B58e8F,0x5fe2B58c013d7601147DcdD68C143A77499f5531,0x3066818837c5e6eD6601bd5a91B0762877A6B731,0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174,0xb33EaAd8d922B1083446DC23f610c2567fB5180f,0x87ff96aba480f1813aF5c780387d8De7cf7D8261,0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6,0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619,0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270,0xDBf31dF14B66535aF65AaC99C32e9eA844e14501,0xDA537104D6A5edd53c6fBba9A898708E465260b6,0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE&vs_currencies=usd
+
 
 module.exports = class PolygonPriceOracle {
   constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager) {
@@ -57,11 +60,6 @@ module.exports = class PolygonPriceOracle {
     return this.priceCollector.getSymbolMap();
   }
 
-  async jsonRequest(url) {
-    const pancakeResponse = await request(url);
-    return JSON.parse(pancakeResponse.body);
-  }
-
   async updateTokensSushiSwap() {
     const foo = await fetch("https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange", {
       "credentials": "omit",
@@ -94,7 +92,7 @@ module.exports = class PolygonPriceOracle {
   }
 
   async updateTokensQuickswap() {
-    const foo = await fetch("https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06", {
+    const foo = await Utils.request("POST", "https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06", {
         "credentials": "omit",
         "headers": {
           "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0",
@@ -107,11 +105,10 @@ module.exports = class PolygonPriceOracle {
         },
         "referrer": "https://info.quickswap.exchange/",
         "body": "{\"operationName\":\"tokens\",\"variables\":{},\"query\":\"fragment TokenFields on Token {\\n  id\\n  name\\n  symbol\\n  derivedETH\\n  tradeVolume\\n  tradeVolumeUSD\\n  untrackedVolumeUSD\\n decimals\\n  totalLiquidity\\n  __typename\\n}\\n\\nquery tokens {\\n  tokens(first: 200, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    ...TokenFields\\n    __typename\\n  }\\n}\\n\"}",
-        "method": "POST",
         "mode": "cors"
       });
 
-    const result = await foo.json();
+    const result = JSON.parse(foo);
 
     result.data.tokens.forEach(t => {
       this.tokenCollector.add({
@@ -126,15 +123,19 @@ module.exports = class PolygonPriceOracle {
 
 
   async updateTokens() {
-    await Promise.allSettled([
+    (await Promise.allSettled([
       this.tokenMaps(),
       this.updateTokensQuickswap(),
       this.updateTokensSushiSwap(),
-    ])
+    ])).forEach(p => {
+      if (p.status !== 'fulfilled') {
+        console.error('polygon updateTokens error', p.reason)
+      }
+    });
 
-    const bPrices = await Promise.allSettled([
+    const bPrices = (await Promise.allSettled([
       this.updateCoinGeckoPrices(),
-    ])
+    ]))
 
     const addresses = [];
 
@@ -187,7 +188,7 @@ module.exports = class PolygonPriceOracle {
       return cache;
     }
 
-    const tokens = await this.jsonRequest('https://api.coingecko.com/api/v3/coins/list?include_platform=true');
+    const tokens = await Utils.requestJsonGet('https://api.coingecko.com/api/v3/coins/list?include_platform=true', 50);
 
     const matches = {};
 
@@ -207,10 +208,12 @@ module.exports = class PolygonPriceOracle {
 
     const matches = [];
 
-    for (let chunk of _.chunk(Object.keys(tokens), 100)) {
-      const prices = await this.jsonRequest(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`);
+    for (let chunk of _.chunk(Object.keys(tokens), 75)) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      for (const [key, value] of Object.entries(prices)) {
+      const prices = await Utils.requestJsonGet(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`, 50);
+
+      for (const [key, value] of Object.entries(prices || [])) {
         if (tokens[key] && value.usd && value.usd > 0.0000001 && value.usd < 10000000) {
           let item = {
             address: tokens[key].toLowerCase(),
@@ -359,7 +362,7 @@ module.exports = class PolygonPriceOracle {
   async tokenMaps() {
     const tokens = {};
 
-    let response = await this.jsonRequest('https://api.1inch.exchange/v3.0/137/tokens');
+    const response = await Utils.requestJsonGet('https://api.1inch.exchange/v3.0/137/tokens');
 
     Object.values(response.tokens).forEach(t => {
       if (t.symbol && t.address && t.decimals) {

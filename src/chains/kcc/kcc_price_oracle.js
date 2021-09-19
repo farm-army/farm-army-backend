@@ -9,8 +9,6 @@ const UniswapRouter = require("../../abi/uniswap_router.json");
 const erc20ABI = require("../../platforms/pancake/abi/erc20.json");
 const lpAbi = require("../../lpAbi.json");
 
-const fetch = require("node-fetch");
-
 module.exports = class KccPriceOracle {
   constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager) {
     this.tokenCollector = tokenCollector;
@@ -124,7 +122,7 @@ module.exports = class KccPriceOracle {
       return cache;
     }
 
-    const tokens = await this.jsonRequest('https://api.coingecko.com/api/v3/coins/list?include_platform=true');
+    const tokens = await Utils.requestJsonGet('https://api.coingecko.com/api/v3/coins/list?include_platform=true');
 
     const matches = {};
 
@@ -169,9 +167,9 @@ module.exports = class KccPriceOracle {
     this.tokenCollector.save();
 
     for (let chunk of _.chunk(Object.keys(tokens), 100)) {
-      const prices = await this.jsonRequest(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`);
+      const prices = await Utils.requestJsonGet(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`);
 
-      for (const [key, value] of Object.entries(prices)) {
+      for (const [key, value] of Object.entries(prices || [])) {
         if (tokens[key] && value.usd && value.usd > 0.0000001 && value.usd < 10000000) {
           let item = {
             address: tokens[key].toLowerCase(),

@@ -45,6 +45,7 @@ const HOSTS = Object.freeze([
 const HOSTS_POLYGON = Object.freeze([
   // Recommend
   // 'https://rpc-mainnet.matic.network',
+  'https://polygon-rpc.com/',
   'https://rpc-mainnet.maticvigil.com',
   'https://rpc-mainnet.matic.quiknode.pro',
   'https://matic-mainnet.chainstacklabs.com',
@@ -696,6 +697,22 @@ module.exports = {
     return (1 + (r * c) / n) ** (n * t) - 1;
   },
 
+  request: async (method, url, opts, timeout = 25) => {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), timeout * 1000);
+
+    opts.method = method;
+    opts.signal = controller.signal;
+
+    try {
+      return await (await fetch(url, opts)).text();
+    } catch (e) {
+      console.error('requestGet error: ', url, e.message)
+    }
+
+    return undefined;
+  },
+
   requestJsonGet: async (url, timeout = 25) => {
     const controller = new AbortController();
     setTimeout(() => controller.abort(), timeout * 1000);
@@ -805,7 +822,7 @@ module.exports = {
       case 'polygon':
         return 2.1
       case 'fantom':
-        return 2.1
+        return 1; // its 2 but why everyone use '1'?
       case 'kcc':
         return 3;
       case 'bsc':

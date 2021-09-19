@@ -40,14 +40,7 @@ module.exports = class yieldparrot extends MasterChefWithAutoCompoundAndRewards 
       return [];
     }
 
-    let apys = undefined;
-    try {
-      apys = await Utils.requestJsonGet('https://api.yieldparrot.finance/apy');
-    } catch (e) {
-      await this.cacheManager.set(cacheKey, [], {ttl: 60 * 30});
-
-      return [];
-    }
+    const apys = (await Utils.requestJsonGet('https://api.yieldparrot.finance/apy')) || {};
 
     const map = [];
     rows.forEach(r => {

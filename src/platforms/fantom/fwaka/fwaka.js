@@ -1,13 +1,10 @@
 "use strict";
 
 const MasterChefAbi = require('./abi/masterchef.json');
-const StrategyAbi = require('./abi/strategy.json');
-const Web3EthContract = require("web3-eth-contract");
-const Utils = require("../../../utils");
 const PancakePlatformFork = require("../../common").PancakePlatformFork;
 
-module.exports = class honeyfarm extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0x671e56C68047029F236f342b18632425C75885a3"
+module.exports = class fwaka extends PancakePlatformFork {
+  static MASTER_ADDRESS = "0xaEF349E1736b8A4B1B243A369106293c3a0b9D09"
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     super(cache, priceOracle);
@@ -17,6 +14,7 @@ module.exports = class honeyfarm extends PancakePlatformFork {
     this.tokenCollector = tokenCollector;
     this.farmCollector = farmCollector;
     this.cacheManager = cacheManager;
+    this.masterAbi = {};
   }
 
   async getFetchedFarms() {
@@ -44,26 +42,6 @@ module.exports = class honeyfarm extends PancakePlatformFork {
     return reformat;
   }
 
-  async farmInfo() {
-    const foo = await this.getFetchedFarms();
-
-    const callsPromise = [];
-
-    foo.forEach(i => {
-      if (i.raw.poolInfoNormalized && i.raw.poolInfoNormalized.strategy) {
-        // wantLockedTotal
-
-        const contract = new Web3EthContract(StrategyAbi, i.raw.poolInfoNormalized.strategy);
-        callsPromise.push({
-          id: i.pid.toString(),
-          balance: contract.methods.wantLockedTotal(),
-        });
-      }
-    });
-
-    return Utils.multiCall(callsPromise, this.getChain());
-  }
-
   getRawFarms() {
     return this.getFetchedFarms();
   }
@@ -73,15 +51,15 @@ module.exports = class honeyfarm extends PancakePlatformFork {
   }
 
   getName() {
-    return 'honeyfarm';
+    return 'fwaka';
   }
 
   getChain() {
-    return 'bsc';
+    return 'fantom';
   }
 
   getFarmLink(farm) {
-    return 'https://honeyfarm.finance/farms?ref=MHg4OThlOTk2ODFDMjk0NzliODYzMDQyOTJiMDMwNzFDODBBNTc5NDhG';
+    return 'https://waka.finance/#/farms';
   }
 
   getFarmEarns(farm) {
@@ -91,7 +69,7 @@ module.exports = class honeyfarm extends PancakePlatformFork {
   }
 
   getPendingRewardContractMethod() {
-    return 'pendingEarnings';
+    return 'pendingWaka';
   }
 
   getSousAbi() {
@@ -103,6 +81,13 @@ module.exports = class honeyfarm extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return honeyfarm.MASTER_ADDRESS;
+    return fwaka.MASTER_ADDRESS;
+  }
+
+  async onFarmsBuild(farms) {
+    farms.forEach(farm => {
+      farm.main_platform = 'waka';
+      farm.platform = 'waka';
+    });
   }
 };

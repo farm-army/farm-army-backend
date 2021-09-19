@@ -66,7 +66,7 @@ module.exports = class autofarm {
 
     const farms = [];
 
-    for (const key of Object.keys(response.pools || {})) {
+    for (const key of Object.keys(response?.pools || {})) {
       const farm = response.pools[key];
 
       if (!farm.display || farm.display !== true) {
@@ -181,16 +181,22 @@ module.exports = class autofarm {
 
     const farms = await this.getFarms();
 
-    const tokenCalls = addressFarms.map(id => {
+    const tokenCalls = [];
+
+    addressFarms.map(id => {
       const farm = farms.find(f => f.id === id);
 
+      if (!farm) {
+        return;
+      }
+
       const contract = new Web3EthContract(MASTERCHEF_ABI, this.getMasterChefAddress());
-      return {
+      tokenCalls.push({
         id: farm.id,
         pendingAUTO: contract.methods.pendingAUTO(farm.raw.id, address),
         stakedWantTokens: contract.methods.stakedWantTokens(farm.raw.id, address),
         // userInfo: contract.methods.userInfo(farm.raw.id, address)
-      };
+      });
     });
 
     const calls = await Utils.multiCall(tokenCalls, this.getChain());

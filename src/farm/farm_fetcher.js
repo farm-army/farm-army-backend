@@ -171,7 +171,7 @@ module.exports = class FarmFetcher {
       ? options.abi
       : await this.contractAbiFetcher.getAbiForContractAddress(masterChef, chain, options);
 
-    const {
+    let {
       poolInfoFunctionName,
       rewardTokenFunctionName,
       multiplierFunctionName,
@@ -182,6 +182,9 @@ module.exports = class FarmFetcher {
       pendingRewardsFunctionName
     } = this.extractFunctionsFromAbi(abi);
 
+    if (options.rewardTokenFunctionName) {
+      rewardTokenFunctionName = options.rewardTokenFunctionName;
+    }
 
     if (!rewardTokenFunctionName) {
       console.log(`no reward token contract method found for "${masterChef}"`)
