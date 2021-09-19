@@ -147,7 +147,7 @@ module.exports = class impermax {
   }
 
   async getAddressFarms(address) {
-    let cacheKey = `getAddressFarms-${this.getName()}-${address}`;
+    let cacheKey = `getAddressFarms-${this.getName()}-v2-${address}`;
 
     const cacheItem = await this.cacheManager.get(cacheKey)
     if (cacheItem) {
@@ -168,7 +168,7 @@ module.exports = class impermax {
       },
       "referrer": "https://polygon.impermax.finance/",
       "referrerPolicy": "strict-origin-when-cross-origin",
-      "body": "{\"operationName\":null,\"variables\":{},\"query\":\"{\\n  user(id: \\\"0x5b42ce17a8f582f261b10dcffa2d2e26fa3fbf4d\\\") {\\n    collateralPositions(first: 1000) {\\n      balance\\n      collateral {\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    supplyPositions(first: 1000) {\\n      balance\\n      borrowable {\\n        underlying {\\n          id\\n          __typename\\n        }\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    borrowPositions(first: 1000) {\\n      borrowBalance\\n      borrowIndex\\n      borrowable {\\n        underlying {\\n          id\\n          __typename\\n        }\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}",
+      "body": "{\"operationName\":null,\"variables\":{},\"query\":\"{\\n  user(id: \\\"" + address.toLowerCase() + "\\\") {\\n    collateralPositions(first: 1000) {\\n      balance\\n      collateral {\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    supplyPositions(first: 1000) {\\n      balance\\n      borrowable {\\n        underlying {\\n          id\\n          __typename\\n        }\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    borrowPositions(first: 1000) {\\n      borrowBalance\\n      borrowIndex\\n      borrowable {\\n        underlying {\\n          id\\n          __typename\\n        }\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}",
       "method": "POST",
       "mode": "cors"
     });

@@ -159,17 +159,21 @@ module.exports = class tarot {
     const subgraphResponse = await Utils.request("POST", "https://dev.tarot.to/subgraphs/name/tarot-finance/tarot", {
       "headers": {
         "accept": "*/*",
-        "accept-language": "en-US,en;q=0.9,de;q=0.8",
+        "accept-language": "en-US,en;q=0.9",
+        "cache-control": "no-cache",
         "content-type": "application/json",
-        "sec-ch-ua": "\"Chromium\";v=\"92\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"92\"",
+        "pragma": "no-cache",
+        "sec-ch-ua": "\"Chromium\";v=\"93\", \" Not;A Brand\";v=\"99\"",
         "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\"",
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-site"
       },
       "referrer": "https://www.tarot.to/",
       "referrerPolicy": "strict-origin-when-cross-origin",
-      "body": "{\"operationName\":null,\"variables\":{},\"query\":\"{\\n  user(id: \\\"" + address + "\\\") {\\n    collateralPositions(first: 1000) {\\n      balance\\n      collateral {\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    supplyPositions(first: 1000) {\\n      balance\\n      borrowable {\\n        underlying {\\n          id\\n          __typename\\n        }\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    borrowPositions(first: 1000) {\\n      borrowBalance\\n      borrowIndex\\n      borrowable {\\n        underlying {\\n          id\\n          __typename\\n        }\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}",
+      "body": "{\"operationName\":null,\"variables\":{},\"query\":\"{\\n  user(id: \\\"" + address.toLowerCase() + "\\\") {\\n    collateralPositions(first: 1000) {\\n      balance\\n      collateral {\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    supplyPositions(first: 1000) {\\n      balance\\n      borrowable {\\n        underlying {\\n          id\\n          __typename\\n        }\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    borrowPositions(first: 1000) {\\n      borrowBalance\\n      borrowIndex\\n      borrowable {\\n        underlying {\\n          id\\n          __typename\\n        }\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}",
+      "method": "POST",
       "mode": "cors"
     });
 

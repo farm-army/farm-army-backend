@@ -1,6 +1,6 @@
 # farm.army - Backend #
 
-Track your farming and pool performance on the Binance Chain, Polygon, Fantom, KuCoin Community Chain
+Track your farming and pool performance on the Binance Chain, Polygon, Fantom, KuCoin Community Chain, Harmony
 
 ### Platforms ###
 
@@ -105,13 +105,14 @@ node src/index.js
   /polygon/farms
   /fantom/farms
   /kcc/farms
+  /harmony/farms
 ```
 
 ```
   /:chain/wallet/:address
 ```
 
-`:chain`: bsc, polygon, fantom, kcc
+`:chain`: bsc, polygon, fantom, kcc, harmony
 
 ```
   /:chain/all/yield/:address
@@ -150,7 +151,7 @@ Every farm contract should be converted / provided in a common format. Still fea
     "notes": ['note_1', 'note_1'] // optional note of the farm; will be join in frontend
     "compound": true|false // optional if auto-compounding
     "leverage": true|false // optional if vault is leveraged
-    "chain": "bsc|polygon|kcc|fantom" the chain for this vault
+    "chain": "bsc|polygon|kcc|fantom|harmony" the chain for this vault
     "extra": {
       "lpAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82", // to given hint about liquity split calculation
       "transactionToken": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82", // "in" and "out" transaction token

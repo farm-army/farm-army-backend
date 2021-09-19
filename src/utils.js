@@ -20,7 +20,8 @@ const MULTI_CALL_CONTRACT = {
   bsc: '0xB94858b0bB5437498F5453A16039337e5Fdc269C',
   polygon: '0x13E5407E38860A743E025A8834934BEA0264A8c1',
   fantom: '0xe6cd57c490cdc698aa6df974b207c4c044818d5a',
-  kcc: '0xae49c2836d060bD7F4ed6566626b52cF4991B172'
+  kcc: '0xae49c2836d060bD7F4ed6566626b52cF4991B172',
+  harmony: '0xd1AE3C177E13ac82E667eeEdE2609C98c69FF684',
 }
 
 const HOSTS = Object.freeze([
@@ -61,6 +62,14 @@ const HOSTS_FANTOM = Object.freeze([
 const HOSTS_KCC = Object.freeze([
   // Recommend
   'https://rpc-mainnet.kcc.network',
+]);
+
+const HOSTS_HARMONY = Object.freeze([
+  // Recommend
+  'https://api.harmony.one',
+  //'https://s1.api.harmony.one',
+  //'https://s2.api.harmony.one',
+  //'https://s3.api.harmony.one',
 ]);
 
 const ENDPOINTS_MULTICALL = {};
@@ -171,6 +180,33 @@ HOSTS_KCC.forEach(url => {
 
 const ENDPOINTS_KCC = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_KCC));
 
+const ENDPOINTS_MULTICALL_HARMONY = {};
+const ENDPOINTS_RPC_WRAPPER_HARMONY = {};
+
+HOSTS_HARMONY.forEach(url => {
+  ENDPOINTS_MULTICALL_HARMONY[url] = new MulticallProvider(
+    new providers.StaticJsonRpcProvider({
+      url: url,
+      timeout: 10000,
+    }),
+    {
+      contract: MULTI_CALL_CONTRACT.kcc,
+      batchSize: 50,
+      timeWindow: 50,
+    }
+  )
+
+  const f1 = new Web3.providers.HttpProvider(url, {
+      keepAlive: true,
+      timeout: 10000,
+    }
+  )
+
+  ENDPOINTS_RPC_WRAPPER_HARMONY[url] = new Web3(f1)
+});
+
+const ENDPOINTS_HARMONY = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_HARMONY));
+
 module.exports = {
   PRICES: {},
   BITQUERY_TRANSACTIONS: fs.readFileSync(
@@ -195,6 +231,8 @@ module.exports = {
         return ENDPOINTS_RPC_WRAPPER_FANTOM[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_FANTOM))[0]];
       case 'kcc':
         return ENDPOINTS_RPC_WRAPPER_KCC[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_KCC))[0]];
+      case 'harmony':
+        return ENDPOINTS_RPC_WRAPPER_HARMONY[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_HARMONY))[0]];
       case 'bsc':
       default:
         return ENDPOINTS_RPC_WRAPPER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER))[0]];
@@ -218,6 +256,9 @@ module.exports = {
         break;
       case 'kcc':
         selectedEndpoints = ENDPOINTS_KCC.slice();
+        break;
+      case 'harmony':
+        selectedEndpoints = ENDPOINTS_HARMONY.slice();
         break;
       case 'bsc':
       default:
@@ -268,6 +309,8 @@ module.exports = {
               web3 = ENDPOINTS_RPC_WRAPPER_FANTOM[endpointInner]
             } else if(chain === 'kcc') {
               web3 = ENDPOINTS_RPC_WRAPPER_KCC[endpointInner]
+            } else if(chain === 'harmony') {
+              web3 = ENDPOINTS_RPC_WRAPPER_HARMONY[endpointInner]
             } else {
               web3 = ENDPOINTS_RPC_WRAPPER[endpointInner]
             }
@@ -336,6 +379,9 @@ module.exports = {
       case 'kcc':
         selectedEndpoints = ENDPOINTS_KCC.slice();
         break;
+      case 'harmony':
+        selectedEndpoints = ENDPOINTS_HARMONY.slice();
+        break;
       case 'bsc':
       default:
         selectedEndpoints = ENDPOINTS.slice();
@@ -354,6 +400,8 @@ module.exports = {
         options = ENDPOINTS_MULTICALL_FANTOM[endpoints[0]];
       } else if (chain === 'kcc') {
         options = ENDPOINTS_MULTICALL_KCC[endpoints[0]];
+      } else if (chain === 'harmony') {
+        options = ENDPOINTS_MULTICALL_HARMONY[endpoints[0]];
       } else if (chain === 'bsc') {
         options = ENDPOINTS_MULTICALL[endpoints[0]];
       } else {
@@ -496,6 +544,9 @@ module.exports = {
     } else if (chain === 'kcc') {
       host = 'api.ftmscan.com';
       apiKey = module.exports.CONFIG['KCCSCAN_API_KEY'];
+    } else if (chain === 'harmony') {
+      host = 'api.ftmscan.com';
+      apiKey = module.exports.CONFIG['HARMONYSCAN_API_KEY'];
     } else {
       host = 'api.bscscan.com';
       apiKey = module.exports.CONFIG['BSCSCAN_API_KEY'];
@@ -824,6 +875,8 @@ module.exports = {
       case 'fantom':
         return 1; // its 2 but why everyone use '1'?
       case 'kcc':
+        return 3;
+      case 'harmony':
         return 3;
       case 'bsc':
         return 3;

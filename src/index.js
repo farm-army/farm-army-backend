@@ -10,6 +10,7 @@ async function farmUpdater() {
     Promise.all(services.getPolygonPlatforms().getFunctionAwaits('getFarms', [true])),
     Promise.all(services.getFantomPlatforms().getFunctionAwaits('getFarms', [true])),
     Promise.all(services.getKccPlatforms().getFunctionAwaits('getFarms', [true])),
+    Promise.all(services.getHarmonyPlatforms().getFunctionAwaits('getFarms', [true])),
   ])).forEach(p => {
     if (p.status !== 'fulfilled') {
       console.error('farmUpdater error', p.reason)
@@ -23,6 +24,7 @@ async function priceUpdater() {
     services.getCronjobs().polygonCronInterval(),
     services.getCronjobs().fantomCronInterval(),
     services.getCronjobs().kccCronInterval(),
+    services.getCronjobs().harmonyCronInterval(),
   ])).forEach(p => {
     if (p.status !== 'fulfilled') {
       console.error('priceUpdater error', p.reason)
@@ -68,6 +70,10 @@ setInterval(async () => {
     services.getKccDb().updateFarmPrices(),
     services.getKccDb().updateAddressMaps(),
     services.getKccDb().updateLpInfoMaps(),
+
+    services.getHarmonyDb().updateFarmPrices(),
+    services.getHarmonyDb().updateAddressMaps(),
+    services.getHarmonyDb().updateLpInfoMaps(),
   ])).forEach(p => {
     if (p.status !== 'fulfilled') {
       console.error('farm update interval error', p.reason)

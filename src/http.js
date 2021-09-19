@@ -12,6 +12,7 @@ module.exports = class Http {
     platformsPolygon,
     platformsFantom,
     platformsKcc,
+    platformsHarmony,
     balances,
     addressTransactions,
     polygonAddressTransactions,
@@ -36,9 +37,13 @@ module.exports = class Http {
     kccLiquidityTokenCollector,
     kccTokenCollector,
     kccBalances,
-    kccTokenInfo
+    kccTokenInfo,
+    harmonyPriceOracle,
+    harmonyLiquidityTokenCollector,
+    harmonyTokenCollector,
+    harmonyBalances,
+    harmonyTokenInfo
   ) {
-
     this.chains = {};
 
     this.priceOracle = priceOracle;
@@ -111,6 +116,17 @@ module.exports = class Http {
       tokenCollector: kccTokenCollector,
       balances: kccBalances,
       tokenInfo: kccTokenInfo,
+      addressTransactions: {}, // not supported
+      autoFarm: {}, // not supported
+    }
+
+    this.chains.harmony = {
+      platforms: platformsHarmony,
+      priceOracle: harmonyPriceOracle,
+      liquidityTokenCollector: harmonyLiquidityTokenCollector,
+      tokenCollector: harmonyTokenCollector,
+      balances: harmonyBalances,
+      tokenInfo: harmonyTokenInfo,
       addressTransactions: {}, // not supported
       autoFarm: {}, // not supported
     }

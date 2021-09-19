@@ -54,6 +54,16 @@ let kccTokenInfo;
 let kccDb;
 let kccFarmPlatformResolver;
 
+let harmonyPriceOracle;
+let harmonyTokenCollector;
+let harmonyPriceCollector;
+let harmonyLiquidityTokenCollector;
+let harmonyCacheManager;
+let harmonyBalances;
+let harmonyTokenInfo;
+let harmonyDb;
+let harmonyFarmPlatformResolver;
+
 const Cache = require("timed-cache");
 const Sqlite = require("better-sqlite3");
 const Http = require("./http");
@@ -77,6 +87,7 @@ const PolygonPriceOracle = require("./chains/polygon/polygon_price_oracle");
 const FantomPriceOracle = require("./chains/fantom/fantom_price_oracle");
 const KccPriceOracle = require("./chains/kcc/kcc_price_oracle");
 const FarmPlatformResolver = require("./farm/farm_platform_resolver");
+const HarmonyPriceOracle = require("./chains/harmony/harmony_price_oracle");
 
 const FarmAuto = require("./farm/farm_auto");
 
@@ -172,6 +183,9 @@ const KukafeDecorator = require("./platforms/kcc/kukafe/kukafe_decorator");
 const Boneswap = require("./platforms/kcc/boneswap/boneswap");
 const Scream = require("./platforms/fantom/scream/scream");
 
+const Hbeefy = require("./platforms/harmony/hbeefy/hbeefy");
+const Hsushi = require("./platforms/harmony/hsushi/hsushi");
+
 let pancake;
 let swamp;
 let blizzard;
@@ -264,9 +278,13 @@ let boneswap;
 let kukafeCompound;
 let kukafeDecorator;
 
+let hbeefy;
+let hsushi;
+
 let polygonPlatform;
 let fantomPlatform;
 let kccPlatform;
+let harmonyPlatform;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -310,6 +328,9 @@ module.exports = {
       this.getKccPlatforms(),
       this.getKccPriceOracle(),
       this.getKccFarmPlatformResolver(),
+      this.getHarmonyPlatforms(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyFarmPlatformResolver(),
     ));
   },
 
@@ -407,6 +428,19 @@ module.exports = {
     ));
   },
 
+  getHarmonyPriceOracle() {
+    if (harmonyPriceOracle) {
+      return harmonyPriceOracle;
+    }
+
+    return (harmonyPriceOracle = new HarmonyPriceOracle(
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyLiquidityTokenCollector(),
+      this.getHarmonyPriceCollector(),
+      this.getHarmonyCacheManager(),
+    ));
+  },
+
   getFarmPlatformResolver() {
     if (farmPlatformResolver) {
       return farmPlatformResolver;
@@ -444,6 +478,16 @@ module.exports = {
 
     return (kccFarmPlatformResolver = new FarmPlatformResolver(
       this.getKccCacheManager(),
+    ));
+  },
+
+  getHarmonyFarmPlatformResolver() {
+    if (harmonyFarmPlatformResolver) {
+      return harmonyFarmPlatformResolver;
+    }
+
+    return (harmonyFarmPlatformResolver = new FarmPlatformResolver(
+      this.getHarmonyCacheManager(),
     ));
   },
 
@@ -583,6 +627,22 @@ module.exports = {
       this.getCache(),
       this.getKccPriceOracle(),
       this.getKccTokenCollector(),
+    ));
+  },
+
+  getHarmonyPlatforms() {
+    if (harmonyPlatform) {
+      return harmonyPlatform;
+    }
+
+    return (harmonyPlatform = new Platforms(
+      [
+        this.getHbeefy(),
+        this.getHsushi(),
+      ],
+      this.getCache(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
     ));
   },
 
@@ -846,6 +906,20 @@ module.exports = {
       this.getPolygonTokenCollector(),
       this.getFarmFetcher(),
       this.getCacheManager(),
+    ));
+  },
+
+  getHsushi() {
+    if (hsushi) {
+      return hsushi;
+    }
+
+    return (hsushi = new Hsushi(
+      this.getCache(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+      this.getFarmFetcher(),
+      this.getHarmonyCacheManager(),
     ));
   },
 
@@ -1801,6 +1875,18 @@ module.exports = {
     ));
   },
 
+  getHbeefy() {
+    if (hbeefy) {
+      return hbeefy;
+    }
+
+    return (hbeefy = new Hbeefy(
+      this.getCache(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+    ));
+  },
+
   getCache() {
     if (cache) {
       return cache;
@@ -1894,6 +1980,16 @@ module.exports = {
     ));
   },
 
+  getHarmonyLiquidityTokenCollector() {
+    if (harmonyLiquidityTokenCollector) {
+      return harmonyLiquidityTokenCollector;
+    }
+
+    return (fantomLiquidityTokenCollector = new LiquidityTokenCollector(
+      this.getHarmonyCacheManager(),
+    ));
+  },
+
   getCacheManager() {
     if (cacheManager) {
       return cacheManager;
@@ -1974,6 +2070,26 @@ module.exports = {
     return kccCacheManager = diskCache;
   },
 
+  getHarmonyCacheManager() {
+    if (harmonyCacheManager) {
+      return harmonyCacheManager;
+    }
+
+    const cacheDir = path.resolve(__dirname, '../var/cache_harmony')
+
+    const diskCache = cacheManagerInstance.caching({
+      store: fsStore,
+      options: {
+        path: cacheDir,
+        ttl: 60 * 60 * 24 * 30,
+        subdirs: true,
+        zip: false,
+      }
+    });
+
+    return harmonyCacheManager = diskCache;
+  },
+
   getUserCacheManager() {
     if (cacheManager) {
       return cacheManager;
@@ -2050,6 +2166,20 @@ module.exports = {
     ));
   },
 
+  getHarmonyBalances() {
+    if (harmonyBalances) {
+      return harmonyBalances;
+    }
+
+    return (harmonyBalances = new Balances(
+      this.getHarmonyCacheManager(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyLiquidityTokenCollector(),
+      'harmony'
+    ));
+  },
+
   getTokenCollector() {
     if (tokenCollector) {
       return tokenCollector;
@@ -2082,6 +2212,14 @@ module.exports = {
     return (kccTokenCollector = new TokenCollector(this.getKccCacheManager(), 'kcc'));
   },
 
+  getHarmonyTokenCollector() {
+    if (harmonyTokenCollector) {
+      return harmonyTokenCollector;
+    }
+
+    return (harmonyTokenCollector = new TokenCollector(this.getHarmonyCacheManager(), 'harmony'));
+  },
+
   getPriceCollector() {
     if (priceCollector) {
       return priceCollector;
@@ -2112,6 +2250,14 @@ module.exports = {
     }
 
     return (kccPriceCollector = new PriceCollector(this.getKccCacheManager()));
+  },
+
+  getHarmonyPriceCollector() {
+    if (harmonyPriceCollector) {
+      return harmonyPriceCollector;
+    }
+
+    return (harmonyPriceCollector = new PriceCollector(this.getHarmonyCacheManager()));
   },
 
   getDb() {
@@ -2170,6 +2316,20 @@ module.exports = {
     ));
   },
 
+  getHarmonyDb() {
+    if (harmonyDb) {
+      return harmonyDb;
+    }
+
+    return (harmonyDb = new Db(
+      this.getDatabase(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyPlatforms(),
+      this.getHarmonyPriceCollector(),
+      this.getHarmonyLiquidityTokenCollector(),
+    ));
+  },
+
   getHttp() {
     if (http) {
       return http;
@@ -2181,6 +2341,7 @@ module.exports = {
       this.getPolygonPlatforms(),
       this.getFantomPlatforms(),
       this.getKccPlatforms(),
+      this.getHarmonyPlatforms(),
       this.getBalances(),
       this.getAddressTransactions(),
       this.getPolygonAddressTransactions(),
@@ -2205,7 +2366,12 @@ module.exports = {
       this.getKccLiquidityTokenCollector(),
       this.getKccTokenCollector(),
       this.getKccBalances(),
-      this.getKccTokenInfo()
+      this.getKccTokenInfo(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyLiquidityTokenCollector(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyBalances(),
+      this.getHarmonyTokenInfo()
     ));
   },
 
@@ -2283,6 +2449,20 @@ module.exports = {
       this.getKccLiquidityTokenCollector(),
       this.getKccPriceCollector(),
       this.getKccDb(),
+    ));
+  },
+
+  getHarmonyTokenInfo() {
+    if (harmonyTokenInfo) {
+      return harmonyTokenInfo;
+    }
+
+    return (harmonyTokenInfo = new TokenInfo(
+      this.getHarmonyCacheManager(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyLiquidityTokenCollector(),
+      this.getHarmonyPriceCollector(),
+      this.getHarmonyDb(),
     ));
   },
 

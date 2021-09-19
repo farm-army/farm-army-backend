@@ -128,6 +128,14 @@ module.exports = class Balances {
         };
 
         nativePrice = this.priceOracle.findPrice('0x4446fc4eb47f2f6586f9faab68b3498f86c07521');
+      } else if(this.chain === 'harmony') {
+        item = {
+          token: '0xcf664087a5bb0237a0bad6742852ec6c8d69a27a',
+          symbol: 'one',
+          amount: nativeBalance / 1e18
+        };
+
+        nativePrice = this.priceOracle.findPrice('0xcf664087a5bb0237a0bad6742852ec6c8d69a27a');
       } else {
         throw new Error('invalid chain');
       }
