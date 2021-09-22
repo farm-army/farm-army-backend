@@ -946,6 +946,10 @@ module.exports = {
           info.underlying = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
         }
 
+        if (this.getChain() === 'fantom' && info.underlying && info.underlying.toLowerCase().includes('eeeeeeeeeeeeeeeeeeeeeeeeeeeeee')) {
+          info.underlying = '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83'
+        }
+
         if (!info.underlying) {
           console.log(`${this.getName()}: missing underlying ${JSON.stringify(info)}`)
           return;
@@ -1016,6 +1020,10 @@ module.exports = {
 
         farms.push(item);
       });
+
+      if (typeof this.onFarmsBuild !== "undefined") {
+        await this.onFarmsBuild(farms)
+      }
 
       await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 

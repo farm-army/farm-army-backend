@@ -84,7 +84,7 @@ module.exports = class autofarm {
 
       const item = {
         id: `${this.getName()}_${key}`,
-        name: farm.wantName,
+        name: farm.wantName.replace('\t', ''),
         platform: platform,
         raw: Object.freeze(response.pools[key]),
         provider: this.getName(),

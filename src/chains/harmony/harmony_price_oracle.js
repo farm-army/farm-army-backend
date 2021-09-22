@@ -10,11 +10,12 @@ const erc20ABI = require("../../platforms/pancake/abi/erc20.json");
 const lpAbi = require("../../lpAbi.json");
 
 module.exports = class HarmonyPriceOracle {
-  constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager) {
+  constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager, priceFetcher) {
     this.tokenCollector = tokenCollector;
     this.lpTokenCollector = lpTokenCollector;
     this.priceCollector = priceCollector;
     this.cacheManager = cacheManager;
+    this.priceFetcher = priceFetcher;
   }
 
   /**
@@ -122,18 +123,24 @@ module.exports = class HarmonyPriceOracle {
       return cache;
     }
 
-    const tokens = await Utils.requestJsonGet('https://api.coingecko.com/api/v3/coins/list?include_platform=true');
+    const tokens = await this.priceFetcher.getCoinGeckoTokens();
 
     const matches = {};
 
     const known = {
       'harmony': '0xcf664087a5bb0237a0bad6742852ec6c8d69a27a',
+      'ethereum': '0x6983D1E6DEf3690C4d616b13597A09e6193EA013',
+      'terrausd': '0x224e64ec1BDce3870a6a6c777eDd450454068FEC',
+      'binance-usd': '0x0aB43550A6915F9f67d0c454C2E90385E6497EaA', // and 0xE176EBE47d621b984a73036B9DA5d834411ef734
+      'binancecoin': '0xb1f6e61e1e113625593a22fa6aa94f8052bc39e0',
     };
 
     tokens.forEach(token => {
       if (token['platforms'] && token['platforms']['harmony-shard-0'] && token['platforms']['harmony-shard-0'].startsWith('0x')) {
         matches[token['id']] = token['platforms']['harmony-shard-0'];
-      } else if(known[token['id']]) {
+      }
+
+      if(known[token['id']]) {
         matches[token['id']] = known[token['id']];
       }
     })
@@ -173,7 +180,7 @@ module.exports = class HarmonyPriceOracle {
     this.tokenCollector.save();
 
     for (let chunk of _.chunk(Object.keys(tokens), 100)) {
-      const prices = await Utils.requestJsonGet(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`);
+      const prices = await this.priceFetcher.requestCoingeckoThrottled(`https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(chunk.join(','))}&vs_currencies=usd`);
 
       for (const [key, value] of Object.entries(prices || [])) {
         if (tokens[key] && value.usd && value.usd > 0.0000001 && value.usd < 10000000) {

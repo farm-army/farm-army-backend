@@ -19,11 +19,12 @@ const lpAbi = JSON.parse(
 const fetch = require("node-fetch");
 
 module.exports = class PriceOracle {
-  constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager) {
+  constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager, priceFetcher) {
     this.tokenCollector = tokenCollector;
     this.lpTokenCollector = lpTokenCollector;
     this.priceCollector = priceCollector;
     this.cacheManager = cacheManager;
+    this.priceFetcher = priceFetcher;
   }
 
   /**
@@ -129,7 +130,7 @@ module.exports = class PriceOracle {
       return cache;
     }
 
-    const tokens = await Utils.requestJsonGet('https://api.coingecko.com/api/v3/coins/list?include_platform=true', 60);
+    const tokens = await this.priceFetcher.getCoinGeckoTokens();
 
     const matches = {};
 
@@ -150,8 +151,7 @@ module.exports = class PriceOracle {
     const matches = [];
 
     for (let chunk of _.chunk(Object.keys(tokens), 75)) {
-      const prices = await Utils.requestJsonGet(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`, 60);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const prices = await this.priceFetcher.requestCoingeckoThrottled(`https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(chunk.join(','))}&vs_currencies=usd`);
 
       for (const [key, value] of Object.entries(prices || [])) {
         if(tokens[key] && value.usd && value.usd > 0.0000001 && value.usd < 10000000) {
@@ -213,7 +213,7 @@ module.exports = class PriceOracle {
       'binancecoin': 'bnb',
     };
 
-    const coingeckoTokens = await Utils.requestJsonGet(`https://api.coingecko.com/api/v3/simple/price?ids=${Object.keys(maps).join(',')}&vs_currencies=usd`);
+    const coingeckoTokens = await this.priceFetcher.requestCoingeckoThrottled(`https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(Object.keys(maps).join(','))}&vs_currencies=usd`);
 
     const prices = [];
 

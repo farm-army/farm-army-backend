@@ -877,7 +877,7 @@ module.exports = {
       case 'kcc':
         return 3;
       case 'harmony':
-        return 3;
+        return 2;
       case 'bsc':
         return 3;
     }

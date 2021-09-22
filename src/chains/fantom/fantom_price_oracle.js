@@ -10,11 +10,12 @@ const erc20ABI = require("../../platforms/pancake/abi/erc20.json");
 const lpAbi = require("../../lpAbi.json");
 
 module.exports = class FantomPriceOracle {
-  constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager) {
+  constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager, priceFetcher) {
     this.tokenCollector = tokenCollector;
     this.lpTokenCollector = lpTokenCollector;
     this.priceCollector = priceCollector;
     this.cacheManager = cacheManager;
+    this.priceFetcher = priceFetcher;
   }
 
   /**
@@ -205,7 +206,7 @@ module.exports = class FantomPriceOracle {
       return cache;
     }
 
-    const tokens = await Utils.requestJsonGet('https://api.coingecko.com/api/v3/coins/list?include_platform=true', 50);
+    const tokens = await this.priceFetcher.getCoinGeckoTokens();
 
     const matches = {};
 
@@ -213,6 +214,9 @@ module.exports = class FantomPriceOracle {
       'binance-usd': '0xc931f61b1534eb21d8c11b24f3f5ab2471d4ab50',
       'dai': '0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e',
       'tether': '0x049d68029688eabf473097a2fc38ef61633a3c7a',
+      'chainlink': '0xb3654dc3D10Ea7645f8319668E8F54d2574FBdC8',
+      'binancecoin': '0xD67de0e0a0Fd7b15dC8348Bb9BE742F3c5850454',
+      'yearn-finance': '0x29b0Da86e484E1C0029B56e817912d778aC0EC69',
     };
 
     (tokens || []).forEach(token => {
@@ -258,9 +262,7 @@ module.exports = class FantomPriceOracle {
     this.tokenCollector.save();
 
     for (let chunk of _.chunk(Object.keys(tokens), 50)) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      const prices = await Utils.requestJsonGet(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`, 50);
+      const prices = await this.priceFetcher.requestCoingeckoThrottled(`https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(chunk.join(','))}&vs_currencies=usd`);
 
       for (const [key, value] of Object.entries(prices || [])) {
         if (tokens[key] && value.usd && value.usd > 0.0000001 && value.usd < 10000000) {

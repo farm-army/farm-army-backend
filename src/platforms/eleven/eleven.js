@@ -7,6 +7,7 @@ const Utils = require("../../utils");
 const vaultABI = require("./abi/vaultABI.json");
 const erc20Abi = require("../../abi/erc20.json");
 const MasterchefAbi = require("./abi/masterchef.json");
+const AstParser = require("../../utils/ast_parser");
 
 module.exports = class eleven {
   static ELEVEN_TOKEN = '0xAcD7B3D9c10e97d0efA418903C0c7669E702E4C0';
@@ -29,16 +30,28 @@ module.exports = class eleven {
   }
 
   async getRawFarms() {
-    const require1 = require('./farms.json')
-      .filter(f => {
-        if (f.network !== this.getChain()) {
-          return false;
-        }
+    let cacheKey = `getRawFarms-${this.getName()}`;
 
-        return true;
-      });
+    const cacheItem = this.cache.get(cacheKey);
+    if (cacheItem) {
+      return cacheItem;
+    }
 
-    return require1;
+    let rows = [];
+
+    Object.values(await Utils.getJavascriptFiles('https://eleven.finance/')).forEach(f => {
+      rows.push(...AstParser.createJsonFromObjectExpression(f, keys => keys.includes('earnedTokenAddress') && keys.includes('network') && keys.includes('token')));
+    });
+
+    if (rows.length === 0) {
+      rows = require('./farms.json');
+    }
+
+    const result = rows.filter(f => f.network === this.getChain());
+
+    this.cache.put(cacheKey, result, { ttl: 600 * 1000 });
+
+    return result;
   }
 
   async getAddressFarms(address) {

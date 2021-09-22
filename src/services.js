@@ -64,6 +64,8 @@ let harmonyTokenInfo;
 let harmonyDb;
 let harmonyFarmPlatformResolver;
 
+let priceFetcher;
+
 const Cache = require("timed-cache");
 const Sqlite = require("better-sqlite3");
 const Http = require("./http");
@@ -88,6 +90,7 @@ const FantomPriceOracle = require("./chains/fantom/fantom_price_oracle");
 const KccPriceOracle = require("./chains/kcc/kcc_price_oracle");
 const FarmPlatformResolver = require("./farm/farm_platform_resolver");
 const HarmonyPriceOracle = require("./chains/harmony/harmony_price_oracle");
+const PriceFetcher = require("./chains/price_fetcher");
 
 const FarmAuto = require("./farm/farm_auto");
 
@@ -174,6 +177,10 @@ const Fcream = require("./platforms/fantom/fcream/fcream");
 const Tarot = require("./platforms/fantom/tarot/tarot");
 const Fwaka = require("./platforms/fantom/fwaka/fwaka");
 const Fhyperjump = require("./platforms/fantom/fhyperjump/fhyperjump");
+const Fautofarm = require("./platforms/fantom/fautofarm/fautofarm");
+const SpiritswapLend = require("./platforms/fantom/spiritswap/spiritswap_lend");
+const SpiritswapDecorator = require("./platforms/fantom/spiritswap/spiritswap_decorator");
+const Feleven = require("./platforms/fantom/feleven/feleven");
 
 const Kuswap = require("./platforms/kcc/kuswap/kuswap");
 const Kudex = require("./platforms/kcc/kudex/kudex");
@@ -185,6 +192,7 @@ const Scream = require("./platforms/fantom/scream/scream");
 
 const Hbeefy = require("./platforms/harmony/hbeefy/hbeefy");
 const Hsushi = require("./platforms/harmony/hsushi/hsushi");
+const Openswap = require("./platforms/harmony/openswap/openswap");
 
 let pancake;
 let swamp;
@@ -259,6 +267,7 @@ let impermax;
 
 let spookyswap;
 let spiritswap;
+let spiritswapLend;
 let liquiddriver;
 let fbeefy;
 let fcurve;
@@ -270,6 +279,9 @@ let scream;
 let tarot;
 let fwaka;
 let fhyperjump;
+let fautofarm;
+let spiritswapDecorator;
+let feleven;
 
 let kuswap;
 let kudex;
@@ -280,6 +292,7 @@ let kukafeDecorator;
 
 let hbeefy;
 let hsushi;
+let openswap;
 
 let polygonPlatform;
 let fantomPlatform;
@@ -386,6 +399,7 @@ module.exports = {
       this.getLiquidityTokenCollector(),
       this.getPriceCollector(),
       this.getCacheManager(),
+      this.getPriceFetcher(),
     ));
   },
 
@@ -399,6 +413,7 @@ module.exports = {
       this.getPolygonLiquidityTokenCollector(),
       this.getPolygonPriceCollector(),
       this.getPolygonCacheManager(),
+      this.getPriceFetcher(),
     ));
   },
 
@@ -412,6 +427,7 @@ module.exports = {
       this.getFantomLiquidityTokenCollector(),
       this.getFantomPriceCollector(),
       this.getFantomCacheManager(),
+      this.getPriceFetcher(),
     ));
   },
 
@@ -425,6 +441,7 @@ module.exports = {
       this.getKccLiquidityTokenCollector(),
       this.getKccPriceCollector(),
       this.getKccCacheManager(),
+      this.getPriceFetcher(),
     ));
   },
 
@@ -438,6 +455,17 @@ module.exports = {
       this.getHarmonyLiquidityTokenCollector(),
       this.getHarmonyPriceCollector(),
       this.getHarmonyCacheManager(),
+      this.getPriceFetcher(),
+    ));
+  },
+
+  getPriceFetcher() {
+    if (priceFetcher) {
+      return priceFetcher;
+    }
+
+    return (priceFetcher = new PriceFetcher(
+      this.getCacheManager(),
     ));
   },
 
@@ -593,7 +621,7 @@ module.exports = {
     return (fantomPlatform = new Platforms(
       [
         this.getSpookyswap(),
-        this.getSpiritswap(),
+        this.getSpiritswapDecorator(),
         this.getLiquiddriver(),
         this.getFbeefy(),
         this.getFcurve(),
@@ -605,6 +633,8 @@ module.exports = {
         this.getTarot(),
         this.getFwaka(),
         this.getFhyperjump(),
+        this.getFautofarm(),
+        this.getFeleven(),
       ],
       this.getCache(),
       this.getFantomPriceOracle(),
@@ -639,6 +669,7 @@ module.exports = {
       [
         this.getHbeefy(),
         this.getHsushi(),
+        this.getOpenswap(),
       ],
       this.getCache(),
       this.getHarmonyPriceOracle(),
@@ -923,6 +954,20 @@ module.exports = {
     ));
   },
 
+  getOpenswap() {
+    if (openswap) {
+      return openswap;
+    }
+
+    return (openswap = new Openswap(
+      this.getCache(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+      this.getFarmFetcher(),
+      this.getHarmonyCacheManager(),
+    ));
+  },
+
   getPcurve() {
     if (pcurve) {
       return pcurve;
@@ -957,6 +1002,17 @@ module.exports = {
     return (pautofarm = new Pautofarm(
       this.getCache(),
       this.getPolygonPriceOracle(),
+    ));
+  },
+
+  getFautofarm() {
+    if (fautofarm) {
+      return fautofarm;
+    }
+
+    return (fautofarm = new Fautofarm(
+      this.getCache(),
+      this.getFantomPriceOracle(),
     ));
   },
 
@@ -1037,6 +1093,31 @@ module.exports = {
       this.getFantomTokenCollector(),
       this.getFarmFetcher(),
       this.getCacheManager(),
+    ));
+  },
+
+  getSpiritswapLend() {
+    if (spiritswapLend) {
+      return spiritswapLend;
+    }
+
+    return (spiritswapLend = new SpiritswapLend(
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomCacheManager(),
+      this.getFantomLiquidityTokenCollector(),
+      this.getFantomFarmPlatformResolver(),
+    ));
+  },
+
+  getSpiritswapDecorator() {
+    if (spiritswapDecorator) {
+      return spiritswapDecorator;
+    }
+
+    return (spiritswapDecorator = new SpiritswapDecorator(
+      this.getSpiritswap(),
+      this.getSpiritswapLend(),
     ));
   },
 
@@ -1189,6 +1270,21 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonLiquidityTokenCollector(),
       this.getPolygonFarmPlatformResolver(),
+    ));
+  },
+
+  getFeleven() {
+    if (feleven) {
+      return feleven;
+    }
+
+    return (feleven = new Feleven(
+      this.getCache(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFarmFetcher(),
+      this.getFantomCacheManager(),
+      this.getFantomLiquidityTokenCollector(),
     ));
   },
 

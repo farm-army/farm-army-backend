@@ -21,12 +21,14 @@ module.exports = class tarot {
     return _.uniq(lbAddresses);
   }
 
-  async getRawFarms() {
-    const cacheKey = `${this.getName()}-v3-farm-info`
+  async getRawFarms(refresh = false) {
+    const cacheKey = `${this.getName()}-v4-farm-info`
 
-    const cache = await this.cacheManager.get(cacheKey)
-    if (cache) {
-      return cache;
+    if (!refresh) {
+      const cacheItem = await this.cacheManager.get(cacheKey)
+      if (cacheItem) {
+        return cacheItem;
+      }
     }
 
     const allLendingPoolsLengthResult = await Utils.multiCall([{
@@ -59,21 +61,25 @@ module.exports = class tarot {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9,de;q=0.8",
         "content-type": "application/json",
-        "sec-ch-ua": "\"Chromium\";v=\"92\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"92\"",
+        "sec-ch-ua": "\"Google Chrome\";v=\"93\", \" Not;A Brand\";v=\"99\", \"Chromium\";v=\"93\"",
         "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\"",
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-site"
       },
       "referrer": "https://www.tarot.to/",
       "referrerPolicy": "strict-origin-when-cross-origin",
-      "body": "{\"operationName\":null,\"variables\":{},\"query\":\"{\\n  lendingPools(first: 1000, orderBy: totalBorrowsUSD, orderDirection: desc) {\\n    id\\n    borrowable0 {\\n      id\\n      underlying {\\n        id\\n        symbol\\n        name\\n        decimals\\n        derivedUSD\\n        __typename\\n      }\\n      totalBalance\\n      totalBorrows\\n      borrowRate\\n      reserveFactor\\n      kinkBorrowRate\\n      kinkUtilizationRate\\n      borrowIndex\\n      accrualTimestamp\\n      exchangeRate\\n      totalBalanceUSD\\n      totalSupplyUSD\\n      totalBorrowsUSD\\n      farmingPool {\\n        epochAmount\\n        epochBegin\\n        segmentLength\\n        vestingBegin\\n        sharePercentage\\n        distributor {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    borrowable1 {\\n      id\\n      underlying {\\n        id\\n        symbol\\n        name\\n        decimals\\n        derivedUSD\\n        __typename\\n      }\\n      totalBalance\\n      totalBorrows\\n      borrowRate\\n      reserveFactor\\n      kinkBorrowRate\\n      kinkUtilizationRate\\n      borrowIndex\\n      accrualTimestamp\\n      exchangeRate\\n      totalBalanceUSD\\n      totalSupplyUSD\\n      totalBorrowsUSD\\n      farmingPool {\\n        epochAmount\\n        epochBegin\\n        segmentLength\\n        vestingBegin\\n        sharePercentage\\n        distributor {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    collateral {\\n      id\\n      totalBalance\\n      totalBalanceUSD\\n      safetyMargin\\n      liquidationIncentive\\n      exchangeRate\\n      __typename\\n    }\\n    pair {\\n      reserve0\\n      reserve1\\n      reserveUSD\\n      token0Price\\n      token1Price\\n      derivedUSD\\n      isVaultToken\\n      uniswapV2PairAddress\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}",
+      "body": "{\"operationName\":null,\"variables\":{},\"query\":\"{\\n  lendingPools(first: 1000, orderBy: totalBorrowsUSD, orderDirection: desc) {\\n    id\\n    borrowable0 {\\n      id\\n      underlying {\\n        id\\n        symbol\\n        name\\n        decimals\\n        derivedUSD\\n        __typename\\n      }\\n      totalBalance\\n      totalBorrows\\n      borrowRate\\n      reserveFactor\\n      kinkBorrowRate\\n      kinkUtilizationRate\\n      borrowIndex\\n      accrualTimestamp\\n      exchangeRate\\n      totalBalanceUSD\\n      totalSupplyUSD\\n      totalBorrowsUSD\\n      farmingPool {\\n        epochAmount\\n        epochBegin\\n        segmentLength\\n        vestingBegin\\n        sharePercentage\\n        distributor {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    borrowable1 {\\n      id\\n      underlying {\\n        id\\n        symbol\\n        name\\n        decimals\\n        derivedUSD\\n        __typename\\n      }\\n      totalBalance\\n      totalBorrows\\n      borrowRate\\n      reserveFactor\\n      kinkBorrowRate\\n      kinkUtilizationRate\\n      borrowIndex\\n      accrualTimestamp\\n      exchangeRate\\n      totalBalanceUSD\\n      totalSupplyUSD\\n      totalBorrowsUSD\\n      farmingPool {\\n        epochAmount\\n        epochBegin\\n        segmentLength\\n        vestingBegin\\n        sharePercentage\\n        distributor {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    collateral {\\n      id\\n      totalBalance\\n      totalBalanceUSD\\n      safetyMargin\\n      liquidationIncentive\\n      exchangeRate\\n      __typename\\n    }\\n    pair {\\n      reserve0\\n      reserve1\\n      reserveUSD\\n      token0Price\\n      token1Price\\n      derivedUSD\\n      derivedETH\\n      isVaultToken\\n      uniswapV2PairAddress\\n      rewardsToken {\\n        id\\n        symbol\\n        name\\n        decimals\\n        derivedUSD\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}",
+      "method": "POST",
       "mode": "cors"
     });
 
     const subgraphs = subgraphResponse
       ? JSON.parse(subgraphResponse)?.data?.lendingPools || []
       : [];
+
+    console.log(subgraphResponse);
 
     result.forEach(i => {
       const item = subgraphs.find(x => x.id.toLowerCase() === i.address.toLowerCase());
@@ -97,7 +103,7 @@ module.exports = class tarot {
       }
     }
 
-    const pools = await this.getRawFarms();
+    const pools = await this.getRawFarms(refresh);
 
     const farms = [];
     pools.forEach(pool => {
@@ -149,7 +155,7 @@ module.exports = class tarot {
   }
 
   async getAddressFarms(address) {
-    let cacheKey = `getAddressFarms-${this.getName()}-${address}`;
+    let cacheKey = `getAddressFarms-${this.getName()}-v2-${address}`;
 
     const cacheItem = await this.cacheManager.get(cacheKey)
     if (cacheItem) {

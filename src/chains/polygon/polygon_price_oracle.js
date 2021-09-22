@@ -15,11 +15,12 @@ const fetch = require("node-fetch");
 
 
 module.exports = class PolygonPriceOracle {
-  constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager) {
+  constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager, priceFetcher) {
     this.tokenCollector = tokenCollector;
     this.lpTokenCollector = lpTokenCollector;
     this.priceCollector = priceCollector;
     this.cacheManager = cacheManager;
+    this.priceFetcher = priceFetcher;
   }
 
   /**
@@ -80,7 +81,7 @@ module.exports = class PolygonPriceOracle {
 
     const result = await foo.json();
 
-    result.data.tokens.forEach(t => {
+    (result?.data?.tokens || []).forEach(t => {
       this.tokenCollector.add({
         symbol: t.symbol,
         address: t.id,
@@ -188,13 +189,20 @@ module.exports = class PolygonPriceOracle {
       return cache;
     }
 
-    const tokens = await Utils.requestJsonGet('https://api.coingecko.com/api/v3/coins/list?include_platform=true', 50);
+    const tokens = await this.priceFetcher.getCoinGeckoTokens();
 
     const matches = {};
+
+    const known = {
+      'imx': '0x60bB3D364B765C497C8cE50AE0Ae3f0882c5bD05',
+      'binancecoin': '0x3BA4c387f786bFEE076A58914F5Bd38d668B42c3',
+    };
 
     tokens.forEach(token => {
       if (token['platforms'] && token['platforms']['polygon-pos'] && token['platforms']['polygon-pos'].startsWith('0x')) {
         matches[token['id']] = token['platforms']['polygon-pos'];
+      } else if (known[token['id']]) {
+        matches[token['id']] = known[token['id']];
       }
     })
 
@@ -209,9 +217,7 @@ module.exports = class PolygonPriceOracle {
     const matches = [];
 
     for (let chunk of _.chunk(Object.keys(tokens), 75)) {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      const prices = await Utils.requestJsonGet(`https://api.coingecko.com/api/v3/simple/price?ids=${chunk.join(',')}&vs_currencies=usd`, 50);
+      const prices = await this.priceFetcher.requestCoingeckoThrottled(`https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(chunk.join(','))}&vs_currencies=usd`);
 
       for (const [key, value] of Object.entries(prices || [])) {
         if (tokens[key] && value.usd && value.usd > 0.0000001 && value.usd < 10000000) {

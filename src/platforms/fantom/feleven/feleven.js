@@ -2,9 +2,9 @@
 
 const eleven = require("../../eleven/eleven");
 
-module.exports = class peleven extends eleven {
+module.exports = class feleven extends eleven {
   getName() {
-    return 'peleven';
+    return 'feleven';
   }
 
   getChain() {
