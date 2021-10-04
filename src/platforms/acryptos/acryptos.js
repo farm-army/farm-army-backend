@@ -26,11 +26,14 @@ const minterAbi = JSON.parse(
 
 const BigNumber = require("bignumber.js");
 const Utils = require("../../utils");
+const AstParser = require("../../utils/ast_parser");
+const crypto = require("crypto");
 
 module.exports = class acryptos {
-  constructor(cache, priceOracle) {
+  constructor(cache, priceOracle, tokenCollector) {
     this.cache = cache;
     this.priceOracle = priceOracle;
+    this.tokenCollector = tokenCollector;
   }
 
   static STATIC_TOKENS = {
@@ -40,10 +43,82 @@ module.exports = class acryptos {
     ACS4USD: "0x83d69ef5c9837e21e2389d47d791714f5771f29b"
   }
 
-  getRawPools() {
-    return JSON.parse(
-      fs.readFileSync(path.resolve(__dirname, "farms/farms.json"), "utf8")
-    );
+  async getRawPools() {
+    const cacheKey = `getRawPools-v7-acryptos`;
+
+    const cacheItem = this.cache.get(cacheKey);
+    if (cacheItem) {
+     // return cacheItem;
+    }
+
+    let rows = [];
+
+    const constants = {
+      acsMasterFarm: "0xeaE1425d8ed46554BF56968960e2E567B49D0BED",
+      acsMasterFarmV2: "0xb1fa5d3c0111d8E9ac43A19ef17b281D5D4b474E",
+      acsiMasterFarm: "0x96c8390BA28eB083A784280227C37b853bc408B7",
+      acsiMasterFarmV2b: "0x0C3B6058c25205345b8f22578B27065a7506671C",
+    };
+
+    Object.values(await Utils.getJavascriptFiles('https://app.acryptos.com/')).forEach(f => {
+      // first file wins
+      if (rows.length > 0) {
+        return;
+      }
+
+      rows.push(...AstParser.createJsonFromObjectExpression(f, keys => (keys.includes('vault') || keys.includes('farm')) && keys.includes('tags'), (item, node) => {
+        // resolve "D.acsMasterFarmV2"
+        const vault = (node.properties || []).find(p => p.key.name === 'farm');
+
+        if (vault && vault.value && vault.value.type === 'ObjectExpression') {
+          const master = (vault.value.properties || []).find(p => p.key.name === 'master');
+
+          if (master) {
+            const name = master?.value?.property?.name;
+            if (name) {
+              for (const [key, value] of Object.entries(constants)) {
+                if (name.toLowerCase() === key.toLowerCase()) {
+                  item.farm.master = value;
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }));
+    });
+
+    rows = rows.filter(v => v?.showFarmDeprecatedOnly !== true && v?.vault?.deprecated !== true && v?.farm?.deprecated !== true && (v.vault || v.farm));
+
+    if (rows.length === 0) {
+      rows = JSON.parse(
+        fs.readFileSync(path.resolve(__dirname, "farms/farms.json"), "utf8")
+      );
+    } else {
+      const callsPromises = [];
+
+      rows.forEach(r => {
+        if (r?.vault?.address) {
+          const token = new Web3EthContract(vaultAbi, r.vault.address);
+
+          callsPromises.push({
+            address: r.vault.address,
+            token: token.methods.token(),
+          });
+        }
+      });
+
+      (await Utils.multiCall(callsPromises, 'bsc')).forEach(c => {
+        const farm = rows.find(r => r?.vault?.address === c.address);
+        if (farm) {
+          farm.vault.token = c.token;
+        }
+      });
+    }
+
+    this.cache.put(cacheKey, rows, {ttl: 60 * 60 * 1000});
+
+    return rows;
   }
 
   async getAddressFarms(address) {
@@ -85,13 +160,7 @@ module.exports = class acryptos {
     // v2
     const v2Promises = Utils.multiCall(
       pools
-        .filter(
-          f =>
-            f.raw.farm &&
-            f.raw.farm.master &&
-            !f.raw.farm.pid &&
-            f.raw.farm.token
-        )
+        .filter(f => f.raw.farm && f.raw.farm.master && !f.raw.farm.pid && f.raw.farm.token)
         .map(farm => {
           const token = new Web3EthContract(masterV2Abi, farm.raw.farm.master);
           return {
@@ -131,9 +200,7 @@ module.exports = class acryptos {
   }
 
   async getStableFarmsPrices() {
-    const foo = await Utils.multiCall(
-      this
-        .getRawPools()
+    const foo = await Utils.multiCall((await this.getRawPools())
         .filter(
           farm =>
             farm.farm &&
@@ -178,23 +245,20 @@ module.exports = class acryptos {
 
   async getFarmsV2Prices(pools) {
     const v2TokenPricesPromise = pools
-      .filter(
-        farm =>
-          farm.farm && farm.farm.master && !farm.farm.pid && farm.farm.token
-      )
+      .filter(farm => farm?.vault?.address)
       .map(farm => {
-        const token = new Web3EthContract(tokenV2Abi, farm.farm.token);
+        const token = new Web3EthContract(tokenV2Abi, farm.vault.address);
         return {
-          token: farm.farm.token,
+          vault: farm.vault.address,
           pricePerFullShare: token.methods.getPricePerFullShare()
         };
       });
 
-    return Utils.multiCallIndexBy("token", v2TokenPricesPromise);
+    return Utils.multiCallIndexBy("vault", v2TokenPricesPromise);
   }
 
   async getFarms(refresh = false) {
-    const cacheKey = "getFarms-acryptos";
+    const cacheKey = "getFarms-v3-acryptos";
 
     if (!refresh) {
       const cacheItem = this.cache.get(cacheKey);
@@ -203,17 +267,14 @@ module.exports = class acryptos {
       }
     }
 
-    const pools = this.getRawPools();
+    const pools = await this.getRawPools();
 
     const vaultCallsPromise = Utils.multiCall(
       pools
-        .filter(f => f.vault && f.vault.address)
+        .filter(f => f.vault && f.vault.address && f.vault.token)
         .map(farm => {
           return {
-            totalSupply: new Web3EthContract(
-              vaultAbi,
-              farm.vault.address
-            ).methods.totalSupply(),
+            totalSupply: new Web3EthContract(vaultAbi, farm.vault.address).methods.totalSupply(),
             lpAddress: farm.vault.token
           };
         })
@@ -230,7 +291,7 @@ module.exports = class acryptos {
       farmTvls[call.lpAddress] = call.totalSupply;
     });
 
-    const result = this.getRawPools().map((i, index) => {
+    const result = (await this.getRawPools()).map((i, index) => {
       let token;
 
       if (i.vault && i.vault.tokenSymbol) {
@@ -239,8 +300,17 @@ module.exports = class acryptos {
         token = i.farm.tokenSymbol;
       }
 
+      const hash = [i?.vault?.address, i?.farm?.master, i?.farm?.token, i?.farm?.name]
+        .filter(s => s)
+        .map(s => s.toLowerCase())
+        .join('-');
+
+      const md5Hash = crypto.createHash('md5')
+        .update(hash)
+        .digest('hex');
+
       const item = {
-        id: `acryptos_${index}`,
+        id: `acryptos_${md5Hash}`,
         name: token,
         token: token.toLowerCase().replace(/(acs\d+)/, ""),
         provider: "acryptos",
@@ -281,58 +351,28 @@ module.exports = class acryptos {
         }
       }
 
-      if (
-        i.vault &&
-        i.vault.tokenSymbol &&
-        i.vault.tokenSymbol.includes("-") &&
-        i.vault.token &&
-        i.vault.address
-      ) {
+      if (i.vault && i.vault.tokenSymbol && i.vault.tokenSymbol.includes("-") && i.vault.token && i.vault.address) {
         // lpAddress
         item.extra.lpAddress = i.vault.token;
         item.extra.transactionToken = i.vault.token;
         item.extra.transactionAddress = i.vault.address;
-      } else if (
-        i.vault &&
-        i.vault.tokenSymbol &&
-        i.vault.token &&
-        i.vault.address
-      ) {
+      } else if (i.vault && i.vault.tokenSymbol && i.vault.token && i.vault.address) {
         // single
         item.extra.transactionToken = i.vault.token;
         item.extra.transactionAddress = i.vault.address;
       }
 
-      if (
-        i.farm &&
-        i.farm.master &&
-        i.farm.tokenSymbol &&
-        acryptos.STATIC_TOKENS[i.farm.tokenSymbol]
-      ) {
-        item.extra.transactionToken =
-          acryptos.STATIC_TOKENS[i.farm.tokenSymbol];
+      if (i.farm && i.farm.master && i.farm.tokenSymbol && acryptos.STATIC_TOKENS[i.farm.tokenSymbol]) {
+        item.extra.transactionToken = acryptos.STATIC_TOKENS[i.farm.tokenSymbol];
         item.extra.transactionAddress = i.farm.master;
       }
 
-      if (
-        i.farm &&
-        i.farm.pid &&
-        fooCalls[i.farm.pid] &&
-        fooCalls[i.farm.pid].virtualPrice
-      ) {
+      if (i.farm && i.farm.pid && fooCalls[i.farm.pid] && fooCalls[i.farm.pid].virtualPrice) {
         item.extra.virtualPrice = fooCalls[i.farm.pid].virtualPrice / 1e18;
       }
 
-      if (
-        i.farm &&
-        i.farm.token &&
-        v2TokenPrices[i.farm.token].pricePerFullShare &&
-        new BigNumber(
-          v2TokenPrices[i.farm.token].pricePerFullShare
-        ).isGreaterThan(0)
-      ) {
-        item.extra.pricePerFullShare =
-          v2TokenPrices[i.farm.token].pricePerFullShare / 1e18;
+      if (i?.vault?.address && v2TokenPrices[i.vault.address].pricePerFullShare > 0) {
+        item.extra.pricePerFullShare = v2TokenPrices[i.vault.address].pricePerFullShare / 1e18;
       }
 
       return Object.freeze(item);
@@ -361,8 +401,7 @@ module.exports = class acryptos {
 
     const farms = await this.getFarms();
 
-    const unstakedPromises = Utils.multiCallIndexBy(
-      "id",
+    const unstakedPromises = Utils.multiCall(
       addressFarms
         .filter(s => {
           const farm = farms.filter(f => f.id === s)[0];
@@ -380,8 +419,7 @@ module.exports = class acryptos {
         })
     );
 
-    const stakedPromises = Utils.multiCallIndexBy(
-      "id",
+    const stakedPromises = Utils.multiCall(
       addressFarms
         .filter(farmId => {
           const farm = farms.find(f => f.id === farmId);
@@ -393,26 +431,17 @@ module.exports = class acryptos {
           const token = new Web3EthContract(masterAbi, farm.raw.farm.master);
           return {
             id: farm.id.toString(),
-            pendingSushi: token.methods.pendingSushi(
-              farm.raw.farm.pid,
-              address
-            ),
+            pendingSushi: token.methods.pendingSushi(farm.raw.farm.pid, address),
             userInfo: token.methods.userInfo(farm.raw.farm.pid, address)
           };
         })
     );
 
-    const v2CallsPromises = Utils.multiCallIndexBy(
-      "id",
+    const v2CallsPromises = Utils.multiCall(
       addressFarms
         .filter(farmId => {
           const farm = farms.find(f => f.id === farmId);
-          return (
-            farm.raw.farm &&
-            farm.raw.farm.master &&
-            !farm.raw.farm.pid &&
-            farm.raw.farm.token
-          );
+          return (farm.raw.farm && farm.raw.farm.master && !farm.raw.farm.pid && farm.raw.farm.token);
         })
         .map(farmId => {
           const farm = farms.find(f => f.id === farmId);
@@ -421,10 +450,7 @@ module.exports = class acryptos {
           return {
             id: farm.id.toString(),
             userInfo: token.methods.userInfo(farm.raw.farm.token, address),
-            pendingSushi: token.methods.pendingSushi(
-              farm.raw.farm.token,
-              address
-            )
+            pendingSushi: token.methods.pendingSushi(farm.raw.farm.token, address)
           };
         })
     );
@@ -435,98 +461,53 @@ module.exports = class acryptos {
       v2CallsPromises
     ]);
 
-    return farms
-      .filter(f => addressFarms.includes(f.id))
-      .map(farm => {
+    const results = [unstaked, staked, v2Calls].flat();
+
+    return results
+      .map(call => {
+        const farm = farms.find(f => f.id === call.id);
+
         const result = {};
 
         result.farm = farm;
 
-        const unStakedCall = unstaked[farm.id] || {};
-        const stakedCall = staked[farm.id] || {};
-
         let amount = new BigNumber(0);
-        if (stakedCall.userInfo && stakedCall.userInfo[0]) {
-          amount = amount.plus(new BigNumber(stakedCall.userInfo[0]));
+        if (call.userInfo && call.userInfo[0]) {
+          amount = amount.plus(new BigNumber(call.userInfo[0]));
         }
 
-        if (unStakedCall.balanceOf) {
-          amount = amount.plus(new BigNumber(unStakedCall.balanceOf));
+        if (call.balanceOf) {
+          amount = amount.plus(new BigNumber(call.balanceOf));
         }
 
         if (amount.isGreaterThan(0)) {
-          let { pricePerFullShare } = unStakedCall;
-          if (!pricePerFullShare) {
-            pricePerFullShare = 1e18;
+          let pricePerFullShare = 1;
+          if (farm.extra?.pricePerFullShare) {
+            pricePerFullShare = farm.extra.pricePerFullShare;
+          } else if (farm.extra?.virtualPrice) {
+            pricePerFullShare = farm.extra.virtualPrice;
           }
+
+          const decimals = farm.extra?.transactionToken
+            ? this.tokenCollector.getDecimals(farm.extra?.transactionToken)
+            : 18;
 
           result.deposit = {
             symbol: "?",
-            amount: (amount.toNumber() * pricePerFullShare) / 1e18 / 1e18
+            amount: (amount.toNumber() / (10 ** decimals)) * pricePerFullShare
           };
 
-          if (farm.raw.vault) {
-            let price = this.priceOracle.findPrice(farm.raw.vault.token);
-
-            if (!price && farm.raw.vault.tokenSymbol) {
-              price = this.priceOracle.findPrice(farm.raw.vault.tokenSymbol.toLowerCase());
-            }
-
-            if (price) {
-              result.deposit.usd = result.deposit.amount * price;
-            }
-          } else if (farm.extra && farm.extra.virtualPrice) {
-            result.deposit.usd =
-              result.deposit.amount * farm.extra.virtualPrice;
-          }
-        }
-
-        // V2
-        if (
-          farm.extra.pricePerFullShare &&
-          v2Calls[farm.id] &&
-          v2Calls[farm.id].userInfo
-        ) {
-          const [amount, weight, rewardDebt, rewardCredit] = Object.values(
-            v2Calls[farm.id].userInfo
-          );
-
-          if (amount > 0) {
-            result.deposit = {
-              symbol: "?",
-              amount: (amount / 1e18) * farm.extra.pricePerFullShare
-            };
-
-            const price = this.priceOracle.getAddressPrice(farm.raw.vault.token);
+          if (farm.extra?.transactionToken) {
+            let price = this.priceOracle.findPrice(farm.extra.transactionToken);
             if (price) {
               result.deposit.usd = result.deposit.amount * price;
             }
           }
         }
 
-        let pendingSushi;
-        if (
-          stakedCall.pendingSushi &&
-          new BigNumber(stakedCall.pendingSushi).isGreaterThan(0)
-        ) {
-          pendingSushi = stakedCall.pendingSushi;
-        }
-
-        // V2
-        if (
-          farm.extra.pricePerFullShare &&
-          v2Calls[farm.id] &&
-          v2Calls[farm.id].pendingSushi &&
-          new BigNumber(v2Calls[farm.id].pendingSushi).isGreaterThan(0)
-        ) {
-          pendingSushi = v2Calls[farm.id].pendingSushi;
-        }
-
-        if (pendingSushi && new BigNumber(pendingSushi).isGreaterThan(0)) {
-          let reward = {};
-
-          reward = {
-            amount: pendingSushi / 1e18,
+        if (call.pendingSushi && call.pendingSushi > 0) {
+          const reward = {
+            amount: call.pendingSushi / 1e18,
             symbol: "?"
           };
 

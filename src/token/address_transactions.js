@@ -26,7 +26,11 @@ module.exports = class AddressTransactions {
     } else if (chain === 'fantom') {
       host = 'api.ftmscan.com';
     } else if (chain === 'kcc') {
-      host = 'api.explorer.kcc.io';
+      host = 'explorer.kcc.io';
+    } else if (chain === 'harmony') {
+      host = 'explorer.harmony.one';
+    } else if (chain === 'celo') {
+      host = 'explorer.celo.org';
     } else {
       host = 'api.bscscan.com';
     }

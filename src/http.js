@@ -13,6 +13,7 @@ module.exports = class Http {
     platformsFantom,
     platformsKcc,
     platformsHarmony,
+    platformsCelo,
     balances,
     addressTransactions,
     polygonAddressTransactions,
@@ -38,11 +39,19 @@ module.exports = class Http {
     kccTokenCollector,
     kccBalances,
     kccTokenInfo,
+    kccAddressTransactions,
     harmonyPriceOracle,
     harmonyLiquidityTokenCollector,
     harmonyTokenCollector,
     harmonyBalances,
-    harmonyTokenInfo
+    harmonyTokenInfo,
+    harmonyAddressTransactions,
+    celoPriceOracle,
+    celoLiquidityTokenCollector,
+    celoTokenCollector,
+    celoBalances,
+    celoTokenInfo,
+    celoAddressTransactions
   ) {
     this.chains = {};
 
@@ -51,11 +60,16 @@ module.exports = class Http {
     this.platformsPolygon = platformsPolygon;
     this.platformsFantom = platformsFantom;
     this.platformsKcc = platformsKcc;
+    this.platformsCelo = platformsCelo;
+
     this.balances = balances;
 
     this.addressTransactions = addressTransactions;
     this.polygonAddressTransactions = polygonAddressTransactions;
     this.fantomAddressTransactions = fantomAddressTransactions;
+    this.kccAddressTransactions = kccAddressTransactions;
+    this.harmonyAddressTransactions = harmonyAddressTransactions;
+    this.celoAddressTransactions = celoAddressTransactions;
 
     this.tokenCollector = tokenCollector;
     this.liquidityTokenCollector = liquidityTokenCollector;
@@ -116,7 +130,7 @@ module.exports = class Http {
       tokenCollector: kccTokenCollector,
       balances: kccBalances,
       tokenInfo: kccTokenInfo,
-      addressTransactions: {}, // not supported
+      addressTransactions: kccAddressTransactions,
       autoFarm: {}, // not supported
     }
 
@@ -127,7 +141,18 @@ module.exports = class Http {
       tokenCollector: harmonyTokenCollector,
       balances: harmonyBalances,
       tokenInfo: harmonyTokenInfo,
-      addressTransactions: {}, // not supported
+      addressTransactions: harmonyAddressTransactions,
+      autoFarm: {}, // not supported
+    }
+
+    this.chains.celo = {
+      platforms: platformsCelo,
+      priceOracle: celoPriceOracle,
+      liquidityTokenCollector: celoLiquidityTokenCollector,
+      tokenCollector: celoTokenCollector,
+      balances: celoBalances,
+      tokenInfo: celoTokenInfo,
+      addressTransactions: celoAddressTransactions,
       autoFarm: {}, // not supported
     }
 

@@ -136,6 +136,14 @@ module.exports = class Balances {
         };
 
         nativePrice = this.priceOracle.findPrice('0xcf664087a5bb0237a0bad6742852ec6c8d69a27a');
+      } else if (this.chain === 'celo') {
+        item = {
+          token: '0x471ece3750da237f93b8e339c536989b8978a438',
+          symbol: 'celo',
+          amount: nativeBalance / 1e18
+        };
+
+        nativePrice = this.priceOracle.findPrice('0x471ece3750da237f93b8e339c536989b8978a438');
       } else {
         throw new Error('invalid chain');
       }

@@ -138,6 +138,15 @@ module.exports = class FantomPriceOracle {
     return prices;
   }
 
+  async updatePrice(address, price) {
+    if (!address.startsWith('0x')) {
+      console.log("fantom: Invalid updatePrice:", address, price);
+      return;
+    }
+
+    this.priceCollector.add(address, price);
+  }
+
   async updateTokens() {
     (await Promise.allSettled([
       this.tokenMaps(),
@@ -433,11 +442,31 @@ module.exports = class FantomPriceOracle {
         decimals: 18,
       },
       {
+        router: '0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52', // spiritswap
+        address: '0xAcD7B3D9c10e97d0efA418903C0c7669E702E4C0',
+        symbol: 'ele',
+        decimals: 18,
+      },
+      {
         router: '0x53c153a0df7e050bbefbb70ee9632061f12795fb', // hyperjump
         address: '0x0575f8738efda7f512e3654f277c77e80c7d2725',
         symbol: 'ori',
         decimals: 18,
       },
+      {
+        router: '0x845E76A8691423fbc4ECb8Dd77556Cb61c09eE25', // jetswap
+        address: '0x3d8f1accee8e263f837138829b6c4517473d0688',
+        symbol: 'fwings',
+        decimals: 18,
+      },
+      {
+        router: '0xfD000ddCEa75a2E23059881c3589F6425bFf1AbB', // paintswap
+        address: '0x85dec8c4b2680793661bca91a8f129607571863d',
+        symbol: 'brush',
+        decimals: 18,
+      },
+
+
     ];
 
     const calls = tokens.map(t => {

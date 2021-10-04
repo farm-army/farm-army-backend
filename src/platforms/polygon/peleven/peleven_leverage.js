@@ -137,7 +137,7 @@ module.exports = class peleven_leverage {
   }
 
   async getLeverageFarms() {
-    const cacheKey = `${this.getName()}-v1-farm-info`
+    const cacheKey = `${this.getName()}-v3-farm-info`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -153,7 +153,7 @@ module.exports = class peleven_leverage {
 
     const farms = [];
     Object.values(files).forEach(f => {
-      farms.push(...AstParser.createJsonFromObjectExpression(f, keys => keys.includes('contractAddress') && keys.includes('maxLeverage')));
+      farms.push(...AstParser.createJsonFromObjectExpression(f, keys => keys.includes('vaultAddress') && keys.includes('maxLeverage')));
     });
 
     const result = {
@@ -167,7 +167,7 @@ module.exports = class peleven_leverage {
   }
 
   async getFarms(refresh = false) {
-    let cacheKey = `getFarms-v1-${this.getName()}-leverage`;
+    let cacheKey = `getFarms-v2-${this.getName()}-leverage`;
 
     if (!refresh) {
       const cacheItem = await this.cacheManager.get(cacheKey)
@@ -198,11 +198,6 @@ module.exports = class peleven_leverage {
         return;
       }
 
-      const bank = laverageFarms.banks.find(b => b.id === pool.bank);
-      if (!bank) {
-        return;
-      }
-
       const name = pool.name
         .replace(/\s+\w*lp$/i, '')
         .trim();
@@ -214,13 +209,12 @@ module.exports = class peleven_leverage {
         has_details: true,
         raw: Object.freeze({
           pool: pool,
-          bank: bank,
         }),
         extra: {},
         chain: this.getChain(),
         compound: true,
         leverage: true,
-        notes: [`Bank: ${bank.name}`]
+        notes: []
       };
 
       if (pool.maxLeverage) {
@@ -287,10 +281,15 @@ module.exports = class peleven_leverage {
 
     const results = [];
 
+    const foo = await this.getLeverageFarms();
+
     addressFarms.forEach(position => {
       const [id, bankAddress, bigfoot, ownerAddress, _debtShare] = position;
 
-      const farm = farms.find(f => f.raw.pool.contractAddress.toLowerCase() === bigfoot.toLowerCase() && f.raw.bank.address.toLowerCase() === bankAddress.toLowerCase());
+      const farm = farms.find(f => {
+        return f.raw.pool.borrowOptions.find(opt => opt.contracts.borrow === bigfoot)
+      });
+
       if (!farm) {
         return;
       }
@@ -304,17 +303,27 @@ module.exports = class peleven_leverage {
         farm: farm
       };
 
-      const borrowTokenAddress = farm.raw.bank.baseToken.address;
       const [borrowToken, debtShare] = Object.values(positionInfo);
 
       if (borrowToken > 0) {
+        const borrow = (farm.raw?.pool?.borrowOptions || []).find(opt => opt?.contracts?.borrow === bigfoot);
+        const bank = (foo?.banks || []).find(b => b.id.toLowerCase() === borrow.bankId.toLowerCase());
+        if (!bank) {
+          return;
+        }
+
+        const borrowTokenAddress = this.tokenCollector.getAddressBySymbol(bank.baseToken.toLowerCase());
+        if (!borrowTokenAddress) {
+          return;
+        }
+
         const amount = (borrowToken - debtShare) / (10 ** this.tokenCollector.getDecimals(borrowTokenAddress));
         result.deposit = {
           symbol: '?',
           amount: amount, // value in borrowToken token
         };
 
-        const price = this.priceOracle.getAddressPrice(borrowTokenAddress); // bnb or busd
+        const price = this.priceOracle.getAddressPrice(borrowTokenAddress);
         if (price) {
           result.deposit.usd = result.deposit.amount * price;
 

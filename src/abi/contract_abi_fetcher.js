@@ -31,7 +31,13 @@ module.exports = class ContractAbiFetcher {
         url = `https://api.ftmscan.com/api?module=contract&action=getabi&address=${address}`;
         break;
       case 'kcc':
-        url = `https://api.explorer.kcc.io/api?module=contract&action=getabi&address=${address}`;
+        url = `https://explorer.kcc.io/api?module=contract&action=getabi&address=${address}`;
+        break;
+      case 'harmony':
+        url = `https://explorer.harmony.one/api?module=contract&action=getabi&address=${address}`;
+        break;
+      case 'celo':
+        url = `https:/explorer.celo.org/api?module=contract&action=getabi&address=${address}`;
         break;
       default:
         throw new Error('Invalid chain');

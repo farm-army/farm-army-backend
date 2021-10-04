@@ -44,6 +44,14 @@ const foo = [
       earnContractAddress: r.masterLory,
       masterchefPid: 43
     },
+    farms: [
+      {
+        earnedToken: "LORY",
+      },
+      {
+        earnedToken: "LORY2",
+      }
+    ],
     routerAddress: r.pancakeswapRouterAddress,
     path0: ["0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c", "0x55d398326f99059ff775485246999027b3197955"],
     path1: ["0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c", "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"],

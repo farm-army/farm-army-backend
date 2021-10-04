@@ -65,6 +65,15 @@ module.exports = class PriceOracle {
     return this.priceCollector.getSymbolMap();
   }
 
+  async updatePrice(address, price) {
+    if (!address.startsWith('0x')) {
+      console.log("bsc: Invalid updatePrice:", address, price);
+      return;
+    }
+
+    this.priceCollector.add(address, price);
+  }
+
   async updateTokens() {
     await this.tokenMaps();
 

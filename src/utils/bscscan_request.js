@@ -2,10 +2,11 @@ const PromiseThrottle = require('promise-throttle');
 const Utils = require("../utils");
 
 module.exports = class BscscanRequest {
-    constructor(bscApiKey, polygonApiKey, fantomApiKey) {
+    constructor(bscApiKey, polygonApiKey, fantomApiKey, celoApiKey) {
         this.bscApiKey = bscApiKey;
         this.polygonApiKey = polygonApiKey;
         this.fantomApiKey = fantomApiKey;
+        this.celoApiKey = celoApiKey;
 
         this.promiseThrottle = new PromiseThrottle({
             requestsPerSecond: 2,
@@ -21,6 +22,8 @@ module.exports = class BscscanRequest {
             apiKey = this.polygonApiKey;
         } else if (chain === 'fantom') {
             apiKey = this.fantomApiKey;
+        } else if (chain === 'celo') {
+            apiKey = this.celoApiKey;
         } else {
             apiKey = this.bscApiKey;
         }

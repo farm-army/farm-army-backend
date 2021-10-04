@@ -7,6 +7,7 @@ const Utils = require("../../utils");
 const vaultABI = require("./abi/vaultABI.json");
 const erc20Abi = require("../../abi/erc20.json");
 const MasterchefAbi = require("./abi/masterchef.json");
+const BankAbi = require("./abi/bank.json");
 const AstParser = require("../../utils/ast_parser");
 
 module.exports = class eleven {
@@ -29,12 +30,85 @@ module.exports = class eleven {
     return '0x1ac6C0B955B6D7ACb61c9Bdf3EE98E0689e07B8A';
   }
 
+  async getBanks() {
+    let cacheKey = `getBanks-v1-${this.getName()}`;
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
+    }
+
+    const files = await Utils.getJavascriptFiles('https://eleven.finance/');
+
+    const banks = [];
+    Object.values(files).forEach(f => {
+      banks.push(...AstParser.createJsonFromObjectExpression(f, keys => keys.includes('collateralTokens') && keys.includes('minLoanSize') && keys.includes('baseToken')));
+    });
+
+    const result = banks.filter(f => f.network === this.getChain());
+
+    result.forEach(bank => {
+      if (bank.baseToken) {
+        let baseTokenAddress = this.tokenCollector.getAddressBySymbol(bank.baseToken.toLowerCase());
+
+        // strip W
+        if (!baseTokenAddress && bank.baseToken.toLowerCase().startsWith('w')) {
+          baseTokenAddress = this.tokenCollector.getAddressBySymbol(bank.baseToken.toLowerCase().substring(1));
+        }
+
+        if (baseTokenAddress) {
+          bank.baseTokenAddress = baseTokenAddress;
+        }
+      }
+    })
+
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 60 * 3})
+
+    return result;
+  }
+
+  async fetchBankTokens() {
+    const bank = await this.getBanks();
+
+    const calls = await Utils.multiCallIndexBy('id', bank.map(bank => {
+      const contract = new Web3EthContract(BankAbi, bank.address);
+
+      return {
+        id: bank.id,
+        pricePerFullShare: contract.methods.getPricePerFullShare(),
+        decimals: contract.methods.decimals(),
+      };
+    }), this.getChain());
+
+    bank.forEach(bank => {
+      if (!bank.baseTokenAddress || !calls[bank.id] || !calls[bank.id].pricePerFullShare) {
+        return;
+      }
+
+      this.tokenCollector.add({
+        address: bank.address.toLowerCase(),
+        symbol: bank.name.toLowerCase(),
+        decimals: parseInt(calls[bank.id].decimals),
+      });
+
+      const basePrice = this.priceOracle.findPrice(bank.baseTokenAddress);
+      if (!basePrice) {
+        return;
+      }
+
+      const price = basePrice * (calls[bank.id].pricePerFullShare / 1e18);
+      if (price) {
+        this.priceOracle.updatePrice(bank.address, price);
+      }
+    })
+  }
+
   async getRawFarms() {
     let cacheKey = `getRawFarms-${this.getName()}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     let rows = [];
@@ -49,15 +123,17 @@ module.exports = class eleven {
 
     const result = rows.filter(f => f.network === this.getChain());
 
-    this.cache.put(cacheKey, result, { ttl: 600 * 1000 });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30})
 
     return result;
   }
 
   async getAddressFarms(address) {
-    const cacheItem = this.cache.get(`getAddressFarms-${this.getName()}-${address}`);
-    if (cacheItem) {
-      return cacheItem;
+    const cacheKey = `getAddressFarms-${this.getName()}-${address}`;
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const farms = await this.getFarms();
@@ -91,7 +167,7 @@ module.exports = class eleven {
       )
       .map(v => v.id));
 
-    this.cache.put(`getAddressFarms-eleven-${address}`, result, { ttl: 300 * 1000 });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }
@@ -100,11 +176,13 @@ module.exports = class eleven {
     let cacheKey = `getFarms-${this.getName()}`;
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
       }
     }
+
+    await this.fetchBankTokens();
 
     let apys = {};
     try {
@@ -135,8 +213,8 @@ module.exports = class eleven {
 
       const item = {
         id: `${this.getName()}_${farm.id.toLowerCase()}`,
-        name: token.toUpperCase(),
-        token: token,
+        name: token.toUpperCase().trim(),
+        token: token.trim(),
         platform: farm.platform,
         provider: this.getName(),
         has_details: !!(farm.earnedTokenAddress && farm.tokenAddress),
@@ -201,7 +279,7 @@ module.exports = class eleven {
       farms.push(Object.freeze(item));
     });
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log(`${this.getName()} updated`);
 
@@ -266,7 +344,7 @@ module.exports = class eleven {
 
         let amount = 0;
         if (userInfo[id] && userInfo[id].userInfo && userInfo[id].userInfo[0] && userInfo[id].userInfo[0] > 0) {
-          let decimals = farm.raw.tokenAddress ? (10 ** this.tokenCollector.getDecimals(farm.raw.tokenAddress)) : 1e18;
+          const decimals = farm.extra.transactionAddress ? (10 ** this.tokenCollector.getDecimals(farm.extra.transactionAddress)) : 1e18;
           amount = (userInfo[id].userInfo[0] / decimals) * farm.extra.pricePerFullShare;
         } else if (balanceOf[id] && balanceOf[id].balanceOf && balanceOf[id].balanceOf > 0) {
           amount = balanceOf[id].balanceOf / 1e18 * farm.extra.pricePerFullShare;
@@ -280,11 +358,16 @@ module.exports = class eleven {
           amount: amount,
         };
 
-        if (farm.raw.tokenAddress) {
-          let price = this.priceOracle.findPrice(farm.raw.tokenAddress);
-          if (price) {
-            result.deposit.usd = result.deposit.amount * price;
-          }
+        let price = undefined;
+
+        if (farm.raw?.tokenAddress) {
+          price = this.priceOracle.findPrice(farm.raw.tokenAddress);
+        } else if(farm.extra?.transactionAddress) {
+          price = this.priceOracle.findPrice(farm.extra.transactionAddress);
+        }
+
+        if (price) {
+          result.deposit.usd = result.deposit.amount * price;
         }
 
         if (userInfo[id] && new BigNumber(userInfo[id].pendingRewards).isGreaterThan(0)) {

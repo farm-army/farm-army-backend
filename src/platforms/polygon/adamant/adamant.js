@@ -50,14 +50,20 @@ module.exports = class adamant {
 
     const farms = [];
 
-    const tokenCalls = rawFarms.map(pool => {
+    const tokenCalls = [];
+
+    rawFarms.forEach(pool => {
+      if (!pool.vaultAddress) {
+        return;
+      }
+
       const token = new Web3EthContract(VAULT_ABI, pool.vaultAddress);
 
-      return {
+      tokenCalls.push({
         vaultAddress: pool.vaultAddress.toLowerCase(),
         balance: token.methods.balance(),
         totalShares: token.methods.totalShares(),
-      };
+      });
     });
 
     const calls = await Utils.multiCallIndexBy('vaultAddress', tokenCalls, this.getChain());

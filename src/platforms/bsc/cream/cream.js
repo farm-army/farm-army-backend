@@ -18,7 +18,7 @@ module.exports = class cream extends LendBorrowPlatform {
       return cache;
     }
 
-    const markets = await Utils.requestJsonGet(this.getMarketsUrl());
+    const markets = (await Utils.requestJsonGet(this.getMarketsUrl())) || [];
 
     const result = markets.map(market => ({
       address: market.token_address,

@@ -53,6 +53,7 @@ let kccBalances;
 let kccTokenInfo;
 let kccDb;
 let kccFarmPlatformResolver;
+let kccAddressTransactions;
 
 let harmonyPriceOracle;
 let harmonyTokenCollector;
@@ -63,6 +64,18 @@ let harmonyBalances;
 let harmonyTokenInfo;
 let harmonyDb;
 let harmonyFarmPlatformResolver;
+let harmonyAddressTransactions;
+
+let celoPriceOracle;
+let celoTokenCollector;
+let celoPriceCollector;
+let celoLiquidityTokenCollector;
+let celoCacheManager;
+let celoBalances;
+let celoTokenInfo;
+let celoDb;
+let celoFarmPlatformResolver;
+let celoAddressTransactions;
 
 let priceFetcher;
 
@@ -91,6 +104,7 @@ const KccPriceOracle = require("./chains/kcc/kcc_price_oracle");
 const FarmPlatformResolver = require("./farm/farm_platform_resolver");
 const HarmonyPriceOracle = require("./chains/harmony/harmony_price_oracle");
 const PriceFetcher = require("./chains/price_fetcher");
+const CeloPriceOracle = require("./chains/celo/celo_price_oracle");
 
 const FarmAuto = require("./farm/farm_auto");
 
@@ -132,6 +146,7 @@ const Venus = require("./platforms/bsc/venus/venus");
 const Fortress = require("./platforms/bsc/fortress/fortress");
 const Fortube = require("./platforms/bsc/fortube/fortube");
 const Bakery = require("./platforms/bakery/bakery");
+const Planet = require("./platforms/bsc/planet/planet");
 
 const Pwault = require("./platforms/polygon/pwault/pwault");
 const Polycat = require("./platforms/polygon/polycat/polycat");
@@ -181,6 +196,8 @@ const Fautofarm = require("./platforms/fantom/fautofarm/fautofarm");
 const SpiritswapLend = require("./platforms/fantom/spiritswap/spiritswap_lend");
 const SpiritswapDecorator = require("./platforms/fantom/spiritswap/spiritswap_decorator");
 const Feleven = require("./platforms/fantom/feleven/feleven");
+const Fjetswap = require("./platforms/fantom/fjetswap/fjetswap");
+const Paintswap = require("./platforms/fantom/paintswap/paintswap");
 
 const Kuswap = require("./platforms/kcc/kuswap/kuswap");
 const Kudex = require("./platforms/kcc/kudex/kudex");
@@ -193,6 +210,8 @@ const Scream = require("./platforms/fantom/scream/scream");
 const Hbeefy = require("./platforms/harmony/hbeefy/hbeefy");
 const Hsushi = require("./platforms/harmony/hsushi/hsushi");
 const Openswap = require("./platforms/harmony/openswap/openswap");
+
+const Ubeswap = require("./platforms/celo/ubeswap/ubeswap");
 
 let pancake;
 let swamp;
@@ -232,6 +251,7 @@ let venus;
 let fortress;
 let fortube;
 let bakery;
+let planet;
 
 let pwault;
 let polycat;
@@ -282,6 +302,8 @@ let fhyperjump;
 let fautofarm;
 let spiritswapDecorator;
 let feleven;
+let fjetswap;
+let paintswap;
 
 let kuswap;
 let kudex;
@@ -294,10 +316,13 @@ let hbeefy;
 let hsushi;
 let openswap;
 
+let ubeswap;
+
 let polygonPlatform;
 let fantomPlatform;
 let kccPlatform;
 let harmonyPlatform;
+let celoPlatform;
 
 const _ = require("lodash");
 const fs = require("fs");
@@ -344,6 +369,9 @@ module.exports = {
       this.getHarmonyPlatforms(),
       this.getHarmonyPriceOracle(),
       this.getHarmonyFarmPlatformResolver(),
+      this.getCeloPlatforms(),
+      this.getCeloPriceOracle(),
+      this.getCeloFarmPlatformResolver(),
     ));
   },
 
@@ -459,6 +487,20 @@ module.exports = {
     ));
   },
 
+  getCeloPriceOracle() {
+    if (celoPriceOracle) {
+      return celoPriceOracle;
+    }
+
+    return (celoPriceOracle = new CeloPriceOracle(
+      this.getCeloTokenCollector(),
+      this.getCeloLiquidityTokenCollector(),
+      this.getCeloPriceCollector(),
+      this.getCeloCacheManager(),
+      this.getPriceFetcher(),
+    ));
+  },
+
   getPriceFetcher() {
     if (priceFetcher) {
       return priceFetcher;
@@ -519,6 +561,16 @@ module.exports = {
     ));
   },
 
+  getCeloFarmPlatformResolver() {
+    if (celoFarmPlatformResolver) {
+      return celoFarmPlatformResolver;
+    }
+
+    return (celoFarmPlatformResolver = new FarmPlatformResolver(
+      this.getCeloCacheManager(),
+    ));
+  },
+
   getPlatforms() {
     if (platforms) {
       return platforms;
@@ -565,6 +617,7 @@ module.exports = {
           this.getFortress(),
           this.getFortube(),
           this.getBakery(),
+          this.getPlanet(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -635,6 +688,8 @@ module.exports = {
         this.getFhyperjump(),
         this.getFautofarm(),
         this.getFeleven(),
+        this.getFjetswap(),
+        this.getPaintswap(),
       ],
       this.getCache(),
       this.getFantomPriceOracle(),
@@ -674,6 +729,21 @@ module.exports = {
       this.getCache(),
       this.getHarmonyPriceOracle(),
       this.getHarmonyTokenCollector(),
+    ));
+  },
+
+  getCeloPlatforms() {
+    if (celoPlatform) {
+      return celoPlatform;
+    }
+
+    return (celoPlatform = new Platforms(
+      [
+        this.getUbeswap(),
+      ],
+      this.getCache(),
+      this.getCeloPriceOracle(),
+      this.getCeloTokenCollector(),
     ));
   },
 
@@ -758,6 +828,34 @@ module.exports = {
       this.getPolygonTokenCollector(),
       this.getFarmFetcher(),
       this.getCacheManager(),
+    ));
+  },
+
+  getFjetswap() {
+    if (fjetswap) {
+      return fjetswap;
+    }
+
+    return (fjetswap = new Fjetswap(
+      this.getCache(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFarmFetcher(),
+      this.getFantomCacheManager(),
+    ));
+  },
+
+  getPaintswap() {
+    if (paintswap) {
+      return paintswap;
+    }
+
+    return (paintswap = new Paintswap(
+      this.getCache(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFarmFetcher(),
+      this.getFantomCacheManager(),
     ));
   },
 
@@ -1871,6 +1969,21 @@ module.exports = {
     ));
   },
 
+  getPlanet() {
+    if (planet) {
+      return planet;
+    }
+
+    return (planet = new Planet(
+      this.getCache(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+      this.getFarmPlatformResolver(),
+    ));
+  },
+
   getJetswap() {
     if (jetswap) {
       return jetswap;
@@ -1983,6 +2096,19 @@ module.exports = {
     ));
   },
 
+  getUbeswap() {
+    if (ubeswap) {
+      return ubeswap;
+    }
+
+    return (ubeswap = new Ubeswap(
+      this.getCache(),
+      this.getCeloPriceOracle(),
+      this.getCeloTokenCollector(),
+      this.getCeloLiquidityTokenCollector(),
+    ));
+  },
+
   getCache() {
     if (cache) {
       return cache;
@@ -2036,6 +2162,51 @@ module.exports = {
     ));
   },
 
+  getKccAddressTransactions() {
+    if (kccAddressTransactions) {
+      return kccAddressTransactions;
+    }
+
+    return (kccAddressTransactions = new AddressTransactions(
+      this.getKccPlatforms(),
+      this.getUserCacheManager(),
+      this.getBscscanRequest(),
+      this.getKccLiquidityTokenCollector(),
+      this.getKccTokenCollector(),
+      this.getKccPriceCollector(),
+    ));
+  },
+
+  getHarmonyAddressTransactions() {
+    if (harmonyAddressTransactions) {
+      return harmonyAddressTransactions;
+    }
+
+    return (harmonyAddressTransactions = new AddressTransactions(
+      this.getHarmonyPlatforms(),
+      this.getUserCacheManager(),
+      this.getBscscanRequest(),
+      this.getHarmonyLiquidityTokenCollector(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyPriceCollector(),
+    ));
+  },
+
+  getCeloAddressTransactions() {
+    if (celoAddressTransactions) {
+      return celoAddressTransactions;
+    }
+
+    return (celoAddressTransactions = new AddressTransactions(
+      this.getCeloPlatforms(),
+      this.getUserCacheManager(),
+      this.getBscscanRequest(),
+      this.getCeloLiquidityTokenCollector(),
+      this.getCeloTokenCollector(),
+      this.getCeloPriceCollector(),
+    ));
+  },
+
   getLiquidityTokenCollector() {
     if (liquidityTokenCollector) {
       return liquidityTokenCollector;
@@ -2083,6 +2254,16 @@ module.exports = {
 
     return (fantomLiquidityTokenCollector = new LiquidityTokenCollector(
       this.getHarmonyCacheManager(),
+    ));
+  },
+
+  getCeloLiquidityTokenCollector() {
+    if (celoLiquidityTokenCollector) {
+      return celoLiquidityTokenCollector;
+    }
+
+    return (celoLiquidityTokenCollector = new LiquidityTokenCollector(
+      this.getCeloCacheManager(),
     ));
   },
 
@@ -2186,6 +2367,26 @@ module.exports = {
     return harmonyCacheManager = diskCache;
   },
 
+  getCeloCacheManager() {
+    if (celoCacheManager) {
+      return celoCacheManager;
+    }
+
+    const cacheDir = path.resolve(__dirname, '../var/cache_celo')
+
+    const diskCache = cacheManagerInstance.caching({
+      store: fsStore,
+      options: {
+        path: cacheDir,
+        ttl: 60 * 60 * 24 * 30,
+        subdirs: true,
+        zip: false,
+      }
+    });
+
+    return celoCacheManager = diskCache;
+  },
+
   getUserCacheManager() {
     if (cacheManager) {
       return cacheManager;
@@ -2276,6 +2477,20 @@ module.exports = {
     ));
   },
 
+  getCeloBalances() {
+    if (celoBalances) {
+      return celoBalances;
+    }
+
+    return (celoBalances = new Balances(
+      this.getCeloCacheManager(),
+      this.getCeloPriceOracle(),
+      this.getCeloTokenCollector(),
+      this.getCeloLiquidityTokenCollector(),
+      'celo'
+    ));
+  },
+
   getTokenCollector() {
     if (tokenCollector) {
       return tokenCollector;
@@ -2316,6 +2531,14 @@ module.exports = {
     return (harmonyTokenCollector = new TokenCollector(this.getHarmonyCacheManager(), 'harmony'));
   },
 
+  getCeloTokenCollector() {
+    if (celoTokenCollector) {
+      return celoTokenCollector;
+    }
+
+    return (celoTokenCollector = new TokenCollector(this.getHarmonyCacheManager(), 'celo'));
+  },
+
   getPriceCollector() {
     if (priceCollector) {
       return priceCollector;
@@ -2354,6 +2577,14 @@ module.exports = {
     }
 
     return (harmonyPriceCollector = new PriceCollector(this.getHarmonyCacheManager()));
+  },
+
+  getCeloPriceCollector() {
+    if (celoPriceCollector) {
+      return celoPriceCollector;
+    }
+
+    return (celoPriceCollector = new PriceCollector(this.getCeloCacheManager()));
   },
 
   getDb() {
@@ -2426,6 +2657,20 @@ module.exports = {
     ));
   },
 
+  getCeloDb() {
+    if (celoDb) {
+      return celoDb;
+    }
+
+    return (celoDb = new Db(
+      this.getDatabase(),
+      this.getCeloPriceOracle(),
+      this.getCeloPlatforms(),
+      this.getCeloPriceCollector(),
+      this.getCeloLiquidityTokenCollector(),
+    ));
+  },
+
   getHttp() {
     if (http) {
       return http;
@@ -2438,6 +2683,7 @@ module.exports = {
       this.getFantomPlatforms(),
       this.getKccPlatforms(),
       this.getHarmonyPlatforms(),
+      this.getCeloPlatforms(),
       this.getBalances(),
       this.getAddressTransactions(),
       this.getPolygonAddressTransactions(),
@@ -2463,11 +2709,19 @@ module.exports = {
       this.getKccTokenCollector(),
       this.getKccBalances(),
       this.getKccTokenInfo(),
+      this.getKccAddressTransactions(),
       this.getHarmonyPriceOracle(),
       this.getHarmonyLiquidityTokenCollector(),
       this.getHarmonyTokenCollector(),
       this.getHarmonyBalances(),
-      this.getHarmonyTokenInfo()
+      this.getHarmonyTokenInfo(),
+      this.getHarmonyAddressTransactions(),
+      this.getCeloPriceOracle(),
+      this.getCeloLiquidityTokenCollector(),
+      this.getCeloTokenCollector(),
+      this.getCeloBalances(),
+      this.getCeloTokenInfo(),
+      this.getCeloAddressTransactions()
     ));
   },
 
@@ -2562,6 +2816,20 @@ module.exports = {
     ));
   },
 
+  getCeloTokenInfo() {
+    if (celoTokenInfo) {
+      return celoTokenInfo;
+    }
+
+    return (celoTokenInfo = new TokenInfo(
+      this.getCeloCacheManager(),
+      this.getCeloTokenCollector(),
+      this.getCeloLiquidityTokenCollector(),
+      this.getCeloPriceCollector(),
+      this.getCeloDb(),
+    ));
+  },
+
   getBscscanRequest() {
     if (bscscanRequest) {
       return bscscanRequest;
@@ -2571,6 +2839,7 @@ module.exports = {
       module.exports.CONFIG['BSCSCAN_API_KEY'] || '',
       module.exports.CONFIG['POLYGONSCAN_API_KEY'] || '',
       module.exports.CONFIG['FANTOMSCAN_API_KEY'] || '',
+      module.exports.CONFIG['CELOSCAN_API_KEY'] || '',
     ));
   },
 };

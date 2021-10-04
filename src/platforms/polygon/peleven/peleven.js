@@ -8,10 +8,10 @@ module.exports = class peleven extends eleven {
   }
 
   getChain() {
-    return 'fantom';
+    return 'polygon';
   }
 
   getMasterChefAddress() {
-    return '0x8eDCe6D0E0687DA9C07B36591781fB6641A53a12';
+    return '0xD109D9d6f258D48899D7D16549B89122B0536729';
   }
 }

@@ -90,6 +90,10 @@ module.exports = class balancer {
     const farms = [];
 
     rawFarms.forEach(farm => {
+      if (!calls[farm.id.toLowerCase()]?.pool || !calls[farm.id.toLowerCase()]?.pool[0]) {
+        return;
+      }
+
       const tokenNames = farm.tokens.map(token => this.tokenCollector.getSymbolByAddress(token.address) || '?');
 
       let weights = [];

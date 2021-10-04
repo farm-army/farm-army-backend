@@ -1,7 +1,8 @@
 'use strict';
 
-const STATIC_TOKENS = Object.freeze(require('./token_collector_static.json'))
-const STATIC_TOKENS_POLYGON = Object.freeze(require('./token_collector_static_polygon.json'))
+const STATIC_TOKENS = Object.freeze(require('./token_collector_static.json'));
+const STATIC_TOKENS_POLYGON = Object.freeze(require('./token_collector_static_polygon.json'));
+const STATIC_TOKENS_FANTOM = Object.freeze(require('./token_collector_static_fantom.json'));
 
 module.exports = class TokenCollector {
   constructor(cacheManager, chain = undefined) {
@@ -14,6 +15,8 @@ module.exports = class TokenCollector {
       STATIC_TOKENS.forEach(i => this.add(i));
     } else if (chain === 'polygon') {
       STATIC_TOKENS_POLYGON.forEach(i => this.add(i));
+    } else if (chain === 'fantom') {
+      STATIC_TOKENS_FANTOM.forEach(i => this.add(i));
     }
 
     // init data
@@ -32,6 +35,8 @@ module.exports = class TokenCollector {
         STATIC_TOKENS.forEach(i => this.add(i))
       } else if (chain === 'polygon') {
         STATIC_TOKENS_POLYGON.forEach(i => this.add(i));
+      } else if (chain === 'fantom') {
+        STATIC_TOKENS_FANTOM.forEach(i => this.add(i));
       }
     }, 1)
   }

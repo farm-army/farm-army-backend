@@ -13,6 +13,8 @@ const FallbackVaults = require('./farms/fallback.json');
 
 const fetch = require("node-fetch");
 const AbortController = require("abort-controller")
+const walk = require("acorn-walk");
+const acorn = require("acorn");
 
 module.exports = class alpaca {
   ibTokenMapping = {
@@ -132,8 +134,38 @@ module.exports = class alpaca {
     return positions;
   }
 
+  async getRawFarms() {
+    const cacheKey = "getRawFarms-alpaca-v1";
+
+    const cacheItem = this.cache.get(cacheKey);
+    if (cacheItem) {
+      return cacheItem;
+    }
+
+    const javascriptFiles = await Utils.getJavascriptFiles("https://app.alpacafinance.org");
+    let response = {};
+
+    Object.values(javascriptFiles).forEach(body => {
+      walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
+        Literal(node) {
+          if (node.value && node.value.toString().startsWith('{') && (node.value.toString().toLowerCase().includes('0x5379F32C8D5F663EACb61eeF63F722950294f452'.toLowerCase()) && node.value.toString().toLowerCase().includes('ProxyAdmin'.toLowerCase()))) {
+            try {
+              response = JSON.parse(node.value);
+            } catch (e) {
+              console.log('invalid farm json')
+            }
+          }
+        }
+      })
+    });
+
+    this.cache.put(cacheKey, response, { ttl: 1000 * 60 * 60 * 3 });
+
+    return response;
+  }
+
   async getFarms(refresh = false) {
-    const cacheKey = "getFarms-alpaca";
+    const cacheKey = "getFarms-alpaca-v2";
 
     if (!refresh) {
       const cacheItem = this.cache.get(cacheKey);
@@ -142,15 +174,10 @@ module.exports = class alpaca {
       }
     }
 
-    let response;
-    try {
-      response = await Utils.requestJsonGet("https://raw.githubusercontent.com/alpaca-finance/bsc-alpaca-contract/main/.mainnet.json");
-    } catch (e) {
-      console.log(`github bsc-alpaca-contract vault fetch error: ${String(e)}`);
-      response = _.cloneDeep(FallbackVaults)
+    const response = await this.getRawFarms();
+    if (!response?.FairLaunch || !response?.Vaults) {
+      return [];
     }
-
-    const farms = [];
 
     const idMap = {};
     response.FairLaunch.pools.forEach(pool => {
@@ -176,10 +203,12 @@ module.exports = class alpaca {
 
     const vaultConfig = await Utils.multiCallIndexBy('address', vaultConfigCalls);
 
-   response.Vaults.forEach(bearing => {
-     let id = crypto.createHash('md5')
-       .update(`${bearing.symbol.toLowerCase()}`)
-       .digest("hex");
+    const farms = [];
+
+    response.Vaults.forEach(bearing => {
+      let id = crypto.createHash('md5')
+        .update(`${bearing.symbol.toLowerCase()}`)
+        .digest("hex");
 
       let item = {
         id: `alpaca_stake_${id}`,
@@ -212,7 +241,7 @@ module.exports = class alpaca {
           .update(`${bearing.symbol.toLowerCase()}_${vault.name.toLowerCase()}`)
           .digest("hex");
 
-        const ibVault = vault
+        const ibVault = _.cloneDeep(vault);
 
         ibVault.ibDebtToken = bearing.debtToken;
         ibVault.ibAddress = bearing.address;
@@ -223,9 +252,9 @@ module.exports = class alpaca {
 
         const item = {
           id: `alpaca_vault_${id}`,
-          name: vault.name.replace(/(\s+(.*)worker)/i, '').replace('wbnb', 'bnb'),
+          name: vault.name.replace(/(\s+(.*)worker)/i, '').replace('wbnb', 'bnb').trim(),
           platform: 'pancake',
-          raw: Object.freeze(vault),
+          raw: Object.freeze(ibVault),
           provider: "alpaca",
           has_details: true,
           link: 'https://app.alpacafinance.org/farm',
@@ -235,6 +264,11 @@ module.exports = class alpaca {
           leverage: true,
           compound: true
         };
+
+        const workerPlatform = ibVault.name.match(/\s+(.*)worker/i);
+        if (workerPlatform) {
+          item.platform = workerPlatform[1].toLowerCase();
+        }
 
         item.extra.transactionToken = vault.stakingToken;
 

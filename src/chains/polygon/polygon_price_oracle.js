@@ -122,6 +122,14 @@ module.exports = class PolygonPriceOracle {
     this.tokenCollector.save();
   }
 
+  async updatePrice(address, price) {
+    if (!address.startsWith('0x')) {
+      console.log("polygon: Invalid updatePrice:", address, price);
+      return;
+    }
+
+    this.priceCollector.add(address, price);
+  }
 
   async updateTokens() {
     (await Promise.allSettled([
@@ -164,9 +172,10 @@ module.exports = class PolygonPriceOracle {
     this.priceCollector.save();
 
     let nativePrice = this.priceCollector.getPrice('0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270');
+    const usdcPrice = this.priceCollector.getPrice('0x2791bca1f2de4661ed88a30c99a7a9449aa84174');
 
     const results = await Promise.allSettled([
-      this.updateViaRouter(nativePrice),
+      this.updateViaRouter(nativePrice, usdcPrice),
     ]);
 
     results.filter(p => p.status === 'fulfilled').forEach(p => {
@@ -194,7 +203,7 @@ module.exports = class PolygonPriceOracle {
     const matches = {};
 
     const known = {
-      'imx': '0x60bB3D364B765C497C8cE50AE0Ae3f0882c5bD05',
+      'impermax': '0x60bB3D364B765C497C8cE50AE0Ae3f0882c5bD05',
       'binancecoin': '0x3BA4c387f786bFEE076A58914F5Bd38d668B42c3',
     };
 
@@ -386,10 +395,15 @@ module.exports = class PolygonPriceOracle {
     return tokens;
   }
 
-  async updateViaRouter(nativePrice) {
+  async updateViaRouter(nativePrice, usdcPrice) {
     if (!nativePrice) {
       throw Error('Invalid native price')
     }
+
+    const pricesTarget = {
+      '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270': nativePrice,
+      '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174': usdcPrice,
+    };
 
     const tokens = [
       {
@@ -440,15 +454,30 @@ module.exports = class PolygonPriceOracle {
         symbol: 'paw',
         decimals: 18,
       },
+      {
+        router: '0x3a1D87f206D12415f5b0A33E786967680AAb4f6d', // waultswap
+        address: '0xb8ab048D6744a276b2772dC81e406a4b769A5c3D',
+        source: {
+          address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+          decimals: 6
+        }, // usdc
+        symbol: 'wusd',
+        decimals: 18,
+      },
     ];
 
     const calls = tokens.map(t => {
       const contract = new Web3EthContract(UniswapRouter, t.router);
+
+      const sourceAddress = t?.source?.address || '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270';
+      const sourceDecimals = t?.source?.decimals || 18;
+
       return {
         decimals: t.decimals.toString(),
         symbol: t.symbol,
         address: t.address,
-        amountsOut: contract.methods.getAmountsOut(new BigNumber(1e18), ['0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', t.address]),
+        sourceAddress: sourceAddress,
+        amountsOut: contract.methods.getAmountsOut(new BigNumber(10 ** sourceDecimals), [sourceAddress, t.address]),
       };
     })
 
@@ -457,8 +486,12 @@ module.exports = class PolygonPriceOracle {
     const prices = [];
 
     vaultCalls.forEach(call => {
+      if (!call.amountsOut || !call.amountsOut[1] || !pricesTarget[call.sourceAddress]) {
+        return;
+      }
+
       const inNative = call.amountsOut[1] / (10 ** call.decimals);
-      const usdPrice = nativePrice / inNative;
+      const usdPrice = pricesTarget[call.sourceAddress] / inNative;
 
       prices.push({
         address: call.address,

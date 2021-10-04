@@ -234,7 +234,7 @@ module.exports = class FarmFetcher {
 
     if (!poolLength) {
       console.log('found no poolLength')
-      process.exit();
+      return {};
     }
 
 

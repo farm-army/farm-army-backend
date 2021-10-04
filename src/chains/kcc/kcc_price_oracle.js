@@ -61,6 +61,15 @@ module.exports = class KccPriceOracle {
     return JSON.parse(pancakeResponse.body);
   }
 
+  async updatePrice(address, price) {
+    if (!address.startsWith('0x')) {
+      console.log("kcc: Invalid updatePrice:", address, price);
+      return;
+    }
+
+    this.priceCollector.add(address, price);
+  }
+
   async updateTokens() {
     await Promise.allSettled([
       this.tokenMaps(),

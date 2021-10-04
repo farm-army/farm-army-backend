@@ -1,6 +1,6 @@
 # farm.army - Backend #
 
-Track your farming and pool performance on the Binance Chain, Polygon, Fantom, KuCoin Community Chain, Harmony
+Track your farming and pool performance on the Binance Chain, Polygon, Fantom, KuCoin Community Chain, Harmony, Celo
 
 ### Platforms ###
 
@@ -106,13 +106,14 @@ node src/index.js
   /fantom/farms
   /kcc/farms
   /harmony/farms
+  /celo/farms
 ```
 
 ```
   /:chain/wallet/:address
 ```
 
-`:chain`: bsc, polygon, fantom, kcc, harmony
+`:chain`: bsc, polygon, fantom, kcc, harmony, celo
 
 ```
   /:chain/all/yield/:address

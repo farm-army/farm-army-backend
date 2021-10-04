@@ -3,6 +3,7 @@ const Utils = require("../../../utils");
 const Web3EthContract = require("web3-eth-contract");
 const FACTORY_ABI = require("./abi/factory.json");
 const _ = require("lodash");
+const HttpsProxyAgent = require('https-proxy-agent');
 
 module.exports = class tarot {
   constructor(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver) {
@@ -22,7 +23,7 @@ module.exports = class tarot {
   }
 
   async getRawFarms(refresh = false) {
-    const cacheKey = `${this.getName()}-v4-farm-info`
+    const cacheKey = `${this.getName()}-v5-farm-info`
 
     if (!refresh) {
       const cacheItem = await this.cacheManager.get(cacheKey)
@@ -56,7 +57,10 @@ module.exports = class tarot {
         borrowable1: i.lendingPool[4],
       }));
 
+    const proxyAgent = new HttpsProxyAgent('http://69.197.181.202:3128');
+
     const subgraphResponse = await Utils.request('POST', "https://dev.tarot.to/subgraphs/name/tarot-finance/tarot", {
+      "agent": proxyAgent,
       "headers": {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9,de;q=0.8",
@@ -79,8 +83,6 @@ module.exports = class tarot {
       ? JSON.parse(subgraphResponse)?.data?.lendingPools || []
       : [];
 
-    console.log(subgraphResponse);
-
     result.forEach(i => {
       const item = subgraphs.find(x => x.id.toLowerCase() === i.address.toLowerCase());
       if (item) {
@@ -94,7 +96,7 @@ module.exports = class tarot {
   }
 
   async getFarms(refresh = false) {
-    let cacheKey = `getFarms-${this.getName()}`;
+    let cacheKey = `getFarms-v2-${this.getName()}`;
 
     if (!refresh) {
       const cacheItem = await this.cacheManager.get(cacheKey)
@@ -162,7 +164,10 @@ module.exports = class tarot {
       return cacheItem;
     }
 
+    const proxyAgent = new HttpsProxyAgent('http://69.197.181.202:3128');
+
     const subgraphResponse = await Utils.request("POST", "https://dev.tarot.to/subgraphs/name/tarot-finance/tarot", {
+      "agent": proxyAgent,
       "headers": {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9",

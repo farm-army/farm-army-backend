@@ -23,6 +23,16 @@ module.exports = {
         row[property.key.name] = propertyValue.value;
       } else if (propertyValue.type === 'ObjectExpression') {
         row[property.key.name] = module.exports.parseObject(propertyValue);
+      } else if (propertyValue.type === 'ArrayExpression') {
+        row[property.key.name] = [];
+
+        propertyValue.elements.forEach(element => {
+          if (element.type === 'Literal') {
+            row[property.key.name].push(element.value);
+          } else if (element.type === 'ObjectExpression') {
+            row[property.key.name].push(module.exports.parseObject(element));
+          }
+        })
       } else if (propertyValue.type === 'UnaryExpression' && propertyValue.operator === '!') {
         if (propertyValue.argument && typeof propertyValue.argument.value !== 'undefined' && ['0', '1'].includes(propertyValue.argument.value.toString())) {
           row[property.key.name] = eval(`!${propertyValue.argument.value.toString()}`);
@@ -33,7 +43,7 @@ module.exports = {
     return row
   },
 
-  createJsonFromObjectExpression: (body, filter) => {
+  createJsonFromObjectExpression: (body, filter, callback) => {
     const items = [];
 
     walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
@@ -43,7 +53,13 @@ module.exports = {
           return;
         }
 
-        items.push(module.exports.parseObject(node));
+        const items1 = module.exports.parseObject(node);
+
+        if (callback) {
+          callback(items1, node);
+        }
+
+        items.push(items1);
       }
     })
 

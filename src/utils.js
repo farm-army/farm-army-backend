@@ -22,6 +22,7 @@ const MULTI_CALL_CONTRACT = {
   fantom: '0xe6cd57c490cdc698aa6df974b207c4c044818d5a',
   kcc: '0xae49c2836d060bD7F4ed6566626b52cF4991B172',
   harmony: '0xd1AE3C177E13ac82E667eeEdE2609C98c69FF684',
+  celo: '0xfEEaa3989087F2c9eB4e920D57Df0A3F83486414',
 }
 
 const HOSTS = Object.freeze([
@@ -70,6 +71,10 @@ const HOSTS_HARMONY = Object.freeze([
   //'https://s1.api.harmony.one',
   //'https://s2.api.harmony.one',
   //'https://s3.api.harmony.one',
+]);
+
+const HOSTS_CELO = Object.freeze([
+  'https://forno.celo.org',
 ]);
 
 const ENDPOINTS_MULTICALL = {};
@@ -207,6 +212,33 @@ HOSTS_HARMONY.forEach(url => {
 
 const ENDPOINTS_HARMONY = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_HARMONY));
 
+const ENDPOINTS_MULTICALL_CELO = {};
+const ENDPOINTS_RPC_WRAPPER_CELO = {};
+
+HOSTS_CELO.forEach(url => {
+  ENDPOINTS_MULTICALL_CELO[url] = new MulticallProvider(
+    new providers.StaticJsonRpcProvider({
+      url: url,
+      timeout: 10000,
+    }),
+    {
+      contract: MULTI_CALL_CONTRACT.celo,
+      batchSize: 50,
+      timeWindow: 50,
+    }
+  )
+
+  const f1 = new Web3.providers.HttpProvider(url, {
+      keepAlive: true,
+      timeout: 10000,
+    }
+  )
+
+  ENDPOINTS_RPC_WRAPPER_CELO[url] = new Web3(f1)
+});
+
+const ENDPOINTS_CELO = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_CELO));
+
 module.exports = {
   PRICES: {},
   BITQUERY_TRANSACTIONS: fs.readFileSync(
@@ -233,6 +265,8 @@ module.exports = {
         return ENDPOINTS_RPC_WRAPPER_KCC[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_KCC))[0]];
       case 'harmony':
         return ENDPOINTS_RPC_WRAPPER_HARMONY[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_HARMONY))[0]];
+      case 'celo':
+        return ENDPOINTS_RPC_WRAPPER_CELO[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_CELO))[0]];
       case 'bsc':
       default:
         return ENDPOINTS_RPC_WRAPPER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER))[0]];
@@ -259,6 +293,9 @@ module.exports = {
         break;
       case 'harmony':
         selectedEndpoints = ENDPOINTS_HARMONY.slice();
+        break;
+      case 'celo':
+        selectedEndpoints = ENDPOINTS_CELO.slice();
         break;
       case 'bsc':
       default:
@@ -311,6 +348,8 @@ module.exports = {
               web3 = ENDPOINTS_RPC_WRAPPER_KCC[endpointInner]
             } else if(chain === 'harmony') {
               web3 = ENDPOINTS_RPC_WRAPPER_HARMONY[endpointInner]
+            } else if (chain === 'celo') {
+              web3 = ENDPOINTS_RPC_WRAPPER_CELO[endpointInner]
             } else {
               web3 = ENDPOINTS_RPC_WRAPPER[endpointInner]
             }
@@ -382,6 +421,9 @@ module.exports = {
       case 'harmony':
         selectedEndpoints = ENDPOINTS_HARMONY.slice();
         break;
+      case 'celo':
+        selectedEndpoints = ENDPOINTS_CELO.slice();
+        break;
       case 'bsc':
       default:
         selectedEndpoints = ENDPOINTS.slice();
@@ -402,6 +444,8 @@ module.exports = {
         options = ENDPOINTS_MULTICALL_KCC[endpoints[0]];
       } else if (chain === 'harmony') {
         options = ENDPOINTS_MULTICALL_HARMONY[endpoints[0]];
+      } else if (chain === 'celo') {
+        options = ENDPOINTS_MULTICALL_CELO[endpoints[0]];
       } else if (chain === 'bsc') {
         options = ENDPOINTS_MULTICALL[endpoints[0]];
       } else {
@@ -545,8 +589,11 @@ module.exports = {
       host = 'api.ftmscan.com';
       apiKey = module.exports.CONFIG['KCCSCAN_API_KEY'];
     } else if (chain === 'harmony') {
-      host = 'api.ftmscan.com';
+      host = 'explorer.harmony.one/';
       apiKey = module.exports.CONFIG['HARMONYSCAN_API_KEY'];
+    } else if (chain === 'celo') {
+      host = 'explorer.celo.org';
+      apiKey = module.exports.CONFIG['CELOSCAN_API_KEY'];
     } else {
       host = 'api.bscscan.com';
       apiKey = module.exports.CONFIG['BSCSCAN_API_KEY'];
@@ -878,6 +925,8 @@ module.exports = {
         return 3;
       case 'harmony':
         return 2;
+      case 'celo':
+        return 5;
       case 'bsc':
         return 3;
     }

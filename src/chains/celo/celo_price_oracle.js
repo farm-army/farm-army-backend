@@ -9,7 +9,7 @@ const UniswapRouter = require("../../abi/uniswap_router.json");
 const erc20ABI = require("../../platforms/pancake/abi/erc20.json");
 const lpAbi = require("../../lpAbi.json");
 
-module.exports = class HarmonyPriceOracle {
+module.exports = class CeloPriceOracle {
   constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager, priceFetcher) {
     this.tokenCollector = tokenCollector;
     this.lpTokenCollector = lpTokenCollector;
@@ -63,7 +63,7 @@ module.exports = class HarmonyPriceOracle {
 
   async updatePrice(address, price) {
     if (!address.startsWith('0x')) {
-      console.log("harmony: Invalid updatePrice:", address, price);
+      console.log("celo: Invalid updatePrice:", address, price);
       return;
     }
 
@@ -75,7 +75,7 @@ module.exports = class HarmonyPriceOracle {
       this.tokenMaps(),
     ])
 
-    let nativePrice = this.priceCollector.getPrice('0xcf664087a5bb0237a0bad6742852ec6c8d69a27a');
+    let nativePrice = this.priceCollector.getPrice('0x471EcE3750Da237f93B8E339c536989b8978a438');
 
     const bPrices = await Promise.allSettled([
       this.updateCoinGeckoPrices(),
@@ -106,7 +106,7 @@ module.exports = class HarmonyPriceOracle {
 
     this.priceCollector.save();
 
-    nativePrice = this.priceCollector.getPrice('0xcf664087a5bb0237a0bad6742852ec6c8d69a27a');
+    nativePrice = this.priceCollector.getPrice('0x471EcE3750Da237f93B8E339c536989b8978a438');
 
     const results = await Promise.allSettled([
       this.updateViaRouter(nativePrice),
@@ -125,7 +125,7 @@ module.exports = class HarmonyPriceOracle {
   }
 
   async getCoinGeckoTokens() {
-    const cacheKey = `coingecko-harmony-v6-token-addresses`
+    const cacheKey = `coingecko-celo-v6-token-addresses`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -137,22 +137,15 @@ module.exports = class HarmonyPriceOracle {
     const matches = {};
 
     const known = {
-      'harmony': ['0xcf664087a5bb0237a0bad6742852ec6c8d69a27a'],
-      'ethereum': ['0x6983D1E6DEf3690C4d616b13597A09e6193EA013'],
-      'terrausd': ['0x224e64ec1BDce3870a6a6c777eDd450454068FEC'],
-      'binance-usd': ['0x0aB43550A6915F9f67d0c454C2E90385E6497EaA', '0xE176EBE47d621b984a73036B9DA5d834411ef734'],
-      'binancecoin': ['0xb1f6e61e1e113625593a22fa6aa94f8052bc39e0'],
-      'usd-coin': ['0x44cED87b9F1492Bf2DCf5c16004832569f7f6cBa'],
-      'matic-network': ['0x6e7be5b9b4c9953434cd83950d61408f1ccc3bee'],
     };
 
     tokens.forEach(token => {
-      if (token['platforms'] && token['platforms']['harmony-shard-0'] && token['platforms']['harmony-shard-0'].startsWith('0x')) {
+      if (token['platforms'] && token['platforms']['celo'] && token['platforms']['celo'].startsWith('0x')) {
         if (!matches[token['id']]) {
           matches[token['id']] = [];
         }
 
-        matches[token['id']].push(token['platforms']['harmony-shard-0']);
+        matches[token['id']].push(token['platforms']['celo']);
       }
 
       if(known[token['id']]) {
@@ -188,7 +181,7 @@ module.exports = class HarmonyPriceOracle {
         symbol: web3EthContract.methods.symbol(),
         decimals: web3EthContract.methods.decimals(),
       };
-    }), 'harmony');
+    }), 'celo');
 
     tokensRaw.forEach(token => {
       if (!token.decimals && parseInt(token.decimals) > 0) {
@@ -243,9 +236,9 @@ module.exports = class HarmonyPriceOracle {
       };
     });
 
-    console.log("harmony: lp address update", lpAddress.length);
+    console.log("celo: lp address update", lpAddress.length);
 
-    const vaultCalls = await Utils.multiCall(v, 'harmony');
+    const vaultCalls = await Utils.multiCall(v, 'celo');
 
     const ercs = {};
 
@@ -253,7 +246,7 @@ module.exports = class HarmonyPriceOracle {
 
     vaultCalls.forEach(v => {
       if (!v.getReserves) {
-        console.log("harmony: Missing reserve:", v._address);
+        console.log("celo: Missing reserve:", v._address);
         return;
       }
 
@@ -289,7 +282,7 @@ module.exports = class HarmonyPriceOracle {
 
     const tokenAddressSymbol = {};
 
-    const vaultCalls2 = await Utils.multiCall(Object.values(ercs), 'harmony');
+    const vaultCalls2 = await Utils.multiCall(Object.values(ercs), 'celo');
 
     vaultCalls2.forEach(v => {
       tokenAddressSymbol[v._token.toLowerCase()] = {
@@ -330,7 +323,7 @@ module.exports = class HarmonyPriceOracle {
       this.lpTokenCollector.add(c.address, pricesLpAddress);
 
       if (!token0Price || !token1Price) {
-        console.log("harmony: Missing price:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+        console.log("celo: Missing price:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
 
         return;
       }
@@ -343,7 +336,7 @@ module.exports = class HarmonyPriceOracle {
 
       const number = (x0p + x1p) / c.totalSupply * (10 ** c.decimals);
       if (number <= 0) {
-        console.log("harmony: Missing lp price:", token0.symbol.toLowerCase(), token1.symbol.toLowerCase());
+        console.log("celo: Missing lp price:", token0.symbol.toLowerCase(), token1.symbol.toLowerCase());
 
         return;
       }
@@ -356,19 +349,82 @@ module.exports = class HarmonyPriceOracle {
   }
 
   async tokenMaps() {
+    const cacheKey = 'celo-tokenlist'
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return [];
+    }
+
+    const tokenLists = await Promise.allSettled([
+      Utils.requestJsonGet('https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap.token-list.json'),
+      Utils.requestJsonGet('https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap-experimental.token-list.json'),
+    ]);
+
+    tokenLists.forEach(tokenListPromise => {
+      (tokenListPromise?.value?.tokens || []).forEach(token => {
+        if (!token.address || !token.symbol || !token.decimals || parseInt(token.chainId) !== 42220) {
+          return;
+        }
+
+        this.tokenCollector.add({
+          address: token.address.toLowerCase(),
+          symbol: token.symbol.toLowerCase(),
+          decimals: parseInt(token.decimals),
+        })
+      })
+    });
+
+    await this.cacheManager.set(cacheKey, 'cached', {ttl: 60 * 60 * 3})
+
     return [];
   }
 
   async updateViaRouter(nativePrice) {
     if (!nativePrice) {
-      throw Error('harmony: Invalid native price')
+      throw Error('celo: Invalid native price')
     }
 
     const tokens = [
       {
-        router: '0xE6a72FeE7e34768661805DE2b621a8CDBe0DBc81', // openswap
-        address: '0xc0431Ddcc0D213Bf27EcEcA8C2362c0d0208c6DC',
-        symbol: 'oswap',
+        router: '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121', // ubeswap
+        address: '0x2A3684e9Dc20B857375EA04235F2F7edBe818FA7',
+        symbol: 'usdc',
+        decimals: 6,
+      },
+      {
+        router: '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121', // ubeswap
+        address: '0xb020D981420744F6b0FedD22bB67cd37Ce18a1d5',
+        symbol: 'usdt',
+        decimals: 6,
+      },
+      {
+        router: '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121', // ubeswap
+        address: '0xE4fE50cdD716522A56204352f00AA110F731932d',
+        symbol: 'dai',
+        decimals: 18,
+      },
+      {
+        router: '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121', // ubeswap
+        address: '0x73a210637f6F6B7005512677Ba6B3C96bb4AA44B',
+        symbol: 'mobi',
+        decimals: 18,
+      },
+      {
+        router: '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121', // ubeswap
+        address: '0x64dEFa3544c695db8c535D289d843a189aa26b98',
+        symbol: 'mcusd',
+        decimals: 18,
+      },
+      {
+        router: '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121', // ubeswap
+        address: '0xa8d0E6799FF3Fd19c6459bf02689aE09c4d78Ba7',
+        symbol: 'mceur',
+        decimals: 18,
+      },
+      {
+        router: '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121', // ubeswap
+        address: '0x1a8Dbe5958c597a744Ba51763AbEBD3355996c3e',
+        symbol: 'rcelo',
         decimals: 18,
       },
     ];
@@ -379,11 +435,11 @@ module.exports = class HarmonyPriceOracle {
         decimals: t.decimals.toString(),
         symbol: t.symbol,
         address: t.address,
-        amountsOut: contract.methods.getAmountsOut(new BigNumber(1e18), ['0xcf664087a5bb0237a0bad6742852ec6c8d69a27a', t.address]),
+        amountsOut: contract.methods.getAmountsOut(new BigNumber(1e18), ['0x471EcE3750Da237f93B8E339c536989b8978a438', t.address]),
       };
     })
 
-    const vaultCalls = await Utils.multiCall(calls, 'harmony');
+    const vaultCalls = await Utils.multiCall(calls, 'celo');
 
     const prices = [];
 

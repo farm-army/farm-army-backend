@@ -43,6 +43,15 @@ module.exports = class fcurve {
         rewardsTokens: [
           '0x1e4f97b9f9f913c46f1632781732927b9019c68b'
         ]
+      },
+      {
+        name: 'TriCrypto',
+        symbol: 'fusdt-btc-eth',
+        token: '0x58e57cA18B7A47112b877E31929798Cd3D703b0f',
+        gauge: '0x3a1659Ddcf2339Be3aeA159cA010979FB49155FF',
+        rewardsTokens: [
+          '0x1e4f97b9f9f913c46f1632781732927b9019c68b'
+        ]
       }
     ];
   }

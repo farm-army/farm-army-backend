@@ -19,6 +19,10 @@ describe('#ast parser utils functions', () => {
     assert.strictEqual(first.claimable, false);
     assert.strictEqual(first.idFoobarBool, true);
     assert.strictEqual(first.idFoobarBoolFalse, false);
+    assert.notStrictEqual(first.path0, ['0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', '0x55d398326f99059ff775485246999027b3197955']);
+
+    assert.strictEqual(first.farms[0].earnedToken, "LORY");
+    assert.strictEqual(first.farms[1].earnedToken, "LORY2");
 
     const second = result.find(i => i.id === 'WINGS-BNB LP');
 

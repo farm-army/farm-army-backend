@@ -131,13 +131,19 @@ module.exports = class beefy {
         .replace(/\s+\w*lp$/i, '')
         .trim();
 
+      let token = farm.token.replace(/\//g, '-')
+        .replace(/\s+\w*lp$/i, '')
+        .trim()
+        .toLowerCase();
+
+      if (farm.assets && farm.assets.length > 0) {
+        token = farm.assets.map(a => a.toLowerCase()).join('-')
+      }
+
       const item = {
         id: `${this.getName()}_${farm.id}`,
         name: name,
-        token: farm.token.replace(/\//g, '-')
-          .replace(/\s+\w*lp$/i, '')
-          .trim()
-          .toLowerCase(),
+        token: token,
         platform: farm.platform,
         provider: this.getName(),
         has_details: !!(farm.earnedTokenAddress && farm.tokenAddress),

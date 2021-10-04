@@ -218,7 +218,7 @@ module.exports = {
           }
         }
 
-        if (item.tvl && item.tvl.usd && farm.raw && farm.raw.yearlyRewardsInToken && farm.raw.earns[0]) {
+        if (item.tvl && item.tvl.usd && farm.raw && farm.raw.yearlyRewardsInToken && farm.raw.earns && farm.raw.earns[0]) {
           const yearlyRewardsInToken = farm.raw.yearlyRewardsInToken / (10 ** this.tokenCollector.getDecimals(farm.raw.earns[0].address));
 
           if (item.raw.earns && item.raw.earns[0]) {
@@ -567,6 +567,12 @@ module.exports = {
       this.farmCollector = farmCollector;
       this.cacheManager = cacheManager;
       this.farmPlatformResolver = farmPlatformResolver;
+    }
+
+    async getLbAddresses() {
+      return (await this.getFarms())
+        .filter(f => f?.extra?.lpAddress )
+        .map(f => f.extra.lpAddress);
     }
 
     async getMatcherChefMeta() {
