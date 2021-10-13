@@ -38,7 +38,12 @@ module.exports = class PriceFetcher {
 
   async requestCoingeckoThrottled(url) {
     return this.promiseThrottle.add(async () => {
-      return await Utils.requestJsonGet(url, 30)
+      const newVar = await Utils.requestJsonGet(url, 30);
+      if (newVar) {
+        return newVar;
+      }
+
+      return await Utils.requestJsonGet(url, 30, true);
     });
   }
 }

@@ -10,8 +10,7 @@ const _ = require("lodash");
 module.exports = class rabbit {
   static DEBT_ADDRESS = "0xc18907269640D11E2A91D7204f33C5115Ce3419e"
 
-  constructor(cache, priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver) {
-    this.cache = cache;
+  constructor(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver) {
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
     this.cacheManager = cacheManager;
@@ -23,9 +22,9 @@ module.exports = class rabbit {
     const cacheKey = "getFarms-rabbit-v1";
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
       }
     }
 
@@ -101,7 +100,7 @@ module.exports = class rabbit {
       farms.push(item);
     })
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log("rabbit updated");
 
@@ -110,9 +109,10 @@ module.exports = class rabbit {
 
   async getAddressFarms(address) {
     const cacheKey = `getAddressFarms-v5-rabbit-${address}`;
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     let calls1 = [
@@ -144,7 +144,7 @@ module.exports = class rabbit {
         .map(position => position.posid.toString());
     }
 
-    this.cache.put(cacheKey, result, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
 
     return result;
   }

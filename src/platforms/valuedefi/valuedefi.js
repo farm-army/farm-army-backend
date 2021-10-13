@@ -7,8 +7,8 @@ const BigNumber = require("bignumber.js");
 const Utils = require("../../utils");
 
 module.exports = class valuedefi {
-  constructor(cache, priceOracle) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
   }
 
@@ -68,9 +68,11 @@ module.exports = class valuedefi {
   }
 
   async getAddressFarms(address) {
-    const cacheItem = this.cache.get(`getAddressFarms-valuedefi-${address}`);
-    if (cacheItem) {
-      return cacheItem;
+    const cacheKey = `getAddressFarms-valuedefi-${address}`;
+
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const vaultCalls = (await this.getFarms())
@@ -126,9 +128,7 @@ module.exports = class valuedefi {
 
     const result = [...result1, ...result2, ...result3];
 
-    this.cache.put(`getAddressFarms-valuedefi-${address}`, result, {
-      ttl: 300 * 1000
-    });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }
@@ -137,9 +137,9 @@ module.exports = class valuedefi {
     const cacheKey = "getFarms-valuedefi";
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
       }
     }
 
@@ -301,7 +301,7 @@ module.exports = class valuedefi {
 
     const result = [...result1, ...result2, ...result3];
 
-    this.cache.put(cacheKey, result, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
 
     console.log("valuedefi updated");
 

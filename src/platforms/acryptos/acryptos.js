@@ -30,8 +30,8 @@ const AstParser = require("../../utils/ast_parser");
 const crypto = require("crypto");
 
 module.exports = class acryptos {
-  constructor(cache, priceOracle, tokenCollector) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle, tokenCollector) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
   }
@@ -46,9 +46,9 @@ module.exports = class acryptos {
   async getRawPools() {
     const cacheKey = `getRawPools-v7-acryptos`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-     // return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     let rows = [];
@@ -116,7 +116,7 @@ module.exports = class acryptos {
       });
     }
 
-    this.cache.put(cacheKey, rows, {ttl: 60 * 60 * 1000});
+    await this.cacheManager.set(cacheKey, rows, {ttl: 60 * 60});
 
     return rows;
   }
@@ -124,9 +124,9 @@ module.exports = class acryptos {
   async getAddressFarms(address) {
     const cacheKey = `getAddressFarms-acryptos-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const pools = await this.getFarms();
@@ -194,7 +194,7 @@ module.exports = class acryptos {
 
     const all = _.uniq([...result, ...result2, ...result3]);
 
-    this.cache.put(cacheKey, all, { ttl: 300 * 1000 });
+    await this.cacheManager.set(cacheKey, all, {ttl: 60 * 5});
 
     return all;
   }
@@ -261,9 +261,9 @@ module.exports = class acryptos {
     const cacheKey = "getFarms-v3-acryptos";
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
       }
     }
 
@@ -378,7 +378,7 @@ module.exports = class acryptos {
       return Object.freeze(item);
     });
 
-    this.cache.put(cacheKey, result, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
 
     console.log("acryptos updated");
 

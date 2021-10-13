@@ -13,8 +13,8 @@ const ibBNBAbi = require('./abi/ibBNBAbi.json');
 const GoblinAbi = require('./abi/goblin.json');
 
 module.exports = class alpha {
-  constructor(cache, priceOracle, farmPlatformResolver, tokenCollector) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle, farmPlatformResolver, tokenCollector) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.farmPlatformResolver = farmPlatformResolver;
     this.tokenCollector = tokenCollector;
@@ -23,9 +23,9 @@ module.exports = class alpha {
   async getAddressFarms(address) {
     const cacheKey = `getAddressFarms-alpha-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const farms = await this.getFarms();
@@ -41,7 +41,7 @@ module.exports = class alpha {
       }
     })
 
-    this.cache.put(cacheKey, all, { ttl: 300 * 1000 });
+    await this.cacheManager.set(cacheKey, all, {ttl: 60 * 5});
 
     return all;
   }
@@ -49,9 +49,9 @@ module.exports = class alpha {
   async getAddressPositions(address) {
     const cacheKey = `getAddressPositions-alpha-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const controller = new AbortController()
@@ -72,7 +72,7 @@ module.exports = class alpha {
       json = await foo.json();
     } catch (e) {
       console.log('alpha timeout: ', address, e.message)
-      this.cache.put(cacheKey, [], { ttl: 30 * 1000 });
+      await this.cacheManager.set(cacheKey, [], {ttl: 60});
 
       return []
     }
@@ -84,11 +84,11 @@ module.exports = class alpha {
       })
     } else {
       console.log('alpha error: ', address)
-      this.cache.put(cacheKey, positions, { ttl: 30 * 1000 });
+      await this.cacheManager.set(cacheKey, [], {ttl: 60});
       return []
     }
 
-    this.cache.put(cacheKey, positions, { ttl: 300 * 1000 });
+    await this.cacheManager.set(cacheKey, positions, {ttl: 60 * 5});
 
     return positions;
   }
@@ -97,9 +97,9 @@ module.exports = class alpha {
     const cacheKey = "getFarms-alpha";
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
       }
     }
 
@@ -165,7 +165,7 @@ module.exports = class alpha {
       farms.push(item);
     })
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log("alpha updated");
 

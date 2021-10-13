@@ -8,8 +8,8 @@ const VAULT_ABI = require('./abi/vault.json');
 const VAULT_INFORMATION_ABI = require('./abi/vault_information.json');
 
 module.exports = class adamant {
-  constructor(cache, priceOracle, tokenCollector, farmPlatformResolver) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle, tokenCollector, farmPlatformResolver) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
     this.farmPlatformResolver = farmPlatformResolver;
@@ -24,25 +24,25 @@ module.exports = class adamant {
   async getRawFarms() {
     const cacheKey = `getRawFarms-github-${this.getName()}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
-    const request = await Utils.requestJsonGet('https://raw.githubusercontent.com/eepdev/vaults/main/current_vaults.json');
+    const response = await Utils.requestJsonGet('https://raw.githubusercontent.com/eepdev/vaults/main/current_vaults.json');
 
-    this.cache.put(cacheKey, request, { ttl: 600 * 1000 });
+    await this.cacheManager.set(cacheKey, response, {ttl: 60 * 60});
 
-    return request;
+    return response;
   }
 
   async getFarms(refresh = false) {
     let cacheKey = `getFarms-${this.getName()}`;
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
       }
     }
 
@@ -91,6 +91,7 @@ module.exports = class adamant {
         raw: Object.freeze(farm),
         earns: ['addy'],
         extra: {},
+        chain: 'poylgon',
       };
 
       item.extra.transactionToken = farm.lpAddress;
@@ -119,7 +120,7 @@ module.exports = class adamant {
       farms.push(Object.freeze(item));
     });
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log(`${this.getName()} updated`);
 
@@ -129,9 +130,9 @@ module.exports = class adamant {
   async getAddressFarms(address) {
     let cacheKey = `getAddressFarms-${this.getName()}-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const pools = await this.getFarms();
@@ -169,7 +170,7 @@ module.exports = class adamant {
       })
     }
 
-    this.cache.put(cacheKey, result, {ttl: 60 * 1000});
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }
@@ -237,8 +238,6 @@ module.exports = class adamant {
       if (price) {
         result.deposit.usd = result.deposit.amount * price;
       }
-
-      console.log(foo.pendingAddyReward.toString())
 
       if (foo.pendingAddyReward && foo.pendingAddyReward.gt(0)) {
         const reward = {

@@ -9,8 +9,8 @@ const VAULT_ABI = require('./abi/vault.json');
 const ERC20_ABI = require('../../../abi/erc20.json');
 
 module.exports = class dfyn {
-  constructor(cache, priceOracle, tokenCollector) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle, tokenCollector) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
   }
@@ -24,9 +24,9 @@ module.exports = class dfyn {
   async getRawFarms() {
     const cacheKey = `getRawFarms-github-${this.getName()}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const urls = {
@@ -53,7 +53,7 @@ module.exports = class dfyn {
 
     })
 
-    this.cache.put(cacheKey, pools, { ttl: 600 * 1000 });
+    await this.cacheManager.set(cacheKey, pools, {ttl: 60 * 30});
 
     return pools;
   }
@@ -62,9 +62,9 @@ module.exports = class dfyn {
     let cacheKey = `getFarms-${this.getName()}`;
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
       }
     }
 
@@ -112,8 +112,8 @@ module.exports = class dfyn {
 
         const item = {
           id: `${this.getName()}_${farmType}_${id}`,
-          name: farm.tokens.map(i => i.symbol).join('-'),
-          token: farm.tokens.map(i => i.symbol).join('-').toLowerCase(),
+          name: farm.tokens.filter(i => i?.symbol).map(i => i.symbol).join('-'),
+          token: farm.tokens.filter(i => i?.symbol).map(i => i.symbol).join('-').toLowerCase(),
           provider: this.getName(),
           has_details: true,
           raw: Object.freeze(farm),
@@ -162,7 +162,7 @@ module.exports = class dfyn {
       });
     }
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log(`${this.getName()} updated`);
 
@@ -172,9 +172,9 @@ module.exports = class dfyn {
   async getAddressInfo(address) {
     let cacheKey = `getAddressInfo-${this.getName()}-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const pools = await this.getFarms();
@@ -196,7 +196,7 @@ module.exports = class dfyn {
       new BigNumber(v.rewards || 0).isGreaterThan(0)
     );
 
-    this.cache.put(cacheKey, result, {ttl: 60 * 1000});
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }
@@ -204,9 +204,9 @@ module.exports = class dfyn {
   async getAddressFarms(address) {
     let cacheKey = `getAddressFarms-${this.getName()}-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const calls = await this.getAddressInfo(address);
@@ -215,7 +215,7 @@ module.exports = class dfyn {
       .filter(v => new BigNumber(v.balanceOf).isGreaterThan(0) || new BigNumber(v.rewards || 0).isGreaterThan(0))
       .map(v => v.id);
 
-    this.cache.put(cacheKey, result, { ttl: 300 * 1000 });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }

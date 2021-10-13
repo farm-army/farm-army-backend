@@ -9,8 +9,8 @@ const GAUGE_ABI = require('./abi/gauge.json');
 const LP_TOKEN_ABI = require('./abi/lp_token.json');
 
 module.exports = class fcurve {
-  constructor(cache, priceOracle, tokenCollector) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle, tokenCollector) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
   }
@@ -60,9 +60,9 @@ module.exports = class fcurve {
     let cacheKey = `getFarms-${this.getName()}`;
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
       }
     }
 
@@ -127,7 +127,7 @@ module.exports = class fcurve {
       farms.push(Object.freeze(item));
     });
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log(`${this.getName()} updated`);
 
@@ -137,9 +137,9 @@ module.exports = class fcurve {
   async getAddressFarms(address) {
     let cacheKey = `getAddressFarms-${this.getName()}-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const pools = await this.getFarms();
@@ -159,7 +159,7 @@ module.exports = class fcurve {
       .filter(v => new BigNumber(v.balanceOf).isGreaterThan(0))
       .map(v => v.id);
 
-    this.cache.put(cacheKey, result, { ttl: 300 * 1000 });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }

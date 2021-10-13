@@ -9,8 +9,8 @@ const _ = require("lodash");
 
 module.exports = {
   PancakePlatformFork: class PancakePlatformFork {
-    constructor(cache, priceOracle, tokenCollector) {
-      this.cache = cache;
+    constructor(cacheManager, priceOracle, tokenCollector) {
+      this.cacheManager = cacheManager;
       this.priceOracle = priceOracle;
       this.tokenCollector = tokenCollector;
     }
@@ -62,9 +62,11 @@ module.exports = {
     }
 
     async getAddressFarms(address) {
-      const cacheItem = this.cache.get(`getAddressFarms-${this.getName()}-${address}`);
-      if (cacheItem) {
-        return cacheItem;
+      const cacheKey = `getAddressFarms-${this.getName()}-${address}`;
+
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
       }
 
       let farmings = await this.getFarms();
@@ -110,7 +112,7 @@ module.exports = {
         )
         .map(v => v.id);
 
-      this.cache.put(`getAddressFarms-${this.getName()}-${address}`, result, { ttl: 300 * 1000 });
+      await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
       return result;
     }
@@ -119,9 +121,9 @@ module.exports = {
       const cacheKey = `getFarms-${this.getName()}`;
 
       if (!refresh) {
-        const cacheItem = this.cache.get(cacheKey);
-        if (cacheItem) {
-          return cacheItem;
+        const cache = await this.cacheManager.get(cacheKey);
+        if (cache) {
+          return cache;
         }
       }
 
@@ -324,7 +326,7 @@ module.exports = {
 
       const finalResult = result.map(r => Object.freeze(r))
 
-      this.cache.put(cacheKey, finalResult, { ttl: 1000 * 60 * 30 });
+      await this.cacheManager.set(cacheKey, finalResult, {ttl: 60 * 30});
 
       console.log(`${this.getName()} updated`);
 
@@ -560,8 +562,8 @@ module.exports = {
   },
 
   MasterChefWithAutoCompoundAndRewards: class MasterChefWithAutoCompoundAndRewards {
-    constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver) {
-      this.cache = cache;
+    constructor(cacheManager2, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver) {
+      this.cacheManager = cacheManager2;
       this.priceOracle = priceOracle;
       this.tokenCollector = tokenCollector;
       this.farmCollector = farmCollector;
@@ -594,9 +596,9 @@ module.exports = {
       const cacheKey = `getFarms-${this.getName()}`;
 
       if (!refresh) {
-        const cacheItem = this.cache.get(cacheKey);
-        if (cacheItem) {
-          return cacheItem;
+        const cache = await this.cacheManager.get(cacheKey);
+        if (cache) {
+          return cache;
         }
       }
 
@@ -702,7 +704,7 @@ module.exports = {
         return Object.freeze(item);
       });
 
-      this.cache.put(cacheKey, farms, {ttl: 1000 * 60 * 30});
+      await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
       console.log(`${this.getName()} updated`);
 
@@ -710,9 +712,10 @@ module.exports = {
     }
 
     async getAddressFarms(address) {
-      const cacheItem = this.cache.get(`getAddressFarms-${this.getName()}-${address}`);
-      if (cacheItem) {
-        return cacheItem;
+      const cacheKey = `getAddressFarms-${this.getName()}-${address}`;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
       }
 
       let farmings = await this.getFarms();
@@ -734,7 +737,7 @@ module.exports = {
         new BigNumber(v.pendingReward || 0).isGreaterThan(Utils.DUST_FILTER)
       ).map(v => v.id);
 
-      this.cache.put(`getAddressFarms-${this.getName()}-${address}`, result, { ttl: 300 * 1000 });
+      await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
       return result;
     }

@@ -7,8 +7,7 @@ const ERC20Abi = require("../../abi/erc20.json");
 const MasterV2Abi = require("./abi/masterv2.json");
 
 module.exports = class bakery {
-  constructor(cache, priceOracle, cacheManager, tokenCollector, liquidityTokenCollector) {
-    this.cache = cache;
+  constructor(priceOracle, cacheManager, tokenCollector, liquidityTokenCollector) {
     this.priceOracle = priceOracle;
     this.cacheManager = cacheManager;
     this.tokenCollector = tokenCollector;
@@ -89,9 +88,11 @@ module.exports = class bakery {
   }
 
   async getAddressFarms(address) {
-    const cacheItem = this.cache.get(`getAddressFarms-bakery-${address}`);
-    if (cacheItem) {
-      return cacheItem;
+    const cacheKey = `getAddressFarms-bakery-${address}`;
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const vaultCalls = (await this.getFarms())
@@ -113,7 +114,7 @@ module.exports = class bakery {
       )
       .map(v => v.id);
 
-    this.cache.put(`getAddressFarms-bakery-${address}`, result, { ttl: 300 * 1000 });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }
@@ -122,9 +123,9 @@ module.exports = class bakery {
     const cacheKey = "getFarms-bakery";
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
       }
     }
 
@@ -203,7 +204,7 @@ module.exports = class bakery {
       return Object.freeze(item);
     });
 
-    this.cache.put(cacheKey, result, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
 
     console.log("bakery updated");
 

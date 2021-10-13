@@ -18,8 +18,8 @@ const flueMasterChefAbi = JSON.parse(
 );
 
 module.exports = class jetfuel {
-  constructor(cache, priceOracle) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
   }
 
@@ -38,9 +38,11 @@ module.exports = class jetfuel {
   }
 
   async getAddressFarms(address) {
-    const cacheItem = this.cache.get(`getAddressFarms-jetfuel-${address}`);
-    if (cacheItem) {
-      return cacheItem;
+    const cacheKey = `getAddressFarms-jetfuel-${address}`;
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const farms = this.getRawFuels("lp", "single");
@@ -82,9 +84,7 @@ module.exports = class jetfuel {
 
     const result = [...result1, ...result2];
 
-    this.cache.put(`getAddressFarms-jetfuel-${address}`, result, {
-      ttl: 300 * 1000
-    });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }
@@ -93,9 +93,9 @@ module.exports = class jetfuel {
     const cacheKey = "getFarms-jetfuel";
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
       }
     }
 
@@ -219,7 +219,7 @@ module.exports = class jetfuel {
 
     const result = [...resultFarms, ...fuelVaults];
 
-    this.cache.put(cacheKey, result, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
 
     console.log("jetfuel updated");
 

@@ -4,12 +4,15 @@ const crypto = require('crypto');
 const BigNumber = require("bignumber.js");
 const Web3EthContract = require("web3-eth-contract");
 const Utils = require("../../../utils");
+
+const MULTI_REWARD_ABI = require('./abi/gaugev3.json');
+const ERC20_ABI = require('../../../abi/erc20.json');
+const AstParser = require("../../../utils/ast_parser");
 const _ = require("lodash");
 
-const MULTI_REWARD_ABI = require('./abi/multi_reward_abi.json');
-const ERC20_ABI = require('../../../abi/erc20.json');
+// https://github.com/mobiusAMM/mobius-interface/blob/e9a482a39cf7e89ec91700b02f247b357cc2a902/src/state/stablePools/updater.ts
 
-module.exports = class ubeswap {
+module.exports = class mobius {
   constructor(cacheManager, priceOracle, tokenCollector, liquidityTokenCollector) {
     this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
@@ -18,23 +21,7 @@ module.exports = class ubeswap {
   }
 
   async getLbAddresses() {
-    const rawFarms = await this.getRawFarms();
-
-    const calls = [];
-
-    rawFarms.forEach(myPool => {
-      const token = new Web3EthContract(MULTI_REWARD_ABI, myPool.stakingRewardAddress);
-
-      calls.push({
-        stakingToken: token.methods.stakingToken(),
-      });
-    });
-
-    const callsResult = (await Utils.multiCall(calls, this.getChain()))
-      .filter(i => i.stakingToken)
-      .map(i => i.stakingToken);
-
-    return callsResult;
+    return [];
   }
 
   async getRawFarms() {
@@ -45,85 +32,49 @@ module.exports = class ubeswap {
       return cache;
     }
 
-    const pools = [
-      {
-        address: "0xd930501A0848DC0AA3E301c7B9b8AFE8134D7f5F",
-        underlyingPool: "0x19F1A692C77B481C23e9916E3E83Af919eD49765",
-        basePool: "0x19F1A692C77B481C23e9916E3E83Af919eD49765",
-        numRewards: 2,
-        active: !0
-      },
-      {
-        address: "0xbbC8C824c638fd238178a71F5b1E5Ce7e4Ce586B",
-        underlyingPool: "0x66bD2eF224318cA5e3A93E165e77fAb6DD986E89",
-        basePool: "0x66bD2eF224318cA5e3A93E165e77fAb6DD986E89",
-        numRewards: 2,
-        active: !0
-      },
-      {
-        address: "0x0F3d01aea89dA0b6AD81712Edb96FA7AF1c17E9B",
-        underlyingPool: "0x08252f2E68826950d31D268DfAE5E691EE8a2426",
-        basePool: "0x08252f2E68826950d31D268DfAE5E691EE8a2426",
-        numRewards: 2,
-        active: !0
-      },
-      {
-        address: "0x9D87c01672A7D02b2Dc0D0eB7A145C7e13793c3B",
-        underlyingPool: "0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1",
-        basePool: "0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1",
-        numRewards: 2,
-        active: !0
-      },
-      {
-        address: "0x194478Aa91e4D7762c3E51EeE57376ea9ac72761",
-        underlyingPool: "0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468",
-        basePool: "0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468",
-        numRewards: 2,
-        active: !0
-      },
-      {
-        address: "0x2f0ddEAa9DD2A0FB78d41e58AD35373d6A81EbB0",
-        underlyingPool: "0xaf13437122cd537C5D8942f17787cbDBd787fE94",
-        basePool: "0xaf13437122cd537C5D8942f17787cbDBd787fE94",
-        numRewards: 2,
-        active: !1
-      },
-      {
-        address: "0x84Bb1795b699Bf7a798C0d63e9Aad4c96B0830f4",
-        underlyingPool: "0xC087aEcAC0a4991f9b0e931Ce2aC77a826DDdaf3",
-        basePool: "0xC087aEcAC0a4991f9b0e931Ce2aC77a826DDdaf3",
-        numRewards: 2,
-        active: !1
-      },
-      {
-        address: "0x3d823f7979bB3af846D8F1a7d98922514eA203fC",
-        underlyingPool: "0xb030882bfc44e223fd5e20d8645c961be9b30bb3",
-        basePool: "0xaf13437122cd537C5D8942f17787cbDBd787fE94",
-        numRewards: 3,
-        active: !0
-      },
-      {
-        address: "0x3c7beeA32A49D96d72ce45C7DeFb5b287479C2ba",
-        underlyingPool: "0x8f309df7527f16dff49065d3338ea3f3c12b5d09",
-        basePool: "0xC087aEcAC0a4991f9b0e931Ce2aC77a826DDdaf3",
-        numRewards: 3,
-        active: !0
-      },
-      {
-        address: "0xA6f2ea3008E6BA42B0D3c09159860De24591cd0E",
-      },
-      {
-        address: "0x9CbA6392D0c15F6437c7e6085A1350c5862c5aBB",
-      }
-    ].map(i => {
-      i.stakingRewardAddress = i.address;
+    const files = await Utils.getJavascriptFiles('https://www.mobius.money/');
 
+    const rawPools = [];
+    Object.values(files).forEach(f => {
+      rawPools.push(...AstParser.createJsonFromObjectExpression(f, keys => keys.includes('gaugeAddress') && keys.includes('name') && keys.includes('tokenAddresses')));
+    });
+
+    const pools = rawPools.map(i => {
+      i.stakingRewardAddress = i.gaugeAddress;
       return i;
     });
 
-    await this.cacheManager.set(cacheKey, pools, {ttl: 60 * 60});
+    const calls = [];
 
-    return pools;
+    pools.forEach(myPool => {
+      const token = new Web3EthContract(MULTI_REWARD_ABI, myPool.stakingRewardAddress);
+
+      calls.push({
+        stakingRewardAddress: myPool.stakingRewardAddress,
+        stakingToken: token.methods.lp_token(),
+        rewardsToken: '0x73a210637f6F6B7005512677Ba6B3C96bb4AA44B',
+      });
+    });
+
+    const callsResult = await Utils.multiCall(calls, this.getChain());
+
+    const foo = [];
+    callsResult.forEach(i => {
+      if (!i.stakingToken) {
+        return;
+      }
+
+      const h = _.merge(
+        _.cloneDeep(pools.find(p => p.stakingRewardAddress === i.stakingRewardAddress)),
+        i
+      );
+
+      foo.push(h);
+    });
+
+    await this.cacheManager.set(cacheKey, foo, {ttl: 60 * 30});
+
+    return foo;
   }
 
   async getFarms(refresh = false) {
@@ -140,23 +91,7 @@ module.exports = class ubeswap {
 
     const calls = [];
 
-    rawFarms.forEach(myPool => {
-      const token = new Web3EthContract(MULTI_REWARD_ABI, myPool.stakingRewardAddress);
-
-      calls.push({
-        stakingRewardAddress: myPool.stakingRewardAddress.toLowerCase(),
-        stakingToken: token.methods.stakingToken(),
-        rewardsToken: token.methods.rewardsToken(),
-        rewardsToken0: token.methods.externalRewardsTokens(0),
-        rewardsToken1: token.methods.externalRewardsTokens(1),
-        rewardsToken2: token.methods.externalRewardsTokens(2),
-        externalStakingRewards: token.methods.externalStakingRewards(),
-      });
-    });
-
-    const callsResult = await Utils.multiCallIndexBy('stakingRewardAddress', calls, this.getChain());
-
-    Object.values(callsResult).forEach(c => {
+    Object.values(rawFarms).forEach(c => {
       if (!c.stakingToken || !c.stakingRewardAddress) {
         return;
       }
@@ -179,7 +114,7 @@ module.exports = class ubeswap {
         .update(farm.stakingRewardAddress.toLowerCase())
         .digest('hex');
 
-      let info = callsResult[farm.stakingRewardAddress.toLowerCase()];
+      let info = farm;
 
       let lpAddress = undefined;
 
@@ -193,26 +128,25 @@ module.exports = class ubeswap {
         }
       }
 
+      if (!symbol && info.name) {
+        symbol = info.name.replace('Pool', '').trim();
+      }
+
       if (!symbol) {
         symbol = '?';
       }
 
-      farm.info = info;
-
-      const farm1 = _.cloneDeep(farm);
-      farm1.info = info;
-
       const item = {
         id: `${this.getName()}_${id}`,
-        name: symbol.toUpperCase(),
-        token: symbol.toLowerCase(),
+        name: symbol,
+        token: symbol.toLowerCase().replace(/(\s+\(.*\))/i, '').trim().toLowerCase(),
         provider: this.getName(),
         has_details: true,
-        raw: Object.freeze(farm1),
+        raw: Object.freeze(farm),
         extra: {},
         chain: this.getChain(),
-        platform: 'ubeswap',
-        main_platform: 'ubeswap',
+        platform: 'mobius',
+        main_platform: 'mobius',
       };
 
       item.extra.transactionAddress = farm.stakingRewardAddress;
@@ -273,7 +207,7 @@ module.exports = class ubeswap {
       const newVar = {
         id: myPool.id,
         balanceOf: token.methods.balanceOf(address),
-        rewards: token.methods.earned(address),
+        rewards: token.methods.claimable_tokens(address),
       };
 
       if (fetchRewards) {
@@ -374,7 +308,7 @@ module.exports = class ubeswap {
 
           const reward = {
             symbol: farm.earn[index].symbol,
-            amount: value / (10 ** farm.earn[index].decimals)
+            amount: call.rewards / (10 ** farm.earn[index].decimals)
           };
 
           const price = this.priceOracle.findPrice(farm.earn[index].address);
@@ -449,7 +383,7 @@ module.exports = class ubeswap {
   }
 
   getName() {
-    return 'ubeswap';
+    return 'mobius';
   }
 
   getChain() {

@@ -274,21 +274,23 @@ module.exports = class FarmFetcher {
     // sushi: enrich lptoken
     const hasLpToken = pools.find(p => p.poolInfoObject.getLpToken());
     if (!hasLpToken) {
-      const foo = abi.find(f => f.name && f.name.toLowerCase() === 'lptoken' && f.inputs && f.inputs.length === 1 && f.outputs && f.outputs.length === 1 && f.outputs[0].type === 'address');
+      const foo = abi.find(f => f.name && (f.name.toLowerCase() === 'lptoken' || f.name.toLowerCase() === 'lptokens') && f.inputs && f.inputs.length === 1 && f.outputs && f.outputs.length === 1 && f.outputs[0].type === 'address');
 
-      const lpTokens = await Utils.multiCall([...Array(parseInt(poolLength)).keys()].map(id => {
-        return {
-          pid: id.toString(),
-          lptoken: new Web3EthContract(abi, masterChef).methods[foo.name](id),
-        };
-      }), chain);
+      if (foo) {
+        const lpTokens = await Utils.multiCall([...Array(parseInt(poolLength)).keys()].map(id => {
+          return {
+            pid: id.toString(),
+            lptoken: new Web3EthContract(abi, masterChef).methods[foo.name](id),
+          };
+        }), chain);
 
-      lpTokens.forEach(lpTokenResult => {
-        const pool = pools.find(p => p.poolInfoObject.getPid() === lpTokenResult.pid);
-        if (pool) {
-          pool.poolInfoObject.appendInput(lpTokenResult.lptoken, 'lptoken');
-        }
-      });
+        lpTokens.forEach(lpTokenResult => {
+          const pool = pools.find(p => p.poolInfoObject.getPid() === lpTokenResult.pid);
+          if (pool) {
+            pool.poolInfoObject.appendInput(lpTokenResult.lptoken, 'lptoken');
+          }
+        });
+      }
     }
 
     // lpToken or single token

@@ -14,8 +14,8 @@ const walk = require("acorn-walk");
 const acorn = require("acorn");
 
 module.exports = class ppancakebunny {
-  constructor(cache, priceOracle, tokenCollector) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle, tokenCollector) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector
   }
@@ -51,35 +51,30 @@ module.exports = class ppancakebunny {
     }], 'polygon');
 
     return (calls && calls.poolsOf && calls.poolsOf.poolsOf ? calls.poolsOf.poolsOf : [])
-      .filter(p => p.balance.gt(0))
+      .filter(p => p.balance > 0)
+      .map(i => Utils.convertRcpResultObject(i))
   }
 
   async getAddressFarms(address) {
-    const cacheItem = this.cache.get(`getAddressFarms-ppancakebunny-${address}`);
-    if (cacheItem) {
-      return cacheItem;
+    const cacheKey = `getAddressFarms-ppancakebunny-${address}`;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const farms = await this.getFarms();
 
-    const poolsOf = await this.getBalancedAddressPoolInfo(
-      address,
-      farms.filter(farm => farm.raw.address).map(farm => farm.raw.address)
-    )
+    const poolsOf = await this.getBalancedAddressPoolInfo(address, farms.filter(farm => farm.raw.address).map(farm => farm.raw.address))
 
-    this.cache.put(`getAddressFarms-all-ppancakebunny-${address}`, poolsOf, {
-      ttl: 60 * 1000
-    });
+    await this.cacheManager.set(`getAddressFarms-all-ppancakebunny-${address}`, poolsOf, {ttl: 60 * 5});
 
     const result = poolsOf
-      .filter(p => p.balance.gt(0))
+      .filter(p => p.balance > 0)
       .map(p =>
         farms.find(f => f.raw.address.toLowerCase() === p.pool.toLowerCase()).id
       )
 
-    this.cache.put(`getAddressFarms-ppancakebunny-${address}`, result, {
-      ttl: 300 * 1000
-    });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }
@@ -88,9 +83,9 @@ module.exports = class ppancakebunny {
     const cacheKey = "getFarms-ppancakebunny";
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
       }
     }
 
@@ -215,7 +210,7 @@ module.exports = class ppancakebunny {
       farms.push(Object.freeze(items));
     }
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log("ppancakebunny updated");
 
@@ -256,7 +251,9 @@ module.exports = class ppancakebunny {
 
     const farms = await this.getFarms();
 
-    let poolsOfCalls = this.cache.get(`getAddressFarms-all-ppancakebunny-${address}`);
+    const cacheKey = `getAddressFarms-all-ppancakebunny-${address}`;
+
+    let poolsOfCalls = await this.cacheManager.get(cacheKey);
     if (!poolsOfCalls) {
       const poolsOfAddresses = addressFarms
         .map(farmId => farms.find(f => f.id === farmId))
@@ -323,10 +320,10 @@ module.exports = class ppancakebunny {
       if ( pendingBUNNY) {
         result.rewards = [];
 
-        if (pendingBUNNY && pendingBUNNY.gt(0)) {
+        if (pendingBUNNY && pendingBUNNY > 0) {
           const item = {
             symbol: "polybunny",
-            amount: pendingBUNNY.toString() / 1e18
+            amount: pendingBUNNY / 1e18
           };
 
           const bunnyPrice = this.priceOracle.findPrice("0x4c16f69302ccb511c5fac682c7626b9ef0dc126a")
@@ -443,9 +440,10 @@ module.exports = class ppancakebunny {
 
   async getFarmsViaHtml() {
     const cacheKey = "getFarmsViaHtml-ppancakebunny";
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const javascriptFiles = await Utils.getJavascriptFiles('https://polygon.pancakebunny.finance/pool');
@@ -466,7 +464,7 @@ module.exports = class ppancakebunny {
       })
     });
 
-    this.cache.put(cacheKey, rawFarms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, rawFarms, {ttl: 60 * 30});
 
     return Object.freeze(rawFarms);
   }

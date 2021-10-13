@@ -465,8 +465,12 @@ module.exports = class FantomPriceOracle {
         symbol: 'brush',
         decimals: 18,
       },
-
-
+      {
+        router: '0xf491e7b69e4244ad4002bc14e878a34207e38c29', // paintswap
+        address: '0x23cBC7C95a13071562af2C4Fb1Efa7a284d0543a',
+        symbol: 'fswamp',
+        decimals: 18,
+      },
     ];
 
     const calls = tokens.map(t => {

@@ -3,6 +3,7 @@ const Utils = require("../../../utils");
 const Web3EthContract = require("web3-eth-contract");
 const FACTORY_ABI = require("./abi/factory.json");
 const _ = require("lodash");
+const REWARDS_ABI = require("./abi/rewards.json");
 
 module.exports = class impermax {
   constructor(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver) {
@@ -175,7 +176,7 @@ module.exports = class impermax {
 
     const result = subgraphResponse
       ? JSON.parse(subgraphResponse)?.data?.user || []
-      : [];
+      : {};
 
     await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5})
 
@@ -199,6 +200,25 @@ module.exports = class impermax {
     const farms = await this.getFarms();
 
     const results = [];
+
+    const rewards = [];
+
+    (addressFarms.borrowPositions || []).forEach(supply => {
+      const farm = farms.find(f => supply?.borrowable?.lendingPool?.id && f.raw.address.toLowerCase() === supply.borrowable.lendingPool.id.toLowerCase());
+      if (!farm) {
+        return;
+      }
+
+      const contract = new Web3EthContract(REWARDS_ABI, '0x89703cA5c6C3BD35f9D288Ff9710BecBFA8C6f7b');
+      rewards.push({
+        id: farm.id.toString(),
+        rewardToken: contract.methods.rewardToken(),
+        borrowable0: farm.raw.borrowable0 ? contract.methods.pendingReward(farm.raw.borrowable0, address) : '0',
+        borrowable1: farm.raw.borrowable1 ? contract.methods.pendingReward(farm.raw.borrowable1, address) : '0',
+      });
+    });
+
+    const pendingRewards = await Utils.multiCallIndexBy('id', rewards, this.getChain());
 
     (addressFarms.supplyPositions || []).forEach(supply => {
       const farmOrigin = farms.find(f => supply?.borrowable?.lendingPool?.id && f.raw.address.toLowerCase() === supply.borrowable.lendingPool.id.toLowerCase());
@@ -230,11 +250,19 @@ module.exports = class impermax {
         amount: supply.balance * token.exchangeRate
       };
 
+      if (Math.abs(result.deposit.amount) * 1e18 < Utils.DUST_FILTER) {
+        return;
+      }
+
       if (supply?.borrowable?.underlying?.id) {
         const price = this.priceOracle.findPrice(supply.borrowable.underlying.id);
         if (price) {
           result.deposit.usd = result.deposit.amount * price;
         }
+      }
+
+      if ('usd' in result.deposit && Math.abs(result.deposit.usd) < 0.01) {
+        return;
       }
 
       results.push(result);
@@ -257,9 +285,44 @@ module.exports = class impermax {
         amount: supply.balance // * farm.raw.subgraph.collateral.exchangeRate,
       };
 
+      if (Math.abs(result.deposit.amount) * 1e18 < Utils.DUST_FILTER) {
+        return;
+      }
+
       const price = this.priceOracle.findPrice(farm.extra.transactionToken);
       if (price) {
         result.deposit.usd = result.deposit.amount * price;
+      }
+
+      const rewardsDecimals = this.tokenCollector.getDecimals(pendingRewards[farm.id].rewardToken);
+      const rewards = pendingRewards[farm.id]
+        ? ((pendingRewards[farm.id]?.borrowable0 || 0) / (10 ** rewardsDecimals) + (pendingRewards[farm.id]?.borrowable1 || 0) / (10 ** rewardsDecimals))
+        : 0;
+
+      if (rewards) {
+        const rewardToken = this.tokenCollector.getTokenByAddress(pendingRewards[farm.id].rewardToken);
+        if (rewardToken) {
+          const reward = {
+            symbol: this.tokenCollector.getSymbolByAddress(pendingRewards[farm.id].rewardToken),
+            amount: rewards
+          };
+
+          const price = this.priceOracle.findPrice(pendingRewards[farm.id].rewardToken);
+          if (price) {
+            reward.usd = reward.amount * price;
+          }
+
+          result.rewards = [reward];
+        }
+      }
+
+      let value = rewards;
+      if ('usd' in result.deposit) {
+        value += Math.abs(result.deposit.usd);
+      }
+
+      if (value > 0 && value < 0.01) {
+        return;
       }
 
       results.push(result);
@@ -296,9 +359,17 @@ module.exports = class impermax {
         amount: supply.borrowBalance * -1 // * token.exchangeRate ???
       };
 
+      if (Math.abs(result.deposit.amount) * 1e18 < Utils.DUST_FILTER) {
+        return;
+      }
+
       const price = this.priceOracle.findPrice(borrowTokenAddress);
       if (price) {
         result.deposit.usd = result.deposit.amount * price;
+      }
+
+      if ('usd' in result.deposit && Math.abs(result.deposit.usd) < 0.01) {
+        return;
       }
 
       results.push(result);

@@ -137,6 +137,8 @@ module.exports = class Balances {
 
         nativePrice = this.priceOracle.findPrice('0xcf664087a5bb0237a0bad6742852ec6c8d69a27a');
       } else if (this.chain === 'celo') {
+        /*
+        wrapped token is equal with base token
         item = {
           token: '0x471ece3750da237f93b8e339c536989b8978a438',
           symbol: 'celo',
@@ -144,15 +146,18 @@ module.exports = class Balances {
         };
 
         nativePrice = this.priceOracle.findPrice('0x471ece3750da237f93b8e339c536989b8978a438');
+        */
       } else {
         throw new Error('invalid chain');
       }
 
-      if (nativePrice) {
-        item.usd = item.amount * nativePrice
-      }
+      if (item) {
+        if (nativePrice) {
+          item.usd = item.amount * nativePrice
+        }
 
-      balances.push(item);
+        balances.push(item);
+      }
     }
 
     allBalances.filter(c => c.balance > 0).forEach(b => {

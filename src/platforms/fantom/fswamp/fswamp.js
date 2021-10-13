@@ -9,8 +9,8 @@ const Utils = require("../../../utils");
 const JSDOM = require("jsdom").JSDOM;
 const erc20Abi = require("../../../abi/erc20.json");
 
-module.exports = class pswamp extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0x4f04e540a51013afb6761ee73d71d2fb1f29af80"
+module.exports = class fswamp extends PancakePlatformFork {
+  static MASTER_ADDRESS = "0x073D613b435b5574e988Dc989f467DDf94FB47D4"
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     super(cache, priceOracle);
@@ -32,7 +32,7 @@ module.exports = class pswamp extends PancakePlatformFork {
 
     let response
     try {
-      response = await Utils.requestGet('https://swamp.finance/polygon/');
+      response = await Utils.requestGet('https://swamp.finance/fantom/');
     } catch (e) {
       console.log('error swamp fetching vault info')
       await this.cacheManager.set(cacheKey, [], {ttl: 60 * 20})
@@ -110,7 +110,7 @@ module.exports = class pswamp extends PancakePlatformFork {
     });
 
     const [farmBalances] = await Promise.all([
-      Utils.multiCallIndexBy('address', farmBalanceCalls, 'polygon'),
+      Utils.multiCallIndexBy('address', farmBalanceCalls, 'fantom'),
     ]);
 
     const vaultInfos = await this.getVaultInfo();
@@ -166,7 +166,7 @@ module.exports = class pswamp extends PancakePlatformFork {
         item.platform = item.platform
           .replace('pancake swap v2', 'pancake')
           .replace('pancake swap', 'pancake')
-          .replace('polygon', '')
+          .replace('fantom', '')
           .trim()
       }
 
@@ -190,7 +190,7 @@ module.exports = class pswamp extends PancakePlatformFork {
       return cache;
     }
 
-    const foo = (await this.farmCollector.fetchForMasterChef(pswamp.MASTER_ADDRESS, 'polygon')).filter(f => f.isFinished !== true);
+    const foo = (await this.farmCollector.fetchForMasterChef(fswamp.MASTER_ADDRESS, 'fantom')).filter(f => f.isFinished !== true);
 
     const reformat = foo.map(f => {
       f.lpAddresses = f.lpAddress
@@ -224,7 +224,7 @@ module.exports = class pswamp extends PancakePlatformFork {
       };
     });
 
-    const calls = await Utils.multiCall(tokenCalls, 'polygon');
+    const calls = await Utils.multiCall(tokenCalls, 'fantom');
 
     const results = [];
     calls.forEach(call => {
@@ -239,11 +239,11 @@ module.exports = class pswamp extends PancakePlatformFork {
           : 18;
 
         const reward = {
-          symbol: "pswamp",
+          symbol: "fswamp",
           amount: call.pendingNATIVE / (10 ** decimals)
         };
 
-        const swampPrice = this.priceOracle.findPrice("pswamp");
+        const swampPrice = this.priceOracle.findPrice("0x23cBC7C95a13071562af2C4Fb1Efa7a284d0543a");
         if (swampPrice) {
           reward.usd = reward.amount * swampPrice;
         }
@@ -285,11 +285,11 @@ module.exports = class pswamp extends PancakePlatformFork {
   }
 
   getName() {
-    return 'pswamp';
+    return 'fswamp';
   }
 
   getFarmLink() {
-    return 'https://swamp.finance/polygon/';
+    return 'https://swamp.finance/fantom/';
   }
 
   getFarmEarns(farm) {
@@ -311,7 +311,7 @@ module.exports = class pswamp extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return pswamp.MASTER_ADDRESS;
+    return fswamp.MASTER_ADDRESS;
   }
 
   async getDetails(address, id) {
@@ -350,6 +350,6 @@ module.exports = class pswamp extends PancakePlatformFork {
   }
 
   getChain() {
-    return 'polygon';
+    return 'fantom';
   }
 };

@@ -1,21 +1,5 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_sbdo",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_startBlock",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -71,17 +55,17 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "user",
+        "name": "previousOwner",
         "type": "address"
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
       }
     ],
-    "name": "RewardPaid",
+    "name": "OwnershipTransferred",
     "type": "event"
   },
   {
@@ -111,7 +95,20 @@
   },
   {
     "inputs": [],
-    "name": "BLOCKS_PER_WEEK",
+    "name": "NATIVE",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "NATIVEMaxSupply",
     "outputs": [
       {
         "internalType": "uint256",
@@ -124,7 +121,7 @@
   },
   {
     "inputs": [],
-    "name": "TOTAL_REWARDS",
+    "name": "NATIVEPerBlock",
     "outputs": [
       {
         "internalType": "uint256",
@@ -144,18 +141,13 @@
       },
       {
         "internalType": "contract IERC20",
-        "name": "_lpToken",
+        "name": "_want",
         "type": "address"
       },
       {
-        "internalType": "bool",
-        "name": "_withUpdate",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_lastRewardBlock",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "_strat",
+        "type": "address"
       }
     ],
     "name": "add",
@@ -172,7 +164,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_amount",
+        "name": "_wantAmt",
         "type": "uint256"
       }
     ],
@@ -195,19 +187,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "endBlock",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -220,7 +199,7 @@
         "type": "uint256"
       }
     ],
-    "name": "getGeneratedReward",
+    "name": "getMultiplier",
     "outputs": [
       {
         "internalType": "uint256",
@@ -234,41 +213,42 @@
   {
     "inputs": [
       {
-        "internalType": "contract IERC20",
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "amount",
+        "name": "_amount",
         "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
       }
     ],
-    "name": "governanceRecoverUnsupported",
+    "name": "inCaseTokensGetStuck",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "massUpdatePools",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "operator",
+    "name": "owner",
     "outputs": [
       {
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "ownerNATIVEReward",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -287,7 +267,7 @@
         "type": "address"
       }
     ],
-    "name": "pendingShare",
+    "name": "pendingNATIVE",
     "outputs": [
       {
         "internalType": "uint256",
@@ -310,7 +290,7 @@
     "outputs": [
       {
         "internalType": "contract IERC20",
-        "name": "lpToken",
+        "name": "want",
         "type": "address"
       },
       {
@@ -325,38 +305,12 @@
       },
       {
         "internalType": "uint256",
-        "name": "accSbdoPerShare",
+        "name": "accNATIVEPerShare",
         "type": "uint256"
       },
       {
-        "internalType": "bool",
-        "name": "isStarted",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "runningBlocks",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "sbdo",
-    "outputs": [
-      {
-        "internalType": "contract IERC20",
-        "name": "",
+        "internalType": "address",
+        "name": "strat",
         "type": "address"
       }
     ],
@@ -365,7 +319,7 @@
   },
   {
     "inputs": [],
-    "name": "sbdoPerBlock",
+    "name": "poolLength",
     "outputs": [
       {
         "internalType": "uint256",
@@ -374,6 +328,13 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -397,14 +358,25 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_pid",
+        "type": "uint256"
+      },
+      {
         "internalType": "address",
-        "name": "_operator",
+        "name": "_user",
         "type": "address"
       }
     ],
-    "name": "setOperator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "stakedWantTokens",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -431,6 +403,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -463,7 +448,7 @@
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "amount",
+        "name": "shares",
         "type": "uint256"
       },
       {
@@ -484,11 +469,24 @@
       },
       {
         "internalType": "uint256",
-        "name": "_amount",
+        "name": "_wantAmt",
         "type": "uint256"
       }
     ],
     "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_pid",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawAll",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

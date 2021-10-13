@@ -15,6 +15,7 @@ const walk = require("acorn-walk");
 const acorn = require("acorn");
 const JSDOM = require("jsdom").JSDOM;
 const { MulticallProvider } = require("@0xsequence/multicall").providers;
+const HttpsProxyAgent = require('https-proxy-agent');
 
 const MULTI_CALL_CONTRACT = {
   bsc: '0xB94858b0bB5437498F5453A16039337e5Fdc269C',
@@ -811,7 +812,7 @@ module.exports = {
     return undefined;
   },
 
-  requestJsonGet: async (url, timeout = 25) => {
+  requestJsonGet: async (url, timeout = 25, proxy = false) => {
     const controller = new AbortController();
     setTimeout(() => controller.abort(), timeout * 1000);
 
@@ -823,6 +824,10 @@ module.exports = {
       }
     };
 
+    if (proxy && module.exports.CONFIG['DEFAULT_PROXY']) {
+      opts.agent = new HttpsProxyAgent(module.exports.CONFIG['DEFAULT_PROXY']);
+    }
+
     try {
       const foo = await fetch(url, opts);
       return await foo.json();
@@ -831,6 +836,20 @@ module.exports = {
     }
 
     return undefined;
+  },
+
+  requestJsonGetRetry: async (url, timeout = 25) => {
+    const response = await module.exports.requestJsonGet(url, timeout);
+    if (response) {
+      return response;
+    }
+
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+    await delay(2000);
+
+    console.log('retry: ', url)
+
+    return module.exports.requestJsonGet(url, timeout);
   },
 
   requestGet: async (url, timeout = 25) => {
@@ -932,5 +951,21 @@ module.exports = {
     }
 
     throw new Error('Invalid chain: ' + chain);
+  },
+
+  convertRcpResultObject: (item) => {
+    const result = {};
+
+    Object.entries(item).forEach(value => {
+      let valueElement = value[1];
+
+      if (valueElement._isBigNumber === true) {
+        valueElement = valueElement.toString();
+      }
+
+      result[value[0]] = valueElement;
+    });
+
+    return result;
   }
 };

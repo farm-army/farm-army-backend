@@ -25,9 +25,9 @@ module.exports = class polycat_compound extends PancakePlatformFork {
     const cacheKey = `getFarms-${this.getName()}`;
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
       }
     }
 
@@ -68,7 +68,7 @@ module.exports = class polycat_compound extends PancakePlatformFork {
 
     const result = [...farms]
 
-    this.cache.put(cacheKey, result, {ttl: 1000 * 60 * 30});
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
 
     console.log(`${this.getName()} updated`);
 
@@ -95,7 +95,7 @@ module.exports = class polycat_compound extends PancakePlatformFork {
       return f
     })
 
-    await this.cacheManager.set(cacheKey, reformat, {ttl: 60 * 30})
+    await this.cacheManager.set(cacheKey, reformat, {ttl: 60 * 30});
 
     return reformat;
   }

@@ -14,8 +14,8 @@ const acorn = require("acorn")
 const walk = require("acorn-walk");
 
 module.exports = class pancakebunny {
-  constructor(cache, priceOracle, tokenCollector) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle, tokenCollector) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector
   }
@@ -52,45 +52,40 @@ module.exports = class pancakebunny {
 
     return (calls && calls.poolsOf && calls.poolsOf.poolsOf ? calls.poolsOf.poolsOf : [])
       .filter(p => p.balance.gt(0))
+      .map(i => Utils.convertRcpResultObject(i))
   }
 
   async getAddressFarms(address) {
-    const cacheItem = this.cache.get(`getAddressFarms-pancakebunny-${address}`);
-    if (cacheItem) {
-      return cacheItem;
+    const cacheKey = `getAddressFarms-v2-pancakebunny-${address}`;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const farms = await this.getFarms();
 
-    const poolsOf = await this.getBalancedAddressPoolInfo(
-      address,
-      farms.filter(farm => farm.raw.address).map(farm => farm.raw.address)
-    )
+    const poolsOf = await this.getBalancedAddressPoolInfo(address, farms.filter(farm => farm.raw.address).map(farm => farm.raw.address))
 
-    this.cache.put(`getAddressFarms-all-pancakebunny-${address}`, poolsOf, {
-      ttl: 60 * 1000
-    });
+    await this.cacheManager.set(`getAddressFarms-all-pancakebunny-v2-${address}`, poolsOf, {ttl: 60 * 5});
 
     const result = poolsOf
-      .filter(p => p.balance.gt(0))
+      .filter(p => p.balance > 0)
       .map(p =>
         farms.find(f => f.raw.address.toLowerCase() === p.pool.toLowerCase()).id
       )
 
-    this.cache.put(`getAddressFarms-pancakebunny-${address}`, result, {
-      ttl: 300 * 1000
-    });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }
 
   async getFarms(refresh = false) {
-    const cacheKey = "getFarms-v2-pancakebunny";
+    const cacheKey = "getFarms-v3-pancakebunny";
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
       }
     }
 
@@ -215,7 +210,7 @@ module.exports = class pancakebunny {
       farms.push(Object.freeze(items));
     }
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log("pancakebunny updated");
 
@@ -255,7 +250,7 @@ module.exports = class pancakebunny {
 
     const farms = await this.getFarms();
 
-    let poolsOfCalls = this.cache.get(`getAddressFarms-all-pancakebunny-${address}`);
+    let poolsOfCalls = await this.cacheManager.get(`getAddressFarms-all-pancakebunny-v2-${address}`);
     if (!poolsOfCalls) {
       const poolsOfAddresses = addressFarms
         .map(farmId => farms.find(f => f.id === farmId))
@@ -329,10 +324,10 @@ module.exports = class pancakebunny {
       if (pendingUSD || pendingBNB || pendingBUNNY || pendingCAKE) {
         result.rewards = [];
 
-        if (pendingBUNNY && pendingBUNNY.gt(0)) {
+        if (pendingBUNNY && pendingBUNNY > 0) {
           const item = {
             symbol: "bunny",
-            amount: pendingBUNNY.toString() / 1e18
+            amount: pendingBUNNY / 1e18
           };
 
           const bunnyPrice = this.priceOracle.findPrice("bunny")
@@ -343,10 +338,10 @@ module.exports = class pancakebunny {
           result.rewards.push(item);
         }
 
-        if (pendingBNB && pendingBNB.gt(0)) {
+        if (pendingBNB && pendingBNB > 0) {
           const item = {
             symbol: "bnb",
-            amount: pendingBNB.toString() / 1e18
+            amount: pendingBNB / 1e18
           };
 
           const bnbPrice = this.priceOracle.findPrice("bnb");
@@ -357,10 +352,10 @@ module.exports = class pancakebunny {
           result.rewards.push(item);
         }
 
-        if (pendingCAKE && pendingCAKE.gt(0)) {
+        if (pendingCAKE && pendingCAKE > 0) {
           const item = {
             symbol: "cake",
-            amount: pendingCAKE.toString() / 1e18
+            amount: pendingCAKE / 1e18
           };
 
           const cakePrice = this.priceOracle.findPrice("cake")
@@ -484,10 +479,10 @@ module.exports = class pancakebunny {
   }
 
   async getFarmsViaHtml() {
-    const cacheKey = "getFarmsViaHtml-v2-pancakebunny";
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cacheKey = "getFarmsViaHtml-v3-pancakebunny";
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const javascriptFiles = await Utils.getJavascriptFiles("https://pancakebunny.finance/pool");
@@ -497,7 +492,7 @@ module.exports = class pancakebunny {
     Object.values(javascriptFiles).forEach(body => {
       walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
         Literal(node) {
-          if (node.value && node.value.toString().startsWith('{') && (node.value.toString().toLowerCase().includes('fliptocake') || node.value.toString().toLowerCase().includes('fliptoflip'))) {
+          if (node.value && node.value.toString().startsWith('{') && (node.value.toString().toLowerCase().includes('type') && node.value.toString().toLowerCase().includes('address') && node.value.toString().toLowerCase().includes('earn'))) {
             try {
               rawFarms = JSON.parse(node.value);
             } catch (e) {
@@ -510,12 +505,12 @@ module.exports = class pancakebunny {
 
     const farms = {};
     for (const [key, value] of Object.entries(rawFarms || {})) {
-      if (value.chainId.toString() === '56' && value.address && value.address.toLowerCase() !== '0xf84E3809971798Bd372aecdC03aE977759A619aB'.toLowerCase()) {
+      if (value.address && value.address.toLowerCase() !== '0xf84E3809971798Bd372aecdC03aE977759A619aB'.toLowerCase()) {
         farms[key] = Object.freeze(value);
       }
     }
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     return Object.freeze(farms);
   }

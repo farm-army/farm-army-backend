@@ -8,8 +8,7 @@ const crypto = require('crypto');
 const MasterAbi = require('./abi/master.json');
 
 module.exports = class mdex {
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
-    this.cache = cache;
+  constructor(priceOracle, tokenCollector, farmCollector, cacheManager) {
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
     this.farmCollector = farmCollector;
@@ -50,9 +49,9 @@ module.exports = class mdex {
   async getAddressFarms(address) {
     const cacheKey = `getAddressFarms-mdex-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const farms = await this.getFarms();
@@ -72,7 +71,7 @@ module.exports = class mdex {
       .filter(v => new BigNumber(v.userInfo[0] || 0).isGreaterThan(0))
       .map(v => v.id);
 
-    this.cache.put(cacheKey, all, { ttl: 300 * 1000 });
+    await this.cacheManager.set(cacheKey, all, {ttl: 60 * 5});
 
     return all;
   }
@@ -81,9 +80,9 @@ module.exports = class mdex {
     const cacheKey = "getFarms-mdex-v2";
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
       }
     }
 
@@ -163,7 +162,7 @@ module.exports = class mdex {
       return item;
     })
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log("mdex updated");
 

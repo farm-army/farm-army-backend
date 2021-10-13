@@ -5,13 +5,11 @@ const Web3EthContract = require("web3-eth-contract");
 const BigNumber = require("bignumber.js");
 
 const Utils = require("../../../utils");
-const erc20Abi = require("../../../abi/erc20.json");
 const walk = require("acorn-walk");
 const acorn = require("acorn");
 
 module.exports = class kukafe_compound {
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver) {
-    this.cache = cache;
+  constructor(priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver) {
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
     this.farmCollector = farmCollector;
@@ -28,9 +26,9 @@ module.exports = class kukafe_compound {
   async getFarmsRaw() {
     let cacheKey = `getFarmsRaw-js-v3-${this.getName()}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const files = await Utils.getJavascriptFiles('https://kukafe.finance/');
@@ -106,7 +104,7 @@ module.exports = class kukafe_compound {
       });
     })
 
-    this.cache.put(cacheKey, result, {ttl: 1000 * 60 * 30});
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
 
     return result;
   }
@@ -114,9 +112,9 @@ module.exports = class kukafe_compound {
   async getAddressFarms(address) {
     let cacheKey = `getAddressFarms-${this.getName()}-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const pools = await this.getFarms();
@@ -136,7 +134,7 @@ module.exports = class kukafe_compound {
       .filter(v => new BigNumber(v.balanceOf).isGreaterThan(0))
       .map(v => v.id);
 
-    this.cache.put(cacheKey, result, {ttl: 300 * 1000});
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }
@@ -145,9 +143,9 @@ module.exports = class kukafe_compound {
     const cacheKey = `getFarms-${this.getName()}-compound`;
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
       }
     }
 
@@ -206,7 +204,7 @@ module.exports = class kukafe_compound {
       return Object.freeze(item);
     });
 
-    this.cache.put(cacheKey, farms, {ttl: 1000 * 60 * 30});
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log(`${this.getName()} updated`);
 

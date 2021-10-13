@@ -7,7 +7,6 @@ const BigNumber = require("bignumber.js");
 
 const Utils = require("../../utils");
 const JSDOM = require("jsdom").JSDOM;
-const erc20Abi = require("../../abi/erc20.json");
 
 module.exports = class swamp extends PancakePlatformFork {
   static MASTER_ADDRESS = "0x33adbf5f1ec364a4ea3a5ca8f310b597b8afdee3"
@@ -82,7 +81,7 @@ module.exports = class swamp extends PancakePlatformFork {
       vaults.push(vault);
     })
 
-    await this.cacheManager.set(cacheKey, vaults, {ttl: 60 * 20})
+    await this.cacheManager.set(cacheKey, vaults, {ttl: 60 * 20});
 
     return vaults;
   }
@@ -91,9 +90,9 @@ module.exports = class swamp extends PancakePlatformFork {
     const cacheKey = `getFarms-${this.getName()}`;
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
       }
     }
 
@@ -156,7 +155,7 @@ module.exports = class swamp extends PancakePlatformFork {
 
     const result = [...farms]
 
-    this.cache.put(cacheKey, result, {ttl: 1000 * 60 * 30});
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
 
     console.log(`${this.getName()} updated`);
 

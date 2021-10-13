@@ -25,8 +25,7 @@ const sousChefABI = JSON.parse(
 const sousChefCombinedABI = require('./abi/sousChefCombined.json');
 
 module.exports = class pancake {
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
-    this.cache = cache;
+  constructor(priceOracle, tokenCollector, farmCollector, cacheManager) {
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
     this.farmCollector = farmCollector;
@@ -86,9 +85,10 @@ module.exports = class pancake {
   }
 
   async getAddressFarms(address) {
-    const cacheItem = this.cache.get(`getAddressFarms-pancake-${address}`);
-    if (cacheItem) {
-      return cacheItem;
+    const cacheKey = `getAddressFarms-pancake-${address}`;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const results = [];
@@ -115,9 +115,7 @@ module.exports = class pancake {
       .filter(v => v.userInfo && new BigNumber(v.userInfo[0] || 0).isGreaterThan(0))
       .map(v => v.id);
 
-    this.cache.put(`getAddressFarms-pancake-${address}`, result, {
-      ttl: 300 * 1000
-    });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }
@@ -136,9 +134,9 @@ module.exports = class pancake {
     const cacheKey = "getFarms-pancake";
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
       }
     }
 
@@ -347,7 +345,9 @@ module.exports = class pancake {
       chain: 'bsc',
     });
 
-    this.cache.put(cacheKey, result, { ttl: 300 * 1000 });
+    console.log('pancake updated');
+
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }

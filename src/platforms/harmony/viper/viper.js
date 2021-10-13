@@ -3,18 +3,17 @@
 const MasterChefAbi = require('./abi/masterchef.json');
 const PancakePlatformFork = require("../../common").PancakePlatformFork;
 
-module.exports = class fwaka extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0xaEF349E1736b8A4B1B243A369106293c3a0b9D09"
+module.exports = class viper extends PancakePlatformFork {
+  static MASTER_ADDRESS = "0x7abc67c8d4b248a38b0dc5756300630108cb48b4"
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
-    super(cache, priceOracle, tokenCollector);
+    super(cache, priceOracle);
 
     this.cache = cache;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
     this.farmCollector = farmCollector;
     this.cacheManager = cacheManager;
-    this.masterAbi = {};
   }
 
   async getFetchedFarms() {
@@ -25,7 +24,13 @@ module.exports = class fwaka extends PancakePlatformFork {
       return cache;
     }
 
-    const foo = (await this.farmCollector.fetchForMasterChef(this.getMasterChefAddress(), this.getChain())).filter(f => f.isFinished !== true);
+    const foo = (await this.farmCollector.fetchForMasterChef(
+      this.getMasterChefAddress(),
+      this.getChain(),
+      {
+        abi: MasterChefAbi
+      }
+    )).filter(f => f.isFinished !== true);
 
     const reformat = foo.map(f => {
       f.lpAddresses = f.lpAddress
@@ -51,15 +56,15 @@ module.exports = class fwaka extends PancakePlatformFork {
   }
 
   getName() {
-    return 'fwaka';
+    return 'viper';
   }
 
   getChain() {
-    return 'fantom';
+    return 'harmony';
   }
 
   getFarmLink(farm) {
-    return 'https://waka.finance/#/farms';
+    return 'https://kudex.finance/farms';
   }
 
   getFarmEarns(farm) {
@@ -69,7 +74,7 @@ module.exports = class fwaka extends PancakePlatformFork {
   }
 
   getPendingRewardContractMethod() {
-    return 'pendingWaka';
+    return 'pendingReward';
   }
 
   getSousAbi() {
@@ -81,13 +86,15 @@ module.exports = class fwaka extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return fwaka.MASTER_ADDRESS;
+    return viper.MASTER_ADDRESS;
   }
 
   async onFarmsBuild(farms) {
     farms.forEach(farm => {
-      farm.main_platform = 'waka';
-      farm.platform = 'waka';
+      if (farm.id.includes('_farm_')) {
+        farm.main_platform = 'viper';
+        farm.platform = 'viper';
+      }
     });
   }
 };

@@ -9,8 +9,8 @@ const MTOKEN_ABI = require(`./abi/mtoken.json`);
 const BASSET_ABI = require(`./abi/basset.json`);
 
 module.exports = class mstable {
-  constructor(cache, priceOracle, tokenCollector) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle, tokenCollector) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector
   }
@@ -18,9 +18,9 @@ module.exports = class mstable {
   async getAddressFarms(address) {
     let cacheKey = `getAddressFarms-v2-mstable-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const tokenCalls = (await this.getFarms()).map(farm => {
@@ -45,9 +45,7 @@ module.exports = class mstable {
       .filter(v => new BigNumber(v.balanceOf).isGreaterThan(0))
       .map(v => v.id);
 
-    this.cache.put(cacheKey, result, {
-      ttl: 300 * 1000
-    });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }
@@ -98,9 +96,9 @@ module.exports = class mstable {
     const cacheKey = "getFarms-mstable";
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
       }
     }
 
@@ -143,7 +141,7 @@ module.exports = class mstable {
       return item;
     });
 
-    this.cache.put(cacheKey, farms, {ttl: 1000 * 60 * 30});
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log("mstable updated");
 

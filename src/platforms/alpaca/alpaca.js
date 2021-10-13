@@ -34,8 +34,8 @@ module.exports = class alpaca {
     ['0x158Da805682BdC8ee32d52833aD41E74bb951E59'.toLowerCase()]: '0x55d398326f99059ff775485246999027b3197955',
   }
 
-  constructor(cache, priceOracle, tokenCollector, liquidityTokenCollector, farmPlatformResolver) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle, tokenCollector, liquidityTokenCollector, farmPlatformResolver) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
     this.liquidityTokenCollector = liquidityTokenCollector;
@@ -45,9 +45,9 @@ module.exports = class alpaca {
   async getAddressFarms(address) {
     const cacheKey = `getAddressFarms-alpaca-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const farms = await this.getFarms();
@@ -80,7 +80,7 @@ module.exports = class alpaca {
       }
     })
 
-    this.cache.put(cacheKey, all, { ttl: 300 * 1000 });
+    await this.cacheManager.set(cacheKey, all, {ttl: 60 * 5});
 
     return all;
   }
@@ -88,9 +88,9 @@ module.exports = class alpaca {
   async getAddressPositions(address) {
     const cacheKey = `getAddressPositions-alpaca-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const controller = new AbortController()
@@ -111,7 +111,7 @@ module.exports = class alpaca {
       json = await foo.json();
     } catch (e) {
       console.log('alpagraph timeout: ', address, e.message)
-      this.cache.put(cacheKey, [], { ttl: 30 * 1000 });
+      await this.cacheManager.set(cacheKey, [], {ttl: 60 * 30});
 
       return []
     }
@@ -125,11 +125,12 @@ module.exports = class alpaca {
       })
     } else {
       console.log('alpagraph error: ', address)
-      this.cache.put(cacheKey, positions, { ttl: 30 * 1000 });
+      await this.cacheManager.set(cacheKey, positions, {ttl: 60 * 30});
+
       return []
     }
 
-    this.cache.put(cacheKey, positions, { ttl: 300 * 1000 });
+    await this.cacheManager.set(cacheKey, positions, {ttl: 60 * 5});
 
     return positions;
   }
@@ -137,9 +138,9 @@ module.exports = class alpaca {
   async getRawFarms() {
     const cacheKey = "getRawFarms-alpaca-v1";
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const javascriptFiles = await Utils.getJavascriptFiles("https://app.alpacafinance.org");
@@ -159,7 +160,7 @@ module.exports = class alpaca {
       })
     });
 
-    this.cache.put(cacheKey, response, { ttl: 1000 * 60 * 60 * 3 });
+    await this.cacheManager.set(cacheKey, response, {ttl: 60 * 60 * 3});
 
     return response;
   }
@@ -168,9 +169,9 @@ module.exports = class alpaca {
     const cacheKey = "getFarms-alpaca-v2";
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
       }
     }
 
@@ -301,7 +302,7 @@ module.exports = class alpaca {
       })
     })
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log("alpaca updated");
 

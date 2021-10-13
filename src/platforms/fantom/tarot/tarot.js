@@ -6,12 +6,13 @@ const _ = require("lodash");
 const HttpsProxyAgent = require('https-proxy-agent');
 
 module.exports = class tarot {
-  constructor(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver) {
+  constructor(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver, proxy) {
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
     this.cacheManager = cacheManager;
     this.liquidityTokenCollector = liquidityTokenCollector;
     this.farmPlatformResolver = farmPlatformResolver;
+    this.proxy = proxy;
   }
 
   async getLbAddresses() {
@@ -22,14 +23,12 @@ module.exports = class tarot {
     return _.uniq(lbAddresses);
   }
 
-  async getRawFarms(refresh = false) {
+  async getRawFarms() {
     const cacheKey = `${this.getName()}-v5-farm-info`
 
-    if (!refresh) {
-      const cacheItem = await this.cacheManager.get(cacheKey)
-      if (cacheItem) {
-        return cacheItem;
-      }
+    const cacheItem = await this.cacheManager.get(cacheKey)
+    if (cacheItem) {
+      return cacheItem;
     }
 
     const allLendingPoolsLengthResult = await Utils.multiCall([{
@@ -57,10 +56,7 @@ module.exports = class tarot {
         borrowable1: i.lendingPool[4],
       }));
 
-    const proxyAgent = new HttpsProxyAgent('http://69.197.181.202:3128');
-
-    const subgraphResponse = await Utils.request('POST', "https://dev.tarot.to/subgraphs/name/tarot-finance/tarot", {
-      "agent": proxyAgent,
+    const subgraphResponse = await this.proxyRequest('POST', "https://dev.tarot.to/subgraphs/name/tarot-finance/tarot", {
       "headers": {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9,de;q=0.8",
@@ -90,7 +86,7 @@ module.exports = class tarot {
       }
     });
 
-    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30})
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 60 * 3})
 
     return result;
   }
@@ -105,7 +101,7 @@ module.exports = class tarot {
       }
     }
 
-    const pools = await this.getRawFarms(refresh);
+    const pools = await this.getRawFarms();
 
     const farms = [];
     pools.forEach(pool => {
@@ -156,6 +152,21 @@ module.exports = class tarot {
     return farms;
   }
 
+  async proxyRequest(method, url, opt, timeout) {
+    for (const proxy of [this.proxy]) {
+      if (proxy) {
+        opt.agent = new HttpsProxyAgent(proxy);
+      }
+
+      const response = await Utils.request(method, url, opt, timeout);
+      if (response) {
+        return response;
+      }
+    }
+
+    return undefined;
+  }
+
   async getAddressFarms(address) {
     let cacheKey = `getAddressFarms-${this.getName()}-v2-${address}`;
 
@@ -164,10 +175,7 @@ module.exports = class tarot {
       return cacheItem;
     }
 
-    const proxyAgent = new HttpsProxyAgent('http://69.197.181.202:3128');
-
-    const subgraphResponse = await Utils.request("POST", "https://dev.tarot.to/subgraphs/name/tarot-finance/tarot", {
-      "agent": proxyAgent,
+    const subgraphResponse = await this.proxyRequest("POST", "https://dev.tarot.to/subgraphs/name/tarot-finance/tarot", {
       "headers": {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9",
@@ -186,7 +194,7 @@ module.exports = class tarot {
       "body": "{\"operationName\":null,\"variables\":{},\"query\":\"{\\n  user(id: \\\"" + address.toLowerCase() + "\\\") {\\n    collateralPositions(first: 1000) {\\n      balance\\n      collateral {\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    supplyPositions(first: 1000) {\\n      balance\\n      borrowable {\\n        underlying {\\n          id\\n          __typename\\n        }\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    borrowPositions(first: 1000) {\\n      borrowBalance\\n      borrowIndex\\n      borrowable {\\n        underlying {\\n          id\\n          __typename\\n        }\\n        lendingPool {\\n          id\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}",
       "method": "POST",
       "mode": "cors"
-    });
+    }, 15);
 
     const result = subgraphResponse
       ? JSON.parse(subgraphResponse)?.data?.user || []
@@ -245,11 +253,19 @@ module.exports = class tarot {
         amount: supply.balance * token.exchangeRate
       };
 
+      if (Math.abs(result.deposit.amount) * 1e18 < Utils.DUST_FILTER) {
+        return;
+      }
+
       if (supply?.borrowable?.underlying?.id) {
         const price = this.priceOracle.findPrice(supply.borrowable.underlying.id);
         if (price) {
           result.deposit.usd = result.deposit.amount * price;
         }
+      }
+
+      if ('usd' in result.deposit && Math.abs(result.deposit.usd) < 0.01) {
+        return;
       }
 
       results.push(result);
@@ -272,9 +288,17 @@ module.exports = class tarot {
         amount: supply.balance // * farm.raw.subgraph.collateral.exchangeRate,
       };
 
+      if (Math.abs(result.deposit.amount) * 1e18 < Utils.DUST_FILTER) {
+        return;
+      }
+
       const price = this.priceOracle.findPrice(farm.extra.transactionToken);
       if (price) {
         result.deposit.usd = result.deposit.amount * price;
+      }
+
+      if ('usd' in result.deposit && Math.abs(result.deposit.usd) < 0.01) {
+        return;
       }
 
       results.push(result);
@@ -311,9 +335,17 @@ module.exports = class tarot {
         amount: supply.borrowBalance * -1 // * token.exchangeRate ???
       };
 
+      if (Math.abs(result.deposit.amount) * 1e18 < Utils.DUST_FILTER) {
+        return;
+      }
+
       const price = this.priceOracle.findPrice(borrowTokenAddress);
       if (price) {
         result.deposit.usd = result.deposit.amount * price;
+      }
+
+      if ('usd' in result.deposit && Math.abs(result.deposit.usd) < 0.01) {
+        return;
       }
 
       results.push(result);

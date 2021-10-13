@@ -14,6 +14,7 @@ module.exports = class Http {
     platformsKcc,
     platformsHarmony,
     platformsCelo,
+    crossPlatforms,
     balances,
     addressTransactions,
     polygonAddressTransactions,
@@ -61,6 +62,8 @@ module.exports = class Http {
     this.platformsFantom = platformsFantom;
     this.platformsKcc = platformsKcc;
     this.platformsCelo = platformsCelo;
+
+    this.crossPlatforms = crossPlatforms;
 
     this.balances = balances;
 
@@ -284,6 +287,20 @@ module.exports = class Http {
       res.json(result);
     });
 
+    app.get("/farms", async (req, res) => {
+      const items = (await Promise.allSettled(
+        await this.crossPlatforms.getFunctionAwaits("getFarms")
+      )).filter(i => i.value).map(i => i.value);
+
+      const result = items.flat().map(f => {
+        const item = _.cloneDeep(f);
+        delete item.raw;
+        return item;
+      });
+
+      res.json(result);
+    });
+
     app.get("/:chain/yield/:address", async (req, res) => {
       if (!req.query.p) {
         res.status(400).json({error: 'missing "p" query parameter'});
@@ -326,6 +343,52 @@ module.exports = class Http {
 
       timer += performance.now();
       console.log(`${chain}: ${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: ${(timer / 1000).toFixed(3)} sec`);
+
+      res.json(response);
+    });
+
+    app.get("/yield/:address", async (req, res) => {
+      let timer = -performance.now();
+      const {address} = req.params;
+
+      let platforms = [];
+      if (req.query.p) {
+        platforms = _.uniq(req.query.p.split(',').filter(e => e.match(/^[\w]+$/g)));
+
+        if (platforms.length === 0) {
+          res.json({});
+          return;
+        }
+      }
+
+      // filtered or cross-chain
+      const functionAwaitsForPlatforms = platforms.length > 0
+        ? this.crossPlatforms.getFunctionAwaitsForPlatforms(platforms, 'getYields', [address])
+        : this.crossPlatforms.getFunctionAwaits('getYields', [address]);
+
+      const awaits = await Promise.allSettled([...functionAwaitsForPlatforms]);
+
+      const response = {}
+      awaits.forEach(v => {
+        if (!v.value) {
+          console.error(v);
+          return;
+        }
+
+        v.value.forEach(vault => {
+          const item = _.cloneDeep(vault);
+          delete item.farm.raw;
+
+          if (!response[vault.farm.provider]) {
+            response[vault.farm.provider] = [];
+          }
+
+          response[vault.farm.provider].push(item);
+        });
+      });
+
+      timer += performance.now();
+      console.log(`cross-chains (${platforms.length === 0 ? 'all' : platforms.length}): ${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: ${(timer / 1000).toFixed(3)} sec`);
 
       res.json(response);
     });

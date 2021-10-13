@@ -2,11 +2,12 @@
 
 const BigNumber = require("bignumber.js");
 const Web3EthContract = require("web3-eth-contract");
-const Utils = require("../../utils");
+const Utils = require("../../../utils");
 
 const VAULT_ABI = require('./abi/vault.json');
+const AstParser = require("../../../utils/ast_parser");
 
-module.exports = class beefy {
+module.exports = class robovault {
   constructor(cacheManager, priceOracle, tokenCollector) {
     this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
@@ -14,49 +15,47 @@ module.exports = class beefy {
   }
 
   async getLbAddresses() {
-    return (await this.getRawFarms())
-      .filter(
-        farm => farm.tokenAddress && farm.assets && farm.assets.length === 2
-      )
-      .map(farm => farm.tokenAddress);
-  }
-
-  async getLpPrices() {
-    const cacheKey = `beefy-lp-v1-prices`;
-
-    const cache = await this.cacheManager.get(cacheKey);
-    if (cache) {
-      return cache;
-    }
-
-    const prices = await Utils.requestJsonGet('https://api.beefy.finance/lps');
-
-    await this.cacheManager.set(cacheKey, prices, {ttl: 60 * 15});
-
-    return prices;
+    return [];
   }
 
   async getRawFarms() {
-    const cacheKey = `getAddressFarms-github-${this.getName()}`;
+    const cacheKey = `${this.getName()}-v3-raw-farms`
 
-    const cache = await this.cacheManager.get(cacheKey);
+    const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
       return cache;
     }
 
-    const poolsResponse = await Utils.requestGet(this.getGithubFarmsUrl());
+    const files = await Utils.getJavascriptFiles('https://www.robo-vault.com/');
 
-    const pools = Object.freeze(
-      eval(
-        poolsResponse.replace(/export\s+const\s+\w+Pools\s+=\s+/, "")
-      ).filter(p => {
-        return p.status === "active" || p.depositsPaused !== false;
-      })
-    );
+    const rows = [];
+    Object.values(files).forEach(f => {
+      rows.push(...AstParser.createJsonFromObjectExpression(f, keys => keys.includes('earnContractAddress') && keys.includes('earnedTokenAddress')));
+    });
 
-    await this.cacheManager.set(cacheKey, pools, {ttl: 60 * 30});
+    const response = (await Utils.requestJsonGetRetry('https://api.robo-vault.com/vault')) || [];
 
-    return pools;
+    const result = rows.map(row => {
+      const info = response.find(r => r.addr.toLowerCase() === row.earnContractAddress.toLowerCase());
+
+      if (info?.apy) {
+        row.apy = info.apy;
+      }
+
+      if (info?.tvl) {
+        row.tvl = info.tvl;
+      }
+
+      if (info?.tvlUsd) {
+        row.tvlUsd = info.tvlUsd;
+      }
+
+      return row;
+    })
+
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
+
+    return result;
   }
 
   async getAddressFarms(address) {
@@ -70,7 +69,7 @@ module.exports = class beefy {
     const pools = await this.getFarms();
 
     const tokenCalls = pools.map(myPool => {
-      const token = new Web3EthContract(VAULT_ABI, myPool.raw.earnedTokenAddress);
+      const token = new Web3EthContract(VAULT_ABI, myPool.raw.earnContractAddress);
 
       return {
         id: myPool.id,
@@ -99,29 +98,20 @@ module.exports = class beefy {
       }
     }
 
-    let apys = {};
-    try {
-      apys = await Utils.requestJsonGet("https://api.beefy.finance/apy");
-    } catch (e) {
-      console.error("https://api.beefy.finance/apy", e.message);
-    }
-
     const pools = await this.getRawFarms();
 
     const vaultCalls = pools.map(pool => {
-      const vault = new Web3EthContract(VAULT_ABI, pool.earnedTokenAddress);
+      const vault = new Web3EthContract(VAULT_ABI, pool.earnContractAddress);
 
       return {
         id: pool.id,
-        tokenAddress: pool.tokenAddress ? pool.tokenAddress : "",
         pricePerFullShare: vault.methods.getPricePerFullShare(),
-        tvl: vault.methods.balance()
+        pricePerShare: vault.methods.getPricePerShare(),
       };
     });
 
-    const [vault, lpPrices] = await Promise.all([
+    const [vault] = await Promise.all([
       Utils.multiCallIndexBy("id", vaultCalls, this.getChain()),
-      this.getLpPrices(),
     ]);
 
     const farms = [];
@@ -129,6 +119,8 @@ module.exports = class beefy {
       const name = farm.name
         .replace(/\//g, '-')
         .replace(/\s+\w*lp$/i, '')
+        .replace(/\s+\w*lp$/i, '')
+        .replace(/(\s+\(.*\))/i, '')
         .trim();
 
       let token = farm.token.replace(/\//g, '-')
@@ -144,49 +136,51 @@ module.exports = class beefy {
         id: `${this.getName()}_${farm.id}`,
         name: name,
         token: token,
-        platform: farm.platform,
+
         provider: this.getName(),
-        has_details: !!(farm.earnedTokenAddress && farm.tokenAddress),
+        has_details: true,
         raw: Object.freeze(farm),
         extra: {},
         chain: this.getChain(),
         compound: true,
       };
 
+      if (farm.platform) {
+        item.platform = farm.platform.replaceAll(' ', '').split('+').join(',');
+      }
+
       const vaultElement = vault[farm.id];
+
       if (vaultElement.pricePerFullShare) {
-        item.extra.pricePerFullShare = vaultElement.pricePerFullShare / 1e18;
+        item.extra.pricePerFullShare = vaultElement.pricePerFullShare / 1e6;
       }
 
-      if (vaultElement.tokenAddress) {
-        item.extra.lpAddress = vaultElement.tokenAddress;
+      if (vaultElement.pricePerShare) {
+        item.extra.pricePerFullShare = vaultElement.pricePerShare / 1e18;
       }
 
-      if (farm.earnedTokenAddress) {
-        item.extra.transactionAddress = farm.earnedTokenAddress;
-        item.extra.pricePerFullShareToken = farm.earnedTokenAddress;
+      item.extra.transactionAddress = farm.earnContractAddress;
+      item.extra.transactionToken = farm.tokenAddress;
+
+      if (farm.assets && farm.assets.length > 1) {
+        item.extra.lpAddress = vaultElement.transactionToken
       }
 
-      if (vaultElement.tokenAddress) {
-        item.extra.transactionToken = vaultElement.tokenAddress
-
-        item.tvl = {
-          amount: vaultElement.tvl / (10 ** this.tokenCollector.getDecimals(vaultElement.tokenAddress))
-        };
-
-        let price = this.priceOracle.findPrice(vaultElement.tokenAddress, farm.oracleId.toLowerCase());
-        if (!price && lpPrices[farm.id]) {
-          price = lpPrices[farm.id];
-        }
-
-        if (price) {
-          item.tvl.usd = item.tvl.amount * price;
-        }
+      if (farm.tvl || farm.tvlUsd) {
+        item.tvl = {};
       }
 
-      if (apys[farm.id]) {
+      if (farm.tvl) {
+        item.tvl.amount = farm.tvl;
+      }
+
+      if (farm.tvlUsd) {
+        item.tvl.usd = farm.tvlUsd;
+      }
+
+      if (farm.apy) {
         item.yield = {
-          apy: apys[farm.id] * 100
+          apy: farm.apy * 100
         };
       }
 
@@ -217,9 +211,9 @@ module.exports = class beefy {
     const farms = await this.getFarms();
 
     const tokenCalls = addressFarms.map(a => {
-      const farm = farms.filter(f => f.id === a)[0];
+      const farm = farms.find(f => f.id === a);
 
-      const token = new Web3EthContract(VAULT_ABI, farm.raw.earnedTokenAddress);
+      const token = new Web3EthContract(VAULT_ABI, farm.raw.earnContractAddress);
 
       return {
         id: farm.id,
@@ -227,15 +221,14 @@ module.exports = class beefy {
       };
     });
 
-    const [calls, lpPrices] = await Promise.all([
+    const [calls] = await Promise.all([
       Utils.multiCall(tokenCalls, this.getChain()),
-      this.getLpPrices(),
     ]);
 
     return calls.map(call => {
       const farm = farms.find(f => f.id === call.id);
 
-      const amount = call.balanceOf * farm.extra.pricePerFullShare;
+      const amount = call.balanceOf * (farm.extra.pricePerFullShare || 1);
 
       const result = {};
       result.farm = farm;
@@ -247,18 +240,12 @@ module.exports = class beefy {
         amount: amount  / (10 ** decimals)
       };
 
-      if (farm.raw.tokenAddress) {
-        const price = this.priceOracle.findPrice(farm.raw.tokenAddress);
+      if (farm.extra.transactionToken) {
+        const price = this.priceOracle.findPrice(farm.extra.transactionToken);
         if (price) {
           result.deposit.usd = result.deposit.amount * price;
         }
       }
-
-      if (!result.deposit.usd && lpPrices[farm.raw.oracleId]) {
-        result.deposit.usd = result.deposit.amount * lpPrices[farm.raw.oracleId];
-      }
-
-      result.rewards = [];
 
       return result;
     });
@@ -317,15 +304,11 @@ module.exports = class beefy {
     return result;
   }
 
-  getGithubFarmsUrl() {
-    return 'https://raw.githubusercontent.com/beefyfinance/beefy-app/master/src/features/configure/vault/bsc_pools.js';
-  }
-
   getName() {
-    return 'beefy';
+    return 'robovault';
   }
 
   getChain() {
-    return 'bsc';
+    return 'fantom';
   }
 };

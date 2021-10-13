@@ -8,8 +8,8 @@ const Web3EthContract = require("web3-eth-contract");
 const MASTERCHEF_ABI = require("./abi/masterchef.json");
 
 module.exports = class autofarm {
-  constructor(cache, priceOracle) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
   }
 
@@ -23,9 +23,9 @@ module.exports = class autofarm {
 
   async getAddressFarms(address) {
     const cacheKey = `getAddressFarms-${this.getName()}-${address}`;
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
     }
 
     const farms = await this.getFarms();
@@ -47,7 +47,7 @@ module.exports = class autofarm {
       )
       .map(v => v.id);
 
-    this.cache.put(cacheKey, response, { ttl: 300 * 1000 });
+    await this.cacheManager.set(cacheKey, response, {ttl: 60 * 5});
 
     return response;
   }
@@ -56,9 +56,9 @@ module.exports = class autofarm {
     const cacheKey = `getFarms-${this.getName()}`;
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
       }
     }
 
@@ -158,7 +158,7 @@ module.exports = class autofarm {
       farms.push(Object.freeze(item));
     }
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log(`${this.getName()} updated`);
 

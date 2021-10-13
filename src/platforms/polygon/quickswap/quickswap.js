@@ -9,8 +9,8 @@ const VAULT_ABI = require('./abi/vault.json');
 const ERC20_ABI = require('../../../abi/erc20.json');
 
 module.exports = class quickswap {
-  constructor(cache, priceOracle, tokenCollector, liquidityTokenCollector) {
-    this.cache = cache;
+  constructor(cacheManager, priceOracle, tokenCollector, liquidityTokenCollector) {
+    this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
     this.liquidityTokenCollector = liquidityTokenCollector;
@@ -25,9 +25,9 @@ module.exports = class quickswap {
   async getRawFarms() {
     const cacheKey = `getRawFarms-github-${this.getName()}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const result = await Utils.requestGet('https://raw.githubusercontent.com/vfat-tools/vfat-tools/master/src/static/js/matic_quick.js');
@@ -41,7 +41,7 @@ module.exports = class quickswap {
 
     const pools = eval(x) || [];
 
-    this.cache.put(cacheKey, pools, { ttl: 600 * 1000 });
+    await this.cacheManager.set(cacheKey, pools, {ttl: 60 * 60 * 5});
 
     return pools;
   }
@@ -50,9 +50,9 @@ module.exports = class quickswap {
     let cacheKey = `getFarms-${this.getName()}`;
 
     if (!refresh) {
-      const cacheItem = this.cache.get(cacheKey);
-      if (cacheItem) {
-        return cacheItem;
+      const cache = await this.cacheManager.get(cacheKey)
+      if (cache) {
+        return cache;
       }
     }
 
@@ -163,7 +163,7 @@ module.exports = class quickswap {
       farms.push(Object.freeze(item));
     });
 
-    this.cache.put(cacheKey, farms, { ttl: 1000 * 60 * 30 });
+    await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log(`${this.getName()} updated`);
 
@@ -173,9 +173,9 @@ module.exports = class quickswap {
   async getAddressInfo(address) {
     let cacheKey = `getAddressInfo-${this.getName()}-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const pools = await this.getFarms();
@@ -197,7 +197,7 @@ module.exports = class quickswap {
       new BigNumber(v.rewards || 0).isGreaterThan(0)
     );
 
-    this.cache.put(cacheKey, result, {ttl: 60 * 1000});
+    await this.cacheManager.set(cacheKey, result, {ttl: 60});
 
     return result;
   }
@@ -205,9 +205,9 @@ module.exports = class quickswap {
   async getAddressFarms(address) {
     let cacheKey = `getAddressFarms-${this.getName()}-${address}`;
 
-    const cacheItem = this.cache.get(cacheKey);
-    if (cacheItem) {
-      return cacheItem;
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
     }
 
     const calls = await this.getAddressInfo(address);
@@ -216,7 +216,7 @@ module.exports = class quickswap {
       .filter(v => new BigNumber(v.balanceOf).isGreaterThan(0) || new BigNumber(v.rewards || 0).isGreaterThan(0))
       .map(v => v.id);
 
-    this.cache.put(cacheKey, result, { ttl: 300 * 1000 });
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
 
     return result;
   }

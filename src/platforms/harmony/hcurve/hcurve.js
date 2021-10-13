@@ -8,7 +8,7 @@ const Utils = require("../../../utils");
 const GAUGE_ABI = require('./abi/gauge.json');
 const LP_TOKEN_ABI = require('./abi/lp_token.json');
 
-module.exports = class pcurve {
+module.exports = class hcurve {
   constructor(cacheManager, priceOracle, tokenCollector) {
     this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
@@ -18,32 +18,14 @@ module.exports = class pcurve {
   async getRawFarms() {
     return [
       {
-        name: 'aave',
-        symbol: 'usd',
-        token: '0xE7a24EF0C5e95Ffb0f6684b813A78F2a3AD7D171',
-        gauge: '0x19793B454D3AfC7b454F206Ffe95aDE26cA6912c',
+        name: 'DAI-USDC-USDT',
+        symbol: 'dai-usdc-usdt',
+        token: '0xC5cfaDA84E902aD92DD40194f0883ad49639b023',
+        gauge: '0xbF7E49483881C76487b0989CD7d9A8239B20CA41',
         rewardsTokens: [
-          '0x172370d5Cd63279eFa6d502DAB29171933a610AF'
+          '0xcf664087a5bb0237a0bad6742852ec6c8d69a27a'
         ]
       },
-      {
-        name: 'atricrypto',
-        symbol: 'usd-btc-eth',
-        token: '0x8096ac61db23291252574D49f036f0f9ed8ab390',
-        gauge: '0xb0a366b987d77b5eD5803cBd95C80bB6DEaB48C0',
-        rewardsTokens: [
-          '0x172370d5Cd63279eFa6d502DAB29171933a610AF'
-        ]
-      },
-      {
-        name: 'renBTC',
-        symbol: 'btc',
-        token: '0xf8a57c1d3b9629b77b6726a042ca48990A84Fb49',
-        gauge: '0xffbACcE0CC7C19d46132f1258FC16CF6871D153c',
-        rewardsTokens: [
-          '0x172370d5Cd63279eFa6d502DAB29171933a610AF'
-        ]
-      }
     ];
   }
 
@@ -285,10 +267,10 @@ module.exports = class pcurve {
   }
 
   getName() {
-    return 'pcurve';
+    return 'hcurve';
   }
 
   getChain() {
-    return 'polygon';
+    return 'harmony';
   }
 }
