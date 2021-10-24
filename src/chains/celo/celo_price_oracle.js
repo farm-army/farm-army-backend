@@ -16,6 +16,8 @@ module.exports = class CeloPriceOracle {
     this.priceCollector = priceCollector;
     this.cacheManager = cacheManager;
     this.priceFetcher = priceFetcher;
+
+    this.ignoreLp = [];
   }
 
   /**
@@ -137,6 +139,9 @@ module.exports = class CeloPriceOracle {
     const matches = {};
 
     const known = {
+      'bitcoin': ['0xD629eb00dEced2a080B7EC630eF6aC117e614f1b'],
+      'ethereum': ['0x2DEf4285787d58a2f811AF24755A8150622f4361', '0xe919f65739c26a42616b7b8eedc6b5524d1e3ac4'],
+      'sushi': ['0xd15ec721c2a896512ad29c671997dd68f9593226'],
     };
 
     tokens.forEach(token => {
@@ -223,20 +228,35 @@ module.exports = class CeloPriceOracle {
     return matches
   }
 
-  async fetch(lpAddress) {
-    const v = lpAddress.map(address => {
-      const vault = new Web3EthContract(lpAbi, address);
-      return {
-        totalSupply: vault.methods.totalSupply(),
-        token0: vault.methods.token0(),
-        token1: vault.methods.token1(),
-        getReserves: vault.methods.getReserves(),
-        decimals: vault.methods.decimals(),
-        _address: address
-      };
-    });
+  async onFetchDone() {
+    const cache = await this.cacheManager.get('ignore-tokens-missing-reserves-v1');
+    if (cache) {
+      return;
+    }
 
-    console.log("celo: lp address update", lpAddress.length);
+    await this.cacheManager.set('ignore-tokens-missing-reserves-v1', _.uniq(this.ignoreLp), {ttl: 60 * 60});
+
+    this.ignoreLp = [];
+  }
+
+  async fetch(lpAddress) {
+    const ignoreLp = _.clone((await this.cacheManager.get('ignore-tokens-missing-reserves-v1')) || []);
+
+    const v = lpAddress
+      .filter(address => !ignoreLp.includes(address.toLowerCase()))
+      .map(address => {
+        const vault = new Web3EthContract(lpAbi, address);
+        return {
+          totalSupply: vault.methods.totalSupply(),
+          token0: vault.methods.token0(),
+          token1: vault.methods.token1(),
+          getReserves: vault.methods.getReserves(),
+          decimals: vault.methods.decimals(),
+          _address: address
+        };
+      });
+
+    console.log("celo: lp address update", lpAddress.length, v.length);
 
     const vaultCalls = await Utils.multiCall(v, 'celo');
 
@@ -244,9 +264,38 @@ module.exports = class CeloPriceOracle {
 
     const managedLp = {};
 
+    const tokenAddressSymbol = {};
+
+    vaultCalls.forEach(call => {
+      if (call.token0) {
+        const token = this.tokenCollector.getTokenByAddress(call.token0.toLowerCase());
+        if (token) {
+          tokenAddressSymbol[call.token0.toLowerCase()] = {
+            symbol: token.symbol,
+            decimals: token.decimals
+          }
+        }
+      }
+
+      if (call.token1) {
+        const token = this.tokenCollector.getTokenByAddress(call.token1.toLowerCase());
+        if (token) {
+          tokenAddressSymbol[call.token1.toLowerCase()] = {
+            symbol: token.symbol,
+            decimals: token.decimals
+          }
+        }
+      }
+    });
+
     vaultCalls.forEach(v => {
       if (!v.getReserves) {
         console.log("celo: Missing reserve:", v._address);
+
+        if (!this.ignoreLp.includes(v._address.toLowerCase())) {
+          this.ignoreLp.push(v._address.toLowerCase());
+        }
+
         return;
       }
 
@@ -261,26 +310,24 @@ module.exports = class CeloPriceOracle {
         raw: v
       };
 
-      if (!ercs[v.token0]) {
+      if (v.token0 && !(ercs[v.token0.toLowerCase()] || tokenAddressSymbol[v.token0.toLowerCase()])) {
         const vault = new Web3EthContract(erc20ABI, v.token0);
-        ercs[v.token0] = {
+        ercs[v.token0.toLowerCase()] = {
           symbol: vault.methods.symbol(),
           decimals: vault.methods.decimals(),
           _token: v.token0
         };
       }
 
-      if (!ercs[v.token1]) {
+      if (v.token1 && !(ercs[v.token1.toLowerCase()] || tokenAddressSymbol[v.token1.toLowerCase()])) {
         const vault = new Web3EthContract(erc20ABI, v.token1);
-        ercs[v.token1] = {
+        ercs[v.token1.toLowerCase()] = {
           symbol: vault.methods.symbol(),
           decimals: vault.methods.decimals(),
           _token: v.token1
         };
       }
     });
-
-    const tokenAddressSymbol = {};
 
     const vaultCalls2 = await Utils.multiCall(Object.values(ercs), 'celo');
 
@@ -346,6 +393,7 @@ module.exports = class CeloPriceOracle {
 
     this.lpTokenCollector.save();
     this.priceCollector.save();
+    this.tokenCollector.save();
   }
 
   async tokenMaps() {
@@ -385,6 +433,12 @@ module.exports = class CeloPriceOracle {
     }
 
     const tokens = [
+      {
+        router: '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121', // ubeswap
+        address: '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+        symbol: 'cusd',
+        decimals: 18,
+      },
       {
         router: '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121', // ubeswap
         address: '0x2A3684e9Dc20B857375EA04235F2F7edBe818FA7',

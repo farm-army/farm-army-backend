@@ -25,6 +25,8 @@ module.exports = class PriceOracle {
     this.priceCollector = priceCollector;
     this.cacheManager = cacheManager;
     this.priceFetcher = priceFetcher;
+
+    this.ignoreLp = [];
   }
 
   /**
@@ -116,7 +118,6 @@ module.exports = class PriceOracle {
       this.updateTokensVswap(),
       this.updateTokensBakery(),
       this.inchPricesAsBnb(bnbPrice),
-      this.updateHyperswap(bnbPrice),
     ]);
 
     results.filter(p => p.status === 'fulfilled').forEach(p => {
@@ -243,20 +244,35 @@ module.exports = class PriceOracle {
     return prices;
   }
 
-  async fetch(lpAddress) {
-    const v = lpAddress.map(address => {
-      const vault = new Web3EthContract(lpAbi, address);
-      return {
-        totalSupply: vault.methods.totalSupply(),
-        token0: vault.methods.token0(),
-        token1: vault.methods.token1(),
-        getReserves: vault.methods.getReserves(),
-        decimals: vault.methods.decimals(),
-        _address: address
-      };
-    });
+  async onFetchDone() {
+    const cache = await this.cacheManager.get('ignore-tokens-missing-reserves-v2');
+    if (cache) {
+      return;
+    }
 
-    console.log("bsc: lp address update", lpAddress.length);
+    await this.cacheManager.set('ignore-tokens-missing-reserves-v2', _.uniq(this.ignoreLp), {ttl: 60 * 60});
+
+    this.ignoreLp = [];
+  }
+
+  async fetch(lpAddress) {
+    const ignoreLp = _.clone((await this.cacheManager.get('ignore-tokens-missing-reserves-v2')) || []);
+
+    const v = lpAddress
+      .filter(address => !ignoreLp.includes(address.toLowerCase()))
+      .map(address => {
+        const vault = new Web3EthContract(lpAbi, address);
+        return {
+          totalSupply: vault.methods.totalSupply(),
+          token0: vault.methods.token0(),
+          token1: vault.methods.token1(),
+          getReserves: vault.methods.getReserves(),
+          decimals: vault.methods.decimals(),
+          _address: address
+        };
+      });
+
+    console.log("bsc: lp address update", lpAddress.length, v.length);
 
     const vaultCalls = await Utils.multiCall(v);
 
@@ -264,9 +280,38 @@ module.exports = class PriceOracle {
 
     const managedLp = {};
 
+    const tokenAddressSymbol = {};
+
+    vaultCalls.forEach(call => {
+      if (call.token0) {
+        const token = this.tokenCollector.getTokenByAddress(call.token0.toLowerCase());
+        if (token) {
+          tokenAddressSymbol[call.token0.toLowerCase()] = {
+            symbol: token.symbol,
+            decimals: token.decimals
+          }
+        }
+      }
+
+      if (call.token1) {
+        const token = this.tokenCollector.getTokenByAddress(call.token1.toLowerCase());
+        if (token) {
+          tokenAddressSymbol[call.token1.toLowerCase()] = {
+            symbol: token.symbol,
+            decimals: token.decimals
+          }
+        }
+      }
+    });
+
     vaultCalls.forEach(v => {
       if (!v.getReserves) {
         console.log("bsc: Missing reserve:", v._address);
+
+        if (!this.ignoreLp.includes(v._address.toLowerCase())) {
+          this.ignoreLp.push(v._address.toLowerCase());
+        }
+
         return;
       }
 
@@ -281,26 +326,24 @@ module.exports = class PriceOracle {
         raw: v
       };
 
-      if (!ercs[v.token0]) {
+      if (v.token0 && !(ercs[v.token0.toLowerCase()] || tokenAddressSymbol[v.token0.toLowerCase()])) {
         const vault = new Web3EthContract(erc20ABI, v.token0);
-        ercs[v.token0] = {
+        ercs[v.token0.toLowerCase()] = {
           symbol: vault.methods.symbol(),
           decimals: vault.methods.decimals(),
           _token: v.token0
         };
       }
 
-      if (!ercs[v.token1]) {
+      if (v.token1 && !(ercs[v.token1.toLowerCase()] || tokenAddressSymbol[v.token1.toLowerCase()])) {
         const vault = new Web3EthContract(erc20ABI, v.token1);
-        ercs[v.token1] = {
+        ercs[v.token1.toLowerCase()] = {
           symbol: vault.methods.symbol(),
           decimals: vault.methods.decimals(),
           _token: v.token1
         };
       }
     });
-
-    const tokenAddressSymbol = {};
 
     const vaultCalls2 = await Utils.multiCall(Object.values(ercs));
 
@@ -366,6 +409,7 @@ module.exports = class PriceOracle {
 
     this.lpTokenCollector.save();
     this.priceCollector.save();
+    this.tokenCollector.save();
   }
 
   async tokenMaps() {
@@ -543,8 +587,20 @@ module.exports = class PriceOracle {
       },
       {
         router: '0x10ED43C718714eb63d5aA57B78B54704E256024E', // pancakeswap v2
+        address: '0x1A8d7AC01d21991BF5249A3657C97b2B6d919222',
+        symbol: 'bee',
+        decimals: 18,
+      },
+      {
+        router: '0x10ED43C718714eb63d5aA57B78B54704E256024E', // pancakeswap v2
         address: '0x17B7163cf1Dbd286E262ddc68b553D899B93f526',
         symbol: 'qbt',
+        decimals: 18,
+      },
+      {
+        router: '0xB0EeB0632bAB15F120735e5838908378936bd484', // autoshark
+        address: '0x1b219Aca875f8C74c33CFF9fF98f3a9b62fCbff5',
+        symbol: 'fins',
         decimals: 18,
       }
     ];
@@ -668,58 +724,6 @@ module.exports = class PriceOracle {
         }
       }
     });
-
-    return prices;
-  }
-
-  async updateHyperswap(bnbPrice) {
-    if (!bnbPrice) {
-      throw Error('Invalid bnb price')
-    }
-
-    const foo = await Utils.request("POST", "https://subgraph.hyperswap.fi/subgraphs/name/theothug/swap-subgraph", {
-      "headers": {
-        "accept": "*/*",
-        "accept-language": "en-US,en;q=0.9",
-        "content-type": "application/json",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "cross-site"
-      },
-      "referrer": "https://info.hyperjump.fi/",
-      "referrerPolicy": "strict-origin-when-cross-origin",
-      "body": "{\"operationName\":\"tokens\",\"variables\":{},\"query\":\"fragment TokenFields on Token {\\n  id\\n  name\\n  symbol\\n decimals\\n derivedBNB\\n  tradeVolume\\n  tradeVolumeUSD\\n  untrackedVolumeUSD\\n  totalLiquidity\\n  txCount\\n  __typename\\n}\\n\\nquery tokens {\\n  tokens(first: 200, orderBy: tradeVolumeUSD, orderDirection: desc) {\\n    ...TokenFields\\n    __typename\\n  }\\n}\\n\"}",
-      "mode": "cors"
-    });
-
-    let result
-    try {
-      result = JSON.parse(foo);
-    } catch (e) {
-      console.error('theothug price fetch error', e.message)
-      return [];
-    }
-
-    const prices = [];
-    result.data.tokens
-      .filter(t => ['alloy', 'drugs', 'hypr', 'thugs', 'guns', 'smoke', 'cred', 'dvt'].includes(t.symbol.toLowerCase()))
-      .forEach(t => {
-        this.tokenCollector.add({
-          symbol: t.symbol,
-          address: t.id,
-          decimals: parseInt(t.decimals),
-        })
-
-        // risky price catch; only what we really need: BHC token is really crazy!
-        if (t.derivedBNB) {
-          prices.push({
-            address: t.id,
-            symbol: t.symbol.toLowerCase(),
-            price: t.derivedBNB * bnbPrice,
-            source: 'hyperswap',
-          });
-        }
-      });
 
     return prices;
   }

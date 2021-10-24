@@ -189,6 +189,7 @@ module.exports = class eleven {
       apys = await Utils.requestJsonGet("https://eleven.finance/api.json");
     } catch (e) {
       console.error("https://eleven.finance/api.json", e.message);
+      apys = {};
     }
 
     const pools = await this.getRawFarms();
@@ -262,7 +263,7 @@ module.exports = class eleven {
         }
       }
 
-      if (apys[farm.token] && apys[farm.token].farm && apys[farm.token].farm.apy) {
+      if (apys[farm.token] && apys[farm.token]?.farm?.apy) {
         item.yield = {
           apy: apys[farm.token].farm.apy
         };

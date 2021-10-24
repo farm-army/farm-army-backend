@@ -7,7 +7,7 @@ const Utils = require("../../../utils");
 const PancakePlatformFork = require("../../common").PancakePlatformFork;
 
 module.exports = class honeyfarm extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0x671e56C68047029F236f342b18632425C75885a3"
+  static MASTER_ADDRESS = "0x88E21dedEf04cf24AFe1847B0F6927a719AA8F35"
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     super(cache, priceOracle);
@@ -20,7 +20,7 @@ module.exports = class honeyfarm extends PancakePlatformFork {
   }
 
   async getFetchedFarms() {
-    const cacheKey = `${this.getName()}-v1-master-farms`
+    const cacheKey = `${this.getName()}-v2-master-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {

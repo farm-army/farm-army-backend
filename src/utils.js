@@ -24,7 +24,14 @@ const MULTI_CALL_CONTRACT = {
   kcc: '0xae49c2836d060bD7F4ed6566626b52cF4991B172',
   harmony: '0xd1AE3C177E13ac82E667eeEdE2609C98c69FF684',
   celo: '0xfEEaa3989087F2c9eB4e920D57Df0A3F83486414',
+  moonriver: '0x814C1C56815D52b58d7254424c15307e7363E016',
 }
+
+// @TODO: move it to somewhere else
+const CONFIG = _.merge(
+  JSON.parse(fs.readFileSync(path.resolve(__dirname, "../config.json"), "utf8")),
+  fs.existsSync(path.resolve(__dirname, "../config.json.local")) ? JSON.parse(fs.readFileSync(path.resolve(__dirname, "../config.json.local"), "utf8")) : {}
+);
 
 const HOSTS = Object.freeze([
   // Recommend
@@ -47,18 +54,17 @@ const HOSTS = Object.freeze([
 
 const HOSTS_POLYGON = Object.freeze([
   // Recommend
-  // 'https://rpc-mainnet.matic.network',
   'https://polygon-rpc.com/',
-  'https://rpc-mainnet.maticvigil.com',
-  'https://rpc-mainnet.matic.quiknode.pro',
-  'https://matic-mainnet.chainstacklabs.com',
-  'https://matic-mainnet-full-rpc.bwarelabs.com',
+  //'https://rpc-mainnet.maticvigil.com',
+  //'https://rpc-mainnet.matic.quiknode.pro',
+  //'https://matic-mainnet.chainstacklabs.com',
+ // 'https://matic-mainnet-full-rpc.bwarelabs.com',
 ]);
 
 const HOSTS_FANTOM = Object.freeze([
   // Recommend
   'https://rpc.ftm.tools',
-  'https://rpcapi.fantom.network',
+  //'https://rpcapi.fantom.network',
 ]);
 
 const HOSTS_KCC = Object.freeze([
@@ -69,6 +75,7 @@ const HOSTS_KCC = Object.freeze([
 const HOSTS_HARMONY = Object.freeze([
   // Recommend
   'https://api.harmony.one',
+  'https://api.s0.t.hmny.io'
   //'https://s1.api.harmony.one',
   //'https://s2.api.harmony.one',
   //'https://s3.api.harmony.one',
@@ -78,29 +85,43 @@ const HOSTS_CELO = Object.freeze([
   'https://forno.celo.org',
 ]);
 
+const HOSTS_MOONRIVER = Object.freeze([
+  'https://rpc.moonriver.moonbeam.network',
+]);
+
+const WEB3_PROXIES = (CONFIG['WEB3_PROXIES'] || '').split(',').map(i => i.trim()).filter(i => i);
+
 const ENDPOINTS_MULTICALL = {};
 const ENDPOINTS_RPC_WRAPPER = {};
 
 HOSTS.forEach(url => {
-  ENDPOINTS_MULTICALL[url] = new MulticallProvider(
-    new providers.StaticJsonRpcProvider({
-      url: url,
-      timeout: 10000,
-    }),
-    {
-      contract: MULTI_CALL_CONTRACT.bsc,
-      batchSize: 50,
-      timeWindow: 50,
-    }
-  )
+  [undefined, ...WEB3_PROXIES].forEach((proxy, index) => {
+    ENDPOINTS_MULTICALL[url + '_' + index] = new MulticallProvider(
+      new providers.StaticJsonRpcProvider({
+        url: url,
+        timeout: 10000,
+      }),
+      {
+        contract: MULTI_CALL_CONTRACT.fantom,
+        batchSize: 50,
+        timeWindow: 50,
+      }
+    );
 
-  const f1 = new Web3.providers.HttpProvider(url, {
+    const options = {
       keepAlive: true,
       timeout: 10000,
-    }
-  )
+    };
 
-  ENDPOINTS_RPC_WRAPPER[url] = new Web3(f1)
+    if (proxy) {
+      options.agent = {
+        'http': new HttpsProxyAgent(proxy),
+        'https': new HttpsProxyAgent(proxy),
+      };
+    }
+
+    ENDPOINTS_RPC_WRAPPER[url + '_' + index] = new Web3(new Web3.providers.HttpProvider(url, options));
+  });
 });
 
 const ENDPOINTS = Object.freeze(Object.keys(ENDPOINTS_MULTICALL));
@@ -109,25 +130,33 @@ const ENDPOINTS_MULTICALL_POLYGON = {};
 const ENDPOINTS_RPC_WRAPPER_POLYGON = {};
 
 HOSTS_POLYGON.forEach(url => {
-  ENDPOINTS_MULTICALL_POLYGON[url] = new MulticallProvider(
-    new providers.StaticJsonRpcProvider({
-      url: url,
-      timeout: 10000,
-    }),
-    {
-      contract: MULTI_CALL_CONTRACT.polygon,
-      batchSize: 50,
-      timeWindow: 50,
-    }
-  )
+  [undefined, ...WEB3_PROXIES].forEach((proxy, index) => {
+    ENDPOINTS_MULTICALL_POLYGON[url + '_' + index] = new MulticallProvider(
+      new providers.StaticJsonRpcProvider({
+        url: url,
+        timeout: 10000,
+      }),
+      {
+        contract: MULTI_CALL_CONTRACT.polygon,
+        batchSize: 50,
+        timeWindow: 50,
+      }
+    );
 
-  const f1 = new Web3.providers.HttpProvider(url, {
+    const options = {
       keepAlive: true,
       timeout: 10000,
-    }
-  )
+    };
 
-  ENDPOINTS_RPC_WRAPPER_POLYGON[url] = new Web3(f1)
+    if (proxy) {
+      options.agent = {
+        'http': new HttpsProxyAgent(proxy),
+        'https': new HttpsProxyAgent(proxy),
+      };
+    }
+
+    ENDPOINTS_RPC_WRAPPER_POLYGON[url + '_' + index] = new Web3(new Web3.providers.HttpProvider(url, options));
+  });
 });
 
 const ENDPOINTS_POLYGON = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_POLYGON));
@@ -136,25 +165,33 @@ const ENDPOINTS_MULTICALL_FANTOM = {};
 const ENDPOINTS_RPC_WRAPPER_FANTOM = {};
 
 HOSTS_FANTOM.forEach(url => {
-  ENDPOINTS_MULTICALL_FANTOM[url] = new MulticallProvider(
-    new providers.StaticJsonRpcProvider({
-      url: url,
-      timeout: 10000,
-    }),
-    {
-      contract: MULTI_CALL_CONTRACT.fantom,
-      batchSize: 50,
-      timeWindow: 50,
-    }
-  )
+  [undefined, ...WEB3_PROXIES].forEach((proxy, index) => {
+    ENDPOINTS_MULTICALL_FANTOM[url + '_' + index] = new MulticallProvider(
+      new providers.StaticJsonRpcProvider({
+        url: url,
+        timeout: 10000,
+      }),
+      {
+        contract: MULTI_CALL_CONTRACT.fantom,
+        batchSize: 50,
+        timeWindow: 50,
+      }
+    );
 
-  const f1 = new Web3.providers.HttpProvider(url, {
+    const options = {
       keepAlive: true,
       timeout: 10000,
-    }
-  )
+    };
 
-  ENDPOINTS_RPC_WRAPPER_FANTOM[url] = new Web3(f1)
+    if (proxy) {
+      options.agent = {
+        'http': new HttpsProxyAgent(proxy),
+        'https': new HttpsProxyAgent(proxy),
+      };
+    }
+
+    ENDPOINTS_RPC_WRAPPER_FANTOM[url + '_' + index] = new Web3(new Web3.providers.HttpProvider(url, options));
+  });
 });
 
 const ENDPOINTS_FANTOM = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_FANTOM));
@@ -163,25 +200,33 @@ const ENDPOINTS_MULTICALL_KCC = {};
 const ENDPOINTS_RPC_WRAPPER_KCC = {};
 
 HOSTS_KCC.forEach(url => {
-  ENDPOINTS_MULTICALL_KCC[url] = new MulticallProvider(
-    new providers.StaticJsonRpcProvider({
-      url: url,
-      timeout: 10000,
-    }),
-    {
-      contract: MULTI_CALL_CONTRACT.kcc,
-      batchSize: 50,
-      timeWindow: 50,
-    }
-  )
+  [undefined, ...WEB3_PROXIES].forEach((proxy, index) => {
+    ENDPOINTS_MULTICALL_KCC[url + '_' + index] = new MulticallProvider(
+      new providers.StaticJsonRpcProvider({
+        url: url,
+        timeout: 10000,
+      }),
+      {
+        contract: MULTI_CALL_CONTRACT.kcc,
+        batchSize: 50,
+        timeWindow: 50,
+      }
+    );
 
-  const f1 = new Web3.providers.HttpProvider(url, {
+    const options = {
       keepAlive: true,
       timeout: 10000,
-    }
-  )
+    };
 
-  ENDPOINTS_RPC_WRAPPER_KCC[url] = new Web3(f1)
+    if (proxy) {
+      options.agent = {
+        'http': new HttpsProxyAgent(proxy),
+        'https': new HttpsProxyAgent(proxy),
+      };
+    }
+
+    ENDPOINTS_RPC_WRAPPER_KCC[url + '_' + index] = new Web3(new Web3.providers.HttpProvider(url, options));
+  });
 });
 
 const ENDPOINTS_KCC = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_KCC));
@@ -190,25 +235,33 @@ const ENDPOINTS_MULTICALL_HARMONY = {};
 const ENDPOINTS_RPC_WRAPPER_HARMONY = {};
 
 HOSTS_HARMONY.forEach(url => {
-  ENDPOINTS_MULTICALL_HARMONY[url] = new MulticallProvider(
-    new providers.StaticJsonRpcProvider({
-      url: url,
-      timeout: 10000,
-    }),
-    {
-      contract: MULTI_CALL_CONTRACT.kcc,
-      batchSize: 50,
-      timeWindow: 50,
-    }
-  )
+  [undefined, ...WEB3_PROXIES].forEach((proxy, index) => {
+    ENDPOINTS_MULTICALL_HARMONY[url + '_' + index] = new MulticallProvider(
+      new providers.StaticJsonRpcProvider({
+        url: url,
+        timeout: 10000,
+      }),
+      {
+        contract: MULTI_CALL_CONTRACT.harmony,
+        batchSize: 50,
+        timeWindow: 50,
+      }
+    );
 
-  const f1 = new Web3.providers.HttpProvider(url, {
+    const options = {
       keepAlive: true,
       timeout: 10000,
-    }
-  )
+    };
 
-  ENDPOINTS_RPC_WRAPPER_HARMONY[url] = new Web3(f1)
+    if (proxy) {
+      options.agent = {
+        'http': new HttpsProxyAgent(proxy),
+        'https': new HttpsProxyAgent(proxy),
+      };
+    }
+
+    ENDPOINTS_RPC_WRAPPER_HARMONY[url + '_' + index] = new Web3(new Web3.providers.HttpProvider(url, options));
+  });
 });
 
 const ENDPOINTS_HARMONY = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_HARMONY));
@@ -217,28 +270,71 @@ const ENDPOINTS_MULTICALL_CELO = {};
 const ENDPOINTS_RPC_WRAPPER_CELO = {};
 
 HOSTS_CELO.forEach(url => {
-  ENDPOINTS_MULTICALL_CELO[url] = new MulticallProvider(
-    new providers.StaticJsonRpcProvider({
-      url: url,
-      timeout: 10000,
-    }),
-    {
-      contract: MULTI_CALL_CONTRACT.celo,
-      batchSize: 50,
-      timeWindow: 50,
-    }
-  )
+  [undefined, ...WEB3_PROXIES].forEach((proxy, index) => {
+    ENDPOINTS_MULTICALL_CELO[url + '_' + index] = new MulticallProvider(
+      new providers.StaticJsonRpcProvider({
+        url: url,
+        timeout: 10000,
+      }),
+      {
+        contract: MULTI_CALL_CONTRACT.celo,
+        batchSize: 50,
+        timeWindow: 50,
+      }
+    );
 
-  const f1 = new Web3.providers.HttpProvider(url, {
+    const options = {
       keepAlive: true,
       timeout: 10000,
-    }
-  )
+    };
 
-  ENDPOINTS_RPC_WRAPPER_CELO[url] = new Web3(f1)
+    if (proxy) {
+      options.agent = {
+        'http': new HttpsProxyAgent(proxy),
+        'https': new HttpsProxyAgent(proxy),
+      };
+    }
+
+    ENDPOINTS_RPC_WRAPPER_CELO[url + '_' + index] = new Web3(new Web3.providers.HttpProvider(url, options));
+  });
 });
 
 const ENDPOINTS_CELO = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_CELO));
+
+const ENDPOINTS_MULTICALL_MOONRIVER = {};
+const ENDPOINTS_RPC_WRAPPER_MOONRIVER = {};
+
+HOSTS_MOONRIVER.forEach(url => {
+  [undefined, ...WEB3_PROXIES].forEach((proxy, index) => {
+    ENDPOINTS_MULTICALL_MOONRIVER[url + '_' + index] = new MulticallProvider(
+      new providers.StaticJsonRpcProvider({
+        url: url,
+        timeout: 10000,
+      }),
+      {
+        contract: MULTI_CALL_CONTRACT.celo,
+        batchSize: 50,
+        timeWindow: 50,
+      }
+    );
+
+    const options = {
+      keepAlive: true,
+      timeout: 10000,
+    };
+
+    if (proxy) {
+      options.agent = {
+        'http': new HttpsProxyAgent(proxy),
+        'https': new HttpsProxyAgent(proxy),
+      };
+    }
+
+    ENDPOINTS_RPC_WRAPPER_MOONRIVER[url + '_' + index] = new Web3(new Web3.providers.HttpProvider(url, options));
+  });
+});
+
+const ENDPOINTS_MOONRIVER = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_MOONRIVER));
 
 module.exports = {
   PRICES: {},
@@ -248,10 +344,7 @@ module.exports = {
   ),
 
   // @TODO: move it to somewhere else
-  CONFIG: _.merge(
-      JSON.parse(fs.readFileSync(path.resolve(__dirname, "../config.json"), "utf8")),
-      fs.existsSync(path.resolve(__dirname, "../config.json.local")) ? JSON.parse(fs.readFileSync(path.resolve(__dirname, "../config.json.local"), "utf8")) : {}
-  ),
+  CONFIG: CONFIG,
 
   DUST_FILTER: 0.00000000000001 * 1e18,
 
@@ -268,6 +361,8 @@ module.exports = {
         return ENDPOINTS_RPC_WRAPPER_HARMONY[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_HARMONY))[0]];
       case 'celo':
         return ENDPOINTS_RPC_WRAPPER_CELO[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_CELO))[0]];
+      case 'moonriver':
+        return ENDPOINTS_RPC_WRAPPER_MOONRIVER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_MOONRIVER))[0]];
       case 'bsc':
       default:
         return ENDPOINTS_RPC_WRAPPER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER))[0]];
@@ -297,6 +392,9 @@ module.exports = {
         break;
       case 'celo':
         selectedEndpoints = ENDPOINTS_CELO.slice();
+        break;
+      case 'moonriver':
+        selectedEndpoints = ENDPOINTS_MOONRIVER.slice();
         break;
       case 'bsc':
       default:
@@ -351,6 +449,8 @@ module.exports = {
               web3 = ENDPOINTS_RPC_WRAPPER_HARMONY[endpointInner]
             } else if (chain === 'celo') {
               web3 = ENDPOINTS_RPC_WRAPPER_CELO[endpointInner]
+            } else if (chain === 'moonriver') {
+              web3 = ENDPOINTS_RPC_WRAPPER_MOONRIVER[endpointInner]
             } else {
               web3 = ENDPOINTS_RPC_WRAPPER[endpointInner]
             }
@@ -425,6 +525,9 @@ module.exports = {
       case 'celo':
         selectedEndpoints = ENDPOINTS_CELO.slice();
         break;
+      case 'moonriver':
+        selectedEndpoints = ENDPOINTS_MOONRIVER.slice();
+        break;
       case 'bsc':
       default:
         selectedEndpoints = ENDPOINTS.slice();
@@ -449,6 +552,8 @@ module.exports = {
         options = ENDPOINTS_MULTICALL_CELO[endpoints[0]];
       } else if (chain === 'bsc') {
         options = ENDPOINTS_MULTICALL[endpoints[0]];
+      } else if (chain === 'moonriver') {
+        options = ENDPOINTS_MULTICALL_MOONRIVER[endpoints[0]];
       } else {
         options = ENDPOINTS_MULTICALL[endpoints[0]];
       }
@@ -595,6 +700,9 @@ module.exports = {
     } else if (chain === 'celo') {
       host = 'explorer.celo.org';
       apiKey = module.exports.CONFIG['CELOSCAN_API_KEY'];
+    } else if (chain === 'moonriver') {
+      host = 'docs.moonbeam.network';
+      apiKey = module.exports.CONFIG['MOONRIVERSCAN_API_KEY'];
     } else {
       host = 'api.bscscan.com';
       apiKey = module.exports.CONFIG['BSCSCAN_API_KEY'];
@@ -946,6 +1054,8 @@ module.exports = {
         return 2;
       case 'celo':
         return 5;
+      case 'moonriver':
+        return 13;
       case 'bsc':
         return 3;
     }

@@ -178,4 +178,13 @@ module.exports = class biswap extends PancakePlatformFork {
   getMasterChefAddress() {
     return biswap.MASTER_ADDRESS;
   }
+
+  async onFarmsBuild(farms) {
+    farms.forEach(farm => {
+      if (farm.id.includes('_farm_')) {
+        farm.main_platform = 'biswap';
+        farm.platform = 'biswap';
+      }
+    });
+  }
 };

@@ -347,7 +347,7 @@ module.exports = class pancake {
 
     console.log('pancake updated');
 
-    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
 
     return result;
   }

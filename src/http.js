@@ -14,6 +14,7 @@ module.exports = class Http {
     platformsKcc,
     platformsHarmony,
     platformsCelo,
+    platformsMoonriver,
     crossPlatforms,
     balances,
     addressTransactions,
@@ -52,7 +53,13 @@ module.exports = class Http {
     celoTokenCollector,
     celoBalances,
     celoTokenInfo,
-    celoAddressTransactions
+    celoAddressTransactions,
+    moonriverPriceOracle,
+    moonriverLiquidityTokenCollector,
+    moonriverTokenCollector,
+    moonriverBalances,
+    moonriverTokenInfo,
+    moonriverAddressTransactions
   ) {
     this.chains = {};
 
@@ -156,6 +163,17 @@ module.exports = class Http {
       balances: celoBalances,
       tokenInfo: celoTokenInfo,
       addressTransactions: celoAddressTransactions,
+      autoFarm: {}, // not supported
+    }
+
+    this.chains.moonriver = {
+      platforms: platformsMoonriver,
+      priceOracle: moonriverPriceOracle,
+      liquidityTokenCollector: moonriverLiquidityTokenCollector,
+      tokenCollector: moonriverTokenCollector,
+      balances: moonriverBalances,
+      tokenInfo: moonriverTokenInfo,
+      addressTransactions: moonriverAddressTransactions,
       autoFarm: {}, // not supported
     }
 
@@ -344,6 +362,11 @@ module.exports = class Http {
       timer += performance.now();
       console.log(`${chain}: ${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: ${(timer / 1000).toFixed(3)} sec`);
 
+      if (res.headersSent) {
+        console.error(`${chain}: ${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: already send / timout`);
+        return;
+      }
+
       res.json(response);
     });
 
@@ -390,6 +413,11 @@ module.exports = class Http {
       timer += performance.now();
       console.log(`cross-chains (${platforms.length === 0 ? 'all' : platforms.length}): ${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: ${(timer / 1000).toFixed(3)} sec`);
 
+      if (res.headersSent) {
+        console.error(`cross-chains (${platforms.length === 0 ? 'all' : platforms.length}): ${new Date().toISOString()}: yield ${address} - ${platforms.join(',')}: already send / timout`);
+        return;
+      }
+
       res.json(response);
     });
 
@@ -427,9 +455,6 @@ module.exports = class Http {
         ...platformsChain.getFunctionAwaits("getYields", [address])
       ]);
 
-      timer += performance.now();
-      console.log(`${chain}: ${new Date().toISOString()}: yield ${address}: ${(timer / 1000).toFixed(3)} sec`);
-
       const response = {};
 
       if (platformResults[0].status === "fulfilled") {
@@ -460,6 +485,14 @@ module.exports = class Http {
       });
 
       response.platforms = platformsResult;
+
+      timer += performance.now();
+      console.log(`${chain}: ${new Date().toISOString()}: yield ${address}: ${(timer / 1000).toFixed(3)} sec`);
+
+      if (res.headersSent) {
+        console.error(`${chain}: ${new Date().toISOString()}: yield ${address}: already send / timout`);
+        return;
+      }
 
       res.json(response);
     });

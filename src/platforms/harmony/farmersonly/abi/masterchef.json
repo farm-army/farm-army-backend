@@ -1,0 +1,793 @@
+[
+  {
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "internalType": "contract FoxToken",
+        "type": "address",
+        "name": "_fox"
+      },
+      {
+        "name": "_startBlock",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_devAddress",
+        "type": "address"
+      },
+      {
+        "name": "_feeAddress",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "_vaultAddress",
+        "internalType": "address"
+      }
+    ],
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "type": "event",
+    "name": "Deposit",
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "pid",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "anonymous": false,
+    "type": "event",
+    "inputs": [
+      {
+        "name": "user",
+        "indexed": true,
+        "internalType": "address",
+        "type": "address"
+      },
+      {
+        "name": "pid",
+        "type": "uint256",
+        "internalType": "uint256",
+        "indexed": true
+      },
+      {
+        "indexed": false,
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "EmergencyWithdraw"
+  },
+  {
+    "name": "OwnershipTransferred",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "previousOwner",
+        "indexed": true,
+        "internalType": "address",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "indexed": true,
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "ReferralCommissionPaid",
+    "anonymous": false,
+    "type": "event",
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "referrer",
+        "indexed": true,
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "commissionAmount",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "anonymous": false,
+    "name": "SetDevAddress",
+    "type": "event",
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "name": "newAddress",
+        "type": "address",
+        "internalType": "address",
+        "indexed": true
+      }
+    ]
+  },
+  {
+    "name": "SetFeeAddress",
+    "type": "event",
+    "inputs": [
+      {
+        "type": "address",
+        "internalType": "address",
+        "indexed": true,
+        "name": "user"
+      },
+      {
+        "type": "address",
+        "internalType": "address",
+        "name": "newAddress",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "inputs": [
+      {
+        "type": "address",
+        "internalType": "address",
+        "name": "user",
+        "indexed": true
+      },
+      {
+        "name": "newAddress",
+        "internalType": "contract IReferral",
+        "type": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false,
+    "type": "event",
+    "name": "SetReferralAddress"
+  },
+  {
+    "name": "SetVaultAddress",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "user",
+        "internalType": "address",
+        "type": "address",
+        "indexed": true
+      },
+      {
+        "internalType": "address",
+        "indexed": true,
+        "name": "newAddress",
+        "type": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "UpdateEmissionRate",
+    "anonymous": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "indexed": true,
+        "type": "address"
+      },
+      {
+        "name": "foxPerBlock",
+        "internalType": "uint256",
+        "type": "uint256",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "anonymous": false,
+    "name": "Withdraw",
+    "type": "event",
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "user",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "pid",
+        "indexed": true,
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "amount",
+        "internalType": "uint256",
+        "indexed": false,
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "name": "MAXIMUM_REFERRAL_COMMISSION_RATE",
+    "outputs": [
+      {
+        "type": "uint16",
+        "name": "",
+        "internalType": "uint16"
+      }
+    ],
+    "type": "function",
+    "inputs": [],
+    "constant": true,
+    "signature": "0x48b22bfb"
+  },
+  {
+    "name": "devAddress",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "constant": true,
+    "signature": "0x3ad10ef6"
+  },
+  {
+    "name": "feeAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "type": "address",
+        "name": ""
+      }
+    ],
+    "type": "function",
+    "inputs": [],
+    "stateMutability": "view",
+    "constant": true,
+    "signature": "0x41275358"
+  },
+  {
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "contract FoxToken"
+      }
+    ],
+    "stateMutability": "view",
+    "inputs": [],
+    "name": "fox",
+    "type": "function",
+    "constant": true,
+    "signature": "0x4ce512d2"
+  },
+  {
+    "name": "foxPerBlock",
+    "inputs": [],
+    "stateMutability": "view",
+    "type": "function",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "constant": true,
+    "signature": "0x030481ec"
+  },
+  {
+    "name": "owner",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "constant": true,
+    "signature": "0x8da5cb5b"
+  },
+  {
+    "outputs": [
+      {
+        "type": "bool",
+        "internalType": "bool",
+        "name": ""
+      }
+    ],
+    "name": "poolExistence",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "internalType": "contract IERC20",
+        "type": "address",
+        "name": ""
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "internalType": "contract IERC20",
+        "name": "lpToken"
+      },
+      {
+        "internalType": "uint256",
+        "type": "uint256",
+        "name": "allocPoint"
+      },
+      {
+        "name": "lastRewardBlock",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "accFoxPerShare",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "depositFeeBP",
+        "type": "uint16",
+        "internalType": "uint16"
+      }
+    ],
+    "type": "function",
+    "name": "poolInfo",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "inputs": [],
+    "name": "referral",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "contract IReferral"
+      }
+    ],
+    "stateMutability": "view",
+    "constant": true,
+    "signature": "0x1441a5a9"
+  },
+  {
+    "type": "function",
+    "name": "referralCommissionRate",
+    "outputs": [
+      {
+        "name": "",
+        "internalType": "uint16",
+        "type": "uint16"
+      }
+    ],
+    "inputs": [],
+    "stateMutability": "view",
+    "constant": true,
+    "signature": "0xd30ef61b"
+  },
+  {
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "inputs": [],
+    "name": "renounceOwnership",
+    "type": "function"
+  },
+  {
+    "name": "startBlock",
+    "stateMutability": "view",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "internalType": "uint256",
+        "type": "uint256"
+      }
+    ],
+    "constant": true,
+    "signature": "0x48cd4cb1"
+  },
+  {
+    "outputs": [
+      {
+        "type": "uint256",
+        "internalType": "uint256",
+        "name": ""
+      }
+    ],
+    "stateMutability": "view",
+    "inputs": [],
+    "name": "totalAllocPoint",
+    "type": "function",
+    "constant": true,
+    "signature": "0x17caf6f1"
+  },
+  {
+    "name": "transferOwnership",
+    "outputs": [],
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "name": "newOwner",
+        "internalType": "address",
+        "type": "address"
+      }
+    ]
+  },
+  {
+    "name": "userInfo",
+    "type": "function",
+    "outputs": [
+      {
+        "name": "amount",
+        "internalType": "uint256",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rewardDebt",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
+    "inputs": [],
+    "name": "vaultAddress",
+    "constant": true,
+    "signature": "0x430bf08a"
+  },
+  {
+    "name": "poolLength",
+    "type": "function",
+    "inputs": [],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "constant": true,
+    "signature": "0x081e3eda"
+  },
+  {
+    "name": "add",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "_allocPoint",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "internalType": "contract IERC20",
+        "name": "_lpToken",
+        "type": "address"
+      },
+      {
+        "name": "_depositFeeBP",
+        "internalType": "uint16",
+        "type": "uint16"
+      }
+    ]
+  },
+  {
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "name": "_pid",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "type": "uint256",
+        "name": "_allocPoint"
+      },
+      {
+        "name": "_depositFeeBP",
+        "type": "uint16",
+        "internalType": "uint16"
+      }
+    ],
+    "type": "function",
+    "name": "set",
+    "outputs": []
+  },
+  {
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "inputs": [
+      {
+        "name": "_from",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_to",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "getMultiplier",
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "pendingFox",
+    "type": "function",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_user",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "inputs": [],
+    "name": "massUpdatePools",
+    "outputs": [],
+    "type": "function",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "_pid",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "name": "updatePool",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_referrer",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "name": "deposit",
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "outputs": []
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "type": "uint256",
+        "name": "_pid"
+      },
+      {
+        "name": "_amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "name": "withdraw"
+  },
+  {
+    "name": "emergencyWithdraw",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "type": "function",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "name": "_devAddress",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "name": "setDevAddress",
+    "type": "function"
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "type": "address",
+        "internalType": "address",
+        "name": "_feeAddress"
+      }
+    ],
+    "name": "setFeeAddress",
+    "outputs": []
+  },
+  {
+    "name": "setVaultAddress",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultAddress",
+        "type": "address"
+      }
+    ],
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "type": "function",
+    "name": "updateEmissionRate",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "inputs": [
+      {
+        "type": "uint256",
+        "internalType": "uint256",
+        "name": "_foxPerBlock"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "outputs": [],
+    "inputs": [
+      {
+        "internalType": "contract IReferral",
+        "name": "_referral",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "name": "setReferralAddress"
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setReferralCommissionRate",
+    "inputs": [
+      {
+        "internalType": "uint16",
+        "name": "_referralCommissionRate",
+        "type": "uint16"
+      }
+    ]
+  },
+  {
+    "name": "updateStartBlock",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "type": "uint256",
+        "name": "_startBlock"
+      }
+    ],
+    "type": "function",
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  }
+]

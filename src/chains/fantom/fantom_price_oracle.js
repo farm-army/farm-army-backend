@@ -16,6 +16,8 @@ module.exports = class FantomPriceOracle {
     this.priceCollector = priceCollector;
     this.cacheManager = cacheManager;
     this.priceFetcher = priceFetcher;
+
+    this.ignoreLp = [];
   }
 
   /**
@@ -208,7 +210,7 @@ module.exports = class FantomPriceOracle {
   }
 
   async getCoinGeckoTokens() {
-    const cacheKey = `coingekko-fantom-v2-token-addresses`
+    const cacheKey = `coingekko-fantom-v4-token-addresses`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -226,9 +228,15 @@ module.exports = class FantomPriceOracle {
       'chainlink': '0xb3654dc3D10Ea7645f8319668E8F54d2574FBdC8',
       'binancecoin': '0xD67de0e0a0Fd7b15dC8348Bb9BE742F3c5850454',
       'yearn-finance': '0x29b0Da86e484E1C0029B56e817912d778aC0EC69',
+      'magic-internet-money': '0x82f0B8B456c1A451378467398982d4834b6829c1',
+      'renbtc': '0xDBf31dF14B66535aF65AaC99C32e9eA844e14501',
     };
 
     (tokens || []).forEach(token => {
+      if (token.id.startsWith('geist-') && token.id !== 'geist-finance') {
+        return;
+      }
+
       if (token['platforms'] && token['platforms']['fantom'] && token['platforms']['fantom'].startsWith('0x')) {
         matches[token['id']] = token['platforms']['fantom'];
       } else if(known[token['id']]) {
@@ -294,20 +302,35 @@ module.exports = class FantomPriceOracle {
     return matches
   }
 
-  async fetch(lpAddress) {
-    const v = lpAddress.map(address => {
-      const vault = new Web3EthContract(lpAbi, address);
-      return {
-        totalSupply: vault.methods.totalSupply(),
-        token0: vault.methods.token0(),
-        token1: vault.methods.token1(),
-        getReserves: vault.methods.getReserves(),
-        decimals: vault.methods.decimals(),
-        _address: address
-      };
-    });
+  async onFetchDone() {
+    const cache = await this.cacheManager.get('ignore-tokens-missing-reserves-v1');
+    if (cache) {
+      return;
+    }
 
-    console.log("fantom: lp address update", lpAddress.length);
+    await this.cacheManager.set('ignore-tokens-missing-reserves-v1', _.uniq(this.ignoreLp), {ttl: 60 * 60});
+
+    this.ignoreLp = [];
+  }
+
+  async fetch(lpAddress) {
+    const ignoreLp = _.clone((await this.cacheManager.get('ignore-tokens-missing-reserves-v1')) || []);
+
+    const v = lpAddress
+      .filter(address => !ignoreLp.includes(address.toLowerCase()))
+      .map(address => {
+        const vault = new Web3EthContract(lpAbi, address);
+        return {
+          totalSupply: vault.methods.totalSupply(),
+          token0: vault.methods.token0(),
+          token1: vault.methods.token1(),
+          getReserves: vault.methods.getReserves(),
+          decimals: vault.methods.decimals(),
+          _address: address
+        };
+      });
+
+    console.log("fantom: lp address update", lpAddress.length, v.length);
 
     const vaultCalls = await Utils.multiCall(v, 'fantom');
 
@@ -315,9 +338,38 @@ module.exports = class FantomPriceOracle {
 
     const managedLp = {};
 
+    const tokenAddressSymbol = {};
+
+    vaultCalls.forEach(call => {
+      if (call.token0) {
+        const token = this.tokenCollector.getTokenByAddress(call.token0.toLowerCase());
+        if (token) {
+          tokenAddressSymbol[call.token0.toLowerCase()] = {
+            symbol: token.symbol,
+            decimals: token.decimals
+          }
+        }
+      }
+
+      if (call.token1) {
+        const token = this.tokenCollector.getTokenByAddress(call.token1.toLowerCase());
+        if (token) {
+          tokenAddressSymbol[call.token1.toLowerCase()] = {
+            symbol: token.symbol,
+            decimals: token.decimals
+          }
+        }
+      }
+    });
+
     vaultCalls.forEach(v => {
       if (!v.getReserves) {
         console.log("fantom: Missing reserve:", v._address);
+
+        if (!this.ignoreLp.includes(v._address.toLowerCase())) {
+          this.ignoreLp.push(v._address.toLowerCase());
+        }
+
         return;
       }
 
@@ -332,26 +384,24 @@ module.exports = class FantomPriceOracle {
         raw: v
       };
 
-      if (!ercs[v.token0]) {
+      if (v.token0 && !(ercs[v.token0.toLowerCase()] || tokenAddressSymbol[v.token0.toLowerCase()])) {
         const vault = new Web3EthContract(erc20ABI, v.token0);
-        ercs[v.token0] = {
+        ercs[v.token0.toLowerCase()] = {
           symbol: vault.methods.symbol(),
           decimals: vault.methods.decimals(),
           _token: v.token0
         };
       }
 
-      if (!ercs[v.token1]) {
+      if (v.token1 && !(ercs[v.token1.toLowerCase()] || tokenAddressSymbol[v.token1.toLowerCase()])) {
         const vault = new Web3EthContract(erc20ABI, v.token1);
-        ercs[v.token1] = {
+        ercs[v.token1.toLowerCase()] = {
           symbol: vault.methods.symbol(),
           decimals: vault.methods.decimals(),
           _token: v.token1
         };
       }
     });
-
-    const tokenAddressSymbol = {};
 
     const vaultCalls2 = await Utils.multiCall(Object.values(ercs), 'fantom');
 
@@ -417,6 +467,7 @@ module.exports = class FantomPriceOracle {
 
     this.lpTokenCollector.save();
     this.priceCollector.save();
+    this.tokenCollector.save();
   }
 
   async tokenMaps() {
@@ -469,6 +520,24 @@ module.exports = class FantomPriceOracle {
         router: '0xf491e7b69e4244ad4002bc14e878a34207e38c29', // paintswap
         address: '0x23cBC7C95a13071562af2C4Fb1Efa7a284d0543a',
         symbol: 'fswamp',
+        decimals: 18,
+      },
+      {
+        router: '0xf491e7b69e4244ad4002bc14e878a34207e38c29', // spookyswap
+        address: '0x0789ff5ba37f72abc4d561d00648acadc897b32d',
+        symbol: 'morph',
+        decimals: 18,
+      },
+      {
+        router: '0x40b12a3E261416fF0035586ff96e23c2894560f2', // zoodex
+        address: '0xae0c241ec740309c2cbdc27456eb3c1a2ad74737',
+        symbol: 'wild',
+        decimals: 18,
+      },
+      {
+        router: '0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52', // spiritswap
+        address: '0x7c10108d4b7f4bd659ee57a53b30df928244b354',
+        symbol: 'pear',
         decimals: 18,
       },
     ];

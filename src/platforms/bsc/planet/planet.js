@@ -1,7 +1,5 @@
 "use strict";
 
-const Utils = require("../../../utils");
-const AstParser = require("../../../utils/ast_parser");
 const MasterChefWithAutoCompoundAndRewards = require("../../common").MasterChefWithAutoCompoundAndRewards;
 
 module.exports = class planet extends MasterChefWithAutoCompoundAndRewards {

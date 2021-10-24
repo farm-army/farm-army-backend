@@ -294,25 +294,27 @@ module.exports = class impermax {
         result.deposit.usd = result.deposit.amount * price;
       }
 
-      const rewardsDecimals = this.tokenCollector.getDecimals(pendingRewards[farm.id].rewardToken);
-      const rewards = pendingRewards[farm.id]
-        ? ((pendingRewards[farm.id]?.borrowable0 || 0) / (10 ** rewardsDecimals) + (pendingRewards[farm.id]?.borrowable1 || 0) / (10 ** rewardsDecimals))
-        : 0;
+      if (pendingRewards[farm.id] && pendingRewards[farm.id].rewardToken) {
+        const rewardsDecimals = this.tokenCollector.getDecimals(pendingRewards[farm.id].rewardToken);
+        const rewards = pendingRewards[farm.id]
+          ? ((pendingRewards[farm.id]?.borrowable0 || 0) / (10 ** rewardsDecimals) + (pendingRewards[farm.id]?.borrowable1 || 0) / (10 ** rewardsDecimals))
+          : 0;
 
-      if (rewards) {
-        const rewardToken = this.tokenCollector.getTokenByAddress(pendingRewards[farm.id].rewardToken);
-        if (rewardToken) {
-          const reward = {
-            symbol: this.tokenCollector.getSymbolByAddress(pendingRewards[farm.id].rewardToken),
-            amount: rewards
-          };
+        if (rewards) {
+          const rewardToken = this.tokenCollector.getTokenByAddress(pendingRewards[farm.id].rewardToken);
+          if (rewardToken) {
+            const reward = {
+              symbol: this.tokenCollector.getSymbolByAddress(pendingRewards[farm.id].rewardToken),
+              amount: rewards
+            };
 
-          const price = this.priceOracle.findPrice(pendingRewards[farm.id].rewardToken);
-          if (price) {
-            reward.usd = reward.amount * price;
+            const price = this.priceOracle.findPrice(pendingRewards[farm.id].rewardToken);
+            if (price) {
+              reward.usd = reward.amount * price;
+            }
+
+            result.rewards = [reward];
           }
-
-          result.rewards = [reward];
         }
       }
 

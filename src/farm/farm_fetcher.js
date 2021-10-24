@@ -81,8 +81,9 @@ class PoolInfo {
 }
 
 module.exports = class FarmFetcher {
-  constructor(contractAbiFetcher) {
+  constructor(contractAbiFetcher, tokenCollector) {
     this.contractAbiFetcher = contractAbiFetcher;
+    this.tokenCollector = tokenCollector;
   }
 
   extractFunctionsFromAbi(abi) {
@@ -105,9 +106,17 @@ module.exports = class FarmFetcher {
 
     // same have a "st" or "erc20" method
     if (!rewardTokenFunctionName) {
-      const stFunction = abi.find(f => f.name && f.type === 'function' && f.name && (f.name.toLowerCase() === 'st' || f.name.toLowerCase() === 'erc20' || f.name.toLowerCase() === 'earningtoken'));
-      if (stFunction && stFunction.outputs && stFunction.outputs[0] && stFunction.outputs[0].type === 'address') {
+      const stFunction = abi.find(f => f.name && f.type === 'function' && f.name && (f.name.toLowerCase() === 'st' || f.name.toLowerCase() === 'erc20' || f.name.toLowerCase() === 'earningtoken') && f.outputs && f.outputs[0] && f.outputs[0].type === 'address');
+      if (stFunction) {
         rewardTokenFunctionName = stFunction.name
+      }
+
+      // some lower prio function names
+      if (!rewardTokenFunctionName) {
+        const stFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase() === 'govtoken' && f.outputs && f.outputs[0] && f.outputs[0].type === 'address');
+        if (stFunction) {
+          rewardTokenFunctionName = stFunction.name
+        }
       }
     }
 
@@ -120,14 +129,14 @@ module.exports = class FarmFetcher {
 
     // tokenPerBlock
     let tokenPerBlockFunctionName = undefined;
-    const tokenPerBlockFunction = abi.find(f => f.name && f.type === 'function' && f.name && !f.name.includes('DevPerBlock') && f.name.toLowerCase().includes('perblock') && f.inputs.length === 0);
+    const tokenPerBlockFunction = abi.find(f => f.name && f.type === 'function' && f.name && !f.name.includes('DevPerBlock') && (f.name.toLowerCase().includes('perblock') || f.name.replaceAll('_', '').toLowerCase().includes('rewardperblock')) && f.inputs.length === 0);
     if (tokenPerBlockFunction && tokenPerBlockFunction.name) {
       tokenPerBlockFunctionName = tokenPerBlockFunction.name;
     }
 
     // tokenPerBlock
     let tokenPerSecondFunctionName = undefined;
-    const tokenPerSecondFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase().includes('persecond') && f.inputs.length === 0);
+    const tokenPerSecondFunction = abi.find(f => f.name && f.type === 'function' && f.name && (f.name.toLowerCase().includes('persecond') || f.name.toLowerCase().endsWith('persec')) && f.inputs.length === 0);
     if (tokenPerSecondFunction && tokenPerSecondFunction.name) {
       tokenPerSecondFunctionName = tokenPerSecondFunction.name;
     }
@@ -310,20 +319,61 @@ module.exports = class FarmFetcher {
 
     const lpTokens = await Utils.multiCallIndexBy('pid', vaultCalls, chain);
 
+    const tokens = {};
+
+    Object.values(lpTokens).forEach(result => {
+      if (result.token0) {
+        const token = this.tokenCollector.getTokenByAddress(result.token0.toLowerCase());
+        if (token) {
+          tokens[result.token0.toLowerCase()] = {
+            token: token.address,
+            symbol: token.symbol,
+            decimals: token.decimals,
+          };
+        }
+      }
+
+      if (result.token1) {
+        const token = this.tokenCollector.getTokenByAddress(result.token1.toLowerCase());
+        if (token) {
+          tokens[result.token1.toLowerCase()] = {
+            token: token.address,
+            symbol: token.symbol,
+            decimals: token.decimals,
+          };
+        }
+      }
+    });
+
     // resolve token symbols
     const tokenAddresses = [];
     Object.values(lpTokens).forEach(result => {
       if (!result.token0) {
         tokenAddresses.push(result.lpToken);
       } else if (result.token0 && result.token1) {
-        tokenAddresses.push(result.token0);
-        tokenAddresses.push(result.token1);
+        if (!tokens[result.token0.toLowerCase()]) {
+          tokenAddresses.push(result.token0);
+        }
+
+        if (!tokens[result.token1.toLowerCase()]) {
+          tokenAddresses.push(result.token1);
+        }
       }
     });
 
+    // append reward token
     if (masterInfo[0].rewardToken) {
-      tokenAddresses.push(masterInfo[0].rewardToken);
-    }
+      const token = this.tokenCollector.getTokenByAddress(masterInfo[0].rewardToken.toLowerCase());
+      if (token) {
+        tokens[masterInfo[0].rewardToken.toLowerCase()] = {
+          token: token.address,
+          symbol: token.symbol,
+          decimals: token.decimals,
+        };
+      } else {
+        tokenAddresses.push(masterInfo[0].rewardToken);
+      }
+   }
 
     const tokensRaw = await Utils.multiCallIndexBy('token', _.uniq(tokenAddresses).map(token => {
       const web3EthContract = new Web3EthContract(ErcAbi, token);
@@ -335,7 +385,6 @@ module.exports = class FarmFetcher {
       }
     }), chain);
 
-    const tokens = {}
     for (const [key, value] of Object.entries(tokensRaw)) {
       if (value.decimals && value.symbol) {
         tokens[key.toLowerCase()] = value;

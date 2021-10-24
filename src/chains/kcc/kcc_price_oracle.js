@@ -16,6 +16,8 @@ module.exports = class KccPriceOracle {
     this.priceCollector = priceCollector;
     this.cacheManager = cacheManager;
     this.priceFetcher = priceFetcher;
+
+    this.ignoreLp = [];
   }
 
   /**
@@ -200,20 +202,35 @@ module.exports = class KccPriceOracle {
     return matches
   }
 
-  async fetch(lpAddress) {
-    const v = lpAddress.map(address => {
-      const vault = new Web3EthContract(lpAbi, address);
-      return {
-        totalSupply: vault.methods.totalSupply(),
-        token0: vault.methods.token0(),
-        token1: vault.methods.token1(),
-        getReserves: vault.methods.getReserves(),
-        decimals: vault.methods.decimals(),
-        _address: address
-      };
-    });
+  async onFetchDone() {
+    const cache = await this.cacheManager.get('ignore-tokens-missing-reserves-v1');
+    if (cache) {
+      return;
+    }
 
-    console.log("kcc: lp address update", lpAddress.length);
+    await this.cacheManager.set('ignore-tokens-missing-reserves-v1', _.uniq(this.ignoreLp), {ttl: 60 * 60});
+
+    this.ignoreLp = [];
+  }
+
+  async fetch(lpAddress) {
+    const ignoreLp = _.clone((await this.cacheManager.get('ignore-tokens-missing-reserves-v1')) || []);
+
+    const v = lpAddress
+      .filter(address => !ignoreLp.includes(address.toLowerCase()))
+      .map(address => {
+        const vault = new Web3EthContract(lpAbi, address);
+        return {
+          totalSupply: vault.methods.totalSupply(),
+          token0: vault.methods.token0(),
+          token1: vault.methods.token1(),
+          getReserves: vault.methods.getReserves(),
+          decimals: vault.methods.decimals(),
+          _address: address
+        };
+      });
+
+    console.log("kcc: lp address update", lpAddress.length, v.length);
 
     const vaultCalls = await Utils.multiCall(v, 'kcc');
 
@@ -221,9 +238,38 @@ module.exports = class KccPriceOracle {
 
     const managedLp = {};
 
+    const tokenAddressSymbol = {};
+
+    vaultCalls.forEach(call => {
+      if (call.token0) {
+        const token = this.tokenCollector.getTokenByAddress(call.token0.toLowerCase());
+        if (token) {
+          tokenAddressSymbol[call.token0.toLowerCase()] = {
+            symbol: token.symbol,
+            decimals: token.decimals
+          }
+        }
+      }
+
+      if (call.token1) {
+        const token = this.tokenCollector.getTokenByAddress(call.token1.toLowerCase());
+        if (token) {
+          tokenAddressSymbol[call.token1.toLowerCase()] = {
+            symbol: token.symbol,
+            decimals: token.decimals
+          }
+        }
+      }
+    });
+
     vaultCalls.forEach(v => {
       if (!v.getReserves) {
         console.log("kcc: Missing reserve:", v._address);
+
+        if (!this.ignoreLp.includes(v._address.toLowerCase())) {
+          this.ignoreLp.push(v._address.toLowerCase());
+        }
+
         return;
       }
 
@@ -238,26 +284,24 @@ module.exports = class KccPriceOracle {
         raw: v
       };
 
-      if (!ercs[v.token0]) {
+      if (v.token0 && !(ercs[v.token0.toLowerCase()] || tokenAddressSymbol[v.token0.toLowerCase()])) {
         const vault = new Web3EthContract(erc20ABI, v.token0);
-        ercs[v.token0] = {
+        ercs[v.token0.toLowerCase()] = {
           symbol: vault.methods.symbol(),
           decimals: vault.methods.decimals(),
           _token: v.token0
         };
       }
 
-      if (!ercs[v.token1]) {
+      if (v.token1 && !(ercs[v.token1.toLowerCase()] || tokenAddressSymbol[v.token1.toLowerCase()])) {
         const vault = new Web3EthContract(erc20ABI, v.token1);
-        ercs[v.token1] = {
+        ercs[v.token1.toLowerCase()] = {
           symbol: vault.methods.symbol(),
           decimals: vault.methods.decimals(),
           _token: v.token1
         };
       }
     });
-
-    const tokenAddressSymbol = {};
 
     const vaultCalls2 = await Utils.multiCall(Object.values(ercs), 'kcc');
 
@@ -323,6 +367,7 @@ module.exports = class KccPriceOracle {
 
     this.lpTokenCollector.save();
     this.priceCollector.save();
+    this.tokenCollector.save();
   }
 
   async tokenMaps() {

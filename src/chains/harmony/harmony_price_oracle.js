@@ -16,6 +16,8 @@ module.exports = class HarmonyPriceOracle {
     this.priceCollector = priceCollector;
     this.cacheManager = cacheManager;
     this.priceFetcher = priceFetcher;
+
+    this.ignoreLp = [];
   }
 
   /**
@@ -144,6 +146,7 @@ module.exports = class HarmonyPriceOracle {
       'binancecoin': ['0xb1f6e61e1e113625593a22fa6aa94f8052bc39e0'],
       'usd-coin': ['0x44cED87b9F1492Bf2DCf5c16004832569f7f6cBa'],
       'matic-network': ['0x6e7be5b9b4c9953434cd83950d61408f1ccc3bee'],
+      'terra-luna': ['0x95ce547d730519a90def30d647f37d9e5359b6ae'],
     };
 
     tokens.forEach(token => {
@@ -230,20 +233,35 @@ module.exports = class HarmonyPriceOracle {
     return matches
   }
 
-  async fetch(lpAddress) {
-    const v = lpAddress.map(address => {
-      const vault = new Web3EthContract(lpAbi, address);
-      return {
-        totalSupply: vault.methods.totalSupply(),
-        token0: vault.methods.token0(),
-        token1: vault.methods.token1(),
-        getReserves: vault.methods.getReserves(),
-        decimals: vault.methods.decimals(),
-        _address: address
-      };
-    });
+  async onFetchDone() {
+    const cache = await this.cacheManager.get('ignore-tokens-missing-reserves-v1');
+    if (cache) {
+      return;
+    }
 
-    console.log("harmony: lp address update", lpAddress.length);
+    await this.cacheManager.set('ignore-tokens-missing-reserves-v1', _.uniq(this.ignoreLp), {ttl: 60 * 60});
+
+    this.ignoreLp = [];
+  }
+
+  async fetch(lpAddress) {
+    const ignoreLp = _.clone((await this.cacheManager.get('ignore-tokens-missing-reserves-v1')) || []);
+
+    const v = lpAddress
+      .filter(address => !ignoreLp.includes(address.toLowerCase()))
+      .map(address => {
+        const vault = new Web3EthContract(lpAbi, address);
+        return {
+          totalSupply: vault.methods.totalSupply(),
+          token0: vault.methods.token0(),
+          token1: vault.methods.token1(),
+          getReserves: vault.methods.getReserves(),
+          decimals: vault.methods.decimals(),
+          _address: address
+        };
+      });
+
+    console.log("harmony: lp address update", lpAddress.length, v.length);
 
     const vaultCalls = await Utils.multiCall(v, 'harmony');
 
@@ -251,9 +269,38 @@ module.exports = class HarmonyPriceOracle {
 
     const managedLp = {};
 
+    const tokenAddressSymbol = {};
+
+    vaultCalls.forEach(call => {
+      if (call.token0) {
+        const token = this.tokenCollector.getTokenByAddress(call.token0.toLowerCase());
+        if (token) {
+          tokenAddressSymbol[call.token0.toLowerCase()] = {
+            symbol: token.symbol,
+            decimals: token.decimals
+          }
+        }
+      }
+
+      if (call.token1) {
+        const token = this.tokenCollector.getTokenByAddress(call.token1.toLowerCase());
+        if (token) {
+          tokenAddressSymbol[call.token1.toLowerCase()] = {
+            symbol: token.symbol,
+            decimals: token.decimals
+          }
+        }
+      }
+    });
+
     vaultCalls.forEach(v => {
       if (!v.getReserves) {
         console.log("harmony: Missing reserve:", v._address);
+
+        if (!this.ignoreLp.includes(v._address.toLowerCase())) {
+          this.ignoreLp.push(v._address.toLowerCase());
+        }
+
         return;
       }
 
@@ -268,26 +315,24 @@ module.exports = class HarmonyPriceOracle {
         raw: v
       };
 
-      if (!ercs[v.token0]) {
+      if (v.token0 && !(ercs[v.token0.toLowerCase()] || tokenAddressSymbol[v.token0.toLowerCase()])) {
         const vault = new Web3EthContract(erc20ABI, v.token0);
-        ercs[v.token0] = {
+        ercs[v.token0.toLowerCase()] = {
           symbol: vault.methods.symbol(),
           decimals: vault.methods.decimals(),
           _token: v.token0
         };
       }
 
-      if (!ercs[v.token1]) {
+      if (v.token1 && !(ercs[v.token1.toLowerCase()] || tokenAddressSymbol[v.token1.toLowerCase()])) {
         const vault = new Web3EthContract(erc20ABI, v.token1);
-        ercs[v.token1] = {
+        ercs[v.token1.toLowerCase()] = {
           symbol: vault.methods.symbol(),
           decimals: vault.methods.decimals(),
           _token: v.token1
         };
       }
     });
-
-    const tokenAddressSymbol = {};
 
     const vaultCalls2 = await Utils.multiCall(Object.values(ercs), 'harmony');
 
@@ -353,6 +398,7 @@ module.exports = class HarmonyPriceOracle {
 
     this.lpTokenCollector.save();
     this.priceCollector.save();
+    this.tokenCollector.save();
   }
 
   async tokenMaps() {
@@ -369,6 +415,18 @@ module.exports = class HarmonyPriceOracle {
         router: '0xE6a72FeE7e34768661805DE2b621a8CDBe0DBc81', // openswap
         address: '0xc0431Ddcc0D213Bf27EcEcA8C2362c0d0208c6DC',
         symbol: 'oswap',
+        decimals: 18,
+      },
+      {
+        router: '0x24ad62502d1C652Cc7684081169D04896aC20f30', // defikingdom
+        address: '0xd74433b187cf0ba998ad9be3486b929c76815215',
+        symbol: 'mis',
+        decimals: 18,
+      },
+      {
+        router: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506', // sushiswap
+        address: '0x0159ed2e06ddcd46a25e74eb8e159ce666b28687',
+        symbol: 'fox',
         decimals: 18,
       },
     ];

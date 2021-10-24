@@ -122,4 +122,23 @@ describe('#test farm fetcher for masterchef', function () {
       multiplierFunctionName: undefined,
     });
   });
+
+  it('test extraction for viper abi fixtures', () => {
+    const abi = JSON.parse(fs.readFileSync(`${__dirname}/fixtures/viper-abi.json`, 'utf8'));
+
+    const farmFetcher = new FarmFetcher({});
+
+    const foo = farmFetcher.extractFunctionsFromAbi(abi);
+
+    assert.deepStrictEqual(farmFetcher.extractFunctionsFromAbi(abi), {
+      poolInfoFunctionName: "poolInfo",
+      rewardTokenFunctionName: "govToken",
+      multiplierFunctionName: "getMultiplier",
+      tokenPerBlockFunctionName: "REWARD_PER_BLOCK",
+      tokenPerSecondFunctionName: undefined,
+      totalAllocPointFunctionName: "totalAllocPoint",
+      poolLengthFunctionName: "poolLength",
+      pendingRewardsFunctionName: "pendingReward"
+    });
+  });
 });

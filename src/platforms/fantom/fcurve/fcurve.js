@@ -4,9 +4,14 @@ const crypto = require('crypto');
 const BigNumber = require("bignumber.js");
 const Web3EthContract = require("web3-eth-contract");
 const Utils = require("../../../utils");
+const Curve = require("../../curve");
 
 const GAUGE_ABI = require('./abi/gauge.json');
 const LP_TOKEN_ABI = require('./abi/lp_token.json');
+const LP_TOKEN_MINTER_ABI = require('./abi/lp_token_minter.json');
+const REWARD_CONTRACT_ABI = require('./abi/reward_contract.json');
+
+const POOLS = require('./pools');
 
 module.exports = class fcurve {
   constructor(cacheManager, priceOracle, tokenCollector) {
@@ -15,45 +20,91 @@ module.exports = class fcurve {
     this.tokenCollector = tokenCollector;
   }
 
+  async getPoolPrices() {
+    const prices = await Curve.getPoolPrices(
+      POOLS.map(p => p.addresses.lpToken),
+      this.getChain(),
+      this.priceOracle,
+      this.tokenCollector
+    );
+
+    return prices;
+  }
+
   async getRawFarms() {
-    return [
-      {
-        name: '2pool',
-        symbol: 'dai-usdc',
-        token: '0x27e611fd27b276acbd5ffd632e5eaebec9761e40',
-        gauge: '0x8866414733F22295b7563f9C5299715D2D76CAf4',
-        rewardsTokens: [
-          '0x1e4f97b9f9f913c46f1632781732927b9019c68b'
-        ]
-      },
-      {
-        name: 'fUSDT',
-        symbol: 'fusdt',
-        token: '0x92d5ebf3593a92888c25c0abef126583d4b5312e',
-        gauge: '0x06e3C4da96fd076b97b7ca3Ae23527314b6140dF',
-        rewardsTokens: [
-          '0x1e4f97b9f9f913c46f1632781732927b9019c68b'
-        ]
-      },
-      {
-        name: 'WBTC/renBTC',
-        symbol: 'btc',
-        token: '0x5B5CFE992AdAC0C9D48E05854B2d91C73a003858',
-        gauge: '0xBdFF0C27dd073C119ebcb1299a68A6A92aE607F0',
-        rewardsTokens: [
-          '0x1e4f97b9f9f913c46f1632781732927b9019c68b'
-        ]
-      },
-      {
-        name: 'TriCrypto',
-        symbol: 'fusdt-btc-eth',
-        token: '0x58e57cA18B7A47112b877E31929798Cd3D703b0f',
-        gauge: '0x3a1659Ddcf2339Be3aeA159cA010979FB49155FF',
-        rewardsTokens: [
-          '0x1e4f97b9f9f913c46f1632781732927b9019c68b'
-        ]
+    let cacheKey = `getRawFarms-v3-${this.getName()}`;
+
+    const cache = await this.cacheManager.get(cacheKey)
+    if (cache) {
+      return cache;
+    }
+
+    const pools = POOLS.map(p => {
+      let symbol = p.assets
+        .replaceAll('+', '-')
+        .split('-')
+        .map(i => {
+          if (i.startsWith('g')) {
+            i = i.substring(1);
+          } else if(i.startsWith('cy')) {
+            i = i.substring(2);
+          }
+
+          return i;
+        })
+        .join('-')
+        .toLowerCase();
+
+      return {
+        id: p.id,
+        name: p.name,
+        symbol,
+        token: p.addresses.swap,
+        lpToken: p.addresses.lpToken,
+        gauge: p.addresses.gauge,
+        rewardsTokens: (p.additionalRewards || []).map(p => p.rewardTokenAddress),
       }
-    ];
+    });
+
+    const rewardsContracts = pools.map(farm => {
+      const token = new Web3EthContract(GAUGE_ABI, farm.gauge);
+
+      return {
+        gauge: farm.gauge,
+        reward_contract: token.methods.reward_contract(),
+      };
+    });
+
+    (await Utils.multiCall(rewardsContracts, this.getChain())).forEach(reward => {
+      const farm = pools.find(f => f.gauge.toLowerCase() === reward.gauge.toLowerCase())
+      if (farm) {
+        farm.rewardContract = reward.reward_contract;
+      }
+    });
+
+    const rewardsReceivers = pools
+      .filter(farm => farm.rewardContract)
+      .map(farm => {
+        const token = new Web3EthContract(REWARD_CONTRACT_ABI, farm.rewardContract);
+
+        return {
+          gauge: farm.gauge,
+          reward_receiver: token.methods.reward_receiver(),
+        };
+      });
+
+    (await Utils.multiCall(rewardsReceivers, this.getChain())).forEach(reward => {
+      const farm = pools.find(f => f.gauge.toLowerCase() === reward.gauge.toLowerCase())
+      if (farm) {
+        farm.rewardReceiver = reward.reward_receiver;
+      }
+    });
+
+    const result = Object.freeze(pools);
+
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 60});
+
+    return result;
   }
 
   async getFarms(refresh = false) {
@@ -68,20 +119,59 @@ module.exports = class fcurve {
 
     const rawFarms = await this.getRawFarms();
 
-    const calls = [];
+    const tokenInfoPromises = [];
+    const rewardInfoPromises = [];
+    const tvlInfoPromises = [];
 
     rawFarms.forEach(farm => {
-      const token = new Web3EthContract(LP_TOKEN_ABI, farm.token);
-
-      calls.push({
-        token: farm.token.toLowerCase(),
-        virtualPrice: token.methods.get_virtual_price(),
+      tokenInfoPromises.push({
+        gauge: farm.gauge,
+        virtualPrice: new Web3EthContract(LP_TOKEN_ABI, farm.token).methods.get_virtual_price(),
       });
+
+      if (farm.rewardReceiver) {
+        const lpTokenContract = new Web3EthContract(LP_TOKEN_ABI, farm.lpToken);
+
+        tvlInfoPromises.push({
+          gauge: farm.gauge,
+          balanceOf: lpTokenContract.methods.balanceOf(farm.rewardReceiver),
+          decimals: lpTokenContract.methods.decimals(),
+          type: '1',
+        });
+      }
+
+      const lpTokenContract2 = new Web3EthContract(LP_TOKEN_ABI, farm.lpToken);
+
+      tvlInfoPromises.push({
+        gauge: farm.gauge,
+        balanceOf: lpTokenContract2.methods.balanceOf(farm.gauge),
+        decimals: lpTokenContract2.methods.decimals(),
+        type: '2',
+      });
+
+      const rewardData = {
+        gauge: farm.gauge,
+      };
+
+      const token = new Web3EthContract(REWARD_CONTRACT_ABI, farm.rewardContract);
+      (farm.rewardsTokens || []).forEach((r, index) => {
+        rewardData['reward' + index] = token.methods.reward_data(r);
+      })
+
+      rewardInfoPromises.push(rewardData);
     });
 
-    const callsResult = await Utils.multiCallIndexBy('token', calls, this.getChain());
+    const [rewardInfos, callsResult, tvlInfos] = await Promise.all([
+      Utils.multiCallIndexBy('gauge', rewardInfoPromises, this.getChain()),
+      Utils.multiCallIndexBy('gauge', tokenInfoPromises, this.getChain()),
+      Utils.multiCall(tvlInfoPromises, this.getChain()),
+    ]);
 
     const farms = [];
+
+    const apys = await Utils.requestJsonGet('https://stats.curve.fi/raw-stats-ftm/apys.json');
+
+    const prices = await this.getPoolPrices();
 
     rawFarms.forEach(farm => {
       let id = crypto.createHash('md5')
@@ -90,20 +180,35 @@ module.exports = class fcurve {
 
       const item = {
         id: `${this.getName()}_${id}`,
-        name: farm.name,
+        name: farm.symbol.toUpperCase() + ' (' + farm.name.charAt(0).toUpperCase() + farm.name.slice(1) + ')',
         token: farm.symbol,
         provider: this.getName(),
         has_details: true,
         raw: Object.freeze(farm),
-        extra: {}
+        extra: {},
+        chain: 'fantom',
+        main_platform: 'curve',
+        platform: 'curve',
       };
 
       item.extra.transactionAddress = farm.gauge;
       item.extra.transactionToken = farm.token;
 
-      let info = callsResult[farm.token.toLowerCase()];
+      let info = callsResult[farm.gauge];
       if (info && info.virtualPrice) {
         item.extra.virtualPrice = info.virtualPrice / 1e18;
+      }
+
+      const tvlInfo = tvlInfos.find(t => t.gauge.toLowerCase() === farm.gauge.toLowerCase() && t.balanceOf > 0);
+      if (tvlInfo?.balanceOf > 0) {
+        item.tvl = {
+          amount: tvlInfo.balanceOf / (10 ** tvlInfo.decimals)
+        };
+
+        const price = prices[item.extra.transactionToken.toLowerCase()];
+        if (price) {
+          item.tvl.usd = item.tvl.amount * price;
+        }
       }
 
       if (farm.rewardsTokens) {
@@ -121,6 +226,41 @@ module.exports = class fcurve {
             item.earn.push(rewardToken);
             item.earns.push(rewardToken.symbol);
           }
+        });
+      }
+
+      if (apys?.apy?.day && apys?.apy?.day[farm.id]) {
+        item.yield = {
+          apy: apys?.apy?.day[farm.id] * 100,
+        };
+      }
+
+      const rewardInfo = rewardInfos[farm.gauge];
+      if (rewardInfo) {
+        (farm.rewardsTokens || []).forEach((rewardsToken, index) => {
+          const rewardTokenInfo = rewardInfo['reward' + index];
+          if (!rewardTokenInfo || !item?.tvl?.usd) {
+            return;
+          }
+
+          const [distributor, periodFinish, rate, duration, received, paid] = Object.values(rewardTokenInfo);
+
+          const secondsPerYear = 31536000;
+          const yearlyRewards = (Date.now() / 1000 > periodFinish) ? 0 : rate / (10 ** this.tokenCollector.getDecimals(rewardsToken)) * secondsPerYear;
+
+          const price = this.priceOracle.findPrice(rewardsToken);
+          if (!price) {
+            return;
+          }
+
+          const yearlyRewardsInUsd = yearlyRewards * price;
+          const dailyApr = yearlyRewardsInUsd / item.tvl.usd
+
+          if (!item?.yield?.apy) {
+            item.yield.apy = 0;
+          }
+
+          item.yield.apy += Utils.compound(dailyApr, 8760, 0.94) * 100;
         });
       }
 
@@ -186,11 +326,16 @@ module.exports = class fcurve {
 
       const token = new Web3EthContract(GAUGE_ABI, farm.raw.gauge);
 
-      return {
+      let newVar = {
         id: farm.id,
         balanceOf: token.methods.balanceOf(address),
-        rewards: token.methods.claimable_reward_write(address, farm.earn[0].address),
       };
+
+      farm.earn.forEach((r, index) => {
+        newVar['rewards' + index] = token.methods.claimable_reward_write(address, r.address)
+      })
+
+      return newVar;
     });
 
     const calls = await Utils.multiCall(tokenCalls, this.getChain());
@@ -225,18 +370,28 @@ module.exports = class fcurve {
         }
       }
 
-      if (new BigNumber(call.rewards).isGreaterThan(0) && farm.earn[0]) {
-        const reward = {
-          symbol: farm.earn[0].symbol,
-          amount: call.rewards / (10 ** farm.earn[0].decimals)
-        };
+      const rewards = [];
 
-        const price = this.priceOracle.findPrice(farm.earn[0].address);
-        if (price) {
-          reward.usd = reward.amount * price;
+      farm.earn.forEach((earn, index) => {
+        let rewardAmount = call['rewards' + index] || 0;
+
+        if (new BigNumber(rewardAmount).isGreaterThan(0)) {
+          const reward = {
+            symbol: earn.symbol,
+            amount: call['rewards' + index] / (10 ** earn.decimals)
+          };
+
+          const price = this.priceOracle.findPrice(earn.address);
+          if (price) {
+            reward.usd = reward.amount * price;
+          }
+
+          rewards.push(reward);
         }
+      });
 
-        result.rewards = [reward];
+      if (rewards.length > 0) {
+        result.rewards = rewards;
       }
 
       results.push(result);

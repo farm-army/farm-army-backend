@@ -1,7 +1,7 @@
 const _ = require("lodash");
 
 module.exports = class Cronjobs {
-  constructor(platforms, priceOracle, polygonPlatforms, polygonPriceOracle, fantomPlatforms, fantomPriceOracle, farmPlatformResolver, polygonFarmPlatformResolver, fantomFarmPlatformResolver, kccPlatforms, kccPriceOracle, kccFarmPlatformResolver, harmonyPlatforms, harmonyPriceOracle, harmonyFarmPlatformResolver, celoPlatforms, celoPriceOracle, celoFarmPlatformResolver) {
+  constructor(platforms, priceOracle, polygonPlatforms, polygonPriceOracle, fantomPlatforms, fantomPriceOracle, farmPlatformResolver, polygonFarmPlatformResolver, fantomFarmPlatformResolver, kccPlatforms, kccPriceOracle, kccFarmPlatformResolver, harmonyPlatforms, harmonyPriceOracle, harmonyFarmPlatformResolver, celoPlatforms, celoPriceOracle, celoFarmPlatformResolver, moonriverPlatforms, moonriverPriceOracle, moonriverFarmPlatformResolver) {
     this.platforms = platforms;
     this.priceOracle = priceOracle;
     this.farmPlatformResolver = farmPlatformResolver;
@@ -25,6 +25,10 @@ module.exports = class Cronjobs {
     this.celoPlatforms = celoPlatforms;
     this.celoPriceOracle = celoPriceOracle;
     this.celoFarmPlatformResolver = celoFarmPlatformResolver;
+
+    this.moonriverPlatforms = moonriverPlatforms;
+    this.moonriverPriceOracle = moonriverPriceOracle;
+    this.moonriverFarmPlatformResolver = moonriverFarmPlatformResolver;
   }
 
   async cronInterval() {
@@ -36,7 +40,7 @@ module.exports = class Cronjobs {
       return this.priceOracle.fetch(chunk);
     }));
 
-    await this.farmPlatformResolver.buildPlatformList((await Promise.all(this.platforms.getFunctionAwaits('getFarms'))).flat());
+    await this.priceOracle.onFetchDone();
   }
 
   async polygonCronInterval() {
@@ -47,6 +51,8 @@ module.exports = class Cronjobs {
     await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
       return this.polygonPriceOracle.fetch(chunk);
     }));
+
+    await this.polygonPriceOracle.onFetchDone();
   }
 
   async fantomCronInterval() {
@@ -57,6 +63,8 @@ module.exports = class Cronjobs {
     await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
       return this.fantomPriceOracle.fetch(chunk);
     }));
+
+    await this.fantomPriceOracle.onFetchDone();
   }
 
   async kccCronInterval() {
@@ -67,6 +75,8 @@ module.exports = class Cronjobs {
     await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
       return this.kccPriceOracle.fetch(chunk);
     }));
+
+    await this.kccPriceOracle.onFetchDone();
   }
 
   async harmonyCronInterval() {
@@ -77,6 +87,8 @@ module.exports = class Cronjobs {
     await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
       return this.harmonyPriceOracle.fetch(chunk);
     }));
+
+    await this.harmonyPriceOracle.onFetchDone();
   }
 
   async celoCronInterval() {
@@ -87,10 +99,25 @@ module.exports = class Cronjobs {
     await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
       return this.celoPriceOracle.fetch(chunk);
     }));
+
+    await this.celoPriceOracle.onFetchDone();
+  }
+
+  async moonriverCronInterval() {
+    await this.moonriverPriceOracle.updateTokens();
+
+    const lps = (await Promise.all(this.moonriverPlatforms.getFunctionAwaits('getLbAddresses'))).flat();
+    const addresses = _.uniqWith(lps, (a, b) => a.toLowerCase() === b.toLowerCase());
+    await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
+      return this.moonriverPriceOracle.fetch(chunk);
+    }));
+
+    await this.moonriverPriceOracle.onFetchDone();
   }
 
   async cronPlatforms() {
     Promise.allSettled([
+      this.farmPlatformResolver.buildPlatformList((await Promise.all(this.platforms.getFunctionAwaits('getFarms'))).flat()),
       this.fantomFarmPlatformResolver.buildPlatformList((await Promise.all(this.fantomPlatforms.getFunctionAwaits('getFarms'))).flat()),
       this.kccFarmPlatformResolver.buildPlatformList((await Promise.all(this.kccPlatforms.getFunctionAwaits('getFarms'))).flat()),
       this.polygonFarmPlatformResolver.buildPlatformList((await Promise.all(this.polygonPlatforms.getFunctionAwaits('getFarms'))).flat()),

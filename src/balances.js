@@ -136,6 +136,14 @@ module.exports = class Balances {
         };
 
         nativePrice = this.priceOracle.findPrice('0xcf664087a5bb0237a0bad6742852ec6c8d69a27a');
+      } else if (this.chain === 'moonriver') {
+        item = {
+          token: '0x98878B06940aE243284CA214f92Bb71a2b032B8A',
+          symbol: 'movr',
+          amount: nativeBalance / 1e18
+        };
+
+        nativePrice = this.priceOracle.findPrice('0x98878B06940aE243284CA214f92Bb71a2b032B8A');
       } else if (this.chain === 'celo') {
         /*
         wrapped token is equal with base token

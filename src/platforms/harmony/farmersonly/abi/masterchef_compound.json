@@ -1,0 +1,415 @@
+[
+  {
+    "anonymous": false,
+    "name": "AddPool",
+    "type": "event",
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "strat",
+        "type": "address"
+      }
+    ]
+  },
+  {
+    "name": "Deposit",
+    "type": "event",
+    "inputs": [
+      {
+        "name": "user",
+        "indexed": true,
+        "internalType": "address",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "name": "pid",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "internalType": "uint256",
+        "name": "amount",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "name": "EmergencyWithdraw",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address",
+        "indexed": true
+      },
+      {
+        "indexed": true,
+        "type": "uint256",
+        "internalType": "uint256",
+        "name": "pid"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "OperatorUpdated",
+    "inputs": [
+      {
+        "type": "address",
+        "indexed": true,
+        "internalType": "address",
+        "name": "operator"
+      },
+      {
+        "indexed": true,
+        "type": "bool",
+        "internalType": "bool",
+        "name": "status"
+      }
+    ]
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "previousOwner",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "internalType": "address",
+        "name": "newOwner",
+        "indexed": true
+      }
+    ],
+    "type": "event",
+    "name": "OwnershipTransferred"
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "Withdraw",
+    "inputs": [
+      {
+        "type": "address",
+        "indexed": true,
+        "internalType": "address",
+        "name": "user"
+      },
+      {
+        "indexed": true,
+        "name": "pid",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "indexed": false,
+        "type": "uint256",
+        "name": "amount"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "name": "operators",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "type": "function",
+    "inputs": [],
+    "name": "owner",
+    "constant": true,
+    "signature": "0x8da5cb5b"
+  },
+  {
+    "name": "poolInfo",
+    "outputs": [
+      {
+        "type": "address",
+        "internalType": "contract IERC20",
+        "name": "want"
+      },
+      {
+        "type": "address",
+        "internalType": "address",
+        "name": "strat"
+      }
+    ],
+    "type": "function",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "name": "renounceOwnership",
+    "type": "function",
+    "outputs": [],
+    "inputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "inputs": [
+      {
+        "name": "newOwner",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "name": "transferOwnership",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_operator",
+        "internalType": "address"
+      },
+      {
+        "type": "bool",
+        "internalType": "bool",
+        "name": "_status"
+      }
+    ],
+    "name": "updateOperator",
+    "outputs": [],
+    "type": "function",
+    "stateMutability": "nonpayable"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "type": "uint256",
+        "name": ""
+      },
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "name": "userInfo",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "name": "shares",
+        "internalType": "uint256",
+        "type": "uint256"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "type": "function",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "inputs": [],
+    "name": "poolLength",
+    "constant": true,
+    "signature": "0x081e3eda"
+  },
+  {
+    "name": "addPool",
+    "inputs": [
+      {
+        "name": "_strat",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "name": "stakedWantTokens",
+    "type": "function",
+    "outputs": [
+      {
+        "name": "",
+        "internalType": "uint256",
+        "type": "uint256"
+      }
+    ],
+    "inputs": [
+      {
+        "name": "_pid",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_user",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "type": "uint256",
+        "name": "_pid"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_wantAmt",
+        "type": "uint256"
+      },
+      {
+        "name": "_to",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "deposit",
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "outputs": [],
+    "name": "deposit",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      },
+      {
+        "name": "_wantAmt",
+        "internalType": "uint256",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "name": "withdraw",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "type": "uint256",
+        "internalType": "uint256",
+        "name": "_pid"
+      },
+      {
+        "internalType": "uint256",
+        "type": "uint256",
+        "name": "_wantAmt"
+      },
+      {
+        "name": "_to",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "name": "withdraw",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "type": "uint256",
+        "internalType": "uint256",
+        "name": "_pid"
+      },
+      {
+        "type": "uint256",
+        "internalType": "uint256",
+        "name": "_wantAmt"
+      }
+    ],
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "_pid",
+        "internalType": "uint256",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawAll",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "name": "resetAllowances",
+    "type": "function",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "inputs": []
+  },
+  {
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "resetSingleAllowance",
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": []
+  }
+]

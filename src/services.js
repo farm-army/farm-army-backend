@@ -32,6 +32,7 @@ let polygonTokenInfo;
 let polygonDb;
 let polygonFarmPlatformResolver;
 let polygonFarmAuto;
+let polygonFarmFetcher;
 
 let fantomPriceOracle;
 let fantomTokenCollector;
@@ -43,6 +44,7 @@ let fantomTokenInfo;
 let fantomDb;
 let fantomFarmPlatformResolver;
 let fantomFarmAuto;
+let fantomFarmFetcher;
 
 let kccPriceOracle;
 let kccTokenCollector;
@@ -54,6 +56,7 @@ let kccTokenInfo;
 let kccDb;
 let kccFarmPlatformResolver;
 let kccAddressTransactions;
+let kccFarmFetcher;
 
 let harmonyPriceOracle;
 let harmonyTokenCollector;
@@ -65,6 +68,7 @@ let harmonyTokenInfo;
 let harmonyDb;
 let harmonyFarmPlatformResolver;
 let harmonyAddressTransactions;
+let harmonyFarmFetcher;
 
 let celoPriceOracle;
 let celoTokenCollector;
@@ -76,6 +80,19 @@ let celoTokenInfo;
 let celoDb;
 let celoFarmPlatformResolver;
 let celoAddressTransactions;
+let celoFarmFetcher;
+
+let moonriverPriceOracle;
+let moonriverTokenCollector;
+let moonriverPriceCollector;
+let moonriverLiquidityTokenCollector;
+let moonriverCacheManager;
+let moonriverBalances;
+let moonriverTokenInfo;
+let moonriverDb;
+let moonriverFarmPlatformResolver;
+let moonriverAddressTransactions;
+let moonriverFarmFetcher;
 
 let priceFetcher;
 
@@ -105,6 +122,7 @@ const FarmPlatformResolver = require("./farm/farm_platform_resolver");
 const HarmonyPriceOracle = require("./chains/harmony/harmony_price_oracle");
 const PriceFetcher = require("./chains/price_fetcher");
 const CeloPriceOracle = require("./chains/celo/celo_price_oracle");
+const MoonriverPriceOracle = require("./chains/moonriver/moonriver_price_oracle");
 const CrossPlatforms = require("./platforms/cross_platforms");
 
 const FarmAuto = require("./farm/farm_auto");
@@ -154,6 +172,8 @@ const Autofarm = require("./platforms/autofarm/autofarm");
 const Jetfuel = require("./platforms/jetfuel/jetfuel");
 const Valuedefi = require("./platforms/valuedefi/valuedefi");
 const Jul = require("./platforms/jul/jul");
+const Ten = require("./platforms/bsc/ten/ten");
+const Autoshark = require("./platforms/bsc/autoshark/autoshark");
 
 const Pwault = require("./platforms/polygon/pwault/pwault");
 const Polycat = require("./platforms/polygon/polycat/polycat");
@@ -186,6 +206,9 @@ const Pcream = require("./platforms/polygon/pcream/pcream");
 const Pfortube = require("./platforms/polygon/pfortube/pfortube");
 const Balancer = require("./platforms/polygon/balancer/balancer");
 const Impermax = require("./platforms/polygon/impermax/impermax");
+const Pcafeswap = require("./platforms/polygon/pcafeswap/pcafeswap");
+const Polysage = require("./platforms/polygon/polysage/polysage");
+const Paave = require("./platforms/polygon/paave/paave");
 
 const Spookyswap = require("./platforms/fantom/spookyswap/spookyswap");
 const Spiritswap = require("./platforms/fantom/spiritswap/spiritswap");
@@ -208,6 +231,11 @@ const Paintswap = require("./platforms/fantom/paintswap/paintswap");
 const Fswamp = require("./platforms/fantom/fswamp/fswamp");
 const Beethovenx = require("./platforms/fantom/beethovenx/beethovenx");
 const Robovault = require("./platforms/fantom/robovault/robovault");
+const Morpheus = require("./platforms/fantom/morpheus/morpheus");
+const Geist = require("./platforms/fantom/geist/geist");
+const Grim = require("./platforms/fantom/grim/grim");
+const Zoocoin = require("./platforms/fantom/zoocoin/zoocoin");
+const Fpearzap = require("./platforms/fantom/fpearzap/fpearzap");
 
 const Kuswap = require("./platforms/kcc/kuswap/kuswap");
 const Kudex = require("./platforms/kcc/kudex/kudex");
@@ -222,9 +250,21 @@ const Hsushi = require("./platforms/harmony/hsushi/hsushi");
 const Openswap = require("./platforms/harmony/openswap/openswap");
 const Viper = require("./platforms/harmony/viper/viper");
 const Hcurve = require("./platforms/harmony/hcurve/hcurve");
+const Artemis = require("./platforms/harmony/artemis/artemis");
+const Defikingdoms = require("./platforms/harmony/defikingdoms/defikingdoms");
+const Farmersonly = require("./platforms/harmony/farmersonly/farmersonly");
+const FarmersonlyFarm = require("./platforms/harmony/farmersonly/farmersonly_farm");
+const FarmersonlyCompound = require("./platforms/harmony/farmersonly/farmersonly_compound");
 
 const Ubeswap = require("./platforms/celo/ubeswap/ubeswap");
 const Mobius = require("./platforms/celo/mobius/mobius");
+const Csushi = require("./platforms/celo/csushi/csushi");
+const Moola = require("./platforms/celo/moola/moola");
+
+const Mautofarm = require("./platforms/moonriver/mautofarm/mautofarm");
+const Solarbeam = require("./platforms/moonriver/solarbeam/solarbeam");
+const Huckleberry = require("./platforms/moonriver/huckleberry/huckleberry");
+const Moonfarm = require("./platforms/moonriver/moonfarm/moonfarm");
 
 let pancake;
 let swamp;
@@ -271,6 +311,8 @@ let autofarm;
 let jetfuel;
 let valuedefi;
 let jul;
+let ten;
+let autoshark;
 
 let pwault;
 let polycat;
@@ -303,6 +345,9 @@ let pcream;
 let pfortube;
 let balancer;
 let impermax;
+let pcafeswap;
+let polysage;
+let paave;
 
 let spookyswap;
 let spiritswap;
@@ -326,6 +371,11 @@ let paintswap;
 let fswamp;
 let beethovenx;
 let robovault;
+let morpheus;
+let geist;
+let grim;
+let zoocoin;
+let fpearzap;
 
 let kuswap;
 let kudex;
@@ -339,15 +389,28 @@ let hsushi;
 let openswap;
 let viper;
 let hcurve;
+let artemis;
+let defikingdoms;
 
 let ubeswap;
 let mobius;
+let csushi;
+let moola;
+
+let mautofarm;
+let solarbeam;
+let huckleberry;
+let farmersonly;
+let farmersonlyCompound;
+let farmersonlyFarm;
+let moonfarm;
 
 let polygonPlatform;
 let fantomPlatform;
 let kccPlatform;
 let harmonyPlatform;
 let celoPlatform;
+let moonriverPlatform;
 
 let crossPlatforms;
 
@@ -399,6 +462,9 @@ module.exports = {
       this.getCeloPlatforms(),
       this.getCeloPriceOracle(),
       this.getCeloFarmPlatformResolver(),
+      this.getMoonriverPlatforms(),
+      this.getMoonriverPriceOracle(),
+      this.getMoonriverFarmPlatformResolver(),
     ));
   },
 
@@ -423,7 +489,7 @@ module.exports = {
 
     return (polygonFarmAuto = new FarmAuto(
       this.getPolygonPriceOracle(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonTokenCollector(),
       this.getPolygonCacheManager(),
       'polygon'
@@ -437,7 +503,7 @@ module.exports = {
 
     return (fantomFarmAuto = new FarmAuto(
       this.getFantomPriceOracle(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomTokenCollector(),
       this.getFantomCacheManager(),
       'fantom'
@@ -527,7 +593,21 @@ module.exports = {
       this.getPriceFetcher(),
     ));
   },
+  
+  getMoonriverPriceOracle() {
+    if (moonriverPriceOracle) {
+      return moonriverPriceOracle;
+    }
 
+    return (moonriverPriceOracle = new MoonriverPriceOracle(
+      this.getMoonriverTokenCollector(),
+      this.getMoonriverLiquidityTokenCollector(),
+      this.getMoonriverPriceCollector(),
+      this.getMoonriverCacheManager(),
+      this.getPriceFetcher(),
+    ));
+  },
+  
   getPriceFetcher() {
     if (priceFetcher) {
       return priceFetcher;
@@ -598,6 +678,16 @@ module.exports = {
     ));
   },
 
+  getMoonriverFarmPlatformResolver() {
+    if (moonriverFarmPlatformResolver) {
+      return moonriverFarmPlatformResolver;
+    }
+
+    return (moonriverFarmPlatformResolver = new FarmPlatformResolver(
+      this.getMoonriverCacheManager(),
+    ));
+  },
+
   getPlatforms() {
     if (platforms) {
       return platforms;
@@ -651,6 +741,8 @@ module.exports = {
           this.getJetfuel(),
           this.getValuedefi(),
           this.getJul(),
+          this.getTen(),
+          this.getAutoshark(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -692,6 +784,9 @@ module.exports = {
         this.getPfortube(),
         this.getBalancer(),
         this.getImpermax(),
+        this.getPcafeswap(),
+        this.getPolysage(),
+        this.getPaave(),
       ],
       this.getCache(),
       this.getPolygonPriceOracle(),
@@ -726,6 +821,11 @@ module.exports = {
         this.getFswamp(),
         this.getBeethovenx(),
         this.getRobovault(),
+        this.getMorpheus(),
+        this.getGeist(),
+        this.getGrim(),
+        this.getZoocoin(),
+        this.getFpearzap(),
       ],
       this.getCache(),
       this.getFantomPriceOracle(),
@@ -751,6 +851,24 @@ module.exports = {
     ));
   },
 
+  getMoonriverPlatforms() {
+    if (moonriverPlatform) {
+      return moonriverPlatform;
+    }
+
+    return (moonriverPlatform = new Platforms(
+      [
+        this.getMautofarm(),
+        this.getSolarbeam(),
+        this.getHuckleberry(),
+        this.getMoonfarm(),
+      ],
+      this.getCache(),
+      this.getMoonriverPriceOracle(),
+      this.getMoonriverTokenCollector(),
+    ));
+  },
+
   getHarmonyPlatforms() {
     if (harmonyPlatform) {
       return harmonyPlatform;
@@ -763,6 +881,9 @@ module.exports = {
         this.getOpenswap(),
         this.getViper(),
         this.getHcurve(),
+        this.getArtemis(),
+        this.getDefikingdoms(),
+        this.getFarmersonly(),
       ],
       this.getCache(),
       this.getHarmonyPriceOracle(),
@@ -779,6 +900,8 @@ module.exports = {
       [
         this.getUbeswap(),
         this.getMobius(),
+        this.getCsushi(),
+        this.getMoola(),
       ],
       this.getCache(),
       this.getCeloPriceOracle(),
@@ -799,6 +922,7 @@ module.exports = {
         this.getHarmonyPlatforms(),
         this.getCeloPlatforms(),
         this.getKccPlatforms(),
+        this.getMoonriverPlatforms(),
       ],
     ));
   },
@@ -839,8 +963,8 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
-      this.getCacheManager(),
+      this.getPolygonFarmFetcher(),
+      this.getPolygonCacheManager(),
     ));
   },
 
@@ -853,8 +977,8 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
-      this.getCacheManager(),
+      this.getPolygonFarmFetcher(),
+      this.getPolygonCacheManager(),
     ));
   },
 
@@ -867,8 +991,8 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
-      this.getCacheManager(),
+      this.getPolygonFarmFetcher(),
+      this.getPolygonCacheManager(),
     ));
   },
 
@@ -881,8 +1005,8 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
-      this.getCacheManager(),
+      this.getPolygonFarmFetcher(),
+      this.getPolygonCacheManager(),
     ));
   },
 
@@ -895,7 +1019,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
     ));
   },
@@ -909,7 +1033,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
     ));
   },
@@ -923,7 +1047,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
     ));
   },
@@ -937,7 +1061,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
     ));
   },
@@ -951,7 +1075,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
       this.getPolygonFarmPlatformResolver(),
     ));
@@ -978,7 +1102,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
     ));
   },
@@ -992,7 +1116,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
     ));
   },
@@ -1006,7 +1130,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
     ));
   },
@@ -1020,7 +1144,7 @@ module.exports = {
       this.getHarmonyCacheManager(),
       this.getHarmonyPriceOracle(),
       this.getHarmonyTokenCollector(),
-      this.getFarmFetcher(),
+      this.getHarmonyFarmFetcher(),
       this.getHarmonyCacheManager(),
     ));
   },
@@ -1034,6 +1158,34 @@ module.exports = {
       this.getHarmonyCacheManager(),
       this.getHarmonyPriceOracle(),
       this.getHarmonyTokenCollector(),
+    ));
+  },
+
+  getArtemis() {
+    if (artemis) {
+      return artemis;
+    }
+
+    return (artemis = new Artemis(
+      this.getHarmonyCacheManager(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyFarmFetcher(),
+      this.getHarmonyCacheManager(),
+    ));
+  },
+
+  getDefikingdoms() {
+    if (defikingdoms) {
+      return defikingdoms;
+    }
+
+    return (defikingdoms = new Defikingdoms(
+      this.getHarmonyCacheManager(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyFarmFetcher(),
+      this.getHarmonyCacheManager(),
     ));
   },
 
@@ -1070,7 +1222,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
     ));
   },
@@ -1084,7 +1236,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
     ));
   },
@@ -1098,7 +1250,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
     ));
   },
@@ -1112,7 +1264,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
     ));
   },
@@ -1126,7 +1278,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
     ));
   },
@@ -1140,7 +1292,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
     ));
   },
@@ -1154,7 +1306,7 @@ module.exports = {
       this.getHarmonyCacheManager(),
       this.getHarmonyPriceOracle(),
       this.getHarmonyTokenCollector(),
-      this.getFarmFetcher(),
+      this.getHarmonyFarmFetcher(),
       this.getHarmonyCacheManager(),
     ));
   },
@@ -1168,7 +1320,7 @@ module.exports = {
       this.getHarmonyCacheManager(),
       this.getHarmonyPriceOracle(),
       this.getHarmonyTokenCollector(),
-      this.getFarmFetcher(),
+      this.getHarmonyFarmFetcher(),
       this.getHarmonyCacheManager(),
     ));
   },
@@ -1242,6 +1394,61 @@ module.exports = {
     ));
   },
 
+  getTen() {
+    if (ten) {
+      return ten;
+    }
+
+    return (ten = new Ten(
+      this.getCacheManager(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+      this.getFarmPlatformResolver(),
+    ));
+  },
+
+  getFarmersonly() {
+    if (farmersonly) {
+      return farmersonly;
+    }
+
+    return (farmersonly = new Farmersonly(
+      this.getFarmersonlyCompound(),
+      this.getFarmersonlyFarm(),
+    ));
+  },
+
+  getFarmersonlyCompound() {
+    if (farmersonlyCompound) {
+      return farmersonlyCompound;
+    }
+
+    return (farmersonlyCompound = new FarmersonlyCompound(
+      this.getHarmonyCacheManager(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyFarmFetcher(),
+      this.getHarmonyCacheManager(),
+      this.getHarmonyFarmPlatformResolver(),
+    ));
+  },
+
+  getFarmersonlyFarm() {
+    if (farmersonlyFarm) {
+      return farmersonlyFarm;
+    }
+
+    return (farmersonlyFarm = new FarmersonlyFarm(
+      this.getHarmonyCacheManager(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyFarmFetcher(),
+      this.getHarmonyCacheManager(),
+    ));
+  },
+
   getPautofarm() {
     if (pautofarm) {
       return pautofarm;
@@ -1261,6 +1468,59 @@ module.exports = {
     return (fautofarm = new Fautofarm(
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
+    ));
+  },
+
+  getMautofarm() {
+    if (mautofarm) {
+      return mautofarm;
+    }
+
+    return (mautofarm = new Mautofarm(
+      this.getMoonriverCacheManager(),
+      this.getMoonriverPriceOracle(),
+    ));
+  },
+
+  getSolarbeam() {
+    if (solarbeam) {
+      return solarbeam;
+    }
+
+    return (solarbeam = new Solarbeam(
+      this.getMoonriverCacheManager(),
+      this.getMoonriverPriceOracle(),
+      this.getMoonriverTokenCollector(),
+      this.getMoonriverFarmFetcher(),
+      this.getMoonriverCacheManager(),
+    ));
+  },
+
+  getMoonfarm() {
+    if (moonfarm) {
+      return moonfarm;
+    }
+
+    return (moonfarm = new Moonfarm(
+      this.getMoonriverCacheManager(),
+      this.getMoonriverPriceOracle(),
+      this.getMoonriverTokenCollector(),
+      this.getMoonriverFarmFetcher(),
+      this.getMoonriverCacheManager(),
+    ));
+  },
+
+  getHuckleberry() {
+    if (huckleberry) {
+      return huckleberry;
+    }
+
+    return (huckleberry = new Huckleberry(
+      this.getMoonriverCacheManager(),
+      this.getMoonriverPriceOracle(),
+      this.getMoonriverTokenCollector(),
+      this.getMoonriverFarmFetcher(),
+      this.getMoonriverCacheManager(),
     ));
   },
 
@@ -1297,7 +1557,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
     ));
   },
@@ -1311,7 +1571,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
     ));
   },
@@ -1325,7 +1585,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
     ));
   },
@@ -1339,7 +1599,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
     ));
   },
@@ -1378,7 +1638,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
     ));
   },
@@ -1416,7 +1676,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
       this.getFantomFarmPlatformResolver(),
     ));
@@ -1431,7 +1691,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
       this.getFantomFarmPlatformResolver(),
     ));
@@ -1445,7 +1705,7 @@ module.exports = {
     return (reaper = new Reaper(
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
       this.getFantomLiquidityTokenCollector(),
       this.getFantomFarmPlatformResolver(),
@@ -1501,7 +1761,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
-      this.getFarmFetcher(),
+      this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
       this.getPolygonLiquidityTokenCollector(),
     ));
@@ -1530,7 +1790,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
       this.getFantomLiquidityTokenCollector(),
     ));
@@ -1855,6 +2115,20 @@ module.exports = {
     ));
   },
 
+  getAutoshark() {
+    if (autoshark) {
+      return autoshark;
+    }
+
+    return (autoshark = new Autoshark(
+      this.getCacheManager(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
   getFarmhero() {
     if (farmhero) {
       return farmhero;
@@ -1999,7 +2273,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-      this.getFarmFetcher(),
+      this.getFantomFarmFetcher(),
     ));
   },
 
@@ -2012,6 +2286,72 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
+    ));
+  },
+
+  getMorpheus() {
+    if (morpheus) {
+      return morpheus;
+    }
+
+    return (morpheus = new Morpheus(
+      this.getFantomCacheManager(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomFarmFetcher(),
+      this.getFantomCacheManager(),
+    ));
+  },
+
+  getGeist() {
+    if (geist) {
+      return geist;
+    }
+
+    return (geist = new Geist(
+      this.getFantomCacheManager(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+    ));
+  },
+
+  getGrim() {
+    if (grim) {
+      return grim;
+    }
+
+    return (grim = new Grim(
+      this.getFantomCacheManager(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+    ));
+  },
+
+  getZoocoin() {
+    if (zoocoin) {
+      return zoocoin;
+    }
+
+    return (zoocoin = new Zoocoin(
+      this.getFantomCacheManager(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomFarmFetcher(),
+      this.getFantomCacheManager(),
+    ));
+  },
+
+  getFpearzap() {
+    if (fpearzap) {
+      return fpearzap;
+    }
+
+    return (fpearzap = new Fpearzap(
+      this.getFantomCacheManager(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomFarmFetcher(),
+      this.getFantomCacheManager(),
     ));
   },
 
@@ -2055,6 +2395,46 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonLiquidityTokenCollector(),
       this.getPolygonFarmPlatformResolver(),
+    ));
+  },
+
+  getPcafeswap() {
+    if (pcafeswap) {
+      return pcafeswap;
+    }
+
+    return (pcafeswap = new Pcafeswap(
+      this.getPolygonCacheManager(),
+      this.getPolygonPriceOracle(),
+      this.getPolygonTokenCollector(),
+      this.getPolygonFarmFetcher(),
+      this.getPolygonCacheManager(),
+    ));
+  },
+
+  getPolysage() {
+    if (polysage) {
+      return polysage;
+    }
+
+    return (polysage = new Polysage(
+      this.getPolygonCacheManager(),
+      this.getPolygonPriceOracle(),
+      this.getPolygonTokenCollector(),
+      this.getPolygonFarmFetcher(),
+      this.getPolygonCacheManager(),
+    ));
+  },
+
+  getPaave() {
+    if (paave) {
+      return paave;
+    }
+
+    return (paave = new Paave(
+      this.getPolygonCacheManager(),
+      this.getPolygonPriceOracle(),
+      this.getPolygonTokenCollector(),
     ));
   },
 
@@ -2192,7 +2572,7 @@ module.exports = {
       this.getKccCacheManager(),
       this.getKccPriceOracle(),
       this.getKccTokenCollector(),
-      this.getFarmFetcher(),
+      this.getKccFarmFetcher(),
       this.getKccCacheManager(),
       this.getKccFarmPlatformResolver(),
     ));
@@ -2207,7 +2587,7 @@ module.exports = {
       this.getKccCacheManager(),
       this.getKccPriceOracle(),
       this.getKccTokenCollector(),
-      this.getFarmFetcher(),
+      this.getKccFarmFetcher(),
       this.getKccCacheManager(),
       this.getKccFarmPlatformResolver(),
     ));
@@ -2233,7 +2613,7 @@ module.exports = {
       this.getKccCacheManager(),
       this.getKccPriceOracle(),
       this.getKccTokenCollector(),
-      this.getFarmFetcher(),
+      this.getKccFarmFetcher(),
       this.getKccCacheManager(),
       this.getKccFarmPlatformResolver(),
     ));
@@ -2247,7 +2627,7 @@ module.exports = {
     return (kukafeCompound = new KukafeCompound(
       this.getKccPriceOracle(),
       this.getKccTokenCollector(),
-      this.getFarmFetcher(),
+      this.getKccFarmFetcher(),
       this.getKccCacheManager(),
       this.getKccFarmPlatformResolver(),
     ));
@@ -2262,7 +2642,7 @@ module.exports = {
       this.getKccCacheManager(),
       this.getKccPriceOracle(),
       this.getKccTokenCollector(),
-      this.getFarmFetcher(),
+      this.getKccFarmFetcher(),
       this.getKccCacheManager(),
       this.getKccFarmPlatformResolver(),
     ));
@@ -2303,6 +2683,32 @@ module.exports = {
       this.getCeloPriceOracle(),
       this.getCeloTokenCollector(),
       this.getCeloLiquidityTokenCollector(),
+    ));
+  },
+
+  getCsushi() {
+    if (csushi) {
+      return csushi;
+    }
+
+    return (csushi = new Csushi(
+      this.getCeloCacheManager(),
+      this.getCeloPriceOracle(),
+      this.getCeloTokenCollector(),
+      this.getCeloFarmFetcher(),
+      this.getCeloCacheManager(),
+    ));
+  },
+
+  getMoola() {
+    if (moola) {
+      return moola;
+    }
+
+    return (moola = new Moola(
+      this.getCeloCacheManager(),
+      this.getCeloPriceOracle(),
+      this.getCeloTokenCollector(),
     ));
   },
 
@@ -2404,6 +2810,21 @@ module.exports = {
     ));
   },
 
+  getMoonriverAddressTransactions() {
+    if (moonriverAddressTransactions) {
+      return moonriverAddressTransactions;
+    }
+
+    return (moonriverAddressTransactions = new AddressTransactions(
+      this.getMoonriverPlatforms(),
+      this.getUserCacheManager(),
+      this.getBscscanRequest(),
+      this.getMoonriverLiquidityTokenCollector(),
+      this.getMoonriverTokenCollector(),
+      this.getMoonriverPriceCollector(),
+    ));
+  },
+
   getLiquidityTokenCollector() {
     if (liquidityTokenCollector) {
       return liquidityTokenCollector;
@@ -2461,6 +2882,16 @@ module.exports = {
 
     return (celoLiquidityTokenCollector = new LiquidityTokenCollector(
       this.getCeloCacheManager(),
+    ));
+  },
+
+  getMoonriverLiquidityTokenCollector() {
+    if (moonriverLiquidityTokenCollector) {
+      return moonriverLiquidityTokenCollector;
+    }
+
+    return (moonriverLiquidityTokenCollector = new LiquidityTokenCollector(
+      this.getMoonriverCacheManager(),
     ));
   },
 
@@ -2661,6 +3092,39 @@ module.exports = {
     return celoCacheManager = diskCache;
   },
 
+  getMoonriverCacheManager() {
+    if (moonriverCacheManager) {
+      return moonriverCacheManager;
+    }
+
+    const cacheDir = path.resolve(__dirname, '../var/cache_moonriver')
+
+    const diskCache = cacheManagerInstance.caching({
+      ignoreCacheErrors: true,
+      store: fsStore,
+      options: {
+        path: cacheDir,
+        ttl: 60 * 60 * 24 * 30,
+        subdirs: true,
+        zip: false,
+      }
+    });
+
+    const fn = diskCache.get;
+
+    diskCache.get = async (...args) => {
+      try {
+        return await fn(...args);
+      } catch (e) {
+        console.error('error fetching cache: ', JSON.stringify(args))
+      }
+
+      return undefined
+    }
+
+    return moonriverCacheManager = diskCache;
+  },
+
   getUserCacheManager() {
     if (cacheManager) {
       return cacheManager;
@@ -2778,6 +3242,20 @@ module.exports = {
     ));
   },
 
+  getMoonriverBalances() {
+    if (moonriverBalances) {
+      return moonriverBalances;
+    }
+
+    return (moonriverBalances = new Balances(
+      this.getMoonriverCacheManager(),
+      this.getMoonriverPriceOracle(),
+      this.getMoonriverTokenCollector(),
+      this.getMoonriverLiquidityTokenCollector(),
+      'moonriver'
+    ));
+  },
+
   getTokenCollector() {
     if (tokenCollector) {
       return tokenCollector;
@@ -2826,6 +3304,14 @@ module.exports = {
     return (celoTokenCollector = new TokenCollector(this.getCeloCacheManager(), 'celo'));
   },
 
+  getMoonriverTokenCollector() {
+    if (moonriverTokenCollector) {
+      return moonriverTokenCollector;
+    }
+
+    return (moonriverTokenCollector = new TokenCollector(this.getMoonriverCacheManager(), 'moonriver'));
+  },
+
   getPriceCollector() {
     if (priceCollector) {
       return priceCollector;
@@ -2872,6 +3358,14 @@ module.exports = {
     }
 
     return (celoPriceCollector = new PriceCollector(this.getCeloCacheManager()));
+  },
+
+  getMoonriverPriceCollector() {
+    if (moonriverPriceCollector) {
+      return moonriverPriceCollector;
+    }
+
+    return (moonriverPriceCollector = new PriceCollector(this.getMoonriverCacheManager()));
   },
 
   getDb() {
@@ -2958,6 +3452,20 @@ module.exports = {
     ));
   },
 
+  getMoonriverDb() {
+    if (moonriverDb) {
+      return moonriverDb;
+    }
+
+    return (moonriverDb = new Db(
+      this.getDatabase(),
+      this.getMoonriverPriceOracle(),
+      this.getMoonriverPlatforms(),
+      this.getMoonriverPriceCollector(),
+      this.getMoonriverLiquidityTokenCollector(),
+    ));
+  },
+
   getHttp() {
     if (http) {
       return http;
@@ -2971,6 +3479,7 @@ module.exports = {
       this.getKccPlatforms(),
       this.getHarmonyPlatforms(),
       this.getCeloPlatforms(),
+      this.getMoonriverPlatforms(),
       this.getCrossPlatforms(),
       this.getBalances(),
       this.getAddressTransactions(),
@@ -3009,7 +3518,13 @@ module.exports = {
       this.getCeloTokenCollector(),
       this.getCeloBalances(),
       this.getCeloTokenInfo(),
-      this.getCeloAddressTransactions()
+      this.getCeloAddressTransactions(),
+      this.getMoonriverPriceOracle(),
+      this.getMoonriverLiquidityTokenCollector(),
+      this.getMoonriverTokenCollector(),
+      this.getMoonriverBalances(),
+      this.getMoonriverTokenInfo(),
+      this.getMoonriverAddressTransactions(),
     ));
   },
 
@@ -3020,6 +3535,73 @@ module.exports = {
 
     return (farmFetcher = new FarmFetcher(
       this.getContractAbiFetcher(),
+      this.getTokenCollector(),
+    ));
+  },
+
+  getPolygonFarmFetcher() {
+    if (polygonFarmFetcher) {
+      return polygonFarmFetcher;
+    }
+
+    return (polygonFarmFetcher = new FarmFetcher(
+      this.getContractAbiFetcher(),
+      this.getPolygonTokenCollector(),
+    ));
+  },
+
+  getFantomFarmFetcher() {
+    if (fantomFarmFetcher) {
+      return fantomFarmFetcher;
+    }
+
+    return (fantomFarmFetcher = new FarmFetcher(
+      this.getContractAbiFetcher(),
+      this.getFantomTokenCollector(),
+    ));
+  },
+
+  getKccFarmFetcher() {
+    if (kccFarmFetcher) {
+      return kccFarmFetcher;
+    }
+
+    return (kccFarmFetcher = new FarmFetcher(
+      this.getContractAbiFetcher(),
+      this.getKccTokenCollector(),
+    ));
+  },
+
+  getHarmonyFarmFetcher() {
+    if (harmonyFarmFetcher) {
+      return harmonyFarmFetcher;
+    }
+
+    return (harmonyFarmFetcher = new FarmFetcher(
+      this.getContractAbiFetcher(),
+      this.getHarmonyTokenCollector(),
+    ));
+  },
+
+  getCeloFarmFetcher() {
+    if (celoFarmFetcher) {
+      return celoFarmFetcher;
+    }
+
+    return (celoFarmFetcher = new FarmFetcher(
+      this.getContractAbiFetcher(),
+      this.getCeloTokenCollector(),
+    ));
+  },
+
+  getMoonriverFarmFetcher() {
+    if (moonriverFarmFetcher) {
+      return moonriverFarmFetcher;
+    }
+
+    return (moonriverFarmFetcher = new FarmFetcher(
+      this.getContractAbiFetcher(),
+      this.getMoonriverTokenCollector(),
     ));
   },
 
@@ -3115,6 +3697,20 @@ module.exports = {
       this.getCeloLiquidityTokenCollector(),
       this.getCeloPriceCollector(),
       this.getCeloDb(),
+    ));
+  },
+
+  getMoonriverTokenInfo() {
+    if (moonriverTokenInfo) {
+      return moonriverTokenInfo;
+    }
+
+    return (moonriverTokenInfo = new TokenInfo(
+      this.getMoonriverCacheManager(),
+      this.getMoonriverTokenCollector(),
+      this.getMoonriverLiquidityTokenCollector(),
+      this.getMoonriverPriceCollector(),
+      this.getMoonriverDb(),
     ));
   },
 

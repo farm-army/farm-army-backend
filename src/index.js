@@ -12,6 +12,7 @@ async function farmUpdater() {
     Promise.all(services.getKccPlatforms().getFunctionAwaits('getFarms', [true])),
     Promise.all(services.getHarmonyPlatforms().getFunctionAwaits('getFarms', [true])),
     Promise.all(services.getCeloPlatforms().getFunctionAwaits('getFarms', [true])),
+    Promise.all(services.getMoonriverPlatforms().getFunctionAwaits('getFarms', [true])),
   ])).forEach(p => {
     if (p.status !== 'fulfilled') {
       console.error('farmUpdater error', p.reason)
@@ -27,6 +28,7 @@ async function priceUpdater() {
     services.getCronjobs().kccCronInterval(),
     services.getCronjobs().harmonyCronInterval(),
     services.getCronjobs().celoCronInterval(),
+    services.getCronjobs().moonriverCronInterval(),
   ])).forEach(p => {
     if (p.status !== 'fulfilled') {
       console.error('priceUpdater error', p.reason)
@@ -80,6 +82,10 @@ setInterval(async () => {
     services.getCeloDb().updateFarmPrices(),
     services.getCeloDb().updateAddressMaps(),
     services.getCeloDb().updateLpInfoMaps(),
+
+    services.getMoonriverDb().updateFarmPrices(),
+    services.getMoonriverDb().updateAddressMaps(),
+    services.getMoonriverDb().updateLpInfoMaps(),
   ])).forEach(p => {
     if (p.status !== 'fulfilled') {
       console.error('farm update interval error', p.reason)

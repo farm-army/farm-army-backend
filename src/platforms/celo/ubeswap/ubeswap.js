@@ -7,7 +7,9 @@ const Utils = require("../../../utils");
 const _ = require("lodash");
 
 const MULTI_REWARD_ABI = require('./abi/multi_reward_abi.json');
+const POOL_MANAGER_ABI = require('./abi/pool_manager.json');
 const ERC20_ABI = require('../../../abi/erc20.json');
+const AstParser = require("../../../utils/ast_parser");
 
 module.exports = class ubeswap {
   constructor(cacheManager, priceOracle, tokenCollector, liquidityTokenCollector) {
@@ -38,88 +40,55 @@ module.exports = class ubeswap {
   }
 
   async getRawFarms() {
-    const cacheKey = `getRawFarms-v3-${this.getName()}`;
+    const cacheKey = `getRawFarms-v9-${this.getName()}`;
 
     const cache = await this.cacheManager.get(cacheKey);
     if (cache) {
       return cache;
     }
 
-    const pools = [
-      {
-        address: "0xd930501A0848DC0AA3E301c7B9b8AFE8134D7f5F",
-        underlyingPool: "0x19F1A692C77B481C23e9916E3E83Af919eD49765",
-        basePool: "0x19F1A692C77B481C23e9916E3E83Af919eD49765",
-        numRewards: 2,
-        active: !0
-      },
-      {
-        address: "0xbbC8C824c638fd238178a71F5b1E5Ce7e4Ce586B",
-        underlyingPool: "0x66bD2eF224318cA5e3A93E165e77fAb6DD986E89",
-        basePool: "0x66bD2eF224318cA5e3A93E165e77fAb6DD986E89",
-        numRewards: 2,
-        active: !0
-      },
-      {
-        address: "0x0F3d01aea89dA0b6AD81712Edb96FA7AF1c17E9B",
-        underlyingPool: "0x08252f2E68826950d31D268DfAE5E691EE8a2426",
-        basePool: "0x08252f2E68826950d31D268DfAE5E691EE8a2426",
-        numRewards: 2,
-        active: !0
-      },
-      {
-        address: "0x9D87c01672A7D02b2Dc0D0eB7A145C7e13793c3B",
-        underlyingPool: "0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1",
-        basePool: "0x295D6f96081fEB1569d9Ce005F7f2710042ec6a1",
-        numRewards: 2,
-        active: !0
-      },
-      {
-        address: "0x194478Aa91e4D7762c3E51EeE57376ea9ac72761",
-        underlyingPool: "0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468",
-        basePool: "0xD7D6b5213b9B9DFffbb7ef008b3cF3c677eb2468",
-        numRewards: 2,
-        active: !0
-      },
-      {
-        address: "0x2f0ddEAa9DD2A0FB78d41e58AD35373d6A81EbB0",
-        underlyingPool: "0xaf13437122cd537C5D8942f17787cbDBd787fE94",
-        basePool: "0xaf13437122cd537C5D8942f17787cbDBd787fE94",
-        numRewards: 2,
-        active: !1
-      },
-      {
-        address: "0x84Bb1795b699Bf7a798C0d63e9Aad4c96B0830f4",
-        underlyingPool: "0xC087aEcAC0a4991f9b0e931Ce2aC77a826DDdaf3",
-        basePool: "0xC087aEcAC0a4991f9b0e931Ce2aC77a826DDdaf3",
-        numRewards: 2,
-        active: !1
-      },
-      {
-        address: "0x3d823f7979bB3af846D8F1a7d98922514eA203fC",
-        underlyingPool: "0xb030882bfc44e223fd5e20d8645c961be9b30bb3",
-        basePool: "0xaf13437122cd537C5D8942f17787cbDBd787fE94",
-        numRewards: 3,
-        active: !0
-      },
-      {
-        address: "0x3c7beeA32A49D96d72ce45C7DeFb5b287479C2ba",
-        underlyingPool: "0x8f309df7527f16dff49065d3338ea3f3c12b5d09",
-        basePool: "0xC087aEcAC0a4991f9b0e931Ce2aC77a826DDdaf3",
-        numRewards: 3,
-        active: !0
-      },
-      {
-        address: "0xA6f2ea3008E6BA42B0D3c09159860De24591cd0E",
-      },
-      {
-        address: "0x9CbA6392D0c15F6437c7e6085A1350c5862c5aBB",
-      }
-    ].map(i => {
-      i.stakingRewardAddress = i.address;
+    const callsResult = (await Utils.multiCall([{
+      poolLength: new Web3EthContract(POOL_MANAGER_ABI, '0x9Ee3600543eCcc85020D6bc77EB553d1747a65D2').methods.poolsCount(),
+    }], this.getChain()));
 
-      return i;
+    const addresses = await Utils.multiCall([...Array(parseInt(callsResult[0].poolLength)).keys()].map(id => ({
+      pool: new Web3EthContract(POOL_MANAGER_ABI, '0x9Ee3600543eCcc85020D6bc77EB553d1747a65D2').methods.poolsByIndex(id),
+    })), this.getChain());
+
+    const addressesaa = await Utils.multiCall(addresses.map(address => ({
+      address: address.pool,
+      pool: new Web3EthContract(POOL_MANAGER_ABI, '0x9Ee3600543eCcc85020D6bc77EB553d1747a65D2').methods.pools(address.pool),
+    })), this.getChain());
+
+    const inactive = [];
+
+    const poolAddresses = [];
+    addressesaa.forEach(i => {
+      const [index, stakingToken, poolAddress, weight] = Object.values(i.pool);
+      if (weight <= 0) {
+        inactive.push(poolAddress.toLowerCase());
+      }
+
+      poolAddresses.push(poolAddress);
     });
+
+    const files = await Utils.getJavascriptFiles('https://app.ubeswap.org/');
+
+    const xxxxx = [];
+    Object.values(files).forEach(f => {
+      xxxxx.push(...AstParser.createJsonFromObjectExpression(f, keys => keys.includes('underlyingPool') && keys.includes('numRewards') && keys.includes('address')));
+    });
+
+    xxxxx.forEach(i => {
+      if (!poolAddresses.includes(i.address)) {
+        poolAddresses.push(i.address);
+      }
+    });
+
+    const pools = _.uniq(poolAddresses, (a, b) => a.toLowerCase() === b.toLowerCase()).map(address => ({
+      stakingRewardAddress: address,
+      inactive: inactive.includes(address.toLowerCase())
+    }));
 
     await this.cacheManager.set(cacheKey, pools, {ttl: 60 * 60});
 
@@ -151,6 +120,7 @@ module.exports = class ubeswap {
         rewardsToken1: token.methods.externalRewardsTokens(1),
         rewardsToken2: token.methods.externalRewardsTokens(2),
         externalStakingRewards: token.methods.externalStakingRewards(),
+        totalSupply: token.methods.totalSupply(),
       });
     });
 
@@ -166,11 +136,8 @@ module.exports = class ubeswap {
       calls.push({
         stakingRewardAddress: c.stakingRewardAddress.toLowerCase(),
         balanceOf: contract.methods.balanceOf(c.stakingRewardAddress),
-        decimals: contract.methods.decimals(),
       });
     });
-
-    const callsTvl = await Utils.multiCallIndexBy('stakingRewardAddress', calls, this.getChain());
 
     const farms = [];
 
@@ -215,6 +182,10 @@ module.exports = class ubeswap {
         main_platform: 'ubeswap',
       };
 
+      if (farm.inactive === true) {
+        item.flags = ['inactive'];
+      }
+
       item.extra.transactionAddress = farm.stakingRewardAddress;
       item.extra.transactionToken = info.stakingToken;
 
@@ -232,18 +203,14 @@ module.exports = class ubeswap {
 
       item.earns = item.earn.map(r => r.symbol);
 
-      let infoTvl = callsTvl[farm.stakingRewardAddress.toLowerCase()];
-      if (infoTvl) {
-        const decimals = infoTvl.decimals || 18
+      if (info.totalSupply) {
         item.tvl = {
-          amount: infoTvl.balanceOf / (10 ** decimals)
+          amount: info.totalSupply / (10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
         };
 
-        if (item.extra.transactionToken) {
-          let price = this.priceOracle.findPrice(item.extra.transactionToken);
-          if (price) {
-            item.tvl.usd = item.tvl.amount * price;
-          }
+        const price = this.priceOracle.findPrice(item.extra.transactionToken);
+        if (price) {
+          item.tvl.usd = item.tvl.amount * price;
         }
       }
 
