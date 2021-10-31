@@ -97,22 +97,6 @@ module.exports = class fswamp extends PancakePlatformFork {
       }
     }
 
-    const farmBalanceCalls = (await this.getRawFarms()).map(farm => {
-      let address = farm.isTokenOnly !== true
-        ? this.getAddress(farm.lpAddresses)
-        : this.getAddress(farm.tokenAddresses);
-
-      const token = new Web3EthContract(erc20Abi, address);
-      return {
-        address: address,
-        balance: token.methods.balanceOf(this.getMasterChefAddress()),
-      };
-    });
-
-    const [farmBalances] = await Promise.all([
-      Utils.multiCallIndexBy('address', farmBalanceCalls, 'fantom'),
-    ]);
-
     const vaultInfos = await this.getVaultInfo();
 
     const farms = (await this.getRawFarms()).map(farm => {
@@ -168,6 +152,10 @@ module.exports = class fswamp extends PancakePlatformFork {
           .replace('pancake swap', 'pancake')
           .replace('fantom', '')
           .trim()
+      }
+
+      if (farm.actions) {
+        item.actions = farm.actions;
       }
 
       return Object.freeze(item);

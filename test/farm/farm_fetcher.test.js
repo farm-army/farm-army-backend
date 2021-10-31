@@ -128,8 +128,6 @@ describe('#test farm fetcher for masterchef', function () {
 
     const farmFetcher = new FarmFetcher({});
 
-    const foo = farmFetcher.extractFunctionsFromAbi(abi);
-
     assert.deepStrictEqual(farmFetcher.extractFunctionsFromAbi(abi), {
       poolInfoFunctionName: "poolInfo",
       rewardTokenFunctionName: "govToken",
@@ -140,5 +138,96 @@ describe('#test farm fetcher for masterchef', function () {
       poolLengthFunctionName: "poolLength",
       pendingRewardsFunctionName: "pendingReward"
     });
+  });
+
+  it('test extraction for actions viper-abi', async () => {
+    const abi = JSON.parse(fs.readFileSync(`${__dirname}/fixtures/viper-abi.json`, 'utf8'));
+
+    const farmFetcher = new FarmFetcher({});
+
+    const actual = await farmFetcher.extractActionsFromAbi(abi);
+    assert.deepStrictEqual(actual, [
+      {
+        inputs: ['%pid%'],
+        method: 'claimReward',
+        type: 'claim',
+      },
+      {
+        method: 'emergencyWithdraw',
+        inputs: ['%pid%'],
+        type: 'emergency_withdraw',
+      }
+    ]);
+  });
+
+  it('test extraction for actions pwault-abi.json', async () => {
+    const abi = JSON.parse(fs.readFileSync(`${__dirname}/fixtures/pwault-abi.json`, 'utf8'));
+
+    const farmFetcher = new FarmFetcher({});
+
+    const actual = await farmFetcher.extractActionsFromAbi(abi);
+    assert.deepStrictEqual(actual, [
+      {
+        inputs: ['%pid%'],
+        method: 'claim',
+        type: 'claim'
+      },
+      {
+        method: 'emergencyWithdraw',
+        inputs: ['%pid%'],
+        type: 'emergency_withdraw'
+      }
+    ]);
+  });
+
+  it('test extraction for actions pancake-abi.json', async () => {
+    const abi = JSON.parse(fs.readFileSync(`${__dirname}/fixtures/pancake-abi.json`, 'utf8'));
+
+    const farmFetcher = new FarmFetcher({});
+
+    const actual = await farmFetcher.extractActionsFromAbi(abi, {
+      pendingRewardsFunctionName: 'pendingCake',
+    });
+
+    assert.deepStrictEqual(actual, [
+      {
+        inputs: ["%pid%", 0],
+        method: 'deposit',
+        type: 'claim_fake'
+      },
+      {
+        method: 'emergencyWithdraw',
+        inputs: ['%pid%'],
+        type: 'emergency_withdraw'
+      }
+    ]);
+  });
+
+  it('test extraction for actions kyber-abi.json', async () => {
+    const abi = JSON.parse(fs.readFileSync(`${__dirname}/fixtures/kyber-abi.json`, 'utf8'));
+
+    const farmFetcher = new FarmFetcher({});
+
+    const actual = await farmFetcher.extractActionsFromAbi(abi, {
+      pendingRewardsFunctionName: 'pendingCake',
+    });
+
+    assert.deepStrictEqual(actual, [
+      {
+        inputs: ['%pid%', 0, true],
+        method: 'deposit',
+        type: 'claim_fake'
+      },
+      {
+        inputs: ['%pid%'],
+        method: 'withdrawAll',
+        type: 'withdraw_all'
+      },
+      {
+        method: 'emergencyWithdraw',
+        inputs: ['%pid%'],
+        type: 'emergency_withdraw'
+      }
+    ]);
   });
 });

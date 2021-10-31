@@ -214,6 +214,16 @@ module.exports = class ubeswap {
         }
       }
 
+      if (farm.stakingRewardAddress) {
+        item.actions = [
+          {
+            contract: farm.stakingRewardAddress,
+            method: 'getReward',
+            type: 'claim',
+          }
+        ];
+      }
+
       farms.push(Object.freeze(item));
     });
 

@@ -39,6 +39,9 @@ module.exports = class ContractAbiFetcher {
       case 'celo':
         url = `https:/explorer.celo.org/api?module=contract&action=getabi&address=${address}`;
         break;
+      case 'moonriver':
+        url = `https:/blockscout.moonriver.moonbeam.network/api?module=contract&action=getabi&address=${address}`;
+        break;
       default:
         throw new Error('Invalid chain');
     }

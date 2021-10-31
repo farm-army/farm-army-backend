@@ -31,6 +31,8 @@ module.exports = class AddressTransactions {
       host = 'explorer.harmony.one';
     } else if (chain === 'celo') {
       host = 'explorer.celo.org';
+    } else if (chain === 'moonriver') {
+      host = 'blockscout.moonriver.moonbeam.network';
     } else {
       host = 'api.bscscan.com';
     }

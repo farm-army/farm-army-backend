@@ -69,6 +69,7 @@ module.exports = class mstable {
             address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
           },
         ],
+        claim: 'claimReward',
       },
       {
         id: 2,
@@ -88,6 +89,7 @@ module.exports = class mstable {
             address: '0xf501dd45a1198c2e1b5aef5314a68b9006d842e0',
           },
         ],
+        claim: 'getReward',
       }
     ];
   }
@@ -125,7 +127,8 @@ module.exports = class mstable {
         link: `https://mstable.org/`,
         has_details: true,
         extra: {},
-        earns: (farm.earns || []).map(i => i.symbol)
+        earns: (farm.earns || []).map(i => i.symbol),
+        chain: 'polygon',
       };
 
       let exchangeRange = 1;
@@ -135,8 +138,18 @@ module.exports = class mstable {
       }
 
       item.extra.pricePerFullShare = exchangeRange;
-      item.extra.transactionAddress = farm.address
-      item.extra.transactionToken = farm.stakingToken
+      item.extra.transactionAddress = farm.address;
+      item.extra.transactionToken = farm.stakingToken;
+
+      if (farm.claim) {
+        item.actions = [
+          {
+            contract: farm.address,
+            method: farm.claim,
+            type: 'claim',
+          }
+        ];
+      }
 
       return item;
     });

@@ -150,6 +150,10 @@ module.exports = class swamp extends PancakePlatformFork {
           .replace('pancake swap', 'pancake')
       }
 
+      if (farm.actions) {
+        item.actions = farm.actions;
+      }
+
       return Object.freeze(item);
     });
 

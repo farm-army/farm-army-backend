@@ -288,6 +288,8 @@ module.exports = class Http {
     });
 
     app.get("/:chain/farms", async (req, res) => {
+      let timer = -performance.now();
+
       const {chain} = req.params;
 
       let platformsChain = this.chains[chain].platforms;
@@ -302,10 +304,20 @@ module.exports = class Http {
         return item;
       });
 
+      if (res.headersSent) {
+        console.error(`${chain}: farms - ${new Date().toISOString()}: already send / timout`);
+        return;
+      }
+
+      timer += performance.now();
+      console.log(`${chain}: farms - ${new Date().toISOString()}: ${(timer / 1000).toFixed(3)} sec`);
+
       res.json(result);
     });
 
     app.get("/farms", async (req, res) => {
+      let timer = -performance.now();
+
       const items = (await Promise.allSettled(
         await this.crossPlatforms.getFunctionAwaits("getFarms")
       )).filter(i => i.value).map(i => i.value);
@@ -315,6 +327,14 @@ module.exports = class Http {
         delete item.raw;
         return item;
       });
+
+      if (res.headersSent) {
+        console.error(`cross-chains: farms - ${new Date().toISOString()}: already send / timout`);
+        return;
+      }
+
+      timer += performance.now();
+      console.log(`cross-chains: farms - ${new Date().toISOString()}: ${(timer / 1000).toFixed(3)} sec`);
 
       res.json(result);
     });
@@ -434,6 +454,11 @@ module.exports = class Http {
 
       timer += performance.now();
       console.log(`${chain}: ${new Date().toISOString()}: wallet ${address} - ${(timer / 1000).toFixed(3)} sec`);
+
+      if (res.headersSent) {
+        console.error(`${chain}: ${new Date().toISOString()}: wallet ${address} - already send / timout`);
+        return;
+      }
 
       res.json({
         tokens: tokens.value ? tokens.value : [],

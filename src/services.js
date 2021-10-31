@@ -174,6 +174,10 @@ const Valuedefi = require("./platforms/valuedefi/valuedefi");
 const Jul = require("./platforms/jul/jul");
 const Ten = require("./platforms/bsc/ten/ten");
 const Autoshark = require("./platforms/bsc/autoshark/autoshark");
+const Mars = require("./platforms/bsc/mars/mars");
+const MarsMasterchef0 = require("./platforms/bsc/mars/mars_masterchef0");
+const MarsMasterchef1 = require("./platforms/bsc/mars/mars_masterchef1");
+const Atlantis = require("./platforms/bsc/atlantis/atlantis");
 
 const Pwault = require("./platforms/polygon/pwault/pwault");
 const Polycat = require("./platforms/polygon/polycat/polycat");
@@ -209,6 +213,7 @@ const Impermax = require("./platforms/polygon/impermax/impermax");
 const Pcafeswap = require("./platforms/polygon/pcafeswap/pcafeswap");
 const Polysage = require("./platforms/polygon/polysage/polysage");
 const Paave = require("./platforms/polygon/paave/paave");
+const Pfulcrum = require("./platforms/polygon/pfulcrum/pfulcrum");
 
 const Spookyswap = require("./platforms/fantom/spookyswap/spookyswap");
 const Spiritswap = require("./platforms/fantom/spiritswap/spiritswap");
@@ -247,7 +252,6 @@ const Scream = require("./platforms/fantom/scream/scream");
 
 const Hbeefy = require("./platforms/harmony/hbeefy/hbeefy");
 const Hsushi = require("./platforms/harmony/hsushi/hsushi");
-const Openswap = require("./platforms/harmony/openswap/openswap");
 const Viper = require("./platforms/harmony/viper/viper");
 const Hcurve = require("./platforms/harmony/hcurve/hcurve");
 const Artemis = require("./platforms/harmony/artemis/artemis");
@@ -255,16 +259,23 @@ const Defikingdoms = require("./platforms/harmony/defikingdoms/defikingdoms");
 const Farmersonly = require("./platforms/harmony/farmersonly/farmersonly");
 const FarmersonlyFarm = require("./platforms/harmony/farmersonly/farmersonly_farm");
 const FarmersonlyCompound = require("./platforms/harmony/farmersonly/farmersonly_compound");
+const Openswap = require("./platforms/harmony/openswap/openswap");
+const Openswap1 = require("./platforms/harmony/openswap/openswap1");
+const Openswap2 = require("./platforms/harmony/openswap/openswap2");
 
 const Ubeswap = require("./platforms/celo/ubeswap/ubeswap");
 const Mobius = require("./platforms/celo/mobius/mobius");
 const Csushi = require("./platforms/celo/csushi/csushi");
 const Moola = require("./platforms/celo/moola/moola");
+const Cbeefy = require("./platforms/celo/cbeefy/cbeefy");
+const Cautofarm = require("./platforms/celo/cautofarm/cautofarm");
 
 const Mautofarm = require("./platforms/moonriver/mautofarm/mautofarm");
 const Solarbeam = require("./platforms/moonriver/solarbeam/solarbeam");
 const Huckleberry = require("./platforms/moonriver/huckleberry/huckleberry");
 const Moonfarm = require("./platforms/moonriver/moonfarm/moonfarm");
+const Moonkafe = require("./platforms/moonriver/moonkafe/moonkafe");
+const MoonkafeCompound = require("./platforms/moonriver/moonkafe/moonkafe_compound");
 
 let pancake;
 let swamp;
@@ -313,6 +324,8 @@ let valuedefi;
 let jul;
 let ten;
 let autoshark;
+let mars;
+let atlantis;
 
 let pwault;
 let polycat;
@@ -348,6 +361,7 @@ let impermax;
 let pcafeswap;
 let polysage;
 let paave;
+let pfulcrum;
 
 let spookyswap;
 let spiritswap;
@@ -396,6 +410,8 @@ let ubeswap;
 let mobius;
 let csushi;
 let moola;
+let cbeefy;
+let cautofarm;
 
 let mautofarm;
 let solarbeam;
@@ -404,6 +420,8 @@ let farmersonly;
 let farmersonlyCompound;
 let farmersonlyFarm;
 let moonfarm;
+let moonkafe;
+let moonkafeCompound;
 
 let polygonPlatform;
 let fantomPlatform;
@@ -743,6 +761,8 @@ module.exports = {
           this.getJul(),
           this.getTen(),
           this.getAutoshark(),
+          this.getMars(),
+          this.getAtlantis(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -787,6 +807,7 @@ module.exports = {
         this.getPcafeswap(),
         this.getPolysage(),
         this.getPaave(),
+        this.getPfulcrum(),
       ],
       this.getCache(),
       this.getPolygonPriceOracle(),
@@ -862,6 +883,7 @@ module.exports = {
         this.getSolarbeam(),
         this.getHuckleberry(),
         this.getMoonfarm(),
+        this.getMoonkafe(),
       ],
       this.getCache(),
       this.getMoonriverPriceOracle(),
@@ -902,6 +924,8 @@ module.exports = {
         this.getMobius(),
         this.getCsushi(),
         this.getMoola(),
+        this.getCbeefy(),
+        this.getCautofarm(),
       ],
       this.getCache(),
       this.getCeloPriceOracle(),
@@ -1317,11 +1341,20 @@ module.exports = {
     }
 
     return (openswap = new Openswap(
-      this.getHarmonyCacheManager(),
-      this.getHarmonyPriceOracle(),
-      this.getHarmonyTokenCollector(),
-      this.getHarmonyFarmFetcher(),
-      this.getHarmonyCacheManager(),
+      new Openswap1(
+        this.getHarmonyCacheManager(),
+        this.getHarmonyPriceOracle(),
+        this.getHarmonyTokenCollector(),
+        this.getHarmonyFarmFetcher(),
+        this.getHarmonyCacheManager(),
+      ),
+      new Openswap2(
+        this.getHarmonyCacheManager(),
+        this.getHarmonyPriceOracle(),
+        this.getHarmonyTokenCollector(),
+        this.getHarmonyFarmFetcher(),
+        this.getHarmonyCacheManager(),
+      )
     ));
   },
 
@@ -1405,6 +1438,45 @@ module.exports = {
       this.getTokenCollector(),
       this.getFarmFetcher(),
       this.getCacheManager(),
+      this.getFarmPlatformResolver(),
+    ));
+  },
+
+  getMars() {
+    if (mars) {
+      return mars;
+    }
+
+    return (mars = new Mars(
+      new MarsMasterchef0(
+        this.getCacheManager(),
+        this.getPriceOracle(),
+        this.getTokenCollector(),
+        this.getFarmFetcher(),
+        this.getCacheManager(),
+        this.getFarmPlatformResolver(),
+      ),
+      new MarsMasterchef1(
+        this.getCacheManager(),
+        this.getPriceOracle(),
+        this.getTokenCollector(),
+        this.getFarmFetcher(),
+        this.getCacheManager(),
+        this.getFarmPlatformResolver(),
+      ),
+    ));
+  },
+
+  getAtlantis() {
+    if (atlantis) {
+      return atlantis;
+    }
+
+    return (atlantis = new Atlantis(
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getCacheManager(),
+      this.getLiquidityTokenCollector(),
       this.getFarmPlatformResolver(),
     ));
   },
@@ -1652,6 +1724,29 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
+    ));
+  },
+
+  getCbeefy() {
+    if (cbeefy) {
+      return cbeefy;
+    }
+
+    return (cbeefy = new Cbeefy(
+      this.getCeloCacheManager(),
+      this.getCeloPriceOracle(),
+      this.getCeloTokenCollector(),
+    ));
+  },
+
+  getCautofarm() {
+    if (cautofarm) {
+      return cautofarm;
+    }
+
+    return (cautofarm = new Cautofarm(
+      this.getMoonriverCacheManager(),
+      this.getMoonriverPriceOracle(),
     ));
   },
 
@@ -2438,6 +2533,18 @@ module.exports = {
     ));
   },
 
+  getPfulcrum() {
+    if (pfulcrum) {
+      return pfulcrum;
+    }
+
+    return (pfulcrum = new Pfulcrum(
+      this.getPolygonCacheManager(),
+      this.getPolygonPriceOracle(),
+      this.getPolygonTokenCollector(),
+    ));
+  },
+
   getVenus() {
     if (venus) {
       return venus;
@@ -2630,6 +2737,30 @@ module.exports = {
       this.getKccFarmFetcher(),
       this.getKccCacheManager(),
       this.getKccFarmPlatformResolver(),
+    ));
+  },
+
+  getMoonkafe() {
+    if (moonkafe) {
+      return moonkafe;
+    }
+
+    return (moonkafe = new Moonkafe(
+      this.getMoonkafeCompound(),
+    ));
+  },
+
+  getMoonkafeCompound() {
+    if (moonkafeCompound) {
+      return moonkafeCompound;
+    }
+
+    return (moonkafeCompound = new MoonkafeCompound(
+      this.getMoonriverPriceOracle(),
+      this.getMoonriverTokenCollector(),
+      this.getMoonriverFarmFetcher(),
+      this.getMoonriverCacheManager(),
+      this.getMoonriverFarmPlatformResolver(),
     ));
   },
 

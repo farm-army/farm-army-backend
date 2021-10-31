@@ -260,7 +260,7 @@ module.exports = class quickswap {
         }
       }
 
-      if (new BigNumber(call.rewards).isGreaterThan(0) && farm.earn[0]) {
+      if (new BigNumber(call.rewards).isGreaterThan(0) && farm.earn && farm.earn[0]) {
         const reward = {
           symbol: farm.earn[0].symbol,
           amount: call.rewards / (10 ** farm.earn[0].decimals)

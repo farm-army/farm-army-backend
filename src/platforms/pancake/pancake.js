@@ -215,6 +215,10 @@ module.exports = class pancake {
         }
       }
 
+      if (farm.actions) {
+        item.actions = farm.actions;
+      }
+
       return Object.freeze(item);
     });
 
@@ -371,6 +375,10 @@ module.exports = class pancake {
     const callsPromises = [];
     addresses.forEach(id => {
       const farm = farms.find(f => f.id === id);
+
+      if (!farm) {
+        return;
+      }
 
       if (farm.id.startsWith('pancake_farm_')) {
         const contract = new Web3EthContract(masterchefABI, masterChefAddress);

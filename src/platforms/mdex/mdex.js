@@ -118,7 +118,6 @@ module.exports = class mdex {
         extra: {},
         earns: ['mdx'],
         chain: 'bsc',
-        main_platform: 'mdex'
       };
 
       item.extra.transactionToken = farm.lpAddress
@@ -126,6 +125,7 @@ module.exports = class mdex {
 
       if (item.token.includes('-')) {
         item.extra.lpAddress = farm.lpAddress;
+        item.main_platform = 'mdex';
       }
 
       if (item.raw && item.raw.raw && item.raw.raw.poolInfo[5]) {
@@ -157,6 +157,10 @@ module.exports = class mdex {
             apy: Utils.compound(dailyApr, 8760, 0.94) * 100
           };
         }
+      }
+
+      if (farm.actions) {
+        item.actions = farm.actions;
       }
 
       return item;

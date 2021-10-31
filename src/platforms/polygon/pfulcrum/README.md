@@ -1,0 +1,1 @@
+https://api.bzx.network/v1/lending-info?networks=polygon

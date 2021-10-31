@@ -90,6 +90,10 @@ module.exports = class FarmAuto {
           }
         }
 
+        if (pool.actions) {
+          farm.actions = pool.actions;
+        }
+
         return farm;
       });
 

@@ -4,42 +4,15 @@ Track your farming and pool performance on the Binance Chain, Polygon, Fantom, K
 
 ### Platforms ###
 
-_(outdated list)_
+Platforms must be self-managed and extract directly from chain contracts. As fallback javascript ast node parsing is allowed to get addresses from pages directly 
 
-| Platform  | Auto Fetch | Done | Notes |  
-|---|---|---|---|  
-| acryptos  | :x:  | :heavy_check_mark:  |  |  
-| alpaca | :heavy_check_mark:  | :heavy_check_mark:  |   | 
-| alpha | :x:  | :white_check_mark:  |   | 
-| apeswap | :x: | :heavy_check_mark:  |  |
-| autofarm | :heavy_check_mark:  | :heavy_check_mark:  |   |
-| bakery | :white_check_mark: | :white_check_mark:  | farm config inconsistent for non so called "supportedPools"  |  
-| bdollar | :x:  |  :white_check_mark: | staking missing  |  
-| bearn | :x:  |  :white_check_mark: | staking missing  |  
-| beefy | :heavy_check_mark:  | :white_check_mark: | boost vaults missing  |  
-| blizzard | :x: | :heavy_check_mark:  |  |
-| goose | :white_check_mark:  | :white_check_mark: | pools  |  
-| hyperjump | :x: |  :heavy_check_mark: | |  
-| jetfuel | :x:  | :white_check_mark:  |  staking missing  |  
-| jul | :x:  | :white_check_mark:  |   |
-| slime | :x: | :heavy_check_mark:  |  |
-| kebab | :x:  | :white_check_mark:  |  pools |
-| mdex | :x:  | :white_check_mark:  |   |  
-| pancake | :white_check_mark: | :heavy_check_mark: | vaults via masterchef; pools manual  |  
-| pancakebunny | :x: | :heavy_check_mark:  |   |  
-| saltswap | :x: | :heavy_check_mark:  |  |
-| slime | :x: | :heavy_check_mark:  |  |
-| space | :x:  | :white_check_mark:  |   |
-| swamp | :x: | :heavy_check_mark:  | fetch via masterchef |
-| valuedefi | :heavy_check_mark: | :white_check_mark:  | staking missing |
-| wault | :x:  | :white_check_mark:  |   | 
-
- - `Auto Fetch`
-   - :heavy_check_mark: New vaults are directly added when new are added New vaults are directly added when new are added
-   - :white_check_mark: Vaults can be internal generate eg via external Github repo
-   - :x: Vaults need to be extraced from the page; mainly dump a javascript variable via chrome
-     
- - `Done` All supported "vault types" (pools, farms, staking, ...) are implemented
+ - [src/platforms/bsc](src/platforms/bsc)
+ - [src/platforms/poylgon](src/platforms/poylgon)
+ - [src/platforms/fantom](src/platforms/fantom)
+ - [src/platforms/kcc](src/platforms/kcc)
+ - [src/platforms/harmony](src/platforms/harmony)
+ - [src/platforms/celo](src/platforms/celo)
+ - [src/platforms/moonriver](src/platforms/moonriver)
 
 ### Tech Stack ###
 
@@ -57,9 +30,6 @@ _(outdated list)_
  - Reduce platform duplicate codes
  - Normalize platform "configuration format" of farms
  - Reduce manually task to generate `farm.json` for some platforms; basically set the breakpoint in foreign platform javascript files (chrome) and dump the JSON configs (mostly all have the same pattern)
- - Make generation `farm.json` via submodules and typescript call redundant
- - Avoid global state; use dependency injection
- - Use a persistent cache to reduce warmup time
  - ...
 
 ### Call Stack ###
@@ -92,6 +62,24 @@ Optional: create a config file with custom configuration
 config.json => config.json.local
 ```
 
+### Config ###
+
+Additional config parameters 
+
+```
+# config.json.local
+
+# add custom / private rpc urls
+"MOONRIVER_RPC": "https://foo.rpc,https://foo1.rpc",
+"POLYGON_RPC": "https://foo.rpc,https://foo1.rpc",
+
+# additional proxy for web3 rpc calls (for load balancing)
+"WEB3_PROXIES": "https://YOUR.proxy:3128,https://YOUR_2.proxy:3128"
+
+# proxy for some http related traffic only (load balancing)
+"DEFAULT_PROXY": "https://YOUR_2.proxy:3128",
+```
+
 ### Start ###
 
 ```
@@ -99,6 +87,15 @@ node src/index.js
 ```
 
 ### Endpoints ###
+
+### Cross-Chain
+
+```
+  /farms
+  /yield/:address
+```
+
+#### Per Chain
 
 ```
   /:chain/farms
@@ -154,6 +151,7 @@ Every farm contract should be converted / provided in a common format. Still fea
     "compound": true|false // optional if auto-compounding
     "leverage": true|false // optional if vault is leveraged
     "chain": "bsc|polygon|kcc|fantom|harmony" the chain for this vault
+    tags: ["lend", "borrow", "deprecated"], some custom tags for frontend badges
     "extra": {
       "lpAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82", // to given hint about liquity split calculation
       "transactionToken": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82", // "in" and "out" transaction token
@@ -168,6 +166,14 @@ Every farm contract should be converted / provided in a common format. Still fea
     "yield": { // yearly values in percent eg 12.12%. apy or apr can be given (TODO: normalize to one)
       "apy": 553.9292024968477,
       "apr": 12.9292024968477,
-    }
+    },
+    actions: [ // web3 actions to directly call via Metamask (web3 providers)
+      {
+        "method": "deposit" // contract method
+        "inputs": [70,0] // method parameters
+        "type": "claim_fake" // custom type if known: "claim", "claim_all", "claim_fake", "emergency_withdraw"
+        "contract": "0xDbc1A13490deeF9c3C12b44FE77b503c1B061739" // contract address      
+      }
+    ]
   },
 ```

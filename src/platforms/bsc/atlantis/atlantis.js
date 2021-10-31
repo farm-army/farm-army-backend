@@ -7,7 +7,7 @@ const Web3EthContract = require("web3-eth-contract");
 const _ = require("lodash");
 const LendBorrowPlatform = require("../../common").LendBorrowPlatform;
 
-module.exports = class spiritswap_lend extends LendBorrowPlatform {
+module.exports = class atlantis extends LendBorrowPlatform {
   async getTokens() {
     const cacheKey = `getFarmsViaHtml-v1-${this.getName()}`;
 
@@ -17,7 +17,7 @@ module.exports = class spiritswap_lend extends LendBorrowPlatform {
     }
 
     const allMarkets = await Utils.multiCall([{
-      allMarkets: new Web3EthContract(LendAbi, '0x892701d128d63c9856A9Eb5d967982F78FD3F2AE').methods.getAllMarkets(),
+      allMarkets: new Web3EthContract(LendAbi, '0xE7E304F136c054Ee71199Efa6E26E8b0DAe242F3').methods.getAllMarkets(),
     }], this.getChain());
 
     const result = allMarkets[0].allMarkets.map(address => ({
@@ -30,11 +30,11 @@ module.exports = class spiritswap_lend extends LendBorrowPlatform {
   }
 
   getName() {
-    return 'spiritswap_lend';
+    return 'atlantis';
   }
 
   getChain() {
-    return 'fantom';
+    return 'bsc';
   }
 
   getTokenAbi() {
@@ -50,16 +50,10 @@ module.exports = class spiritswap_lend extends LendBorrowPlatform {
   }
 
   getFarmLink(farm) {
-    return 'https://app.ola.finance/networks/0x892701d128d63c9856A9Eb5d967982F78FD3F2AE/markets'
+    return 'https://atlantis.loans/app';
   }
 
   getFarmEarns(farm) {
     return [];
-  }
-
-  async onFarmsBuild(farms) {
-    farms.forEach(farm => {
-      farm.provider = 'spiritswap';
-    });
   }
 }

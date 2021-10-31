@@ -123,6 +123,7 @@ module.exports = class Cronjobs {
       this.polygonFarmPlatformResolver.buildPlatformList((await Promise.all(this.polygonPlatforms.getFunctionAwaits('getFarms'))).flat()),
       this.harmonyFarmPlatformResolver.buildPlatformList((await Promise.all(this.harmonyPlatforms.getFunctionAwaits('getFarms'))).flat()),
       this.celoFarmPlatformResolver.buildPlatformList((await Promise.all(this.celoPlatforms.getFunctionAwaits('getFarms'))).flat()),
+      this.moonriverFarmPlatformResolver.buildPlatformList((await Promise.all(this.moonriverPlatforms.getFunctionAwaits('getFarms'))).flat()),
     ]);
   }
 }

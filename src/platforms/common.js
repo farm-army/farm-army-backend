@@ -240,6 +240,10 @@ module.exports = {
           }
         }
 
+        if (farm.actions) {
+          item.actions = farm.actions;
+        }
+
         return item;
       });
 
@@ -709,6 +713,10 @@ module.exports = {
           };
         }
 
+        if (farm.actions) {
+          item.actions = farm.actions;
+        }
+
         return item;
       });
 
@@ -929,6 +937,7 @@ module.exports = {
         cashMethod: 'getCash',
         exchangeRateMethod: 'exchangeRate',
         underlyingMethod: 'underlying',
+        symbol: 'symbol',
       }, this.getConfig());
 
       let rawFarms = await this.getTokens();
@@ -941,6 +950,7 @@ module.exports = {
           tvl: contract.methods[config.cashMethod](),
           exchangeRate: contract.methods[config.exchangeRateMethod](),
           underlying: contract.methods[config.underlyingMethod](),
+          symbol: contract.methods[config.symbol](),
         };
       });
 
@@ -955,17 +965,23 @@ module.exports = {
         }
 
         // nativ chain token
-        if (!info.underlying && token.name && token.name.toLowerCase().includes('bnb')) {
-          info.underlying = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+        let tokenName = token.name;
+
+        if (!tokenName && info.symbol) {
+          tokenName = info.symbol;
         }
 
-        // 0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-        if (this.getChain() === 'bsc' && info.underlying && info.underlying.toLowerCase().includes('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb') && token.name && token.name.toLowerCase().includes('bnb')) {
-          info.underlying = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+        if (this.getChain() === 'bsc') {
+          if (!info.underlying && tokenName?.toLowerCase().includes('bnb')) {
+            info.underlying = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+          } else if (info?.underlying?.toLowerCase().includes('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb') && tokenName?.toLowerCase().includes('bnb')) {
+            // 0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+            info.underlying = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+          }
         }
 
         // 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE
-        if (this.getChain() === 'polygon' && info.underlying && info.underlying.toLowerCase().includes('eeeeeeeeeeeeeeeeeeeeeeeeeeeeee') && token.name && token.name.toLowerCase().includes('matic')) {
+        if (this.getChain() === 'polygon' && info.underlying && info.underlying.toLowerCase().includes('eeeeeeeeeeeeeeeeeeeeeeeeeeeeee') && tokenName && tokenName.toLowerCase().includes('matic')) {
           info.underlying = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
         }
 
@@ -985,8 +1001,8 @@ module.exports = {
           isLiquidityPool = true;
         }
 
-        if (!symbol && token.name) {
-          symbol = token.name;
+        if (!symbol && tokenName) {
+          symbol = tokenName;
         }
 
         if (!symbol) {
@@ -1196,6 +1212,7 @@ module.exports = {
      * underlyingMethod: 'underlying',
      * balanceOfMethod: 'balanceOf',
      * borrowBalanceOfMethod: 'borrowBalanceOf',
+     * symbol: 'symbol',
      */
     getConfig() {
       throw new Error('not implemented');

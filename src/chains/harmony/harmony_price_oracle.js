@@ -412,7 +412,7 @@ module.exports = class HarmonyPriceOracle {
 
     const tokens = [
       {
-        router: '0xE6a72FeE7e34768661805DE2b621a8CDBe0DBc81', // openswap
+        router: '0xE6a72FeE7e34768661805DE2b621a8CDBe0DBc81', // openswapv2
         address: '0xc0431Ddcc0D213Bf27EcEcA8C2362c0d0208c6DC',
         symbol: 'oswap',
         decimals: 18,
@@ -427,6 +427,12 @@ module.exports = class HarmonyPriceOracle {
         router: '0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506', // sushiswap
         address: '0x0159ed2e06ddcd46a25e74eb8e159ce666b28687',
         symbol: 'fox',
+        decimals: 18,
+      },
+      {
+        router: '0x2F99992024DCC51324BA4956bB1c510F36FA54F5', // openswapv2
+        address: '0x01a4b054110d57069c1658afbc46730529a3e326',
+        symbol: 'openx',
         decimals: 18,
       },
     ];

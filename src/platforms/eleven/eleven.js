@@ -263,13 +263,13 @@ module.exports = class eleven {
         }
       }
 
-      if (apys[farm.token] && apys[farm.token]?.farm?.apy) {
+      if (apys && apys[farm.token] && apys[farm.token]?.farm?.apy) {
         item.yield = {
           apy: apys[farm.token].farm.apy
         };
       }
 
-      if (apys[farm.token] && apys[farm.token].tvl) {
+      if (apys && apys[farm.token] && apys[farm.token].tvl) {
         if (!item.tvl) {
           item.tvl = {};
         }

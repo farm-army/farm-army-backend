@@ -318,7 +318,7 @@ module.exports = class impermax {
         }
       }
 
-      let value = rewards;
+      let value = (result.rewards || []).filter(r => r.usd).reduce(r => r.usd || 0, 0);
       if ('usd' in result.deposit) {
         value += Math.abs(result.deposit.usd);
       }

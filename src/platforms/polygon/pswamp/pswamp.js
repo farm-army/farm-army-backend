@@ -109,10 +109,6 @@ module.exports = class pswamp extends PancakePlatformFork {
       };
     });
 
-    const [farmBalances] = await Promise.all([
-      Utils.multiCallIndexBy('address', farmBalanceCalls, 'polygon'),
-    ]);
-
     const vaultInfos = await this.getVaultInfo();
 
     const farms = (await this.getRawFarms()).map(farm => {
@@ -168,6 +164,10 @@ module.exports = class pswamp extends PancakePlatformFork {
           .replace('pancake swap', 'pancake')
           .replace('polygon', '')
           .trim()
+      }
+
+      if (farm.actions) {
+        item.actions = farm.actions;
       }
 
       return Object.freeze(item);

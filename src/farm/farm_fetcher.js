@@ -113,7 +113,7 @@ module.exports = class FarmFetcher {
 
       // some lower prio function names
       if (!rewardTokenFunctionName) {
-        const stFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase() === 'govtoken' && f.outputs && f.outputs[0] && f.outputs[0].type === 'address');
+        const stFunction = abi.find(f => f.name && f.type === 'function' && f.name && (f.name.toLowerCase() === 'govtoken' || f.name.toLowerCase() === 'tokenaddress') && f.outputs && f.outputs[0] && f.outputs[0].type === 'address');
         if (stFunction) {
           rewardTokenFunctionName = stFunction.name
         }
@@ -180,6 +180,7 @@ module.exports = class FarmFetcher {
       ? options.abi
       : await this.contractAbiFetcher.getAbiForContractAddress(masterChef, chain, options);
 
+    const extractedAbiFunctions = this.extractFunctionsFromAbi(abi);
     let {
       poolInfoFunctionName,
       rewardTokenFunctionName,
@@ -189,7 +190,7 @@ module.exports = class FarmFetcher {
       tokenPerSecondFunctionName,
       poolLengthFunctionName,
       pendingRewardsFunctionName
-    } = this.extractFunctionsFromAbi(abi);
+    } = extractedAbiFunctions;
 
     if (options.rewardTokenFunctionName) {
       rewardTokenFunctionName = options.rewardTokenFunctionName;
@@ -391,6 +392,8 @@ module.exports = class FarmFetcher {
       }
     }
 
+    const actions = await this.extractActionsFromAbi(abi, extractedAbiFunctions);
+
     // format items in pancakeswap format
     const all = [];
     pools.forEach(pool => {
@@ -523,6 +526,33 @@ module.exports = class FarmFetcher {
         ]
       }
 
+      const validActions = [];
+
+      actions.forEach(a =>  {
+        const action = _.cloneDeep(a);
+
+        action.contract = masterChef;
+
+        action.inputs = action.inputs.map(i => {
+          if (typeof i === 'string' && i.startsWith('%') && i.endsWith('%')) {
+            return parseInt(i.replace('%pid%', pool.pid));
+          }
+
+          return i;
+        });
+
+        if (action.inputs.some(i => typeof i === 'string' && i.startsWith('%') && i.endsWith('%'))) {
+          console.log('invalid placeholder');
+          return;
+        }
+
+        validActions.push(action);
+      });
+
+      if (validActions.length > 0) {
+        item.actions = validActions;
+      }
+
       all.push(item)
     });
 
@@ -533,6 +563,107 @@ module.exports = class FarmFetcher {
         pendingRewardsFunctionName: pendingRewardsFunctionName,
       }
     };
+  }
+
+  async extractActionsFromAbi(abi, functions) {
+    const actions = [];
+
+    const claimRewardFunction = abi.find(f => {
+      return f.name && f.type === 'function' && f.stateMutability?.toLowerCase() === 'nonpayable' && f.name && ['claimreward', 'claim'].includes(f.name.replaceAll('_').toLowerCase()) && f.inputs?.length === 1 && (f.inputs[0]?.type?.includes('int') || f.inputs[0]?.internalType?.includes('int'))
+    });
+
+    let hasClaim = false;
+    if (claimRewardFunction) {
+      actions.push({
+        method: claimRewardFunction.name,
+        inputs: ['%pid%'],
+        type: 'claim',
+      });
+
+      hasClaim = true;
+    }
+
+    if (!hasClaim && functions?.pendingRewardsFunctionName) {
+      const depositFunction = abi.find(f => {
+        return f.name && f.type === 'function' && f.stateMutability?.toLowerCase() === 'nonpayable'
+          && f.name && f.name.replaceAll('_').toLowerCase() === 'deposit' && f.inputs?.length === 2
+          && (f.inputs[0]?.type?.includes('int') || f.inputs[0]?.internalType?.includes('int'))
+          && (f.inputs[1]?.type?.includes('int') || f.inputs[1]?.internalType?.includes('int'))
+      });
+
+      if (depositFunction) {
+        const pidParameterIndex = depositFunction.inputs.findIndex(i => i.name.replaceAll('_', '').toLowerCase().includes('id'));
+
+        if (pidParameterIndex === 0) {
+          actions.push({
+            method: depositFunction.name,
+            inputs: ['%pid%', 0],
+            type: 'claim_fake',
+          });
+        } else if (pidParameterIndex === 1) {
+          actions.push({
+            method: depositFunction.name,
+            inputs: [0, '%pid%'],
+            type: 'claim_fake',
+          });
+        }
+      } else {
+
+        // _pid, _amount, _withdrawRewards
+        const depositFunction = abi.find(f => {
+          return f.name && f.type === 'function' && f.stateMutability?.toLowerCase() === 'nonpayable'
+            && f.name && f.name.replaceAll('_').toLowerCase() === 'deposit' && f.inputs?.length === 3
+            && (f.inputs[0]?.type?.includes('int') || f.inputs[0]?.internalType?.includes('int'))
+            && (f.inputs[1]?.type?.includes('int') || f.inputs[1]?.internalType?.includes('int'))
+            && (f.inputs[2]?.type?.includes('bool') || f.inputs[2]?.internalType?.includes('bool'))
+            && (f.inputs[2]?.name?.toLowerCase().includes('withdrawreward') || f.inputs[2]?.name?.toLowerCase().includes('shouldharvest'))
+        });
+
+        if (depositFunction) {
+          const pidParameterIndex = depositFunction.inputs.findIndex(i => i.name.replaceAll('_', '').toLowerCase().includes('id'));
+
+          if (pidParameterIndex === 0) {
+            actions.push({
+              method: depositFunction.name,
+              inputs: ['%pid%', 0, true],
+              type: 'claim_fake',
+            });
+          } else if (pidParameterIndex === 1) {
+            actions.push({
+              method: depositFunction.name,
+              inputs: [0, '%pid%', true],
+              type: 'claim_fake',
+            });
+          }
+        }
+      }
+    }
+
+    const withdrawAllFunction = abi.find(f => {
+      return f.name && f.type === 'function' && f.stateMutability?.toLowerCase() === 'nonpayable' && f.name && f.name.replaceAll('_').toLowerCase() === 'withdrawall' && f.inputs?.length === 1 && (f.inputs[0]?.type?.includes('int') || f.inputs[0]?.internalType?.includes('int'))
+    });
+
+    if (withdrawAllFunction) {
+      actions.push({
+        method: withdrawAllFunction.name,
+        inputs: ['%pid%'],
+        type: 'withdraw_all',
+      });
+    }
+
+    const emergencyWithdrawFunction = abi.find(f => {
+      return f.name && f.type === 'function' && f.stateMutability?.toLowerCase() === 'nonpayable' && f.name && f.name.replaceAll('_').toLowerCase() === 'emergencywithdraw' && f.inputs?.length === 1 && (f.inputs[0]?.type?.includes('int') || f.inputs[0]?.internalType?.includes('int'))
+    });
+
+    if (emergencyWithdrawFunction) {
+      actions.push({
+        method: emergencyWithdrawFunction.name,
+        inputs: ['%pid%'],
+        type: 'emergency_withdraw',
+      });
+    }
+
+    return actions;
   }
 
   async findPoolLengthViaPoolInfo(web3EthContract, poolInfoFunctionName, chain) {

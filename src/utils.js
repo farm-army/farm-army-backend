@@ -16,6 +16,7 @@ const acorn = require("acorn");
 const JSDOM = require("jsdom").JSDOM;
 const { MulticallProvider } = require("@0xsequence/multicall").providers;
 const HttpsProxyAgent = require('https-proxy-agent');
+const {performance} = require("perf_hooks");
 
 const MULTI_CALL_CONTRACT = {
   bsc: '0xB94858b0bB5437498F5453A16039337e5Fdc269C',
@@ -50,6 +51,7 @@ const HOSTS = Object.freeze([
   'https://bsc-dataseed2.binance.org/',
   'https://bsc-dataseed3.binance.org/',
   'https://bsc-dataseed4.binance.org/',
+  ...((CONFIG['BSC_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
 ]);
 
 const HOSTS_POLYGON = Object.freeze([
@@ -59,23 +61,27 @@ const HOSTS_POLYGON = Object.freeze([
   //'https://rpc-mainnet.matic.quiknode.pro',
   //'https://matic-mainnet.chainstacklabs.com',
  // 'https://matic-mainnet-full-rpc.bwarelabs.com',
+  ...((CONFIG['POLYGON_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
 ]);
 
 const HOSTS_FANTOM = Object.freeze([
   // Recommend
   'https://rpc.ftm.tools',
   //'https://rpcapi.fantom.network',
+  ...((CONFIG['FANTOM_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
 ]);
 
 const HOSTS_KCC = Object.freeze([
   // Recommend
   'https://rpc-mainnet.kcc.network',
+  ...((CONFIG['KCC_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
 ]);
 
 const HOSTS_HARMONY = Object.freeze([
   // Recommend
-  'https://api.harmony.one',
-  'https://api.s0.t.hmny.io'
+  'https://harmony-0-rpc.gateway.pokt.network'
+  //'https://api.harmony.one',
+  //'https://api.s0.t.hmny.io'
   //'https://s1.api.harmony.one',
   //'https://s2.api.harmony.one',
   //'https://s3.api.harmony.one',
@@ -83,10 +89,13 @@ const HOSTS_HARMONY = Object.freeze([
 
 const HOSTS_CELO = Object.freeze([
   'https://forno.celo.org',
+  ...((CONFIG['CELO_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
 ]);
 
 const HOSTS_MOONRIVER = Object.freeze([
   'https://rpc.moonriver.moonbeam.network',
+  'https://moonriver.api.onfinality.io/public',
+  ...((CONFIG['MOONRIVER_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
 ]);
 
 const WEB3_PROXIES = (CONFIG['WEB3_PROXIES'] || '').split(',').map(i => i.trim()).filter(i => i);
@@ -346,7 +355,7 @@ module.exports = {
   // @TODO: move it to somewhere else
   CONFIG: CONFIG,
 
-  DUST_FILTER: 0.00000000000001 * 1e18,
+  DUST_FILTER: 0.00000000000000000001 * 1e18,
 
 
   getWeb3: (chain = 'bsc') => {
@@ -434,9 +443,10 @@ module.exports = {
             endpointInner = existing[0];
           }
 
+          const timer = -performance.now();
+
           try {
             done.push(endpointInner);
-
 
             let web3
             if (chain === 'polygon') {
@@ -457,9 +467,20 @@ module.exports = {
 
             const [foo] = await new MultiCall(web3, MULTI_CALL_CONTRACT[chain]).all([chunk]);
 
+            let durationSec = (timer + performance.now()) / 1000;
+            if (durationSec > 9.5) {
+              console.log(`Slow multicall: ${chain} - ${(durationSec).toFixed(3)} sec - ${endpointInner}`);
+            }
+
             return foo;
           } catch (e) {
             console.error("failed", "multiCall", endpointInner, chunk.length, e.message);
+
+            let durationSec = (timer + performance.now()) / 1000;
+            if (durationSec > 9.5) {
+              console.log(`Slow multicall: ${chain} - ${(durationSec).toFixed(3)} sec - ${endpointInner}`);
+            }
+
             throwIt = e;
           }
         }
@@ -701,7 +722,7 @@ module.exports = {
       host = 'explorer.celo.org';
       apiKey = module.exports.CONFIG['CELOSCAN_API_KEY'];
     } else if (chain === 'moonriver') {
-      host = 'docs.moonbeam.network';
+      host = 'blockscout.moonriver.moonbeam.network';
       apiKey = module.exports.CONFIG['MOONRIVERSCAN_API_KEY'];
     } else {
       host = 'api.bscscan.com';

@@ -126,7 +126,7 @@ module.exports = class autofarm {
         "buybackrateText",
         "entranceFeeText"
       ].forEach(key => {
-        if (farm[key]) {
+        if (farm[key] && farm[key].toLowerCase() !== 'none') {
           notes.push(farm[key]);
         }
       });

@@ -207,6 +207,7 @@ module.exports = class PolygonPriceOracle {
     const known = {
       'impermax': '0x60bB3D364B765C497C8cE50AE0Ae3f0882c5bD05',
       'binancecoin': '0x3BA4c387f786bFEE076A58914F5Bd38d668B42c3',
+      'bzx-protocol': '0x54cFe73f2c7d0c4b62Ab869B473F5512Dc0944D2',
     };
 
     tokens.forEach(token => {
