@@ -433,11 +433,12 @@ module.exports = class FarmFetcher {
         }
       };
 
-      if (parseInt(allocPoint) === 0) {
+      if (allocPoint && parseInt(allocPoint) === 0) {
         item.isFinished = true;
+        item.inactive = true;
       }
 
-      if (parseInt(allocPoint) > 0) {
+      if (allocPoint && parseInt(allocPoint) > 0) {
         const masterInfoCall = masterInfo[0];
 
         if (masterInfoCall.totalAllocPoint && masterInfoCall.tokenPerBlock) {

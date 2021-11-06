@@ -120,43 +120,43 @@ const FantomPriceOracle = require("./chains/fantom/fantom_price_oracle");
 const KccPriceOracle = require("./chains/kcc/kcc_price_oracle");
 const FarmPlatformResolver = require("./farm/farm_platform_resolver");
 const HarmonyPriceOracle = require("./chains/harmony/harmony_price_oracle");
-const PriceFetcher = require("./chains/price_fetcher");
+const PriceFetcher = require("./chains/bsc/bsc_price_fetcher");
 const CeloPriceOracle = require("./chains/celo/celo_price_oracle");
 const MoonriverPriceOracle = require("./chains/moonriver/moonriver_price_oracle");
 const CrossPlatforms = require("./platforms/cross_platforms");
 
 const FarmAuto = require("./farm/farm_auto");
 
-const Pancake = require("./platforms/pancake/pancake");
-const Swamp = require("./platforms/swamp/swamp");
-const Blizzard = require("./platforms/blizzard/blizzard");
-const Hyperjump = require("./platforms/hyperjump/hyperjump");
-const Slime = require("./platforms/slime/slime");
-const Apeswap = require("./platforms/apeswap/apeswap");
-const Goose = require("./platforms/goose/goose");
-const Cheese = require("./platforms/cheese/cheese");
-const Space = require("./platforms/space/space");
-const Saltswap = require("./platforms/saltswap/saltswap");
-const Mdex = require("./platforms/mdex/mdex");
-const Pandayield = require("./platforms/pandayield/pandayield");
-const Wault = require("./platforms/wault/wault");
-const Cafeswap = require("./platforms/cafeswap/cafeswap");
-const Belt = require("./platforms/belt/belt");
-const Kebab = require("./platforms/kebab/kebab");
-const Polaris = require("./platforms/polaris/polaris");
-const Panther = require("./platforms/panther/panther");
-const Jetswap = require("./platforms/jetswap/jetswap");
-const Warden = require("./platforms/warden/warden");
-const Biswap = require("./platforms/biswap/biswap");
-const Evodefi = require("./platforms/evodefi/evodefi");
-const Eleven = require("./platforms/eleven/eleven");
-const Coinswap = require("./platforms/coinswap/coinswap");
-const Beefy = require("./platforms/beefy/beefy");
+const Pancake = require("./platforms/bsc/pancake/pancake");
+const Swamp = require("./platforms/bsc/swamp/swamp");
+const Blizzard = require("./platforms/bsc/blizzard/blizzard");
+const Hyperjump = require("./platforms/bsc/hyperjump/hyperjump");
+const Slime = require("./platforms/bsc/slime/slime");
+const Apeswap = require("./platforms/bsc/apeswap/apeswap");
+const Goose = require("./platforms/bsc/goose/goose");
+const Cheese = require("./platforms/bsc/cheese/cheese");
+const Space = require("./platforms/bsc/space/space");
+const Saltswap = require("./platforms/bsc/saltswap/saltswap");
+const Mdex = require("./platforms/bsc/mdex/mdex");
+const Pandayield = require("./platforms/bsc/pandayield/pandayield");
+const Wault = require("./platforms/bsc/wault/wault");
+const Cafeswap = require("./platforms/bsc/cafeswap/cafeswap");
+const Belt = require("./platforms/bsc/belt/belt");
+const Kebab = require("./platforms/bsc/kebab/kebab");
+const Polaris = require("./platforms/bsc/polaris/polaris");
+const Panther = require("./platforms/bsc/panther/panther");
+const Jetswap = require("./platforms/bsc/jetswap/jetswap");
+const Warden = require("./platforms/bsc/warden/warden");
+const Biswap = require("./platforms/bsc/biswap/biswap");
+const Evodefi = require("./platforms/bsc/evodefi/evodefi");
+const Eleven = require("./platforms/bsc/eleven/eleven");
+const Coinswap = require("./platforms/bsc/coinswap/coinswap");
+const Beefy = require("./platforms/bsc/beefy/beefy");
 const Treedefi = require("./platforms/bsc/treedefi/treedefi");
 const Farmhero = require("./platforms/bsc/farmhero/farmhero");
-const Alpaca = require("./platforms/alpaca/alpaca");
+const Alpaca = require("./platforms/bsc/alpaca/alpaca");
 const Yieldparrot = require("./platforms/bsc/yieldparrot/yieldparrot");
-const Alpha = require("./platforms/alpha/alpha");
+const Alpha = require("./platforms/bsc/alpha/alpha");
 const Honeyfarm = require("./platforms/bsc/honeyfarm/honeyfarm");
 const Rabbit = require("./platforms/bsc/rabbit/rabbit");
 const Qubit = require("./platforms/bsc/qubit/qubit");
@@ -164,14 +164,14 @@ const Cream = require("./platforms/bsc/cream/cream");
 const Venus = require("./platforms/bsc/venus/venus");
 const Fortress = require("./platforms/bsc/fortress/fortress");
 const Fortube = require("./platforms/bsc/fortube/fortube");
-const Bakery = require("./platforms/bakery/bakery");
+const Bakery = require("./platforms/bsc/bakery/bakery");
 const Planet = require("./platforms/bsc/planet/planet");
-const Acryptos = require("./platforms/acryptos/acryptos");
-const Pancakebunny = require("./platforms/pancakebunny/pancakebunny");
-const Autofarm = require("./platforms/autofarm/autofarm");
-const Jetfuel = require("./platforms/jetfuel/jetfuel");
-const Valuedefi = require("./platforms/valuedefi/valuedefi");
-const Jul = require("./platforms/jul/jul");
+const Acryptos = require("./platforms/bsc/acryptos/acryptos");
+const Pancakebunny = require("./platforms/bsc/pancakebunny/pancakebunny");
+const Autofarm = require("./platforms/bsc/autofarm/autofarm");
+const Jetfuel = require("./platforms/bsc/jetfuel/jetfuel");
+const Valuedefi = require("./platforms/bsc/valuedefi/valuedefi");
+const Jul = require("./platforms/bsc/jul/jul");
 const Ten = require("./platforms/bsc/ten/ten");
 const Autoshark = require("./platforms/bsc/autoshark/autoshark");
 const Mars = require("./platforms/bsc/mars/mars");
@@ -262,6 +262,7 @@ const FarmersonlyCompound = require("./platforms/harmony/farmersonly/farmersonly
 const Openswap = require("./platforms/harmony/openswap/openswap");
 const Openswap1 = require("./platforms/harmony/openswap/openswap1");
 const Openswap2 = require("./platforms/harmony/openswap/openswap2");
+const Tranquil = require("./platforms/harmony/tranquil/tranquil");
 
 const Ubeswap = require("./platforms/celo/ubeswap/ubeswap");
 const Mobius = require("./platforms/celo/mobius/mobius");
@@ -276,6 +277,8 @@ const Huckleberry = require("./platforms/moonriver/huckleberry/huckleberry");
 const Moonfarm = require("./platforms/moonriver/moonfarm/moonfarm");
 const Moonkafe = require("./platforms/moonriver/moonkafe/moonkafe");
 const MoonkafeCompound = require("./platforms/moonriver/moonkafe/moonkafe_compound");
+const Mbeefy = require("./platforms/moonriver/mbeefy/mbeefy");
+const Msushi = require("./platforms/moonriver/msushi/msushi");
 
 let pancake;
 let swamp;
@@ -405,6 +408,7 @@ let viper;
 let hcurve;
 let artemis;
 let defikingdoms;
+let tranquil;
 
 let ubeswap;
 let mobius;
@@ -422,6 +426,8 @@ let farmersonlyFarm;
 let moonfarm;
 let moonkafe;
 let moonkafeCompound;
+let mbeefy;
+let msushi;
 
 let polygonPlatform;
 let fantomPlatform;
@@ -448,7 +454,7 @@ module.exports = {
       return database;
     }
 
-    const myDb = Sqlite("db.db");
+    const myDb = Sqlite(path.resolve(__dirname, '../var/db.db'));
     myDb.pragma("journal_mode = WAL");
     myDb.pragma("SYNCHRONOUS = 1;");
     myDb.pragma("LOCKING_MODE = EXCLUSIVE;");
@@ -884,6 +890,8 @@ module.exports = {
         this.getHuckleberry(),
         this.getMoonfarm(),
         this.getMoonkafe(),
+        this.getMbeefy(),
+        this.getMsushi(),
       ],
       this.getCache(),
       this.getMoonriverPriceOracle(),
@@ -906,6 +914,7 @@ module.exports = {
         this.getArtemis(),
         this.getDefikingdoms(),
         this.getFarmersonly(),
+        this.getTranquil(),
       ],
       this.getCache(),
       this.getHarmonyPriceOracle(),
@@ -1478,6 +1487,20 @@ module.exports = {
       this.getCacheManager(),
       this.getLiquidityTokenCollector(),
       this.getFarmPlatformResolver(),
+    ));
+  },
+
+  getTranquil() {
+    if (tranquil) {
+      return tranquil;
+    }
+
+    return (tranquil = new Tranquil(
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyCacheManager(),
+      this.getHarmonyLiquidityTokenCollector(),
+      this.getHarmonyFarmPlatformResolver(),
     ));
   },
 
@@ -2791,6 +2814,18 @@ module.exports = {
     ));
   },
 
+  getMbeefy() {
+    if (mbeefy) {
+      return mbeefy;
+    }
+
+    return (mbeefy = new Mbeefy(
+      this.getMoonriverCacheManager(),
+      this.getMoonriverPriceOracle(),
+      this.getMoonriverTokenCollector(),
+    ));
+  },
+
   getUbeswap() {
     if (ubeswap) {
       return ubeswap;
@@ -2828,6 +2863,20 @@ module.exports = {
       this.getCeloTokenCollector(),
       this.getCeloFarmFetcher(),
       this.getCeloCacheManager(),
+    ));
+  },
+
+  getMsushi() {
+    if (msushi) {
+      return msushi;
+    }
+
+    return (msushi = new Msushi(
+      this.getMoonriverCacheManager(),
+      this.getMoonriverPriceOracle(),
+      this.getMoonriverTokenCollector(),
+      this.getMoonriverFarmFetcher(),
+      this.getMoonriverCacheManager(),
     ));
   },
 

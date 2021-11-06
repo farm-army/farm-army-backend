@@ -69,7 +69,7 @@ module.exports = class AddressTransactions {
       }
     });
 
-    const transactions = (response.result || [])
+    const transactions = (response?.result || [])
       .filter(
         t =>
           t.value &&

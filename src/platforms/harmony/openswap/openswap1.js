@@ -91,11 +91,11 @@ module.exports = class openswap1 extends PancakePlatformFork {
       farm.platform = 'openswap';
       farm.provider = 'openswap';
 
-      if (!farm.tags) {
-        farm.tags = [];
+      if (!farm.flags) {
+        farm.flags = [];
       }
 
-      farm.tags.push('deprecated');
+      farm.flags.push('deprecated');
 
       if (!farm.actions) {
         farm.actions = [];

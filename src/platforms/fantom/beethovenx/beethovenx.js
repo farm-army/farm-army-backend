@@ -24,33 +24,37 @@ module.exports = class beethovenx {
   }
 
   async getRawFarms() {
-    const cacheKey = `${this.getName()}-v2-raw-farms`
+    const cacheKey = `${this.getName()}-v4-raw-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
       return cache;
     }
 
-    const content = await Utils.request('POST', "https://graph.beethovenx.io/subgraphs/name/beethovenx", {
+
+    const content = await Utils.request('POST', 'https://graph-node.beets-ftm-node.com/subgraphs/name/beethovenx', {
+      "credentials": "omit",
       "headers": {
-        "accept": "application/json, text/plain, */*",
-        "accept-language": "en-US,en;q=0.9",
-        "content-type": "application/json",
-        "sec-ch-ua": "\";Not A Brand\";v=\"99\", \"Chromium\";v=\"94\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Linux\"",
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-site"
+        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:93.0) Gecko/20100101 Firefox/93.0",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "de-DE,de;q=0.7,chrome://global/locale/intl.properties;q=0.3",
+        "Content-Type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "cross-site"
       },
-      "referrer": "https://app.beethovenx.io/",
-      "referrerPolicy": "strict-origin-when-cross-origin",
-      "body": "{\"query\":\"query { pools (first: 1000, orderBy: \\\"totalLiquidity\\\", orderDirection: \\\"desc\\\", where: {totalShares_gt: 0.01, id_not_in: [\\\"0x03b3cc19e4087fd3d63167a604ef8063b095ba16000100000000000000000006\\\"], poolType_not: \\\"Element\\\", id_in: [\\\"0x03c6b3f09d2504606936b1a4decefad204687890000200000000000000000015\\\", \\\"0xd41bf724b6e31311db582c5388af6b316e812fe4000200000000000000000003\\\", \\\"0xcdf68a4d525ba2e90fe959c74330430a5a6b8226000200000000000000000008\\\", \\\"0xa07de66aef84e2c01d88a48d57d1463377ee602b000200000000000000000002\\\", \\\"0x22b30b00e6796daf710fbe5cafbfc9cdd1377f2a000200000000000000000001\\\", \\\"0xd47d2791d3b46f9452709fa41855a045304d6f9d000100000000000000000004\\\", \\\"0x6fdc8415b654b0f60475944a0b9421dc36ee1363000100000000000000000000\\\", \\\"0xf0e2c47d4c9fbbbc2f2e19acdaa3c773a3ecd22100010000000000000000000a\\\", \\\"0x72c0eb973dc95e2d185563f58fc26626cc2e8034000100000000000000000011\\\", \\\"0xd163415bd34ef06f57c58d2aed5a5478afb464cc00000000000000000000000e\\\", \\\"0xa1585005433ae9a72223c6c306261b2f4b38e31c00010000000000000000000c\\\", \\\"0x51c5875ee17f1af4ddca0ce0df8dcad0b115b191000100000000000000000012\\\", \\\"0xfebe0c9fddec3ce393d96a6d5b3c8c90cdef6b11000100000000000000000016\\\", \\\"0x6a9ad1bb2371234aa94601296c1116abbce61b90000100000000000000000017\\\", \\\"0xae1c69eae0f1342425ea3fdb51e9f11223c7ad5b00010000000000000000000b\\\", \\\"0x443804efc861616b920bc30d49282ae72276b5df000000000000000000000010\\\"]}, block: {number: 18598740}) { id name poolType swapFee tokensList totalLiquidity totalSwapVolume totalSwapFee totalShares owner factory amp swapEnabled tokens { address balance weight priceRate } } }\"}",
+      "referrer": "https://app.beets.fi/",
+      "body": "{\"query\":\"query { pools (first: 75, orderBy: \\\"totalLiquidity\\\", orderDirection: \\\"desc\\\", where: {totalShares_gt: 0.01, id_not_in: [\\\"0x03b3cc19e4087fd3d63167a604ef8063b095ba16000100000000000000000006\\\"], poolType_not: \\\"Element\\\", tokensList_contains: []}, skip: 0) { id name poolType swapFee tokensList totalLiquidity totalSwapVolume totalSwapFee totalShares owner factory amp swapEnabled tokens { address balance weight symbol priceRate } } }\"}",
       "method": "POST",
       "mode": "cors"
     });
 
-    const pools = content ? JSON.parse(content)?.data?.pools : [];
+    let pools = [];
+    try {
+      pools = content ? JSON.parse(content)?.data?.pools : [];
+    } catch (e) {
+      console.log('error graph.beethovenx.io', e);
+    }
 
     await this.cacheManager.set(cacheKey, pools, {ttl: 60 * 30});
 

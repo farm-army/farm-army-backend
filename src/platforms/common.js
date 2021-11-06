@@ -244,6 +244,22 @@ module.exports = {
           item.actions = farm.actions;
         }
 
+        if (farm.inactive === true) {
+          if (!item.flags) {
+            item.flags = [];
+          }
+
+          item.flags.push('inactive');
+        }
+
+        if (farm.deprecated === true) {
+          if (!item.flags) {
+            item.flags = [];
+          }
+
+          item.flags.push('deprecated');
+        }
+
         return item;
       });
 
@@ -717,6 +733,22 @@ module.exports = {
           item.actions = farm.actions;
         }
 
+        if (farm.inactive === true) {
+          if (!item.flags) {
+            item.flags = [];
+          }
+
+          item.flags.push('inactive');
+        }
+
+        if (farm.deprecated === true) {
+          if (!item.flags) {
+            item.flags = [];
+          }
+
+          item.flags.push('deprecated');
+        }
+
         return item;
       });
 
@@ -987,6 +1019,10 @@ module.exports = {
 
         if (this.getChain() === 'fantom' && info.underlying && info.underlying.toLowerCase().includes('eeeeeeeeeeeeeeeeeeeeeeeeeeeeee')) {
           info.underlying = '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83'
+        }
+
+        if (this.getChain() === 'harmony' && !info.underlying && tokenName?.toLowerCase().includes('one')) {
+          info.underlying = '0xcf664087a5bb0237a0bad6742852ec6c8d69a27a'
         }
 
         if (!info.underlying) {

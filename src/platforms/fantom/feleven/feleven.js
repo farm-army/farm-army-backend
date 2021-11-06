@@ -1,6 +1,6 @@
 "use strict";
 
-const eleven = require("../../eleven/eleven");
+const eleven = require("../../bsc/eleven/eleven");
 
 module.exports = class feleven extends eleven {
   getName() {

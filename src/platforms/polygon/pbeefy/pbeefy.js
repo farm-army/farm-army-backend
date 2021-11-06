@@ -1,6 +1,6 @@
 "use strict";
 
-const Beefy = require("../../beefy/beefy");
+const Beefy = require("../../bsc/beefy/beefy");
 
 module.exports = class pbeefy extends Beefy {
   getGithubFarmsUrl() {

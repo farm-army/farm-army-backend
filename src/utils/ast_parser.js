@@ -46,22 +46,27 @@ module.exports = {
   createJsonFromObjectExpression: (body, filter, callback) => {
     const items = [];
 
-    walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
-      ObjectExpression(node) {
-        const keys = node.properties.map(p => (p.key && p.key.name) ? p.key.name : undefined);
-        if (!filter(keys)) {
-          return;
+    try {
+      walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
+        ObjectExpression(node) {
+          const keys = node.properties.map(p => (p.key && p.key.name) ? p.key.name : undefined);
+          if (!filter(keys)) {
+            return;
+          }
+
+          const items1 = module.exports.parseObject(node);
+
+          if (callback) {
+            callback(items1, node);
+          }
+
+          items.push(items1);
         }
-
-        const items1 = module.exports.parseObject(node);
-
-        if (callback) {
-          callback(items1, node);
-        }
-
-        items.push(items1);
-      }
-    })
+      });
+    } catch (e) {
+      console.log('ast error', e)
+      return [];
+    }
 
     return items;
   }

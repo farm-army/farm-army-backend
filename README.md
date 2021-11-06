@@ -47,13 +47,7 @@ Platforms need to provide following implementations
 
 ```
 npm install
-sqlite3 db.db < db.sql
-```
-
-Optional: to generate new farms / vault of some provide we need the public repo from them.
-
-```
-git submodule update --init --recursive
+sqlite3 var/db.db < db.sql
 ```
 
 Optional: create a config file with custom configuration
@@ -151,7 +145,7 @@ Every farm contract should be converted / provided in a common format. Still fea
     "compound": true|false // optional if auto-compounding
     "leverage": true|false // optional if vault is leveraged
     "chain": "bsc|polygon|kcc|fantom|harmony" the chain for this vault
-    tags: ["lend", "borrow", "deprecated"], some custom tags for frontend badges
+    "flags": ["lend", "borrow", "deprecated"], some custom tags for frontend badges
     "extra": {
       "lpAddress": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82", // to given hint about liquity split calculation
       "transactionToken": "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82", // "in" and "out" transaction token

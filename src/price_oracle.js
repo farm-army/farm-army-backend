@@ -1,6 +1,4 @@
 const _ = require("lodash");
-const fs = require("fs");
-const path = require("path");
 
 const BigNumber = require("bignumber.js");
 const Utils = require("./utils");
@@ -9,14 +7,8 @@ const Web3EthContract = require("web3-eth-contract");
 const FulcrumLendingTokenAbi = require("./abi/fulcrum_lending_tokens.json");
 const UniswapRouter = require("./abi/uniswap_router.json");
 
-const erc20ABI = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, "platforms/pancake/abi/erc20.json"), "utf8")
-);
-const lpAbi = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, "lpAbi.json"), "utf8")
-);
-
-const fetch = require("node-fetch");
+const erc20ABI = require('./abi/erc20.json');
+const lpAbi = require('./abi/lpAbi.json');
 
 module.exports = class PriceOracle {
   constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager, priceFetcher) {

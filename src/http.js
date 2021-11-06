@@ -61,29 +61,9 @@ module.exports = class Http {
     moonriverTokenInfo,
     moonriverAddressTransactions
   ) {
-    this.chains = {};
-
-    this.priceOracle = priceOracle;
-    this.platforms = platforms;
-    this.platformsPolygon = platformsPolygon;
-    this.platformsFantom = platformsFantom;
-    this.platformsKcc = platformsKcc;
-    this.platformsCelo = platformsCelo;
-
     this.crossPlatforms = crossPlatforms;
 
-    this.balances = balances;
-
-    this.addressTransactions = addressTransactions;
-    this.polygonAddressTransactions = polygonAddressTransactions;
-    this.fantomAddressTransactions = fantomAddressTransactions;
-    this.kccAddressTransactions = kccAddressTransactions;
-    this.harmonyAddressTransactions = harmonyAddressTransactions;
-    this.celoAddressTransactions = celoAddressTransactions;
-
-    this.tokenCollector = tokenCollector;
-    this.liquidityTokenCollector = liquidityTokenCollector;
-    this.tokenInfo = tokenInfo;
+    this.chains = {};
 
     this.chains.bsc = {
       platforms: platforms,
@@ -96,11 +76,6 @@ module.exports = class Http {
       autoFarm: autoFarm,
     }
 
-    this.polygonPriceOracle = polygonPriceOracle;
-    this.polygonLiquidityTokenCollector = polygonLiquidityTokenCollector;
-    this.polygonTokenCollector = polygonTokenCollector;
-    this.polygonBalances = polygonBalances;
-    this.polygonTokenInfo = polygonTokenInfo;
     this.chains.polygon = {
       platforms: platformsPolygon,
       priceOracle: polygonPriceOracle,
@@ -112,11 +87,6 @@ module.exports = class Http {
       autoFarm: polygonAutoFarm,
     }
 
-    this.fantomPriceOracle = fantomPriceOracle;
-    this.fantomLiquidityTokenCollector = fantomLiquidityTokenCollector;
-    this.fantomTokenCollector = fantomTokenCollector;
-    this.fantomBalances = fantomBalances;
-    this.fantomTokenInfo = fantomTokenInfo;
     this.chains.fantom = {
       platforms: platformsFantom,
       priceOracle: fantomPriceOracle,
@@ -128,11 +98,6 @@ module.exports = class Http {
       autoFarm: fantomAutoFarm,
     }
 
-    this.kccPriceOracle = kccPriceOracle;
-    this.kccLiquidityTokenCollector = kccLiquidityTokenCollector;
-    this.kccTokenCollector = kccTokenCollector;
-    this.kccBalances = kccBalances;
-    this.kccTokenInfo = kccTokenInfo;
     this.chains.kcc = {
       platforms: platformsKcc,
       priceOracle: kccPriceOracle,

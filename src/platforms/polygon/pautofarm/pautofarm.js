@@ -1,6 +1,6 @@
 "use strict";
 
-const Autofarm = require("../../autofarm/autofarm");
+const Autofarm = require("../../bsc/autofarm/autofarm");
 
 // rewards:
 // 0x2DE373C78AA74A0B3970880Fd2Ad3116ac1036c8

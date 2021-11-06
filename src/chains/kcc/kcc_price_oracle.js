@@ -6,8 +6,8 @@ const Utils = require("../../utils");
 const Web3EthContract = require("web3-eth-contract");
 
 const UniswapRouter = require("../../abi/uniswap_router.json");
-const erc20ABI = require("../../platforms/pancake/abi/erc20.json");
-const lpAbi = require("../../lpAbi.json");
+const erc20ABI = require("../../platforms/bsc/pancake/abi/erc20.json");
+const lpAbi = require("../../abi/lpAbi.json");
 
 module.exports = class KccPriceOracle {
   constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager, priceFetcher) {

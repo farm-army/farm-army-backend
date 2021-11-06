@@ -7,8 +7,8 @@ const Web3EthContract = require("web3-eth-contract");
 
 const UniswapRouter = require("../../abi/uniswap_router.json");
 const UniswapRouterWithFee = require("../../abi/uniswap_router_with_fee.json");
-const erc20ABI = require("../../platforms/pancake/abi/erc20.json");
-const lpAbi = require("../../lpAbi.json");
+const erc20ABI = require("../../platforms/bsc/pancake/abi/erc20.json");
+const lpAbi = require("../../abi/lpAbi.json");
 
 module.exports = class MoonriverPriceOracle {
   constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager, priceFetcher) {
@@ -129,18 +129,20 @@ module.exports = class MoonriverPriceOracle {
   }
 
   async getCoinGeckoTokens() {
-    const cacheKey = `coingecko-moonriver-v6-token-addresses`
+    const cacheKey = `coingecko-moonriver-v7-token-addresses`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
-     // return cache;
+      return cache;
     }
 
     const tokens = await this.priceFetcher.getCoinGeckoTokens();
 
     const matches = {};
 
-    const known = {};
+    const known = {
+      sushi: ['0xf390830df829cf22c53c8840554b98eafc5dcbc2'],
+    };
 
     tokens.forEach(token => {
       if (token['platforms'] && token['platforms']['moonriver'] && token['platforms']['moonriver'].startsWith('0x')) {

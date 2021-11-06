@@ -1,6 +1,6 @@
 "use strict";
 
-const Autofarm = require("../../autofarm/autofarm");
+const Autofarm = require("../../bsc/autofarm/autofarm");
 
 module.exports = class mautofarm extends Autofarm {
   getFarmDataUrl() {
