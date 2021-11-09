@@ -13,6 +13,7 @@ async function farmUpdater(forceUpdate = true) {
     Promise.all(services.getHarmonyPlatforms().getFunctionAwaits('getFarms', [forceUpdate])),
     Promise.all(services.getCeloPlatforms().getFunctionAwaits('getFarms', [forceUpdate])),
     Promise.all(services.getMoonriverPlatforms().getFunctionAwaits('getFarms', [forceUpdate])),
+    Promise.all(services.getCronosPlatforms().getFunctionAwaits('getFarms', [forceUpdate])),
   ])).forEach(p => {
     if (p.status !== 'fulfilled') {
       console.error('farmUpdater error', p.reason)
@@ -29,6 +30,7 @@ async function priceUpdater() {
     services.getCronjobs().harmonyCronInterval(),
     services.getCronjobs().celoCronInterval(),
     services.getCronjobs().moonriverCronInterval(),
+    services.getCronjobs().cronosCronInterval(),
   ])).forEach(p => {
     if (p.status !== 'fulfilled') {
       console.error('priceUpdater error', p.reason)
@@ -70,6 +72,10 @@ async function collectHistoricalData() {
     services.getMoonriverDb().updateFarmPrices(),
     services.getMoonriverDb().updateAddressMaps(),
     services.getMoonriverDb().updateLpInfoMaps(),
+
+    services.getCronosDb().updateFarmPrices(),
+    services.getCronosDb().updateAddressMaps(),
+    services.getCronosDb().updateLpInfoMaps(),
   ])).forEach(p => {
     if (p.status !== 'fulfilled') {
       console.error('farm update interval error', p.reason)

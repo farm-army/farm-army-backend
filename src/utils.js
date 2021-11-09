@@ -26,6 +26,7 @@ const MULTI_CALL_CONTRACT = {
   harmony: '0xd1AE3C177E13ac82E667eeEdE2609C98c69FF684',
   celo: '0xfEEaa3989087F2c9eB4e920D57Df0A3F83486414',
   moonriver: '0x814C1C56815D52b58d7254424c15307e7363E016',
+  cronos: '0xd1AE3C177E13ac82E667eeEdE2609C98c69FF684',
 }
 
 // @TODO: move it to somewhere else
@@ -96,6 +97,11 @@ const HOSTS_MOONRIVER = Object.freeze([
   'https://rpc.moonriver.moonbeam.network',
   'https://moonriver.api.onfinality.io/public',
   ...((CONFIG['MOONRIVER_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
+]);
+
+const HOSTS_CRONOS = Object.freeze([
+  'https://evm-cronos.crypto.org',
+  ...((CONFIG['CRONOS_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
 ]);
 
 const WEB3_PROXIES = (CONFIG['WEB3_PROXIES'] || '').split(',').map(i => i.trim()).filter(i => i);
@@ -321,7 +327,7 @@ HOSTS_MOONRIVER.forEach(url => {
         timeout: 10000,
       }),
       {
-        contract: MULTI_CALL_CONTRACT.celo,
+        contract: MULTI_CALL_CONTRACT.moonriver,
         batchSize: 50,
         timeWindow: 50,
       }
@@ -344,6 +350,42 @@ HOSTS_MOONRIVER.forEach(url => {
 });
 
 const ENDPOINTS_MOONRIVER = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_MOONRIVER));
+
+
+const ENDPOINTS_MULTICALL_CRONOS = {};
+const ENDPOINTS_RPC_WRAPPER_CRONOS = {};
+
+HOSTS_CRONOS.forEach(url => {
+  [undefined, ...WEB3_PROXIES].forEach((proxy, index) => {
+    ENDPOINTS_MULTICALL_CRONOS[url + '_' + index] = new MulticallProvider(
+      new providers.StaticJsonRpcProvider({
+        url: url,
+        timeout: 10000,
+      }),
+      {
+        contract: MULTI_CALL_CONTRACT.cronos,
+        batchSize: 50,
+        timeWindow: 50,
+      }
+    );
+
+    const options = {
+      keepAlive: true,
+      timeout: 10000,
+    };
+
+    if (proxy) {
+      options.agent = {
+        'http': new HttpsProxyAgent(proxy),
+        'https': new HttpsProxyAgent(proxy),
+      };
+    }
+
+    ENDPOINTS_RPC_WRAPPER_CRONOS[url + '_' + index] = new Web3(new Web3.providers.HttpProvider(url, options));
+  });
+});
+
+const ENDPOINTS_CRONOS = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_CRONOS));
 
 module.exports = {
   PRICES: {},
@@ -372,6 +414,8 @@ module.exports = {
         return ENDPOINTS_RPC_WRAPPER_CELO[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_CELO))[0]];
       case 'moonriver':
         return ENDPOINTS_RPC_WRAPPER_MOONRIVER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_MOONRIVER))[0]];
+      case 'cronos':
+        return ENDPOINTS_RPC_WRAPPER_CRONOS[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_CRONOS))[0]];
       case 'bsc':
       default:
         return ENDPOINTS_RPC_WRAPPER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER))[0]];
@@ -404,6 +448,9 @@ module.exports = {
         break;
       case 'moonriver':
         selectedEndpoints = ENDPOINTS_MOONRIVER.slice();
+        break;
+      case 'cronos':
+        selectedEndpoints = ENDPOINTS_CRONOS.slice();
         break;
       case 'bsc':
       default:
@@ -461,6 +508,8 @@ module.exports = {
               web3 = ENDPOINTS_RPC_WRAPPER_CELO[endpointInner]
             } else if (chain === 'moonriver') {
               web3 = ENDPOINTS_RPC_WRAPPER_MOONRIVER[endpointInner]
+            } else if (chain === 'cronos') {
+              web3 = ENDPOINTS_RPC_WRAPPER_CRONOS[endpointInner]
             } else {
               web3 = ENDPOINTS_RPC_WRAPPER[endpointInner]
             }
@@ -549,6 +598,9 @@ module.exports = {
       case 'moonriver':
         selectedEndpoints = ENDPOINTS_MOONRIVER.slice();
         break;
+      case 'cronos':
+        selectedEndpoints = ENDPOINTS_CRONOS.slice();
+        break;
       case 'bsc':
       default:
         selectedEndpoints = ENDPOINTS.slice();
@@ -575,6 +627,8 @@ module.exports = {
         options = ENDPOINTS_MULTICALL[endpoints[0]];
       } else if (chain === 'moonriver') {
         options = ENDPOINTS_MULTICALL_MOONRIVER[endpoints[0]];
+      } else if (chain === 'cronos') {
+        options = ENDPOINTS_MULTICALL_CRONOS[endpoints[0]];
       } else {
         options = ENDPOINTS_MULTICALL[endpoints[0]];
       }
@@ -724,6 +778,9 @@ module.exports = {
     } else if (chain === 'moonriver') {
       host = 'blockscout.moonriver.moonbeam.network';
       apiKey = module.exports.CONFIG['MOONRIVERSCAN_API_KEY'];
+    } else if (chain === 'cronos') {
+      host = 'cronos.crypto.org/explorer';
+      apiKey = module.exports.CONFIG['CRONOSSCAN_API_KEY'];
     } else {
       host = 'api.bscscan.com';
       apiKey = module.exports.CONFIG['BSCSCAN_API_KEY'];
@@ -1077,6 +1134,8 @@ module.exports = {
         return 5;
       case 'moonriver':
         return 13;
+      case 'cronos':
+        return 5.5;
       case 'bsc':
         return 3;
     }

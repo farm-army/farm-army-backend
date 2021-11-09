@@ -15,6 +15,7 @@ module.exports = class Http {
     platformsHarmony,
     platformsCelo,
     platformsMoonriver,
+    platformsCronos,
     crossPlatforms,
     balances,
     addressTransactions,
@@ -59,7 +60,13 @@ module.exports = class Http {
     moonriverTokenCollector,
     moonriverBalances,
     moonriverTokenInfo,
-    moonriverAddressTransactions
+    moonriverAddressTransactions,
+    cronosPriceOracle,
+    cronosLiquidityTokenCollector,
+    cronosTokenCollector,
+    cronosBalances,
+    cronosTokenInfo,
+    cronosAddressTransactions    
   ) {
     this.crossPlatforms = crossPlatforms;
 
@@ -141,7 +148,18 @@ module.exports = class Http {
       addressTransactions: moonriverAddressTransactions,
       autoFarm: {}, // not supported
     }
-
+    
+    this.chains.cronos = {
+      platforms: platformsCronos,
+      priceOracle: cronosPriceOracle,
+      liquidityTokenCollector: cronosLiquidityTokenCollector,
+      tokenCollector: cronosTokenCollector,
+      balances: cronosBalances,
+      tokenInfo: cronosTokenInfo,
+      addressTransactions: cronosAddressTransactions,
+      autoFarm: {}, // not supported
+    }
+    
     this.app = express();
   }
 

@@ -1,6 +1,6 @@
 # farm.army - Backend #
 
-Track your farming and pool performance on the Binance Chain, Polygon, Fantom, KuCoin Community Chain, Harmony, Celo, Moonriver
+Track your farming and pool performance on the Binance Smart Chain, Polygon, Fantom, KuCoin Community Chain, Harmony, Celo, Moonriver, Crypto.com: Cronos
 
 ### Platforms ###
 
@@ -13,6 +13,7 @@ Platforms must be self-managed and extract directly from chain contracts. As fal
  - [src/platforms/harmony](src/platforms/harmony)
  - [src/platforms/celo](src/platforms/celo)
  - [src/platforms/moonriver](src/platforms/moonriver)
+ - [src/platforms/cronos](src/platforms/cronos)
 
 ### Tech Stack ###
 
@@ -99,13 +100,14 @@ node src/index.js
   /harmony/farms
   /celo/farms
   /moonyriver/farms
+  /cronos/farms  
 ```
 
 ```
   /:chain/wallet/:address
 ```
 
-`:chain`: bsc, polygon, fantom, kcc, harmony, celo, moonriver
+`:chain`: bsc, polygon, fantom, kcc, harmony, celo, moonriver, cronos
 
 ```
   /:chain/all/yield/:address

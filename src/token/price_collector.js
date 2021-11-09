@@ -33,8 +33,8 @@ module.exports = class PriceCollector {
   }
 
   add(address, price) {
-    if (!address || !price) {
-      throw new Error(`Invalid price: ${JSON.stringify([address, price])}`)
+    if (!address) {
+      throw new Error(`Invalid address: ${JSON.stringify([address])}`)
     }
 
     if (!address || !address.startsWith('0x')) {

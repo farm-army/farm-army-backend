@@ -10,7 +10,7 @@ const UniswapRouterWithFee = require("../../abi/uniswap_router_with_fee.json");
 const erc20ABI = require("../../platforms/bsc/pancake/abi/erc20.json");
 const lpAbi = require("../../abi/lpAbi.json");
 
-module.exports = class MoonriverPriceOracle {
+module.exports = class CronosPriceOracle {
   constructor(tokenCollector, lpTokenCollector, priceCollector, cacheManager, priceFetcher) {
     this.tokenCollector = tokenCollector;
     this.lpTokenCollector = lpTokenCollector;
@@ -66,7 +66,7 @@ module.exports = class MoonriverPriceOracle {
 
   async updatePrice(address, price) {
     if (!address.startsWith('0x')) {
-      console.log("moonriver: Invalid updatePrice:", address, price);
+      console.log("cronos: Invalid updatePrice:", address, price);
       return;
     }
 
@@ -78,7 +78,7 @@ module.exports = class MoonriverPriceOracle {
       this.tokenMaps(),
     ])
 
-    let nativePrice = this.priceCollector.getPrice('0x98878B06940aE243284CA214f92Bb71a2b032B8A');
+    let nativePrice = this.priceCollector.getPrice('0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23');
 
     const bPrices = await Promise.allSettled([
       this.updateCoinGeckoPrices(),
@@ -109,7 +109,7 @@ module.exports = class MoonriverPriceOracle {
 
     this.priceCollector.save();
 
-    nativePrice = this.priceCollector.getPrice('0x98878B06940aE243284CA214f92Bb71a2b032B8A');
+    nativePrice = this.priceCollector.getPrice('0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23');
 
     const results = await Promise.allSettled([
       this.updateViaRouter(nativePrice),
@@ -129,7 +129,7 @@ module.exports = class MoonriverPriceOracle {
   }
 
   async getCoinGeckoTokens() {
-    const cacheKey = `coingecko-moonriver-v8-token-addresses`
+    const cacheKey = `coingecko-cronos-v8-token-addresses`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -141,17 +141,20 @@ module.exports = class MoonriverPriceOracle {
     const matches = {};
 
     const known = {
-      sushi: ['0xf390830df829cf22c53c8840554b98eafc5dcbc2'],
-      moonriver: ['0xf50225a84382c74CbdeA10b0c176f71fc3DE0C4d'],
+      'crypto-com-chain': ['0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23'],
+      'ethereum': ['0xe44Fd7fCb2b1581822D0c862B68222998a0c299a'],
+      'usd-coin': ['0xc21223249CA28397B4B6541dfFaEcC539BfF0c59'],
+      'tether': ['0x66e428c3f67a68878562e79a0234c1f83c208770'],
+      'bitcoin': ['0x062E66477Faf219F25D27dCED647BF57C3107d52'],
     };
 
     tokens.forEach(token => {
-      if (token['platforms'] && token['platforms']['moonriver'] && token['platforms']['moonriver'].startsWith('0x')) {
+      if (token['platforms'] && token['platforms']['cronos'] && token['platforms']['cronos'].startsWith('0x')) {
         if (!matches[token['id']]) {
           matches[token['id']] = [];
         }
 
-        matches[token['id']].push(token['platforms']['moonriver']);
+        matches[token['id']].push(token['platforms']['cronos']);
       }
 
       if(known[token['id']]) {
@@ -187,7 +190,7 @@ module.exports = class MoonriverPriceOracle {
         symbol: web3EthContract.methods.symbol(),
         decimals: web3EthContract.methods.decimals(),
       };
-    }), 'moonriver');
+    }), 'cronos');
 
     tokensRaw.forEach(token => {
       if (!token.decimals && parseInt(token.decimals) > 0) {
@@ -257,9 +260,9 @@ module.exports = class MoonriverPriceOracle {
         };
       });
 
-    console.log("moonriver: lp address update", lpAddress.length, v.length);
+    console.log("cronos: lp address update", lpAddress.length, v.length);
 
-    const vaultCalls = await Utils.multiCall(v, 'moonriver');
+    const vaultCalls = await Utils.multiCall(v, 'cronos');
 
     const ercs = {};
 
@@ -291,7 +294,7 @@ module.exports = class MoonriverPriceOracle {
 
     vaultCalls.forEach(v => {
       if (!v.getReserves) {
-        console.log("moonriver: Missing reserve:", v._address);
+        console.log("cronos: Missing reserve:", v._address);
 
         if (!this.ignoreLp.includes(v._address.toLowerCase())) {
           this.ignoreLp.push(v._address.toLowerCase());
@@ -330,7 +333,7 @@ module.exports = class MoonriverPriceOracle {
       }
     });
 
-    const vaultCalls2 = await Utils.multiCall(Object.values(ercs), 'moonriver');
+    const vaultCalls2 = await Utils.multiCall(Object.values(ercs), 'cronos');
 
     vaultCalls2.forEach(v => {
       tokenAddressSymbol[v._token.toLowerCase()] = {
@@ -371,7 +374,7 @@ module.exports = class MoonriverPriceOracle {
       this.lpTokenCollector.add(c.address, pricesLpAddress);
 
       if (!token0Price || !token1Price) {
-        console.log("moonriver: Missing price:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+        console.log("cronos: Missing price:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
 
         return;
       }
@@ -384,7 +387,7 @@ module.exports = class MoonriverPriceOracle {
 
       const number = (x0p + x1p) / c.totalSupply * (10 ** c.decimals);
       if (number <= 0) {
-        console.log("moonriver: Missing lp price:", token0.symbol.toLowerCase(), token1.symbol.toLowerCase());
+        console.log("cronos: Missing lp price:", token0.symbol.toLowerCase(), token1.symbol.toLowerCase());
 
         return;
       }
@@ -398,7 +401,7 @@ module.exports = class MoonriverPriceOracle {
   }
 
   async tokenMaps() {
-    const cacheKey = 'moonriver-tokenlist'
+    const cacheKey = 'cronos-tokenlist'
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
       return [];
@@ -427,126 +430,45 @@ module.exports = class MoonriverPriceOracle {
 
   async updateViaRouter(nativePrice) {
     if (!nativePrice) {
-      throw Error('moonriver: Invalid native price')
+      throw Error('cronos: Invalid native price')
     }
-
-    const pricesTarget = {
-      '0x98878B06940aE243284CA214f92Bb71a2b032B8A': nativePrice,
-      '0x9A92B5EBf1F6F6f7d93696FCD44e5Cf75035A756': this.priceCollector.getPrice('0x9A92B5EBf1F6F6f7d93696FCD44e5Cf75035A756'),
-    };
 
     const tokens = [
       {
-        router: '0xAA30eF758139ae4a7f798112902Bf6d65612045f', // solar
-        address: '0x6bD193Ee6D2104F14F94E2cA6efefae561A4334B',
-        symbol: 'solar',
+        router: '0x145863Eb42Cf62847A6Ca784e6416C1682b1b2Ae', // vvs
+        address: '0x2d03bece6747adc00e1a131bba1469c15fd11e03',
+        symbol: 'vvs',
         decimals: 18,
       },
       {
-        router: '0xAA30eF758139ae4a7f798112902Bf6d65612045f', // solar
-        address: '0xbD90A6125a84E5C512129D622a75CDDE176aDE5E',
-        symbol: 'rib',
-        decimals: 18,
-      },
-      {
-        router: '0x2d4e873f9Ab279da9f1bb2c532d4F06f67755b77', // huckleberry
-        address: '0x9A92B5EBf1F6F6f7d93696FCD44e5Cf75035A756',
-        symbol: 'finn',
-        decimals: 18,
-      },
-      {
-        router: '0x2d4e873f9Ab279da9f1bb2c532d4F06f67755b77', // huckleberry
-        address: '0x78F811A431D248c1EDcF6d95ec8551879B2897C3',
-        symbol: 'btc',
-        decimals: 8,
-      },
-      {
-        router: '0x2d4e873f9Ab279da9f1bb2c532d4F06f67755b77', // huckleberry
-        address: '0x576fDe3f61B7c97e381c94e7A03DBc2e08Af1111',
-        symbol: 'eth',
-        decimals: 18,
-      },
-      {
-        router: '0x2d4e873f9Ab279da9f1bb2c532d4F06f67755b77', // huckleberry
-        address: '0x748134b5f553f2bcbd78c6826de99a70274bdeb3',
-        symbol: 'usdc',
-        decimals: 6,
-        source: {
-          address: '0x9A92B5EBf1F6F6f7d93696FCD44e5Cf75035A756',
-          decimals: 18
-        }, // finn
-      },
-      {
-        router: '0x2d4e873f9Ab279da9f1bb2c532d4F06f67755b77', // huckleberry
-        address: '0x9D5bc9B873AeD984e2B6A64d4792249D68BbA2Fe',
-        symbol: 'xrp',
-        decimals: 6,
-        source: {
-          address: '0x9A92B5EBf1F6F6f7d93696FCD44e5Cf75035A756',
-          decimals: 18
-        }, // finn
-      },
-      {
-        router: '0x2d4e873f9Ab279da9f1bb2c532d4F06f67755b77', // huckleberry
-        address: '0x15b9ca9659f5dff2b7d35a98dd0790a3cbb3d445',
-        symbol: 'dot',
-        decimals: 10,
-        source: {
-          address: '0x9A92B5EBf1F6F6f7d93696FCD44e5Cf75035A756',
-          decimals: 18
-        }, // finn
-      },
-      {
-        router: '0x2d4e873f9Ab279da9f1bb2c532d4F06f67755b77', // huckleberry
-        address: '0xe936caa7f6d9f5c9e907111fcaf7c351c184cda7',
-        symbol: 'usdt',
-        decimals: 6,
-      },
-      {
-        router: '0x2d4e873f9Ab279da9f1bb2c532d4F06f67755b77', // huckleberry
-        address: '0x41562ae242d194247389152aCAa7a9397136b09F',
-        symbol: 'wan',
-        decimals: 18,
-      },
-      {
-        router: '0x120999312896F36047fBcC44AD197b7347F499d6', // moonfarm
-        address: '0xb497c3e9d27ba6b1fea9f1b941d8c79e66cfc9d6',
-        symbol: 'moon',
+        router: '0xcd7d16fB918511BF7269eC4f48d61D79Fb26f918', // cronaswap
+        address: '0xadbd1231fb360047525BEdF962581F3eee7b49fe',
+        symbol: 'crona',
         decimals: 18,
       },
     ];
 
     const calls = tokens.map(t => {
-      const abi = t.router === '0xAA30eF758139ae4a7f798112902Bf6d65612045f'
-        ? UniswapRouterWithFee
-        : UniswapRouter;
-
-      const sourceAddress = t?.source?.address || '0x98878B06940aE243284CA214f92Bb71a2b032B8A';
-      const sourceDecimals = t?.source?.decimals || 18;
-
-      const contract = new Web3EthContract(abi, t.router);
+      const contract = new Web3EthContract(UniswapRouter, t.router);
       return {
         decimals: t.decimals.toString(),
         symbol: t.symbol,
         address: t.address,
-        sourceAddress: sourceAddress,
-        amountsOut: t.router === '0xAA30eF758139ae4a7f798112902Bf6d65612045f'
-          ? contract.methods.getAmountsOut(new BigNumber(10 ** sourceDecimals), [sourceAddress, t.address], 0)
-          : contract.methods.getAmountsOut(new BigNumber(10 ** sourceDecimals), [sourceAddress, t.address])
+        amountsOut: contract.methods.getAmountsOut(new BigNumber(1e18), ['0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23', t.address]),
       };
     })
 
-    const vaultCalls = await Utils.multiCall(calls, 'moonriver');
+    const vaultCalls = await Utils.multiCall(calls, 'cronos');
 
     const prices = [];
 
     vaultCalls.forEach(call => {
-      if (!call.amountsOut || !call.amountsOut[1] || !pricesTarget[call.sourceAddress]) {
+      if (!call?.amountsOut || !call.amountsOut[1]) {
         return;
       }
 
-      const inNative = call.amountsOut[1] / (10 ** call.decimals);
-      const usdPrice = pricesTarget[call.sourceAddress] / inNative;
+      const inNative = call.amountsOut[1] / 10 ** call.decimals;
+      const usdPrice = nativePrice / inNative;
 
       prices.push({
         address: call.address,

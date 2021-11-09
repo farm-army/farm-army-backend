@@ -94,6 +94,18 @@ let moonriverFarmPlatformResolver;
 let moonriverAddressTransactions;
 let moonriverFarmFetcher;
 
+let cronosPriceOracle;
+let cronosTokenCollector;
+let cronosPriceCollector;
+let cronosLiquidityTokenCollector;
+let cronosCacheManager;
+let cronosBalances;
+let cronosTokenInfo;
+let cronosDb;
+let cronosFarmPlatformResolver;
+let cronosAddressTransactions;
+let cronosFarmFetcher;
+
 let priceFetcher;
 
 const Cache = require("timed-cache");
@@ -123,6 +135,7 @@ const HarmonyPriceOracle = require("./chains/harmony/harmony_price_oracle");
 const PriceFetcher = require("./chains/bsc/bsc_price_fetcher");
 const CeloPriceOracle = require("./chains/celo/celo_price_oracle");
 const MoonriverPriceOracle = require("./chains/moonriver/moonriver_price_oracle");
+const CronosPriceOracle = require("./chains/cronos/cronos_price_oracle");
 const CrossPlatforms = require("./platforms/cross_platforms");
 
 const FarmAuto = require("./farm/farm_auto");
@@ -178,6 +191,7 @@ const Mars = require("./platforms/bsc/mars/mars");
 const MarsMasterchef0 = require("./platforms/bsc/mars/mars_masterchef0");
 const MarsMasterchef1 = require("./platforms/bsc/mars/mars_masterchef1");
 const Atlantis = require("./platforms/bsc/atlantis/atlantis");
+const Synapse = require("./platforms/bsc/synapse/synapse");
 
 const Pwault = require("./platforms/polygon/pwault/pwault");
 const Polycat = require("./platforms/polygon/polycat/polycat");
@@ -280,6 +294,9 @@ const MoonkafeCompound = require("./platforms/moonriver/moonkafe/moonkafe_compou
 const Mbeefy = require("./platforms/moonriver/mbeefy/mbeefy");
 const Msushi = require("./platforms/moonriver/msushi/msushi");
 
+const Vvs = require("./platforms/cronos/vvs/vvs");
+const Cronaswap = require("./platforms/cronos/cronaswap/cronaswap");
+
 let pancake;
 let swamp;
 let blizzard;
@@ -329,6 +346,7 @@ let ten;
 let autoshark;
 let mars;
 let atlantis;
+let synapse;
 
 let pwault;
 let polycat;
@@ -429,12 +447,16 @@ let moonkafeCompound;
 let mbeefy;
 let msushi;
 
+let vvs;
+let cronaswap;
+
 let polygonPlatform;
 let fantomPlatform;
 let kccPlatform;
 let harmonyPlatform;
 let celoPlatform;
 let moonriverPlatform;
+let cronosPlatform;
 
 let crossPlatforms;
 
@@ -489,6 +511,9 @@ module.exports = {
       this.getMoonriverPlatforms(),
       this.getMoonriverPriceOracle(),
       this.getMoonriverFarmPlatformResolver(),
+      this.getCronosPlatforms(),
+      this.getCronosPriceOracle(),
+      this.getCronosFarmPlatformResolver(),      
     ));
   },
 
@@ -632,6 +657,20 @@ module.exports = {
     ));
   },
   
+  getCronosPriceOracle() {
+    if (cronosPriceOracle) {
+      return cronosPriceOracle;
+    }
+
+    return (cronosPriceOracle = new CronosPriceOracle(
+      this.getCronosTokenCollector(),
+      this.getCronosLiquidityTokenCollector(),
+      this.getCronosPriceCollector(),
+      this.getCronosCacheManager(),
+      this.getPriceFetcher(),
+    ));
+  },
+  
   getPriceFetcher() {
     if (priceFetcher) {
       return priceFetcher;
@@ -711,7 +750,17 @@ module.exports = {
       this.getMoonriverCacheManager(),
     ));
   },
+  
+  getCronosFarmPlatformResolver() {
+    if (cronosFarmPlatformResolver) {
+      return cronosFarmPlatformResolver;
+    }
 
+    return (cronosFarmPlatformResolver = new FarmPlatformResolver(
+      this.getCronosCacheManager(),
+    ));
+  },
+  
   getPlatforms() {
     if (platforms) {
       return platforms;
@@ -769,6 +818,7 @@ module.exports = {
           this.getAutoshark(),
           this.getMars(),
           this.getAtlantis(),
+          this.getSynapse(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -898,7 +948,23 @@ module.exports = {
       this.getMoonriverTokenCollector(),
     ));
   },
+  
+  getCronosPlatforms() {
+    if (cronosPlatform) {
+      return cronosPlatform;
+    }
 
+    return (cronosPlatform = new Platforms(
+      [
+        this.getVvs(),
+        this.getCronaswap(),
+      ],
+      this.getCache(),
+      this.getCronosPriceOracle(),
+      this.getCronosTokenCollector(),
+    ));
+  },
+  
   getHarmonyPlatforms() {
     if (harmonyPlatform) {
       return harmonyPlatform;
@@ -2880,6 +2946,48 @@ module.exports = {
     ));
   },
 
+  getVvs() {
+    if (vvs) {
+      return vvs;
+    }
+
+    return (vvs = new Vvs(
+      this.getCronosCacheManager(),
+      this.getCronosPriceOracle(),
+      this.getCronosTokenCollector(),
+      this.getCronosFarmFetcher(),
+      this.getCronosCacheManager(),
+    ));
+  },
+
+  getCronaswap() {
+    if (cronaswap) {
+      return cronaswap;
+    }
+
+    return (cronaswap = new Cronaswap(
+      this.getCronosCacheManager(),
+      this.getCronosPriceOracle(),
+      this.getCronosTokenCollector(),
+      this.getCronosFarmFetcher(),
+      this.getCronosCacheManager(),
+    ));
+  },
+
+  getSynapse() {
+    if (synapse) {
+      return synapse;
+    }
+
+    return (synapse = new Synapse(
+      this.getCacheManager(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
   getMoola() {
     if (moola) {
       return moola;
@@ -3004,7 +3112,22 @@ module.exports = {
       this.getMoonriverPriceCollector(),
     ));
   },
+  
+  getCronosAddressTransactions() {
+    if (cronosAddressTransactions) {
+      return cronosAddressTransactions;
+    }
 
+    return (cronosAddressTransactions = new AddressTransactions(
+      this.getCronosPlatforms(),
+      this.getUserCacheManager(),
+      this.getBscscanRequest(),
+      this.getCronosLiquidityTokenCollector(),
+      this.getCronosTokenCollector(),
+      this.getCronosPriceCollector(),
+    ));
+  },
+  
   getLiquidityTokenCollector() {
     if (liquidityTokenCollector) {
       return liquidityTokenCollector;
@@ -3074,7 +3197,17 @@ module.exports = {
       this.getMoonriverCacheManager(),
     ));
   },
+  
+  getCronosLiquidityTokenCollector() {
+    if (cronosLiquidityTokenCollector) {
+      return cronosLiquidityTokenCollector;
+    }
 
+    return (cronosLiquidityTokenCollector = new LiquidityTokenCollector(
+      this.getCronosCacheManager(),
+    ));
+  },
+  
   getCacheManager() {
     if (cacheManager) {
       return cacheManager;
@@ -3305,6 +3438,39 @@ module.exports = {
     return moonriverCacheManager = diskCache;
   },
 
+  getCronosCacheManager() {
+    if (cronosCacheManager) {
+      return cronosCacheManager;
+    }
+
+    const cacheDir = path.resolve(__dirname, '../var/cache_cronos')
+
+    const diskCache = cacheManagerInstance.caching({
+      ignoreCacheErrors: true,
+      store: fsStore,
+      options: {
+        path: cacheDir,
+        ttl: 60 * 60 * 24 * 30,
+        subdirs: true,
+        zip: false,
+      }
+    });
+
+    const fn = diskCache.get;
+
+    diskCache.get = async (...args) => {
+      try {
+        return await fn(...args);
+      } catch (e) {
+        console.error('error fetching cache: ', JSON.stringify(args))
+      }
+
+      return undefined
+    }
+
+    return cronosCacheManager = diskCache;
+  },
+  
   getUserCacheManager() {
     if (cacheManager) {
       return cacheManager;
@@ -3435,7 +3601,21 @@ module.exports = {
       'moonriver'
     ));
   },
+  
+  getCronosBalances() {
+    if (cronosBalances) {
+      return cronosBalances;
+    }
 
+    return (cronosBalances = new Balances(
+      this.getCronosCacheManager(),
+      this.getCronosPriceOracle(),
+      this.getCronosTokenCollector(),
+      this.getCronosLiquidityTokenCollector(),
+      'cronos'
+    ));
+  },
+  
   getTokenCollector() {
     if (tokenCollector) {
       return tokenCollector;
@@ -3491,7 +3671,15 @@ module.exports = {
 
     return (moonriverTokenCollector = new TokenCollector(this.getMoonriverCacheManager(), 'moonriver'));
   },
+  
+  getCronosTokenCollector() {
+    if (cronosTokenCollector) {
+      return cronosTokenCollector;
+    }
 
+    return (cronosTokenCollector = new TokenCollector(this.getCronosCacheManager(), 'cronos'));
+  },
+  
   getPriceCollector() {
     if (priceCollector) {
       return priceCollector;
@@ -3547,7 +3735,15 @@ module.exports = {
 
     return (moonriverPriceCollector = new PriceCollector(this.getMoonriverCacheManager()));
   },
+  
+  getCronosPriceCollector() {
+    if (cronosPriceCollector) {
+      return cronosPriceCollector;
+    }
 
+    return (cronosPriceCollector = new PriceCollector(this.getCronosCacheManager()));
+  },
+  
   getDb() {
     if (db) {
       return db;
@@ -3645,7 +3841,21 @@ module.exports = {
       this.getMoonriverLiquidityTokenCollector(),
     ));
   },
+  
+  getCronosDb() {
+    if (cronosDb) {
+      return cronosDb;
+    }
 
+    return (cronosDb = new Db(
+      this.getDatabase(),
+      this.getCronosPriceOracle(),
+      this.getCronosPlatforms(),
+      this.getCronosPriceCollector(),
+      this.getCronosLiquidityTokenCollector(),
+    ));
+  },
+    
   getHttp() {
     if (http) {
       return http;
@@ -3660,6 +3870,7 @@ module.exports = {
       this.getHarmonyPlatforms(),
       this.getCeloPlatforms(),
       this.getMoonriverPlatforms(),
+      this.getCronosPlatforms(),
       this.getCrossPlatforms(),
       this.getBalances(),
       this.getAddressTransactions(),
@@ -3705,6 +3916,12 @@ module.exports = {
       this.getMoonriverBalances(),
       this.getMoonriverTokenInfo(),
       this.getMoonriverAddressTransactions(),
+      this.getCronosPriceOracle(),
+      this.getCronosLiquidityTokenCollector(),
+      this.getCronosTokenCollector(),
+      this.getCronosBalances(),
+      this.getCronosTokenInfo(),
+      this.getCronosAddressTransactions(),      
     ));
   },
 
@@ -3784,7 +4001,18 @@ module.exports = {
       this.getMoonriverTokenCollector(),
     ));
   },
+  
+  getCronosFarmFetcher() {
+    if (cronosFarmFetcher) {
+      return cronosFarmFetcher;
+    }
 
+    return (cronosFarmFetcher = new FarmFetcher(
+      this.getContractAbiFetcher(),
+      this.getCronosTokenCollector(),
+    ));
+  },
+  
   getContractAbiFetcher() {
     if (contractAbiFetcher) {
       return contractAbiFetcher;
@@ -3893,7 +4121,21 @@ module.exports = {
       this.getMoonriverDb(),
     ));
   },
+  
+  getCronosTokenInfo() {
+    if (cronosTokenInfo) {
+      return cronosTokenInfo;
+    }
 
+    return (cronosTokenInfo = new TokenInfo(
+      this.getCronosCacheManager(),
+      this.getCronosTokenCollector(),
+      this.getCronosLiquidityTokenCollector(),
+      this.getCronosPriceCollector(),
+      this.getCronosDb(),
+    ));
+  },
+  
   getBscscanRequest() {
     if (bscscanRequest) {
       return bscscanRequest;
