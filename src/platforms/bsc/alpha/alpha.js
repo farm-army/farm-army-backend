@@ -280,4 +280,8 @@ module.exports = class alpha {
 
     return result;
   }
+
+  getName() {
+    return 'alpha';
+  }
 };

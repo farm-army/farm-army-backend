@@ -243,4 +243,8 @@ module.exports = class jul {
 
     return result;
   }
+
+  getName() {
+    return 'jul';
+  }
 };

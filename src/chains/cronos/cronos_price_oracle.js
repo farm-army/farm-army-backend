@@ -129,7 +129,7 @@ module.exports = class CronosPriceOracle {
   }
 
   async getCoinGeckoTokens() {
-    const cacheKey = `coingecko-cronos-v8-token-addresses`
+    const cacheKey = `coingecko-cronos-v9-token-addresses`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -146,6 +146,14 @@ module.exports = class CronosPriceOracle {
       'usd-coin': ['0xc21223249CA28397B4B6541dfFaEcC539BfF0c59'],
       'tether': ['0x66e428c3f67a68878562e79a0234c1f83c208770'],
       'bitcoin': ['0x062E66477Faf219F25D27dCED647BF57C3107d52'],
+      'dai': ['0xF2001B145b43032AAF5Ee2884e456CCd805F677D'],
+      'magic-internet-money': ['0x2BC472832Eb20C65F82d6A869db845aB0C0099ba'],
+      'mimatic': ['0x1c965D8E53fb1a448789e2B0FA5abc3EB2c36993'],
+      'matic-network': ['0xad79AC3c5a5c15C6B9194F5568e451b3fc3C2B40'],
+      'binance-usd': ['0x6aB6d61428fde76768D7b45D8BFeec19c6eF91A8'],
+      'avalanche-2': ['0x765277EebeCA2e31912C9946eAe1021199B39C61'],
+      'binancecoin': ['0xfA9343C3897324496A05fC75abeD6bAC29f8A40f'],
+      'fantom': ['0xB44a9B6905aF7c801311e8F4E76932ee959c663C'],
     };
 
     tokens.forEach(token => {
@@ -444,6 +452,12 @@ module.exports = class CronosPriceOracle {
         router: '0xcd7d16fB918511BF7269eC4f48d61D79Fb26f918', // cronaswap
         address: '0xadbd1231fb360047525BEdF962581F3eee7b49fe',
         symbol: 'crona',
+        decimals: 18,
+      },
+      {
+        router: '0xeC0A7a0C2439E8Cb67b992b12ecd020Ea943c7Be', // crodex
+        address: '0xe243CCab9E66E6cF1215376980811ddf1eb7F689',
+        symbol: 'crx',
         decimals: 18,
       },
     ];

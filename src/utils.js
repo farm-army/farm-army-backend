@@ -101,6 +101,11 @@ const HOSTS_MOONRIVER = Object.freeze([
 
 const HOSTS_CRONOS = Object.freeze([
   'https://evm-cronos.crypto.org',
+  'https://cronosrpc-1.xstaking.sg',
+  //'https://rpc.nebkas.ro',
+  //'http://rpc.nebkas.ro:8545',
+  // 'http://cronos.blockmove.eu:8545',
+  'https://rpc.crodex.app',
   ...((CONFIG['CRONOS_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
 ]);
 

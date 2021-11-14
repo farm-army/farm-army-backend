@@ -635,4 +635,8 @@ module.exports = class pancake {
 
     return result;
   }
+
+  getName() {
+    return 'pancake';
+  }
 };

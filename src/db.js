@@ -119,6 +119,10 @@ module.exports = class Db {
 
       this.database.transaction(() => {
         prices.forEach(exchangeCandlestick => {
+          if (!exchangeCandlestick.token0 || !exchangeCandlestick.token1) {
+            return;
+          }
+
           const parameters = {
             token: exchangeCandlestick.token.toLowerCase(),
             token0: exchangeCandlestick.token0,

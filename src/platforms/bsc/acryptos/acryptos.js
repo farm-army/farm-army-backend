@@ -587,4 +587,8 @@ module.exports = class acryptos {
 
     return result;
   }
+
+  getName() {
+    return 'acryptos';
+  }
 };

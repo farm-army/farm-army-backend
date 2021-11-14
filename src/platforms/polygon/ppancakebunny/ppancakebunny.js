@@ -468,4 +468,8 @@ module.exports = class ppancakebunny {
 
     return Object.freeze(rawFarms);
   }
+
+  getName() {
+    return 'ppancakebunny';
+  }
 };

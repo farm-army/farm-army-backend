@@ -403,4 +403,8 @@ module.exports = class jetfuel {
 
     return result;
   }
+
+  getName() {
+    return 'jetfuel';
+  }
 };

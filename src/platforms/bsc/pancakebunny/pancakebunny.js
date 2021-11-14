@@ -514,4 +514,8 @@ module.exports = class pancakebunny {
 
     return Object.freeze(farms);
   }
+
+  getName() {
+    return 'pancakebunny';
+  }
 };

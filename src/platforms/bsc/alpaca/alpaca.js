@@ -441,4 +441,8 @@ module.exports = class alpaca {
 
     return result;
   }
+
+  getName() {
+    return 'alpaca';
+  }
 };

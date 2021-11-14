@@ -16,7 +16,7 @@ module.exports = class Platforms {
 
   requirePlatforms() {
     const me = this;
-    const alreadyInjected = this.myPlatforms.map(p => p.constructor.name);
+    const alreadyInjected = this.myPlatforms.map(p => p.getName());
 
     const newInstances = [];
 
@@ -37,7 +37,7 @@ module.exports = class Platforms {
       newInstances.push(...inst);
     }
 
-    newInstances.push(...this.myPlatforms.map(p => [p.constructor.name, p]));
+    newInstances.push(...this.myPlatforms.map(p => [p.getName(), p]));
 
     return newInstances;
   }

@@ -182,7 +182,7 @@ module.exports = class grim {
         }
       }
 
-      if (apys[farm.id]) {
+      if (apys && apys[farm.id]) {
         item.yield = {
           apy: apys[farm.id] * 100
         };

@@ -1,12 +1,11 @@
 "use strict";
 
-const MasterChefAbi = require('./abi/masterchef.json');
-const PancakePlatformFork = require("../../common").PancakePlatformFork;
+const MasterChefAbi = require('../abi/synapse/masterchef.json');
+const PancakePlatformFork = require("./common").PancakePlatformFork;
+const Curve = require("./curve");
 
 module.exports = class synapse extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0x8F5BBB2BB8c2Ee94639E55d5F41de9b4839C1280"
-
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
+  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager, name, chain, masterChefAddress) {
     super(cache, priceOracle, tokenCollector);
 
     this.cache = cache;
@@ -14,20 +13,25 @@ module.exports = class synapse extends PancakePlatformFork {
     this.tokenCollector = tokenCollector;
     this.farmCollector = farmCollector;
     this.cacheManager = cacheManager;
-    this.masterAbi = {};
+
+    this.name = name;
+    this.chain = chain;
+    this.masterChefAddress = masterChefAddress;
   }
 
-  async getFetchedFarms() {
-    const cacheKey = `${this.getName()}-v3-master-farms`
+  async getRawFarms() {
+    const cacheKey = `${this.getName()}-v5-master-farms`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
-      return cache;
+       return cache;
     }
 
     const foo = (await this.farmCollector.fetchForMasterChef(this.getMasterChefAddress(), this.getChain(), {
       abi: MasterChefAbi,
     }));
+
+    const lpInfos = await Curve.nerveSynapse(foo.map(f => f.lpAddress), this.getChain(), this.priceOracle, this.tokenCollector)
 
     const reformat = foo.map(f => {
       f.lpAddresses = f.lpAddress
@@ -36,16 +40,17 @@ module.exports = class synapse extends PancakePlatformFork {
         f.tokenAddresses = f.lpAddress
       }
 
+      const lpInfo = lpInfos[f.lpAddress.toLowerCase()];
+      if (lpInfo) {
+        f.lpSymbol = lpInfo.tokens.map(i => i.symbol.toLowerCase()).join('-').toUpperCase();
+      }
+
       return f
-    })
+    });
 
     await this.cacheManager.set(cacheKey, reformat, {ttl: 60 * 30})
 
     return reformat;
-  }
-
-  getRawFarms() {
-    return this.getFetchedFarms();
   }
 
   getRawPools() {
@@ -53,11 +58,11 @@ module.exports = class synapse extends PancakePlatformFork {
   }
 
   getName() {
-    return 'synapse';
+    return this.name;
   }
 
   getChain() {
-    return 'bsc';
+    return this.chain;
   }
 
   getFarmLink(farm) {
@@ -83,7 +88,7 @@ module.exports = class synapse extends PancakePlatformFork {
   }
 
   getMasterChefAddress() {
-    return synapse.MASTER_ADDRESS;
+    return this.masterChefAddress
   }
 
   async onFarmsBuild(farms) {

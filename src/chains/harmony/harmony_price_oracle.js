@@ -147,6 +147,7 @@ module.exports = class HarmonyPriceOracle {
       'usd-coin': ['0x44cED87b9F1492Bf2DCf5c16004832569f7f6cBa'],
       'matic-network': ['0x6e7be5b9b4c9953434cd83950d61408f1ccc3bee'],
       'terra-luna': ['0x95ce547d730519a90def30d647f37d9e5359b6ae'],
+      'synapse-2': ['0xe55e19fb4f2d85af758950957714292dac1e25b2'],
     };
 
     tokens.forEach(token => {

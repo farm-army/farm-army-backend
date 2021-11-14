@@ -191,7 +191,8 @@ const Mars = require("./platforms/bsc/mars/mars");
 const MarsMasterchef0 = require("./platforms/bsc/mars/mars_masterchef0");
 const MarsMasterchef1 = require("./platforms/bsc/mars/mars_masterchef1");
 const Atlantis = require("./platforms/bsc/atlantis/atlantis");
-const Synapse = require("./platforms/bsc/synapse/synapse");
+const Synapse = require("./platforms/synapse");
+const Annex = require("./platforms/bsc/annex/annex");
 
 const Pwault = require("./platforms/polygon/pwault/pwault");
 const Polycat = require("./platforms/polygon/polycat/polycat");
@@ -284,6 +285,7 @@ const Csushi = require("./platforms/celo/csushi/csushi");
 const Moola = require("./platforms/celo/moola/moola");
 const Cbeefy = require("./platforms/celo/cbeefy/cbeefy");
 const Cautofarm = require("./platforms/celo/cautofarm/cautofarm");
+const Celodex = require("./platforms/celo/celodex/celodex");
 
 const Mautofarm = require("./platforms/moonriver/mautofarm/mautofarm");
 const Solarbeam = require("./platforms/moonriver/solarbeam/solarbeam");
@@ -296,6 +298,9 @@ const Msushi = require("./platforms/moonriver/msushi/msushi");
 
 const Vvs = require("./platforms/cronos/vvs/vvs");
 const Cronaswap = require("./platforms/cronos/cronaswap/cronaswap");
+const Crodex = require("./platforms/cronos/crodex/crodex");
+const Crokafe = require("./platforms/cronos/crokafe/crokafe");
+const Crautofarm = require("./platforms/cronos/crautofarm/crautofarm");
 
 let pancake;
 let swamp;
@@ -347,6 +352,7 @@ let autoshark;
 let mars;
 let atlantis;
 let synapse;
+let annex;
 
 let pwault;
 let polycat;
@@ -383,6 +389,7 @@ let pcafeswap;
 let polysage;
 let paave;
 let pfulcrum;
+let psynapse;
 
 let spookyswap;
 let spiritswap;
@@ -411,6 +418,7 @@ let geist;
 let grim;
 let zoocoin;
 let fpearzap;
+let fsynapse;
 
 let kuswap;
 let kudex;
@@ -427,6 +435,7 @@ let hcurve;
 let artemis;
 let defikingdoms;
 let tranquil;
+let hsynapse;
 
 let ubeswap;
 let mobius;
@@ -434,6 +443,7 @@ let csushi;
 let moola;
 let cbeefy;
 let cautofarm;
+let celodex;
 
 let mautofarm;
 let solarbeam;
@@ -449,6 +459,9 @@ let msushi;
 
 let vvs;
 let cronaswap;
+let crodex;
+let crokafe;
+let crautofarm
 
 let polygonPlatform;
 let fantomPlatform;
@@ -819,6 +832,7 @@ module.exports = {
           this.getMars(),
           this.getAtlantis(),
           this.getSynapse(),
+          this.getAnnex(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -864,6 +878,7 @@ module.exports = {
         this.getPolysage(),
         this.getPaave(),
         this.getPfulcrum(),
+        this.getPSynapse(),
       ],
       this.getCache(),
       this.getPolygonPriceOracle(),
@@ -903,6 +918,7 @@ module.exports = {
         this.getGrim(),
         this.getZoocoin(),
         this.getFpearzap(),
+        this.getFSynapse(),
       ],
       this.getCache(),
       this.getFantomPriceOracle(),
@@ -958,6 +974,9 @@ module.exports = {
       [
         this.getVvs(),
         this.getCronaswap(),
+        this.getCrodex(),
+        this.getCrokafe(),
+        this.getCrautofarm(),
       ],
       this.getCache(),
       this.getCronosPriceOracle(),
@@ -981,6 +1000,7 @@ module.exports = {
         this.getDefikingdoms(),
         this.getFarmersonly(),
         this.getTranquil(),
+        this.getHSynapse(),
       ],
       this.getCache(),
       this.getHarmonyPriceOracle(),
@@ -1001,6 +1021,7 @@ module.exports = {
         this.getMoola(),
         this.getCbeefy(),
         this.getCautofarm(),
+        this.getCelodex(),
       ],
       this.getCache(),
       this.getCeloPriceOracle(),
@@ -1556,6 +1577,20 @@ module.exports = {
     ));
   },
 
+  getAnnex() {
+    if (annex) {
+      return annex;
+    }
+
+    return (annex = new Annex(
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getCacheManager(),
+      this.getLiquidityTokenCollector(),
+      this.getFarmPlatformResolver(),
+    ));
+  },
+
   getTranquil() {
     if (tranquil) {
       return tranquil;
@@ -1839,6 +1874,20 @@ module.exports = {
     ));
   },
 
+  getCelodex() {
+    if (celodex) {
+      return celodex;
+    }
+
+    return (celodex = new Celodex(
+      this.getCeloCacheManager(),
+      this.getCeloPriceOracle(),
+      this.getCeloTokenCollector(),
+      this.getCeloFarmFetcher(),
+      this.getCeloCacheManager(),
+    ));
+  },
+
   getFcurve() {
     if (fcurve) {
       return fcurve;
@@ -1999,10 +2048,23 @@ module.exports = {
     }
 
     return (quickswap = new Quickswap(
-      this.getCacheManager(),
+      this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
       this.getPolygonLiquidityTokenCollector(),
+    ));
+  },
+
+  getCrodex() {
+    if (crodex) {
+      return crodex;
+    }
+
+    return (crodex = new Crodex(
+      this.getCronosCacheManager(),
+      this.getCronosPriceOracle(),
+      this.getCronosTokenCollector(),
+      this.getCronosLiquidityTokenCollector(),
     ));
   },
 
@@ -2853,6 +2915,31 @@ module.exports = {
     ));
   },
 
+  getCrokafe() {
+    if (crokafe) {
+      return crokafe;
+    }
+
+    return (crokafe = new Crokafe(
+      this.getCronosPriceOracle(),
+      this.getCronosTokenCollector(),
+      this.getCronosFarmFetcher(),
+      this.getCronosCacheManager(),
+      this.getCronosFarmPlatformResolver(),
+    ));
+  },
+
+  getCrautofarm() {
+    if (crautofarm) {
+      return crautofarm;
+    }
+
+    return (crautofarm = new Crautofarm(
+      this.getCronosCacheManager(),
+      this.getCronosPriceOracle(),
+    ));
+  },
+
   getBoneswap() {
     if (boneswap) {
       return boneswap;
@@ -2985,6 +3072,60 @@ module.exports = {
       this.getTokenCollector(),
       this.getFarmFetcher(),
       this.getCacheManager(),
+      'synapse',
+      'bsc',
+      '0x8F5BBB2BB8c2Ee94639E55d5F41de9b4839C1280',
+    ));
+  },
+
+  getPSynapse() {
+    if (psynapse) {
+      return psynapse;
+    }
+
+    return (psynapse = new Synapse(
+      this.getPolygonCacheManager(),
+      this.getPolygonPriceOracle(),
+      this.getPolygonTokenCollector(),
+      this.getPolygonFarmFetcher(),
+      this.getPolygonCacheManager(),
+      'psynapse',
+      'polygon',
+      '0x7875Af1a6878bdA1C129a4e2356A3fD040418Be5',
+    ));
+  },
+
+  getFSynapse() {
+    if (fsynapse) {
+      return fsynapse;
+    }
+
+    return (fsynapse = new Synapse(
+      this.getFantomCacheManager(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomFarmFetcher(),
+      this.getFantomCacheManager(),
+      'fsynapse',
+      'fantom',
+      '0xaed5b25be1c3163c907a471082640450f928ddfe',
+    ));
+  },
+
+  getHSynapse() {
+    if (hsynapse) {
+      return hsynapse;
+    }
+
+    return (hsynapse = new Synapse(
+      this.getHarmonyCacheManager(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyFarmFetcher(),
+      this.getHarmonyCacheManager(),
+      'hsynapse',
+      'harmony',
+      '0xaed5b25be1c3163c907a471082640450f928ddfe',
     ));
   },
 

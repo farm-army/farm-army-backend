@@ -325,4 +325,8 @@ module.exports = class mstable {
 
     return result;
   }
+
+  getName() {
+    return 'mstable';
+  }
 };

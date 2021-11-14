@@ -230,6 +230,7 @@ module.exports = class FantomPriceOracle {
       'yearn-finance': '0x29b0Da86e484E1C0029B56e817912d778aC0EC69',
       'magic-internet-money': '0x82f0B8B456c1A451378467398982d4834b6829c1',
       'renbtc': '0xDBf31dF14B66535aF65AaC99C32e9eA844e14501',
+      'synapse-2': '0xe55e19fb4f2d85af758950957714292dac1e25b2',
     };
 
     (tokens || []).forEach(token => {

@@ -560,4 +560,8 @@ module.exports = class valuedefi {
 
     return result;
   }
+
+  getName() {
+    return 'valuedefi';
+  }
 };
