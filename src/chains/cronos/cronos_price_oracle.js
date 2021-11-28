@@ -460,6 +460,12 @@ module.exports = class CronosPriceOracle {
         symbol: 'crx',
         decimals: 18,
       },
+      {
+        router: '0xCC4C77aA1311d39bc7Df8b24f1b6E5e095738D0A', // annex
+        address: '0x98936bde1cf1bff1e7a8012cee5e2583851f2067',
+        symbol: 'ann',
+        decimals: 18,
+      },
     ];
 
     const calls = tokens.map(t => {

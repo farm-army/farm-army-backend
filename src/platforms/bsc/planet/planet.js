@@ -1,36 +1,46 @@
 "use strict";
 
-const MasterChefWithAutoCompoundAndRewards = require("../../common").MasterChefWithAutoCompoundAndRewards;
+const _ = require("lodash");
 
-module.exports = class planet extends MasterChefWithAutoCompoundAndRewards {
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver) {
-    super(cache, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver);
-
-    this.cache = cache;
-    this.priceOracle = priceOracle;
-    this.tokenCollector = tokenCollector;
-    this.farmCollector = farmCollector;
-    this.cacheManager = cacheManager;
-    this.farmPlatformResolver = farmPlatformResolver;
+module.exports = class planet {
+  constructor(master, lend) {
+    this.master = master;
+    this.lend = lend;
   }
 
-  getFarmLink() {
-    return 'https://planetfinance.io/';
+  async getLbAddresses() {
+    return _.uniq((await Promise.all([
+      this.master.getLbAddresses(),
+    ])).flat());
   }
 
-  async farmInfo() {
-    return [];
+  async getFarms(refresh = false) {
+    return (await Promise.all([
+      this.master.getFarms(refresh),
+      this.lend.getFarms(refresh),
+    ])).flat();
   }
 
-  getMasterChefAddress() {
-    return "0x0ac58fd25f334975b1b61732cf79564b6200a933";
+  async getYields(address) {
+    return (await Promise.all([
+      this.master.getYields(address),
+      this.lend.getYields(address),
+    ])).flat();
+  }
+
+  async getDetails(address, id) {
+    if (id.includes('_lend_')) {
+      return this.lend.getDetails(address, id);
+    }
+
+    return this.master.getDetails(address, id);
+  }
+
+  getName() {
+    return 'planet';
   }
 
   getChain() {
     return 'bsc';
-  }
-
-  getTvlFunction() {
-    return 'wantLockedTotal';
   }
 };

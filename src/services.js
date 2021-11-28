@@ -179,6 +179,8 @@ const Fortress = require("./platforms/bsc/fortress/fortress");
 const Fortube = require("./platforms/bsc/fortube/fortube");
 const Bakery = require("./platforms/bsc/bakery/bakery");
 const Planet = require("./platforms/bsc/planet/planet");
+const PlanetLend = require("./platforms/bsc/planet/planet_lend");
+const PlanetMaster = require("./platforms/bsc/planet/planet_master");
 const Acryptos = require("./platforms/bsc/acryptos/acryptos");
 const Pancakebunny = require("./platforms/bsc/pancakebunny/pancakebunny");
 const Autofarm = require("./platforms/bsc/autofarm/autofarm");
@@ -229,6 +231,8 @@ const Pcafeswap = require("./platforms/polygon/pcafeswap/pcafeswap");
 const Polysage = require("./platforms/polygon/polysage/polysage");
 const Paave = require("./platforms/polygon/paave/paave");
 const Pfulcrum = require("./platforms/polygon/pfulcrum/pfulcrum");
+const Market = require("./platforms/polygon/market/market");
+const MarketPool = require("./platforms/polygon/market/market_pool");
 
 const Spookyswap = require("./platforms/fantom/spookyswap/spookyswap");
 const Spiritswap = require("./platforms/fantom/spiritswap/spiritswap");
@@ -278,6 +282,7 @@ const Openswap = require("./platforms/harmony/openswap/openswap");
 const Openswap1 = require("./platforms/harmony/openswap/openswap1");
 const Openswap2 = require("./platforms/harmony/openswap/openswap2");
 const Tranquil = require("./platforms/harmony/tranquil/tranquil");
+const Hautofarm = require("./platforms/harmony/hautofarm/hautofarm");
 
 const Ubeswap = require("./platforms/celo/ubeswap/ubeswap");
 const Mobius = require("./platforms/celo/mobius/mobius");
@@ -301,6 +306,9 @@ const Cronaswap = require("./platforms/cronos/cronaswap/cronaswap");
 const Crodex = require("./platforms/cronos/crodex/crodex");
 const Crokafe = require("./platforms/cronos/crokafe/crokafe");
 const Crautofarm = require("./platforms/cronos/crautofarm/crautofarm");
+const Crbeefy = require("./platforms/cronos/crbeefy/crbeefy");
+const Crannex = require("./platforms/cronos/crannex/crannex");
+const CrannexMasterchef = require("./platforms/cronos/crannex/crannex_masterchef");
 
 let pancake;
 let swamp;
@@ -390,6 +398,7 @@ let polysage;
 let paave;
 let pfulcrum;
 let psynapse;
+let market;
 
 let spookyswap;
 let spiritswap;
@@ -436,6 +445,7 @@ let artemis;
 let defikingdoms;
 let tranquil;
 let hsynapse;
+let hautofarm;
 
 let ubeswap;
 let mobius;
@@ -462,6 +472,8 @@ let cronaswap;
 let crodex;
 let crokafe;
 let crautofarm
+let crbeefy;
+let crannex;
 
 let polygonPlatform;
 let fantomPlatform;
@@ -879,6 +891,7 @@ module.exports = {
         this.getPaave(),
         this.getPfulcrum(),
         this.getPSynapse(),
+        this.getMarket(),
       ],
       this.getCache(),
       this.getPolygonPriceOracle(),
@@ -977,6 +990,8 @@ module.exports = {
         this.getCrodex(),
         this.getCrokafe(),
         this.getCrautofarm(),
+        this.getCrbeefy(),
+        this.getCrannex(),
       ],
       this.getCache(),
       this.getCronosPriceOracle(),
@@ -1001,6 +1016,7 @@ module.exports = {
         this.getFarmersonly(),
         this.getTranquil(),
         this.getHSynapse(),
+        this.getHautofarm(),
       ],
       this.getCache(),
       this.getHarmonyPriceOracle(),
@@ -1577,6 +1593,33 @@ module.exports = {
     ));
   },
 
+  getMarket() {
+    if (market) {
+      return market;
+    }
+
+    return (market = new Market(
+      new MarketPool(
+        this.getPolygonPriceOracle(),
+        this.getPolygonTokenCollector(),
+        this.getPolygonCacheManager(),
+        this.getPolygonLiquidityTokenCollector(),
+        this.getPolygonFarmPlatformResolver(),
+        5,
+        '0x5BeB233453d3573490383884Bd4B9CbA0663218a'
+      ),
+      new MarketPool(
+        this.getPolygonPriceOracle(),
+        this.getPolygonTokenCollector(),
+        this.getPolygonCacheManager(),
+        this.getPolygonLiquidityTokenCollector(),
+        this.getPolygonFarmPlatformResolver(),
+        3,
+        '0x296233b4f2FEf1Ce7977340cEb3cec4CbE3ada42'
+      ),
+    ));
+  },
+
   getAnnex() {
     if (annex) {
       return annex;
@@ -1653,6 +1696,17 @@ module.exports = {
     return (pautofarm = new Pautofarm(
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
+    ));
+  },
+
+  getHautofarm() {
+    if (hautofarm) {
+      return hautofarm;
+    }
+
+    return (hautofarm = new Hautofarm(
+      this.getHarmonyCacheManager(),
+      this.getHarmonyPriceOracle(),
     ));
   },
 
@@ -2786,12 +2840,21 @@ module.exports = {
     }
 
     return (planet = new Planet(
-      this.getCacheManager(),
-      this.getPriceOracle(),
-      this.getTokenCollector(),
-      this.getFarmFetcher(),
-      this.getCacheManager(),
-      this.getFarmPlatformResolver(),
+      new PlanetMaster(
+        this.getCacheManager(),
+        this.getPriceOracle(),
+        this.getTokenCollector(),
+        this.getFarmFetcher(),
+        this.getCacheManager(),
+        this.getFarmPlatformResolver(),
+      ),
+      new PlanetLend(
+        this.getPriceOracle(),
+        this.getTokenCollector(),
+        this.getCacheManager(),
+        this.getLiquidityTokenCollector(),
+        this.getFarmPlatformResolver(),
+      )
     ));
   },
 
@@ -2937,6 +3000,34 @@ module.exports = {
     return (crautofarm = new Crautofarm(
       this.getCronosCacheManager(),
       this.getCronosPriceOracle(),
+    ));
+  },
+
+  getCrbeefy() {
+    if (crbeefy) {
+      return crbeefy;
+    }
+
+    return (crbeefy = new Crbeefy(
+      this.getCronosCacheManager(),
+      this.getCronosPriceOracle(),
+      this.getCronosTokenCollector(),
+    ));
+  },
+
+  getCrannex() {
+    if (crannex) {
+      return crannex;
+    }
+
+    return (crannex = new Crannex(
+      new CrannexMasterchef(
+        this.getCronosCacheManager(),
+        this.getCronosPriceOracle(),
+        this.getCronosTokenCollector(),
+        this.getCronosFarmFetcher(),
+        this.getCronosCacheManager(),
+      )
     ));
   },
 
@@ -3268,7 +3359,7 @@ module.exports = {
       this.getCronosPriceCollector(),
     ));
   },
-  
+
   getLiquidityTokenCollector() {
     if (liquidityTokenCollector) {
       return liquidityTokenCollector;

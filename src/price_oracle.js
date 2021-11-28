@@ -594,7 +594,15 @@ module.exports = class PriceOracle {
         address: '0x1b219Aca875f8C74c33CFF9fF98f3a9b62fCbff5',
         symbol: 'fins',
         decimals: 18,
+      },
+      /*
+      {
+        router: '0x9F088377BcdC220CB0E1Ad15aE6Bc75074beE9F6', // planet
+        address: '0xb3cb6d2f8f2fde203a022201c81a96c167607f15',
+        symbol: 'gamma',
+        decimals: 18,
       }
+      */
     ];
 
     const calls = tokens.map(t => {
