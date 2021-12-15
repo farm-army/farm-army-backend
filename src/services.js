@@ -309,6 +309,7 @@ const Crautofarm = require("./platforms/cronos/crautofarm/crautofarm");
 const Crbeefy = require("./platforms/cronos/crbeefy/crbeefy");
 const Crannex = require("./platforms/cronos/crannex/crannex");
 const CrannexMasterchef = require("./platforms/cronos/crannex/crannex_masterchef");
+const Mmf = require("./platforms/cronos/mmf/mmf");
 
 let pancake;
 let swamp;
@@ -474,6 +475,7 @@ let crokafe;
 let crautofarm
 let crbeefy;
 let crannex;
+let mmf;
 
 let polygonPlatform;
 let fantomPlatform;
@@ -992,6 +994,7 @@ module.exports = {
         this.getCrautofarm(),
         this.getCrbeefy(),
         this.getCrannex(),
+        this.getMmf(),
       ],
       this.getCache(),
       this.getCronosPriceOracle(),
@@ -3130,6 +3133,20 @@ module.exports = {
     }
 
     return (vvs = new Vvs(
+      this.getCronosCacheManager(),
+      this.getCronosPriceOracle(),
+      this.getCronosTokenCollector(),
+      this.getCronosFarmFetcher(),
+      this.getCronosCacheManager(),
+    ));
+  },
+
+  getMmf() {
+    if (mmf) {
+      return mmf;
+    }
+
+    return (mmf = new Mmf(
       this.getCronosCacheManager(),
       this.getCronosPriceOracle(),
       this.getCronosTokenCollector(),

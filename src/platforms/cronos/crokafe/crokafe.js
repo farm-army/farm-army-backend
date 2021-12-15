@@ -35,7 +35,7 @@ module.exports = class crokafe {
 
     const pools = [];
     Object.values(files).forEach(body => {
-      walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
+      walk.simple(acorn.parse(body, {ecmaVersion: 'latest'}), {
         ObjectExpression(node) {
           const keys = node.properties.map(p => (p.key && p.key.name) ? p.key.name.toLowerCase() : '');
 

@@ -126,7 +126,7 @@ module.exports = class alpaca {
     let response = {};
 
     Object.values(javascriptFiles).forEach(body => {
-      walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
+      walk.simple(acorn.parse(body, {ecmaVersion: 'latest'}), {
         Literal(node) {
           if (node.value && node.value.toString().startsWith('{') && (node.value.toString().toLowerCase().includes('0x5379F32C8D5F663EACb61eeF63F722950294f452'.toLowerCase()) && node.value.toString().toLowerCase().includes('ProxyAdmin'.toLowerCase()))) {
             try {

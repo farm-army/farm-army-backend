@@ -451,7 +451,7 @@ module.exports = class ppancakebunny {
     let rawFarms = undefined;
 
     Object.values(javascriptFiles).forEach(body => {
-      walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
+      walk.simple(acorn.parse(body, {ecmaVersion: 'latest'}), {
         Literal(node) {
           if (node.value && node.value.toString().startsWith('{') && (node.value.toString().toLowerCase().includes('fliptoflip') || node.value.toString().toLowerCase().includes('bunnytobunny'))) {
             try {

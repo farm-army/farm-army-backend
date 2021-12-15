@@ -105,7 +105,7 @@ const HOSTS_CRONOS = Object.freeze([
   //'https://rpc.nebkas.ro',
   //'http://rpc.nebkas.ro:8545',
   // 'http://cronos.blockmove.eu:8545',
-  'https://rpc.crodex.app',
+  // 'https://rpc.crodex.app',
   ...((CONFIG['CRONOS_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
 ]);
 
@@ -691,17 +691,31 @@ module.exports = {
   },
 
   findYieldForDetails: result => {
-    const percent = module.exports.findYieldForDetailsInner(result);
+    const yieldObject = module.exports.findYieldForDetailsInner(result);
 
     if (
-      percent &&
-      percent.percent !== undefined &&
-      Math.abs(percent.percent) <= 0
+      yieldObject &&
+      yieldObject.percent !== undefined &&
+      Math.abs(yieldObject.percent) <= 0
     ) {
       return undefined;
     }
 
-    return percent;
+    if (yieldObject?.amount && result?.farm?.deposit?.amount && result?.farm?.deposit?.usd) {
+      yieldObject.usd = (result.farm.deposit.usd / result.farm.deposit.amount) * yieldObject.amount;
+    }
+
+    if (result.lpTokens && result.lpTokens.length > 0 && yieldObject.percent) {
+      yieldObject.lpTokens = result.lpTokens.map(token => {
+        const newToken = _.cloneDeep(token);
+
+        newToken.amount = (newToken.amount / 100) * yieldObject.percent
+
+        return newToken;
+      })
+    }
+
+    return yieldObject;
   },
 
   findYieldForDetailsInner: result => {
@@ -754,7 +768,7 @@ module.exports = {
 
     return {
       amount: yieldAmount,
-      percent: parseFloat(((yieldAmount / deposits) * 100).toFixed(3))
+      percent: parseFloat(((deposits / transactionDeposit) * 100).toFixed(4)) - 100,
     };
   },
 
@@ -956,7 +970,7 @@ module.exports = {
     return items.reverse();
   },
 
-  findYieldForMixedTransactions: (depositAmount, transactions) => {
+  findYieldForMixedTransactions: (deposits, transactions) => {
     let deposit = 0;
     let withdraw = 0;
 
@@ -968,11 +982,11 @@ module.exports = {
       }
     });
 
-    const yieldAmount = depositAmount - (deposit - withdraw);
+    const yieldAmount = deposits - (deposit - withdraw);
 
     return {
       amount: yieldAmount,
-      percent: parseFloat(((yieldAmount / depositAmount) * 100).toFixed(3))
+      percent: parseFloat(((deposits / (deposit - withdraw)) * 100).toFixed(4)) - 100,
     };
   },
 
@@ -1094,8 +1108,17 @@ module.exports = {
 
     const pools = [];
 
-    Object.values(files).forEach(body => {
-      walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
+    for (const [file, body] of Object.entries(files)) {
+      let node1;
+
+      try {
+        node1 = acorn.parse(body, {ecmaVersion: 'latest'});
+      } catch (e) {
+        console.error('ast error:', url, file, e.message);
+        continue;
+      }
+
+      walk.simple(node1, {
         ArrayExpression(node) {
           if (node.elements[0] && node.elements[0].properties) {
             const keys = node.elements[0].properties.map(p => (p.key && p.key.name) ? p.key.name.toLowerCase() : '');
@@ -1119,8 +1142,9 @@ module.exports = {
             }
           }
         }
-      })
-    })
+      });
+    }
+
 
     return pools;
   },

@@ -61,7 +61,7 @@ module.exports = class biswap extends PancakePlatformFork {
 
     const pools = [];
     Object.values(files).forEach(body => {
-      walk.simple(acorn.parse(body, {ecmaVersion: 2020}), {
+      walk.simple(acorn.parse(body, {ecmaVersion: 'latest'}), {
         ArrayExpression(node) {
           if (node.elements[0] && node.elements[0].properties) {
             const keys = node.elements[0].properties.map(p => (p.key && p.key.name) ? p.key.name.toLowerCase() : '');

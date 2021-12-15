@@ -466,6 +466,12 @@ module.exports = class CronosPriceOracle {
         symbol: 'ann',
         decimals: 18,
       },
+      {
+        router: '0x145677FC4d9b8F19B5D56d1820c48e0443049a30', // mmfinance
+        address: '0x97749c9B61F878a880DfE312d2594AE07AEd7656',
+        symbol: 'mmf',
+        decimals: 18,
+      },
     ];
 
     const calls = tokens.map(t => {

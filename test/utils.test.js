@@ -17,7 +17,7 @@ describe('#test utils functions', function() {
         const result = utils.findYieldForDetails(input)
 
         assert.strictEqual(result.amount.toFixed(2), '22.91');
-        assert.strictEqual(result.percent.toFixed(2), '15.28');
+        assert.strictEqual(result.percent.toFixed(2), '18.03');
     });
 
     it('test negative balance should reset transactions on yield extraction', () => {
@@ -33,7 +33,7 @@ describe('#test utils functions', function() {
         const result = utils.findYieldForDetails(input)
 
         assert.strictEqual(result.amount.toFixed(2), '33.91');
-        assert.strictEqual(result.percent.toFixed(2), '22.61');
+        assert.strictEqual(result.percent.toFixed(2), '29.21');
     });
 
     it('test mixed balance transactions', () => {
@@ -49,6 +49,6 @@ describe('#test utils functions', function() {
         const result = utils.findYieldForDetails(input)
 
         assert.strictEqual(result.amount.toFixed(2), '3460.99');
-        assert.strictEqual(result.percent.toFixed(2), '6.52');
+        assert.strictEqual(result.percent.toFixed(2), '6.98');
     });
 });
