@@ -28,7 +28,7 @@ module.exports = class tarot {
 
     const cacheItem = await this.cacheManager.get(cacheKey)
     if (cacheItem) {
-      return cacheItem;
+      //return cacheItem;
     }
 
     const allLendingPoolsLengthResult = await Utils.multiCall([{
@@ -200,7 +200,7 @@ module.exports = class tarot {
       ? JSON.parse(subgraphResponse)?.data?.user || []
       : [];
 
-    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5})
+    await this.cacheManager.set(cacheKey, result, {ttl: 60 * 15})
 
     return result;
   }

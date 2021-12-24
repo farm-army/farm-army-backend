@@ -91,7 +91,7 @@ module.exports = class adamant {
         raw: Object.freeze(farm),
         earns: ['addy'],
         extra: {},
-        chain: 'poylgon',
+        chain: 'polygon',
       };
 
       item.extra.transactionToken = farm.lpAddress;

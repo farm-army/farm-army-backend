@@ -56,7 +56,7 @@ module.exports = class pancakebunny {
   }
 
   async getAddressFarms(address) {
-    const cacheKey = `getAddressFarms-v2-pancakebunny-${address}`;
+    const cacheKey = `getAddressFarms-v3-pancakebunny-${address}`;
     const cache = await this.cacheManager.get(cacheKey);
     if (cache) {
       return cache;
@@ -80,7 +80,7 @@ module.exports = class pancakebunny {
   }
 
   async getFarms(refresh = false) {
-    const cacheKey = "getFarms-v3-pancakebunny";
+    const cacheKey = "getFarms-v4-pancakebunny";
 
     if (!refresh) {
       const cache = await this.cacheManager.get(cacheKey);
@@ -250,7 +250,7 @@ module.exports = class pancakebunny {
 
     const farms = await this.getFarms();
 
-    let poolsOfCalls = await this.cacheManager.get(`getAddressFarms-all-pancakebunny-v2-${address}`);
+    let poolsOfCalls = await this.cacheManager.get(`getAddressFarms-all-pancakebunny-v3-${address}`);
     if (!poolsOfCalls) {
       const poolsOfAddresses = addressFarms
         .map(farmId => farms.find(f => f.id === farmId))
@@ -479,7 +479,7 @@ module.exports = class pancakebunny {
   }
 
   async getFarmsViaHtml() {
-    const cacheKey = "getFarmsViaHtml-v3-pancakebunny";
+    const cacheKey = "getFarmsViaHtml-v4-pancakebunny";
     const cache = await this.cacheManager.get(cacheKey);
     if (cache) {
       return cache;
@@ -487,16 +487,25 @@ module.exports = class pancakebunny {
 
     const javascriptFiles = await Utils.getJavascriptFiles("https://pancakebunny.finance/pool");
 
-    let rawFarms = undefined;
+    let rawFarms = {};
 
     Object.values(javascriptFiles).forEach(body => {
       walk.simple(acorn.parse(body, {ecmaVersion: 'latest'}), {
         Literal(node) {
           if (node.value && node.value.toString().startsWith('{') && (node.value.toString().toLowerCase().includes('type') && node.value.toString().toLowerCase().includes('address') && node.value.toString().toLowerCase().includes('earn'))) {
+            let items = {};
+
             try {
-              rawFarms = JSON.parse(node.value);
+              items = JSON.parse(node.value);
             } catch (e) {
               console.log('invalid farm json')
+            }
+
+            for (const [key, value] of Object.entries(items)) {
+              // multiplexer; abi not supported
+              if (value.address && value.type !== 'multiplexer') {
+                rawFarms[key] = value;
+              }
             }
           }
         }
@@ -504,7 +513,7 @@ module.exports = class pancakebunny {
     });
 
     const farms = {};
-    for (const [key, value] of Object.entries(rawFarms || {})) {
+    for (const [key, value] of Object.entries(rawFarms)) {
       if (value.address && value.address.toLowerCase() !== '0xf84E3809971798Bd372aecdC03aE977759A619aB'.toLowerCase()) {
         farms[key] = Object.freeze(value);
       }

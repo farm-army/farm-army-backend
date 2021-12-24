@@ -16,7 +16,7 @@ module.exports = class autofarm {
   async getLbAddresses() {
     const response = await Utils.requestJsonGet(this.getFarmDataUrl());
 
-    return Object.values(response.pools)
+    return Object.values(response?.pools || [])
       .filter(f => f.wantIsLP && f.wantAddress)
       .map(f => f.wantAddress);
   }

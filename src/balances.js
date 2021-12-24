@@ -1,9 +1,11 @@
 "use strict";
 
 const ERC20_ABI = require("./abi/erc20.json");
+const ERC721 = require("./abi/erc721.json");
 const utils = require("./utils");
 const Web3EthContract = require("web3-eth-contract");
 const _ = require("lodash");
+const {JSDOM} = require("jsdom");
 
 module.exports = class Balances {
   constructor(cacheManager, priceOracle, tokenCollector, lpTokenCollector, chain) {
@@ -66,7 +68,7 @@ module.exports = class Balances {
   }
 
   async getAllTokenBalances(address) {
-    const cacheKey = `allTokenBalances-address-${this.chain}-${address}`;
+    const cacheKey = `allTokenBalances-v1-address-${this.chain}-${address}`;
 
     const cacheItem = await this.cacheManager.get(cacheKey);
     if (cacheItem) {
@@ -404,5 +406,335 @@ module.exports = class Balances {
     })
 
     return tokens;
+  }
+
+  async getNftsCollections(chain) {
+    const cacheKey = `nfts-v9-collections-${chain}`;
+
+    const cacheItem = await this.cacheManager.get(cacheKey);
+    if (cacheItem) {
+     // return cacheItem;
+    }
+
+    let collections = {};
+
+    if (chain === 'polygon') {
+      collections = await this.getNftradeCollections(collections, '137');
+      collections = await this.getNftkeyCollections(collections, '137');
+    } else if (chain === 'fantom') {
+      collections = await this.getNftradeCollections(collections, '250');
+      collections = await this.getNftkeyCollections(collections, '250');
+    } else if (chain === 'kcc') {
+      collections = await this.getNftradeCollections(collections, '321');
+      collections = await this.getNftkeyCollections(collections, '321');
+    } else if (chain === 'harmony') {
+      collections = await this.getNftradeCollections(collections, '1666600000');
+      collections = await this.getNftkeyCollections(collections, '1666600000');
+    } else if (chain === 'celo') {
+      collections = await this.getNftradeCollections(collections, '42220');
+      collections = await this.getNftkeyCollections(collections, '42220');
+    } else if (chain === 'moonriver') {
+      collections = await this.getNftradeCollections(collections, '1285');
+      collections = await this.getNftkeyCollections(collections, '1285');
+    } else if (chain === 'cronos') {
+      collections = await this.getNftradeCollections(collections, '25');
+      collections = await this.getNftkeyCollections(collections, '25');
+    } else if (chain === 'bsc') {
+      const content = await utils.requestJsonGet('https://nft.pancakeswap.com/api/v1/collections');
+
+      (content?.data || []).filter(i => i.address).forEach(i => {
+        const collection = {
+          address: i.address
+        };
+
+        if (i.avatar) {
+          collection.icon = i.avatar;
+        }
+
+        if (i.name) {
+          collection.name = i.name;
+        }
+
+        if (i.description) {
+          collection.description = i.description;
+        }
+
+        if (i.symbol) {
+          collection.symbol = i.symbol;
+        }
+
+        collections[i.address.toLowerCase()] = collection
+      });
+
+      collections = await this.getNftradeCollections(collections, '56');
+
+      let response
+      try {
+        response = await utils.requestGet('https://bscscan.com/tokens-nft');
+      } catch (e) {
+      }
+
+      if (response) {
+        const dom = new JSDOM(response);
+        dom.window.document.querySelectorAll("table#tblResult tr").forEach(i => {
+          i.querySelectorAll('a').forEach(x => {
+            const tokenLink = x.getAttribute('href');
+            if (tokenLink.startsWith('/token/')) {
+              const addr = tokenLink.match(/(0x[0-9a-f]{40})/i);
+              if (addr && addr[1]) {
+                const address = addr[1];
+
+                const collection = {
+                  address: address
+                };
+
+                const name = x.innerHTML;
+                if (name) {
+                  const stripped = name.replace(/<[^>]*>?/gm, '').trim()
+                  if (!stripped.match(/(0x[0-9a-f]{40})/i)) {
+                    collection.name = name.replace(/<[^>]*>?/gm, '').trim();
+                  }
+                }
+
+                const avatar = i.querySelector('.media img');
+                if (avatar && avatar.hasAttribute('src')) {
+                  const img = avatar.getAttribute('src');
+                  if (img && !img.includes('empty')) {
+                    collection.icon = new URL(img, 'https://bscscan.com/tokens-nft').href;
+                  }
+                }
+
+                collections[address.toLowerCase()] = _.assign(collection, collections[address.toLowerCase()] || {});
+              }
+            }
+          });
+        });
+      }
+
+      collections = await this.getNftkeyCollections(collections, '56');
+
+      [
+        '0xd4220b0b196824c2f548a34c47d81737b0f6b5d6',
+        '0xb00ed7e3671af2675c551a1c26ffdcc5b425359b',
+        '0xc0bfe67cedc9fe042f335258eb75b9e1baaf1a5d',
+        '0x9f0225d5c92b9cee4024f6406c4f13e546fd91a8',
+        '0x0a8901b0E25DEb55A87524f0cC164E9644020EBA',
+        '0x4bd2a30435e6624CcDee4C60229250A84a2E4cD6',
+        '0x6d57712416ed4890e114a37e2d84ab8f9cee4752',
+        '0xdf7952b35f24acf7fc0487d01c8d5690a60dba07',
+        '0x0a8901b0e25deb55a87524f0cc164e9644020eba',
+        '0x85f0e02cb992aa1f9f47112f815f519ef1a59e2d',
+      ].forEach(address => {
+        if (!collections[address.toLowerCase()]) {
+          collections[address.toLowerCase()] = {
+            address: address
+          }
+        }
+      });
+    }
+
+    const finalResult = Object.freeze(Object.values(collections));
+    await this.cacheManager.set(cacheKey, finalResult, {ttl: 60 * 60});
+
+    return finalResult;
+  }
+
+  async getNfts(address) {
+    const cacheKey = `nfts-address-v9-${this.chain}-${address}`;
+
+    const cacheItem = await this.cacheManager.get(cacheKey);
+    if (cacheItem) {
+      return cacheItem;
+    }
+
+    const nfts = await this.getNftsCollections(this.chain);
+    if (nfts.length === 0) {
+      await this.cacheManager.set(cacheKey, [], {ttl: 60 * 15});
+
+      return [];
+    }
+
+    const nftTokens = await utils.multiCall(nfts.map(collection => {
+      const vault = new Web3EthContract(ERC721, collection.address);
+      return {
+        contract: collection.address,
+        name: collection.name ? collection.name.toString() : vault.methods.name(),
+        balance: vault.methods.balanceOf(address),
+      };
+    }), this.chain);
+
+    const tokenOfOwnerByIndexes = await utils.multiCall(nftTokens
+      .filter(item => item.balance > 0)
+      .map(item => {
+        const vault = new Web3EthContract(ERC721, item.contract);
+
+        let newVar = {
+          contract: item.contract,
+        };
+
+        [...Array(parseInt(item.balance)).keys()].forEach(index => {
+          newVar['tokenOfOwnerByIndex' + index] = vault.methods.tokenOfOwnerByIndex(address, index);
+        })
+
+        return newVar;
+      }), this.chain);
+
+    const calls = [];
+
+    tokenOfOwnerByIndexes.forEach(item => {
+      const indexes = [];
+
+      for (const [key, value] of Object.entries(item)) {
+        if (key.startsWith('tokenOfOwnerByIndex') && value > 0) {
+          indexes.push(value)
+        }
+      }
+
+      if (indexes.length > 0) {
+        const vault = new Web3EthContract(ERC721, item.contract);
+
+        let newVar = {
+          contract: item.contract,
+        };
+
+        indexes.forEach(index => {
+          newVar['tokenURI' + index] = vault.methods.tokenURI(index);
+        })
+
+        calls.push(newVar);
+      }
+    })
+
+    const tokenIndexInfo = await utils.multiCall(calls, this.chain);
+
+    const result = {};
+
+    tokenIndexInfo.forEach(item => {
+      for (const [key, value] of Object.entries(item)) {
+        if (!key.startsWith('tokenURI')) {
+          continue;
+        }
+
+        let contractAddressLowered = item.contract.toLowerCase();
+        if (!result[contractAddressLowered]) {
+          result[contractAddressLowered] = {
+            address: item.contract,
+            tokens: []
+          };
+
+          const nftToken = nftTokens.find(t => t.contract.toLowerCase() === contractAddressLowered);
+          if (nftToken) {
+            result[contractAddressLowered].name = nftToken.name;
+            result[contractAddressLowered].balance = nftToken.balance;
+          }
+
+          const nftCollection = nfts.find(t => t.address.toLowerCase() === contractAddressLowered);
+          if (nftCollection) {
+            result[contractAddressLowered] = _.assign(nftCollection, result[contractAddressLowered]);
+          }
+        }
+
+        const token = {
+          id: key.substr('tokenURI'.length),
+        };
+
+        if (key.startsWith('tokenURI') && value && value.length > 0) {
+          token.tokenURI = value;
+        }
+
+        result[contractAddressLowered].tokens.push(token);
+      }
+    });
+
+    const finalResult = Object.freeze(Object.values(result));
+
+    await this.cacheManager.set(cacheKey, finalResult, {ttl: 60 * 15});
+
+    return finalResult;
+  }
+
+  async getNftkeyCollections(collections, chainId) {
+    const nftkey = await utils.request('POST', "https://nftkey.app/graphql", {
+      "credentials": "omit",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0",
+        "Accept": "*/*",
+        "Accept-Language": "en-US,en;q=0.5",
+        "content-type": "application/json",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin"
+      },
+      "referrer": "https://nftkey.app/",
+      "body": "{\"operationName\":\"GetERC721Collections\",\"variables\":{},\"query\":\"query GetERC721Collections {\\n  erc721Collections {\\n    ...ERC721CollectionInfo\\n    __typename\\n  }\\n}\\n\\nfragment ERC721CollectionInfo on ERC721CollectionInfo {\\n  alias\\n  name\\n  itemName\\n  websiteUrl\\n  bannerUrl\\n  headerUrl\\n  thumbnailUrl\\n  frontendPath\\n  socialShareUrl\\n  maxSupply\\n  totalSupply\\n  totalVolume\\n  address\\n  marketplaceAddress\\n  marketplaceV2Address\\n  chainId\\n  isReleased\\n  __typename\\n}\\n\"}",
+      "method": "POST",
+      "mode": "cors"
+    });
+
+    if (nftkey) {
+      let ggg = {};
+
+      try {
+        ggg = JSON.parse(nftkey);
+      } catch (e) {
+        console.log(`nftkey error: ${e.message}`);
+      }
+
+      (ggg?.data?.erc721Collections || [])
+        .filter(i => i.address && i.chainId && i.chainId.toString() === chainId)
+        .forEach(i => {
+          const collection = {
+            address: i.address
+          };
+
+          if (i.name) {
+            collection.name = i.name;
+          }
+
+          if (i.websiteUrl) {
+            collection.url = i.websiteUrl;
+          }
+
+          collections[i.address.toLowerCase()] = _.assign(collection, collections[i.address.toLowerCase()] || {});
+        });
+    }
+
+    return collections;
+  }
+
+  async getNftradeCollections(collections, chainId) {
+    const content2 = await utils.requestJsonGet('https://api.nftrade.com/api/v1/contracts?limit=1000&skip=0&verified=true&search=');
+
+    (content2 || [])
+      .filter(i => i.address && i.chainId.toString() === chainId)
+      .forEach(i => {
+        const collection = {
+          address: i.address
+        };
+
+        if (i.cover_image) {
+          collection.icon = i.image;
+        }
+
+        if (i.name) {
+          collection.name = i.name;
+        }
+
+        if (i.symbol) {
+          collection.symbol = i.symbol;
+        }
+
+        if (i.website) {
+          collection.url = i.website;
+        }
+
+        if (i.description) {
+          collection.description = i.description;
+        }
+
+        collections[i.address.toLowerCase()] = _.assign(collection, collections[i.address.toLowerCase()] || {});
+      });
+
+    return collections;
   }
 };

@@ -189,7 +189,7 @@ module.exports = class CeloPriceOracle {
     }), 'celo');
 
     tokensRaw.forEach(token => {
-      if (!token.decimals && parseInt(token.decimals) > 0) {
+      if (!token.symbol || !token.decimals || parseInt(token.decimals) <= 0) {
         return;
       }
 
@@ -351,8 +351,8 @@ module.exports = class CeloPriceOracle {
       const token0 = tokenAddressSymbol[c.token0.toLowerCase()];
       const token1 = tokenAddressSymbol[c.token1.toLowerCase()];
 
-      const token0Price = this.priceCollector.getPrice(c.token0, token0.symbol);
-      const token1Price = this.priceCollector.getPrice(c.token1, token1.symbol);
+      let token0Price = this.priceCollector.getPrice(c.token0, token0.symbol);
+      let token1Price = this.priceCollector.getPrice(c.token1, token1.symbol);
 
       const pricesLpAddress = Object.freeze([
         {
@@ -368,6 +368,20 @@ module.exports = class CeloPriceOracle {
       ]);
 
       this.lpTokenCollector.add(c.address, pricesLpAddress);
+
+      if (!token0Price || !token1Price) {
+        if (token0Price && !token1Price) {
+          const reserveUsd = (c.reserve0 / (10 ** token0.decimals)) * token0Price;
+          token1Price = reserveUsd / (c.reserve1 / (10 ** token1.decimals));
+
+          console.log("celo: Missing price 'token1' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+        } else if (token1Price && !token0Price) {
+          const reserveUsd = (c.reserve1 / (10 ** token1.decimals)) * token1Price;
+          token0Price = reserveUsd / (c.reserve0 / (10 ** token0.decimals));
+
+          console.log("celo: Missing price 'token0' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+        }
+      }
 
       if (!token0Price || !token1Price) {
         console.log("celo: Missing price:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);

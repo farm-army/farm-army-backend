@@ -165,7 +165,7 @@ module.exports = class KccPriceOracle {
     }), 'kcc');
 
     tokensRaw.forEach(token => {
-      if (!token.decimals && parseInt(token.decimals) > 0) {
+      if (!token.symbol || !token.decimals || parseInt(token.decimals) <= 0) {
         return;
       }
 
@@ -325,8 +325,8 @@ module.exports = class KccPriceOracle {
       const token0 = tokenAddressSymbol[c.token0.toLowerCase()];
       const token1 = tokenAddressSymbol[c.token1.toLowerCase()];
 
-      const token0Price = this.priceCollector.getPrice(c.token0, token0.symbol);
-      const token1Price = this.priceCollector.getPrice(c.token1, token1.symbol);
+      let token0Price = this.priceCollector.getPrice(c.token0, token0.symbol);
+      let token1Price = this.priceCollector.getPrice(c.token1, token1.symbol);
 
       const pricesLpAddress = Object.freeze([
         {
@@ -342,6 +342,20 @@ module.exports = class KccPriceOracle {
       ]);
 
       this.lpTokenCollector.add(c.address, pricesLpAddress);
+
+      if (!token0Price || !token1Price) {
+        if (token0Price && !token1Price) {
+          const reserveUsd = (c.reserve0 / (10 ** token0.decimals)) * token0Price;
+          token1Price = reserveUsd / (c.reserve1 / (10 ** token1.decimals));
+
+          console.log("kcc: Missing price 'token1' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+        } else if (token1Price && !token0Price) {
+          const reserveUsd = (c.reserve1 / (10 ** token1.decimals)) * token1Price;
+          token0Price = reserveUsd / (c.reserve0 / (10 ** token0.decimals));
+
+          console.log("kcc: Missing price 'token0' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+        }
+      }
 
       if (!token0Price || !token1Price) {
         console.log("kcc: Missing price:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
@@ -438,6 +452,12 @@ module.exports = class KccPriceOracle {
         router: '0xF742609f4cafEEf624816E309D770222aA8a55CC', // boneswap
         address: '0x6c1b568a1d7fb33de6707238803f8821e9472539',
         symbol: 'bone',
+        decimals: 18,
+      },
+      {
+        router: '0x8c8067ed3bC19ACcE28C1953bfC18DC85A2127F7', // MojitoSwap
+        address: '0x2ca48b4eea5a731c2b54e7c3944dbdb87c0cfb6f',
+        symbol: 'mjt',
         decimals: 18,
       },
     ];

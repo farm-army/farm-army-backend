@@ -119,6 +119,7 @@ module.exports = class dfyn {
           raw: Object.freeze(farm),
           extra: {},
           notes: [farmType.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')],
+          chain: this.getChain(),
         };
 
         item.extra.transactionAddress = farm.stakingRewardAddress;

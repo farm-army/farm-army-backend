@@ -1026,6 +1026,10 @@ module.exports = {
           info.underlying = '0xcf664087a5bb0237a0bad6742852ec6c8d69a27a'
         }
 
+        if (this.getChain() === 'cronos' && !info.underlying && tokenName?.toLowerCase().includes('cro')) {
+          info.underlying = '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23'
+        }
+
         if (!info.underlying) {
           console.log(`${this.getName()}: missing underlying ${JSON.stringify(info)}`)
           return;

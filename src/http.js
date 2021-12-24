@@ -424,6 +424,40 @@ module.exports = class Http {
       res.json(response);
     });
 
+    app.get("/wallet/:address", async (req, res) => {
+      let timer = -performance.now();
+      const {address, chain} = req.params;
+
+      const promises = [];
+      for (const chain of Object.keys(this.chains)) {
+        let chainBalances = this.chains[chain].balances;
+
+        promises.push(async() => {
+          const [tokens, liquidityPools] = await Promise.allSettled([
+            chainBalances.getAllTokenBalances(address),
+            chainBalances.getAllLpTokenBalances(address)
+          ]);
+
+          return [...(tokens.value || []), ...(liquidityPools.value || [])].map(i => {
+            i.chain = chain;
+            return i;
+          });
+        })
+      }
+
+      const result = (await Promise.all(promises.map(fn => fn()))).flat(1)
+
+      timer += performance.now();
+      console.log(`cross-chains: ${new Date().toISOString()}: wallet ${address} - ${(timer / 1000).toFixed(3)} sec`);
+
+      if (res.headersSent) {
+        console.error(`cross-chains: ${new Date().toISOString()}: wallet ${address} - already send / timout`);
+        return;
+      }
+
+      res.json(result);
+    });
+
     app.get("/:chain/wallet/:address", async (req, res) => {
       let timer = -performance.now();
       const {address, chain} = req.params;
@@ -446,6 +480,29 @@ module.exports = class Http {
       res.json({
         tokens: tokens.value ? tokens.value : [],
         liquidityPools: liquidityPools.value ? liquidityPools.value : [],
+      });
+    });
+
+    app.get("/:chain/nft/:address", async (req, res) => {
+      let timer = -performance.now();
+      const {address, chain} = req.params;
+
+      let chainBalances = this.chains[chain].balances;
+
+      const [platforms] = await Promise.allSettled([
+        chainBalances.getNfts(address),
+      ]);
+
+      timer += performance.now();
+      console.log(`${chain}: ${new Date().toISOString()}: nft ${address} - ${(timer / 1000).toFixed(3)} sec`);
+
+      if (res.headersSent) {
+        console.error(`${chain}: ${new Date().toISOString()}: nft ${address} - already send / timout`);
+        return;
+      }
+
+      res.json({
+        collections: platforms.value ? platforms.value : [],
       });
     });
 

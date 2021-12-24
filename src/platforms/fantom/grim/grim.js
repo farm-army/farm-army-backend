@@ -188,6 +188,14 @@ module.exports = class grim {
         };
       }
 
+      if (farm.depositsPaused === true) {
+        if (!item.flags) {
+          item.flags = [];
+        }
+
+        item.flags.push('deprecated');
+      }
+
       farms.push(Object.freeze(item));
     });
 

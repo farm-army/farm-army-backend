@@ -105,6 +105,7 @@ node src/index.js
 
 ```
   /:chain/wallet/:address
+  /:chain/nft/:address
 ```
 
 `:chain`: bsc, polygon, fantom, kcc, harmony, celo, moonriver, cronos

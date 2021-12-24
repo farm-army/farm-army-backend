@@ -109,7 +109,7 @@ module.exports = class CronosPriceOracle {
 
     this.priceCollector.save();
 
-    nativePrice = this.priceCollector.getPrice('0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23');
+    nativePrice = this.priceCollector.getPrice('0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23');
 
     const results = await Promise.allSettled([
       this.updateViaRouter(nativePrice),
@@ -201,7 +201,7 @@ module.exports = class CronosPriceOracle {
     }), 'cronos');
 
     tokensRaw.forEach(token => {
-      if (!token.decimals && parseInt(token.decimals) > 0) {
+      if (!token.symbol || !token.decimals || parseInt(token.decimals) <= 0) {
         return;
       }
 
@@ -363,8 +363,8 @@ module.exports = class CronosPriceOracle {
       const token0 = tokenAddressSymbol[c.token0.toLowerCase()];
       const token1 = tokenAddressSymbol[c.token1.toLowerCase()];
 
-      const token0Price = this.priceCollector.getPrice(c.token0, token0.symbol);
-      const token1Price = this.priceCollector.getPrice(c.token1, token1.symbol);
+      let token0Price = this.priceCollector.getPrice(c.token0, token0.symbol);
+      let token1Price = this.priceCollector.getPrice(c.token1, token1.symbol);
 
       const pricesLpAddress = Object.freeze([
         {
@@ -380,6 +380,20 @@ module.exports = class CronosPriceOracle {
       ]);
 
       this.lpTokenCollector.add(c.address, pricesLpAddress);
+
+      if (!token0Price || !token1Price) {
+        if (token0Price && !token1Price) {
+          const reserveUsd = (c.reserve0 / (10 ** token0.decimals)) * token0Price;
+          token1Price = reserveUsd / (c.reserve1 / (10 ** token1.decimals));
+
+          console.log("cronos: Missing price 'token1' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+        } else if (token1Price && !token0Price) {
+          const reserveUsd = (c.reserve1 / (10 ** token1.decimals)) * token1Price;
+          token0Price = reserveUsd / (c.reserve0 / (10 ** token0.decimals));
+
+          console.log("cronos: Missing price 'token0' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+        }
+      }
 
       if (!token0Price || !token1Price) {
         console.log("cronos: Missing price:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
@@ -470,6 +484,12 @@ module.exports = class CronosPriceOracle {
         router: '0x145677FC4d9b8F19B5D56d1820c48e0443049a30', // mmfinance
         address: '0x97749c9B61F878a880DfE312d2594AE07AEd7656',
         symbol: 'mmf',
+        decimals: 18,
+      },
+      {
+        router: '0x145863Eb42Cf62847A6Ca784e6416C1682b1b2Ae', // vvs
+        address: '0xDD73dEa10ABC2Bff99c60882EC5b2B81Bb1Dc5B2',
+        symbol: 'tonic',
         decimals: 18,
       },
     ];

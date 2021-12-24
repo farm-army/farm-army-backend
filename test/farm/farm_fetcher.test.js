@@ -149,11 +149,13 @@ describe('#test farm fetcher for masterchef', function () {
     assert.deepStrictEqual(actual, [
       {
         inputs: ['%pid%'],
+        arguments: ['pid'],
         method: 'claimReward',
         type: 'claim',
       },
       {
         method: 'emergencyWithdraw',
+        arguments: ['pid'],
         inputs: ['%pid%'],
         type: 'emergency_withdraw',
       }
@@ -169,12 +171,14 @@ describe('#test farm fetcher for masterchef', function () {
     assert.deepStrictEqual(actual, [
       {
         inputs: ['%pid%'],
+        arguments: ['pid'],
         method: 'claim',
         type: 'claim'
       },
       {
         method: 'emergencyWithdraw',
         inputs: ['%pid%'],
+        arguments: ['pid'],
         type: 'emergency_withdraw'
       }
     ]);
@@ -192,12 +196,14 @@ describe('#test farm fetcher for masterchef', function () {
     assert.deepStrictEqual(actual, [
       {
         inputs: ["%pid%", 0],
+        arguments: ['pid', 'amount'],
         method: 'deposit',
         type: 'claim_fake'
       },
       {
         method: 'emergencyWithdraw',
         inputs: ['%pid%'],
+        arguments: ['pid'],
         type: 'emergency_withdraw'
       }
     ]);
@@ -216,15 +222,43 @@ describe('#test farm fetcher for masterchef', function () {
       {
         inputs: ['%pid%', 0, true],
         method: 'deposit',
-        type: 'claim_fake'
+        type: 'claim_fake',
+        arguments: ['pid', 'amount', 'shouldHarvest'],
       },
       {
         inputs: ['%pid%'],
+        arguments: ['pid'],
         method: 'withdrawAll',
         type: 'withdraw_all'
       },
       {
         method: 'emergencyWithdraw',
+        arguments: ['pid'],
+        inputs: ['%pid%'],
+        type: 'emergency_withdraw'
+      }
+    ]);
+  });
+
+  it('test extraction for actions mmf-abi.json', async () => {
+    const abi = JSON.parse(fs.readFileSync(`${__dirname}/fixtures/mmf-abi.json`, 'utf8'));
+
+    const farmFetcher = new FarmFetcher({});
+
+    const actual = await farmFetcher.extractActionsFromAbi(abi, {
+      pendingRewardsFunctionName: 'pendingCake',
+    });
+
+    assert.deepStrictEqual(actual, [
+      {
+        inputs: ['%pid%', 0, '%referrer%'],
+        arguments: ['pid', 'amount', 'referrer'],
+        method: 'deposit',
+        type: 'claim_fake',
+      },
+      {
+        method: 'emergencyWithdraw',
+        arguments: ['pid'],
         inputs: ['%pid%'],
         type: 'emergency_withdraw'
       }

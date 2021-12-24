@@ -101,8 +101,8 @@ const HOSTS_MOONRIVER = Object.freeze([
 
 const HOSTS_CRONOS = Object.freeze([
   'https://evm-cronos.crypto.org',
-  'https://cronosrpc-1.xstaking.sg',
-  //'https://rpc.nebkas.ro',
+  //'https://cronosrpc-1.xstaking.sg',
+  'https://rpc.nebkas.ro/',
   //'http://rpc.nebkas.ro:8545',
   // 'http://cronos.blockmove.eu:8545',
   // 'https://rpc.crodex.app',
@@ -693,11 +693,11 @@ module.exports = {
   findYieldForDetails: result => {
     const yieldObject = module.exports.findYieldForDetailsInner(result);
 
-    if (
-      yieldObject &&
-      yieldObject.percent !== undefined &&
-      Math.abs(yieldObject.percent) <= 0
-    ) {
+    if (!yieldObject) {
+      return undefined;
+    }
+
+    if (yieldObject.percent !== undefined && Math.abs(yieldObject.percent) <= 0) {
       return undefined;
     }
 
@@ -1082,7 +1082,13 @@ module.exports = {
   getJavascriptFiles: async (url) => {
     const urlObject = new URL(url);
 
-    const jsdom = await JSDOM.fromURL(url);
+    let jsdom;
+    try {
+      jsdom = await JSDOM.fromURL(url);
+    } catch (e) {
+      console.log(`JSONDOM error: ${url} ${e.message.substring(0, 100)}`)
+      return [];
+    }
     const document = jsdom.window.document
 
     const result = document.evaluate("//script", jsdom.window.document, null, jsdom.window.XPathResult.ANY_TYPE, null);

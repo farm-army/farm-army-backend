@@ -260,6 +260,7 @@ const Geist = require("./platforms/fantom/geist/geist");
 const Grim = require("./platforms/fantom/grim/grim");
 const Zoocoin = require("./platforms/fantom/zoocoin/zoocoin");
 const Fpearzap = require("./platforms/fantom/fpearzap/fpearzap");
+const Scream = require("./platforms/fantom/scream/scream");
 
 const Kuswap = require("./platforms/kcc/kuswap/kuswap");
 const Kudex = require("./platforms/kcc/kudex/kudex");
@@ -267,7 +268,7 @@ const Kukafe = require("./platforms/kcc/kukafe/kukafe");
 const KukafeCompound = require("./platforms/kcc/kukafe/kukafe_compound");
 const KukafeDecorator = require("./platforms/kcc/kukafe/kukafe_decorator");
 const Boneswap = require("./platforms/kcc/boneswap/boneswap");
-const Scream = require("./platforms/fantom/scream/scream");
+const Mojito = require("./platforms/kcc/mojito/mojito");
 
 const Hbeefy = require("./platforms/harmony/hbeefy/hbeefy");
 const Hsushi = require("./platforms/harmony/hsushi/hsushi");
@@ -310,6 +311,7 @@ const Crbeefy = require("./platforms/cronos/crbeefy/crbeefy");
 const Crannex = require("./platforms/cronos/crannex/crannex");
 const CrannexMasterchef = require("./platforms/cronos/crannex/crannex_masterchef");
 const Mmf = require("./platforms/cronos/mmf/mmf");
+const Tectonic = require("./platforms/cronos/tectonic/tectonic");
 
 let pancake;
 let swamp;
@@ -436,6 +438,7 @@ let kukafe;
 let boneswap;
 let kukafeCompound;
 let kukafeDecorator;
+let mojito;
 
 let hbeefy;
 let hsushi;
@@ -476,6 +479,7 @@ let crautofarm
 let crbeefy;
 let crannex;
 let mmf;
+let tectonic;
 
 let polygonPlatform;
 let fantomPlatform;
@@ -952,6 +956,7 @@ module.exports = {
         this.getKudex(),
         this.getKukafeDecorator(),
         this.getBoneswap(),
+        this.getMojito(),
       ],
       this.getCache(),
       this.getKccPriceOracle(),
@@ -995,6 +1000,7 @@ module.exports = {
         this.getCrbeefy(),
         this.getCrannex(),
         this.getMmf(),
+        this.getTectonic(),
       ],
       this.getCache(),
       this.getCronosPriceOracle(),
@@ -3049,6 +3055,21 @@ module.exports = {
     ));
   },
 
+  getMojito() {
+    if (mojito) {
+      return mojito;
+    }
+
+    return (mojito = new Mojito(
+      this.getKccCacheManager(),
+      this.getKccPriceOracle(),
+      this.getKccTokenCollector(),
+      this.getKccFarmFetcher(),
+      this.getKccCacheManager(),
+      this.getKccFarmPlatformResolver(),
+    ));
+  },
+
   getHbeefy() {
     if (hbeefy) {
       return hbeefy;
@@ -3152,6 +3173,20 @@ module.exports = {
       this.getCronosTokenCollector(),
       this.getCronosFarmFetcher(),
       this.getCronosCacheManager(),
+    ));
+  },
+
+  getTectonic() {
+    if (tectonic) {
+      return tectonic;
+    }
+
+    return (tectonic = new Tectonic(
+      this.getCronosPriceOracle(),
+      this.getCronosTokenCollector(),
+      this.getCronosCacheManager(),
+      this.getCronosLiquidityTokenCollector(),
+      this.getCronosFarmPlatformResolver(),
     ));
   },
 

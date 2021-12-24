@@ -4,7 +4,6 @@ const BigNumber = require("bignumber.js");
 const Utils = require("./utils");
 const Web3EthContract = require("web3-eth-contract");
 
-const FulcrumLendingTokenAbi = require("./abi/fulcrum_lending_tokens.json");
 const UniswapRouter = require("./abi/uniswap_router.json");
 
 const erc20ABI = require('./abi/erc20.json');
@@ -74,7 +73,6 @@ module.exports = class PriceOracle {
     const bPrices = await Promise.allSettled([
       this.getCoingeckoPrices(),
       this.getBeefyPrices(),
-      this.updateFulcrumTokens(),
       this.updateCoinGeckoPrices(),
     ])
 
@@ -359,8 +357,8 @@ module.exports = class PriceOracle {
       const token0 = tokenAddressSymbol[c.token0.toLowerCase()];
       const token1 = tokenAddressSymbol[c.token1.toLowerCase()];
 
-      const token0Price = this.priceCollector.getPrice(c.token0, token0.symbol);
-      const token1Price = this.priceCollector.getPrice(c.token1, token1.symbol);
+      let token0Price = this.priceCollector.getPrice(c.token0, token0.symbol);
+      let token1Price = this.priceCollector.getPrice(c.token1, token1.symbol);
 
       const pricesLpAddress = Object.freeze([
         {
@@ -376,6 +374,20 @@ module.exports = class PriceOracle {
       ]);
 
       this.lpTokenCollector.add(c.address, pricesLpAddress);
+
+      if (!token0Price || !token1Price) {
+        if (token0Price && !token1Price) {
+          const reserveUsd = (c.reserve0 / (10 ** token0.decimals)) * token0Price;
+          token1Price = reserveUsd / (c.reserve1 / (10 ** token1.decimals));
+
+          console.log("bsc: Missing price 'token1' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+        } else if (token1Price && !token0Price) {
+          const reserveUsd = (c.reserve1 / (10 ** token1.decimals)) * token1Price;
+          token0Price = reserveUsd / (c.reserve0 / (10 ** token0.decimals));
+
+          console.log("bsc: Missing price 'token0' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+        }
+      }
 
       if (!token0Price || !token1Price) {
         console.log("bsc: Missing price:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
@@ -630,48 +642,6 @@ module.exports = class PriceOracle {
         source: 'router',
       });
     });
-
-    return prices;
-  }
-
-  async updateFulcrumTokens() {
-    const foo = await Utils.requestJsonGet('https://api.bzx.network/v1/lending-info?networks=bsc');
-
-    const v = foo.data.bsc.map(token => {
-      const vault = new Web3EthContract(FulcrumLendingTokenAbi, token.address);
-      return {
-        token: token.address,
-        symbol: vault.methods.symbol(),
-        tokenPrice: vault.methods.tokenPrice(),
-        loanTokenAddress: vault.methods.loanTokenAddress(),
-      };
-    });
-
-    const vaultCalls = await Utils.multiCallIndexBy('token', v);
-
-    const prices = [];
-    foo.data.bsc.forEach(token => {
-      let vaultCall = vaultCalls[token.address];
-      if (!vaultCall || !vaultCall.tokenPrice || !vaultCall.loanTokenAddress) {
-        return;
-      }
-
-      this.tokenCollector.add({
-        symbol: vaultCall.symbol,
-        address: vaultCall.token,
-        decimals: 18,
-      })
-
-      const loanTokenPrice = this.priceCollector.getPrice(vaultCall.loanTokenAddress);
-      if (loanTokenPrice) {
-        prices.push({
-          address: vaultCall.token,
-          symbol: vaultCall.symbol,
-          price: loanTokenPrice * (vaultCall.tokenPrice / 1e18),
-          source: 'fulcrum',
-        });
-      }
-    })
 
     return prices;
   }
