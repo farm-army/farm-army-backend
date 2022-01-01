@@ -1,0 +1,17 @@
+[
+  {
+    "symbol": "tem",
+    "address": "0xD86E3F7B2Ff4e803f90c799D702955003bcA9875",
+    "decimals": 9
+  },
+  {
+    "symbol": "mim",
+    "address": "0x0caE51e1032e8461f4806e26332c030E34De3aDb",
+    "decimals": 18
+  },
+  {
+    "symbol": "rome",
+    "address": "0x4a436073552044D5f2f49B176853ad3Ad473d9d6",
+    "decimals": 9
+  }
+]

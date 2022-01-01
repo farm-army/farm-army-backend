@@ -12,7 +12,7 @@ const { providers } = require("ethers");
 const fetch = require("node-fetch");
 const AbortController = require("abort-controller");
 const walk = require("acorn-walk");
-const acorn = require("acorn");
+const acorn = require("acorn-loose");
 const JSDOM = require("jsdom").JSDOM;
 const { MulticallProvider } = require("@0xsequence/multicall").providers;
 const HttpsProxyAgent = require('https-proxy-agent');
@@ -102,7 +102,7 @@ const HOSTS_MOONRIVER = Object.freeze([
 const HOSTS_CRONOS = Object.freeze([
   'https://evm-cronos.crypto.org',
   //'https://cronosrpc-1.xstaking.sg',
-  'https://rpc.nebkas.ro/',
+  //'https://rpc.nebkas.ro/',
   //'http://rpc.nebkas.ro:8545',
   // 'http://cronos.blockmove.eu:8545',
   // 'https://rpc.crodex.app',
@@ -522,7 +522,7 @@ module.exports = {
             const [foo] = await new MultiCall(web3, MULTI_CALL_CONTRACT[chain]).all([chunk]);
 
             let durationSec = (timer + performance.now()) / 1000;
-            if (durationSec > 9.5) {
+            if (durationSec > 15) {
               console.log(`Slow multicall: ${chain} - ${(durationSec).toFixed(3)} sec - ${endpointInner}`);
             }
 
@@ -531,7 +531,7 @@ module.exports = {
             console.error("failed", "multiCall", endpointInner, chunk.length, e.message);
 
             let durationSec = (timer + performance.now()) / 1000;
-            if (durationSec > 9.5) {
+            if (durationSec > 15) {
               console.log(`Slow multicall: ${chain} - ${(durationSec).toFixed(3)} sec - ${endpointInner}`);
             }
 
@@ -823,11 +823,7 @@ module.exports = {
       return [];
     }
 
-    if (!response.result) {
-      return [];
-    }
-
-    const transactions = response.result
+    const transactions = (response?.result || [])
       .filter(
         t =>
           t.value &&
@@ -864,7 +860,7 @@ module.exports = {
         chain
       );
     } catch (e) {
-      console.log("transactions failed bsc", e.message);
+      console.log("transactions failed", chain, address, e.message);
     }
 
     if (chain === 'bsc') {
@@ -875,7 +871,7 @@ module.exports = {
           address
         );
       } catch (e) {
-        console.log("transactions retry via bitquery", e.message);
+        console.log("transactions retry via bitquery", chain, address, e.message);
       }
 
       try {
@@ -885,7 +881,7 @@ module.exports = {
           address
         );
       } catch (e) {
-        console.log("transactions retry via bitquery failed also", e.message);
+        console.log("transactions retry via bitquery failed also", chain, address, e.message);
       }
     }
 
@@ -1189,6 +1185,32 @@ module.exports = {
       }
 
       result[value[0]] = valueElement;
+    });
+
+    return result;
+  },
+
+  convertToNamedAbiOutput: (abi, functionName, values) => {
+    if (!values) {
+      return {};
+    }
+
+    const functionFoo = abi.find(i => i.type === 'function' && i.name === functionName);
+    if (!functionFoo) {
+      return {};
+    }
+
+    const result = {};
+    const array = Object.values(values);
+    (functionFoo.outputs || []).forEach((o, index) => {
+      let name = index.toString();
+      if (o.name) {
+        name = o.name;
+      }
+
+      if (index in array) {
+        result[name] = array[index];
+      }
     });
 
     return result;

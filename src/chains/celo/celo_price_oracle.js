@@ -256,8 +256,6 @@ module.exports = class CeloPriceOracle {
         };
       });
 
-    console.log("celo: lp address update", lpAddress.length, v.length);
-
     const vaultCalls = await Utils.multiCall(v, 'celo');
 
     const ercs = {};

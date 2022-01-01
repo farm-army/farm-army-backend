@@ -129,7 +129,7 @@ module.exports = class MoonriverPriceOracle {
   }
 
   async getCoinGeckoTokens() {
-    const cacheKey = `coingecko-moonriver-v8-token-addresses`
+    const cacheKey = `coingecko-moonriver-v9-token-addresses`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -143,6 +143,7 @@ module.exports = class MoonriverPriceOracle {
     const known = {
       sushi: ['0xf390830df829cf22c53c8840554b98eafc5dcbc2'],
       moonriver: ['0xf50225a84382c74CbdeA10b0c176f71fc3DE0C4d'],
+      'magic-internet-money': ['0x0caE51e1032e8461f4806e26332c030E34De3aDb'],
     };
 
     tokens.forEach(token => {
@@ -256,8 +257,6 @@ module.exports = class MoonriverPriceOracle {
           _address: address
         };
       });
-
-    console.log("moonriver: lp address update", lpAddress.length, v.length);
 
     const vaultCalls = await Utils.multiCall(v, 'moonriver');
 
@@ -447,6 +446,7 @@ module.exports = class MoonriverPriceOracle {
     const pricesTarget = {
       '0x98878B06940aE243284CA214f92Bb71a2b032B8A': nativePrice,
       '0x9A92B5EBf1F6F6f7d93696FCD44e5Cf75035A756': this.priceCollector.getPrice('0x9A92B5EBf1F6F6f7d93696FCD44e5Cf75035A756'),
+      '0x0caE51e1032e8461f4806e26332c030E34De3aDb': this.priceCollector.getPrice('0x0caE51e1032e8461f4806e26332c030E34De3aDb'),
     };
 
     const tokens = [
@@ -527,6 +527,16 @@ module.exports = class MoonriverPriceOracle {
         address: '0xb497c3e9d27ba6b1fea9f1b941d8c79e66cfc9d6',
         symbol: 'moon',
         decimals: 18,
+      },
+      {
+        router: '0x2d4e873f9Ab279da9f1bb2c532d4F06f67755b77', // huckleberry
+        address: '0xD86E3F7B2Ff4e803f90c799D702955003bcA9875',
+        symbol: 'tem',
+        decimals: 9,
+        source: {
+          address: '0x0caE51e1032e8461f4806e26332c030E34De3aDb',
+          decimals: 18
+        }, // mim
       },
     ];
 

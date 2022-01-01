@@ -4,6 +4,7 @@ const STATIC_TOKENS = Object.freeze(require('./token_collector_static.json'));
 const STATIC_TOKENS_POLYGON = Object.freeze(require('./token_collector_static_polygon.json'));
 const STATIC_TOKENS_FANTOM = Object.freeze(require('./token_collector_static_fantom.json'));
 const STATIC_TOKENS_CRONOS = Object.freeze(require('./token_collector_static_cronos.json'));
+const STATIC_TOKENS_MOONRIVER = Object.freeze(require('./token_collector_static_moonriver.json'));
 
 module.exports = class TokenCollector {
   constructor(cacheManager, chain = undefined) {
@@ -20,6 +21,8 @@ module.exports = class TokenCollector {
       STATIC_TOKENS_FANTOM.forEach(i => this.add(i));
     } else if (chain === 'cronos') {
       STATIC_TOKENS_CRONOS.forEach(i => this.add(i));
+    } else if (chain === 'moonriver') {
+      STATIC_TOKENS_MOONRIVER.forEach(i => this.add(i));
     }
 
     // init data
@@ -40,6 +43,8 @@ module.exports = class TokenCollector {
         STATIC_TOKENS_POLYGON.forEach(i => this.add(i));
       } else if (chain === 'fantom') {
         STATIC_TOKENS_FANTOM.forEach(i => this.add(i));
+      } else if (chain === 'moonriver') {
+        STATIC_TOKENS_MOONRIVER.forEach(i => this.add(i));
       }
     }, 1)
   }

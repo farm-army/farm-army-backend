@@ -93,7 +93,7 @@ setTimeout(async () => {
   await farmUpdater(false);
   console.log("\x1b[32m" + "farms init done" + "\x1b[0m");
 
-  services.getHttp().start(process.argv[2] || 3000)
+  services.getHttp().start()
 }, 1);
 
 // farm update interval

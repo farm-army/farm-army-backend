@@ -1,5 +1,5 @@
 const walk = require("acorn-walk");
-const acorn = require("acorn");
+const acornLoose = require("acorn-loose");
 
 module.exports = {
   parseObject: (node) => {
@@ -47,7 +47,7 @@ module.exports = {
     const items = [];
 
     try {
-      walk.simple(acorn.parse(body, {ecmaVersion: 'latest'}), {
+      walk.simple(acornLoose.parse(body, {ecmaVersion: 'latest'}), {
         ObjectExpression(node) {
           const keys = node.properties.map(p => (p.key && p.key.name) ? p.key.name : undefined);
           if (!filter(keys)) {

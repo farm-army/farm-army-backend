@@ -195,6 +195,10 @@ const MarsMasterchef1 = require("./platforms/bsc/mars/mars_masterchef1");
 const Atlantis = require("./platforms/bsc/atlantis/atlantis");
 const Synapse = require("./platforms/synapse");
 const Annex = require("./platforms/bsc/annex/annex");
+const Templar = require("./platforms/bsc/templar/templar");
+const Nemesis = require("./platforms/bsc/nemesis/nemesis");
+const Hunnydao = require("./platforms/bsc/hunnydao/hunnydao");
+const Jade = require("./platforms/bsc/jade/jade");
 
 const Pwault = require("./platforms/polygon/pwault/pwault");
 const Polycat = require("./platforms/polygon/polycat/polycat");
@@ -261,6 +265,9 @@ const Grim = require("./platforms/fantom/grim/grim");
 const Zoocoin = require("./platforms/fantom/zoocoin/zoocoin");
 const Fpearzap = require("./platforms/fantom/fpearzap/fpearzap");
 const Scream = require("./platforms/fantom/scream/scream");
+const Hectordao = require("./platforms/fantom/hectordao/hectordao");
+const Fantohm = require("./platforms/fantom/fantohm/fantohm");
+const Hundred = require("./platforms/fantom/hundred/hundred");
 
 const Kuswap = require("./platforms/kcc/kuswap/kuswap");
 const Kudex = require("./platforms/kcc/kudex/kudex");
@@ -284,6 +291,7 @@ const Openswap1 = require("./platforms/harmony/openswap/openswap1");
 const Openswap2 = require("./platforms/harmony/openswap/openswap2");
 const Tranquil = require("./platforms/harmony/tranquil/tranquil");
 const Hautofarm = require("./platforms/harmony/hautofarm/hautofarm");
+const Euphoria = require("./platforms/harmony/euphoria/euphoria");
 
 const Ubeswap = require("./platforms/celo/ubeswap/ubeswap");
 const Mobius = require("./platforms/celo/mobius/mobius");
@@ -301,6 +309,7 @@ const Moonkafe = require("./platforms/moonriver/moonkafe/moonkafe");
 const MoonkafeCompound = require("./platforms/moonriver/moonkafe/moonkafe_compound");
 const Mbeefy = require("./platforms/moonriver/mbeefy/mbeefy");
 const Msushi = require("./platforms/moonriver/msushi/msushi");
+const Mtemplar = require("./platforms/moonriver/mtemplar/mtemplar");
 
 const Vvs = require("./platforms/cronos/vvs/vvs");
 const Cronaswap = require("./platforms/cronos/cronaswap/cronaswap");
@@ -311,6 +320,7 @@ const Crbeefy = require("./platforms/cronos/crbeefy/crbeefy");
 const Crannex = require("./platforms/cronos/crannex/crannex");
 const CrannexMasterchef = require("./platforms/cronos/crannex/crannex_masterchef");
 const Mmf = require("./platforms/cronos/mmf/mmf");
+const Mmo = require("./platforms/cronos/mmf/mmo");
 const Tectonic = require("./platforms/cronos/tectonic/tectonic");
 
 let pancake;
@@ -364,6 +374,10 @@ let mars;
 let atlantis;
 let synapse;
 let annex;
+let templar;
+let nemesis;
+let hunnydao;
+let jade;
 
 let pwault;
 let polycat;
@@ -431,6 +445,9 @@ let grim;
 let zoocoin;
 let fpearzap;
 let fsynapse;
+let hectordao;
+let fantohm;
+let hundred;
 
 let kuswap;
 let kudex;
@@ -450,6 +467,7 @@ let defikingdoms;
 let tranquil;
 let hsynapse;
 let hautofarm;
+let euphoria
 
 let ubeswap;
 let mobius;
@@ -470,6 +488,8 @@ let moonkafe;
 let moonkafeCompound;
 let mbeefy;
 let msushi;
+let mtemplar;
+let romedao;
 
 let vvs;
 let cronaswap;
@@ -480,6 +500,7 @@ let crbeefy;
 let crannex;
 let mmf;
 let tectonic;
+let mmo;
 
 let polygonPlatform;
 let fantomPlatform;
@@ -851,6 +872,10 @@ module.exports = {
           this.getAtlantis(),
           this.getSynapse(),
           this.getAnnex(),
+          this.getTemplar(),
+          this.getNemesis(),
+          this.getHunnydao(),
+          this.getJade(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -938,6 +963,9 @@ module.exports = {
         this.getZoocoin(),
         this.getFpearzap(),
         this.getFSynapse(),
+        this.getHectordao(),
+        this.getFantohm(),
+        this.getHundred(),
       ],
       this.getCache(),
       this.getFantomPriceOracle(),
@@ -978,6 +1006,7 @@ module.exports = {
         this.getMoonkafe(),
         this.getMbeefy(),
         this.getMsushi(),
+        this.getMtemplar(),
       ],
       this.getCache(),
       this.getMoonriverPriceOracle(),
@@ -1000,6 +1029,7 @@ module.exports = {
         this.getCrbeefy(),
         this.getCrannex(),
         this.getMmf(),
+        this.getMmo(),
         this.getTectonic(),
       ],
       this.getCache(),
@@ -1026,6 +1056,7 @@ module.exports = {
         this.getTranquil(),
         this.getHSynapse(),
         this.getHautofarm(),
+        this.getEuphoria(),
       ],
       this.getCache(),
       this.getHarmonyPriceOracle(),
@@ -1640,6 +1671,76 @@ module.exports = {
       this.getCacheManager(),
       this.getLiquidityTokenCollector(),
       this.getFarmPlatformResolver(),
+    ));
+  },
+
+  getTemplar() {
+    if (templar) {
+      return templar;
+    }
+
+    return (templar = new Templar(
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getCacheManager(),
+      this.getLiquidityTokenCollector(),
+      this.getFarmPlatformResolver(),
+    ));
+  },
+
+  getNemesis() {
+    if (nemesis) {
+      return nemesis;
+    }
+
+    return (nemesis = new Nemesis(
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getCacheManager(),
+      this.getLiquidityTokenCollector(),
+      this.getFarmPlatformResolver(),
+    ));
+  },
+
+  getHunnydao() {
+    if (hunnydao) {
+      return hunnydao;
+    }
+
+    return (hunnydao = new Hunnydao(
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getCacheManager(),
+      this.getLiquidityTokenCollector(),
+      this.getFarmPlatformResolver(),
+    ));
+  },
+
+  getJade() {
+    if (jade) {
+      return jade;
+    }
+
+    return (jade = new Jade(
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getCacheManager(),
+      this.getLiquidityTokenCollector(),
+      this.getFarmPlatformResolver(),
+    ));
+  },
+
+  getMtemplar() {
+    if (mtemplar) {
+      return mtemplar;
+    }
+
+    return (mtemplar = new Mtemplar(
+      this.getMoonriverPriceOracle(),
+      this.getMoonriverTokenCollector(),
+      this.getMoonriverCacheManager(),
+      this.getMoonriverLiquidityTokenCollector(),
+      this.getMoonriverFarmPlatformResolver(),
     ));
   },
 
@@ -2561,6 +2662,48 @@ module.exports = {
     ));
   },
 
+  getHundred() {
+    if (hundred) {
+      return hundred;
+    }
+
+    return (hundred = new Hundred(
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomCacheManager(),
+      this.getFantomLiquidityTokenCollector(),
+      this.getFantomFarmPlatformResolver(),
+    ));
+  },
+
+  getHectordao() {
+    if (hectordao) {
+      return hectordao;
+    }
+
+    return (hectordao = new Hectordao(
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomCacheManager(),
+      this.getFantomLiquidityTokenCollector(),
+      this.getFantomFarmPlatformResolver(),
+    ));
+  },
+
+  getFantohm() {
+    if (fantohm) {
+      return fantohm;
+    }
+
+    return (fantohm = new Fantohm(
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomCacheManager(),
+      this.getFantomLiquidityTokenCollector(),
+      this.getFantomFarmPlatformResolver(),
+    ));
+  },
+
   getBalancer() {
     if (balancer) {
       return balancer;
@@ -3148,6 +3291,20 @@ module.exports = {
     ));
   },
 
+  getEuphoria() {
+    if (euphoria) {
+      return euphoria;
+    }
+
+    return (euphoria = new Euphoria(
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyCacheManager(),
+      this.getHarmonyLiquidityTokenCollector(),
+      this.getHarmonyFarmPlatformResolver(),
+    ));
+  },
+
   getVvs() {
     if (vvs) {
       return vvs;
@@ -3173,6 +3330,18 @@ module.exports = {
       this.getCronosTokenCollector(),
       this.getCronosFarmFetcher(),
       this.getCronosCacheManager(),
+    ));
+  },
+
+  getMmo() {
+    if (mmo) {
+      return mmo;
+    }
+
+    return (mmo = new Mmo(
+      this.getCronosCacheManager(),
+      this.getCronosPriceOracle(),
+      this.getCronosTokenCollector(),
     ));
   },
 
@@ -4146,6 +4315,7 @@ module.exports = {
     }
 
     return (http = new Http(
+      module.exports.CONFIG,
       this.getPriceOracle(),
       this.getPlatforms(),
       this.getPolygonPlatforms(),

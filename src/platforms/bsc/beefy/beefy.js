@@ -5,6 +5,8 @@ const Web3EthContract = require("web3-eth-contract");
 const Utils = require("../../../utils");
 
 const VAULT_ABI = require('./abi/vault.json');
+const AstParser = require("../../../utils/ast_parser");
+const _ = require("lodash");
 
 module.exports = class beefy {
   constructor(cacheManager, priceOracle, tokenCollector) {
@@ -19,6 +21,10 @@ module.exports = class beefy {
         farm => farm.tokenAddress && farm.assets && farm.assets.length === 2
       )
       .map(farm => farm.tokenAddress);
+  }
+
+  getGithubBoostFarmsUrl() {
+    return `https://raw.githubusercontent.com/beefyfinance/beefy-app/master/src/features/configure/stake/${this.getChain()}_stake.js`;
   }
 
   async getLpPrices() {
@@ -36,23 +42,53 @@ module.exports = class beefy {
     return prices;
   }
 
-  async getRawFarms() {
-    const cacheKey = `getAddressFarms-github-${this.getName()}`;
+  async getRawBootsFarms() {
+    const cacheKey = `getRawBootFarms-v2-github-${this.getName()}`;
 
     const cache = await this.cacheManager.get(cacheKey);
     if (cache) {
       return cache;
     }
 
-    const poolsResponse = await Utils.requestGet(this.getGithubFarmsUrl());
+    const githubBoostFarmsUrl = this.getGithubBoostFarmsUrl();
 
-    const pools = Object.freeze(
-      eval(
-        poolsResponse.replace(/export\s+const\s+\w+Pools\s+=\s+/, "")
-      ).filter(p => {
-        return p.status === "active" || p.depositsPaused !== false;
-      })
-    );
+    let pools = [];
+
+    if (githubBoostFarmsUrl) {
+      const poolsResponse = await Utils.requestGet(githubBoostFarmsUrl);
+      if (poolsResponse) {
+        pools.push(...AstParser.createJsonFromObjectExpression(poolsResponse, keys => keys.includes('earnedTokenAddress') && keys.includes('id')));
+
+        pools = pools.filter(p => {
+          if (!p.periodFinish) {
+            return true;
+          }
+
+          // older then 90 days we dont need anymore
+          return p.periodFinish > Math.floor(new Date(new Date().getTime() - (86400000 * 90)) / 1000);
+        })
+      }
+    }
+
+    await this.cacheManager.set(cacheKey, pools, {ttl: 60 * 30});
+
+    return pools;
+  }
+
+  async getRawFarms() {
+    const cacheKey = `getAddressFarms-v1-github-${this.getName()}`;
+
+    const cache = await this.cacheManager.get(cacheKey);
+    if (cache) {
+      return cache;
+    }
+
+    const pools = [];
+
+    const poolsResponse = await Utils.requestGet(this.getGithubFarmsUrl());
+    if (poolsResponse) {
+      pools.push(...AstParser.createJsonFromObjectExpression(poolsResponse, keys => keys.includes('earnContractAddress') && keys.includes('id')));
+    }
 
     await this.cacheManager.set(cacheKey, pools, {ttl: 60 * 30});
 
@@ -60,7 +96,7 @@ module.exports = class beefy {
   }
 
   async getAddressFarms(address) {
-    let cacheKey = `getAddressFarms-${this.getName()}-${address}`;
+    let cacheKey = `getAddressFarms-v1-${this.getName()}-${address}`;
 
     const cache = await this.cacheManager.get(cacheKey);
     if (cache) {
@@ -70,7 +106,7 @@ module.exports = class beefy {
     const pools = await this.getFarms();
 
     const tokenCalls = pools.map(myPool => {
-      const token = new Web3EthContract(VAULT_ABI, myPool.raw.earnedTokenAddress);
+      const token = new Web3EthContract(VAULT_ABI, myPool.raw.earnContractAddress);
 
       return {
         id: myPool.id,
@@ -109,7 +145,7 @@ module.exports = class beefy {
     const pools = await this.getRawFarms();
 
     const vaultCalls = pools.map(pool => {
-      const vault = new Web3EthContract(VAULT_ABI, pool.earnedTokenAddress);
+      const vault = new Web3EthContract(VAULT_ABI, pool.earnContractAddress);
 
       return {
         id: pool.id,
@@ -162,9 +198,9 @@ module.exports = class beefy {
         item.extra.lpAddress = vaultElement.tokenAddress;
       }
 
-      if (farm.earnedTokenAddress) {
-        item.extra.transactionAddress = farm.earnedTokenAddress;
-        item.extra.pricePerFullShareToken = farm.earnedTokenAddress;
+      if (farm.earnContractAddress) {
+        item.extra.transactionAddress = farm.earnContractAddress;
+        item.extra.pricePerFullShareToken = farm.earnContractAddress;
       }
 
       if (vaultElement.tokenAddress) {
@@ -197,6 +233,49 @@ module.exports = class beefy {
       farms.push(Object.freeze(item));
     });
 
+    (await this.getRawBootsFarms()).forEach(farm => {
+      const originFarm = farms.find(f => f.raw?.earnedTokenAddress?.toLowerCase() === farm?.tokenAddress?.toLowerCase());
+      if (!originFarm) {
+        return;
+      }
+
+      const item = _.assign(_.cloneDeep(originFarm), {
+        id: `${this.getName()}_boost_${farm.id}`,
+        name: `${originFarm.name} Boost`,
+        provider: this.getName(),
+        has_details: false,
+        raw: Object.freeze(_.assign(_.cloneDeep(farm), {
+          oracleId: farm.tokenOracleId,
+        })),
+      });
+
+      if (farm.periodFinish && farm.periodFinish < Math.floor(new Date().getTime() / 1000)) {
+        if (!item.flags) {
+          item.flags = [];
+        }
+
+        item.flags = ['inactive'];
+      } else if (farm.status && farm.status.toLowerCase() !== 'active') {
+        if (!item.flags) {
+          item.flags = [];
+        }
+
+        item.flags = ['inactive'];
+      }
+
+      if (item.flags && item.flags.includes('inactive')) {
+        if (item.tvl) {
+          delete item.tvl
+        }
+
+        if (item.yield) {
+          delete item.yield
+        }
+      }
+
+      farms.push(Object.freeze(item));
+    });
+
     await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
 
     console.log(`${this.getName()} updated`);
@@ -223,7 +302,7 @@ module.exports = class beefy {
     const tokenCalls = addressFarms.map(a => {
       const farm = farms.filter(f => f.id === a)[0];
 
-      const token = new Web3EthContract(VAULT_ABI, farm.raw.earnedTokenAddress);
+      const token = new Web3EthContract(VAULT_ABI, farm.raw.earnContractAddress);
 
       return {
         id: farm.id,
@@ -322,7 +401,7 @@ module.exports = class beefy {
   }
 
   getGithubFarmsUrl() {
-    return 'https://raw.githubusercontent.com/beefyfinance/beefy-app/master/src/features/configure/vault/bsc_pools.js';
+    return `https://raw.githubusercontent.com/beefyfinance/beefy-app/master/src/features/configure/vault/${this.getChain()}_pools.js`;
   }
 
   getName() {

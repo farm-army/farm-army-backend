@@ -48,7 +48,7 @@ module.exports = class acryptos {
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
-      return cache;
+     // return cache;
     }
 
     let rows = [];

@@ -163,5 +163,25 @@
     "symbol": "merl",
     "address": "0xDA360309C59CB8C434b28A91b823344a96444278",
     "decimals": 18
+  },
+  {
+    "symbol": "tem",
+    "address": "0x19e6BfC1A6e4B042Fb20531244D47E252445df01",
+    "decimals": 9
+  },
+  {
+    "symbol": "nms",
+    "address": "0x8AC9DC3358A2dB19fDd57f433ff45d1fc357aFb3",
+    "decimals": 9
+  },
+  {
+    "symbol": "love",
+    "address": "0x9505dbD77DaCD1F6C89F101b98522D4b871d88C5",
+    "decimals": 9
+  },
+  {
+    "symbol": "jade",
+    "address": "0x7ad7242A99F21aa543F9650A56D141C57e4F6081",
+    "decimals": 9
   }
 ]

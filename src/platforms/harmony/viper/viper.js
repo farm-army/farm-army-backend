@@ -64,7 +64,7 @@ module.exports = class viper extends PancakePlatformFork {
   }
 
   getFarmLink(farm) {
-    return 'https://kudex.finance/farms';
+    return 'https://viperswap.one/#/staking/pools';
   }
 
   getFarmEarns(farm) {

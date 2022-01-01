@@ -4,6 +4,7 @@ const Web3EthContract = require("web3-eth-contract");
 const BigNumber = require("bignumber.js");
 const Utils = require("../utils");
 const erc20Abi = require("../abi/erc20.json");
+const LP_TOKEN_ABI = require("../abi/lpAbi.json");
 const MASTERCHEF_COMPOUND_STRAT_ABI = require('../abi/mini_masterchef_compound_strat.json');
 const _ = require("lodash");
 const crypto = require("crypto");
@@ -12,6 +13,9 @@ const AAVE_ABI = require("./fantom/geist/abi/geist.json");
 const AAVE_A_TOKEN_ABI = require("./fantom/geist/abi/a_token.json");
 const AAVE_B_TOKEN_ABI = require("./fantom/geist/abi/b_token.json");
 const VAULT_ABI = require("../abi/staking_reward_single_reward_vault.json");
+
+const REEDEM_HELPER = require("../abi/ohm/redeem_helper.json");
+const BOND_ABI = require("../abi/ohm/bond.json");
 
 module.exports = {
   PancakePlatformFork: class PancakePlatformFork {
@@ -1018,8 +1022,12 @@ module.exports = {
           info.underlying = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
         }
 
-        if (this.getChain() === 'fantom' && info.underlying && info.underlying.toLowerCase().includes('eeeeeeeeeeeeeeeeeeeeeeeeeeeeee')) {
-          info.underlying = '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83'
+        if (this.getChain() === 'fantom') {
+          if (info.underlying && info.underlying.toLowerCase().includes('eeeeeeeeeeeeeeeeeeeeeeeeeeeeee')) {
+            info.underlying = '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83'
+          } else if(!info.underlying && tokenName?.toLowerCase().includes('ftm')) {
+            info.underlying = '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83'
+          }
         }
 
         if (this.getChain() === 'harmony' && !info.underlying && tokenName?.toLowerCase().includes('one')) {
@@ -1882,6 +1890,482 @@ module.exports = {
       }
 
       return result;
+    }
+
+    getName() {
+      throw new Error('not implemented');
+    }
+
+    getChain() {
+      throw new Error('not implemented');
+    }
+  },
+
+  OhmFork: class OhmFork {
+    constructor(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver) {
+      this.priceOracle = priceOracle;
+      this.tokenCollector = tokenCollector;
+      this.cacheManager = cacheManager;
+      this.liquidityTokenCollector = liquidityTokenCollector;
+      this.farmPlatformResolver = farmPlatformResolver;
+    }
+
+    async getLbAddresses() {
+      return (await this.getFarms())
+        .filter(f => f.extra && f.extra.lpAddress)
+        .map(f => f.extra.lpAddress);
+    }
+
+    async getRawStakes() {
+      return [
+        {
+          token: this.getConfig().sToken,
+          underlying: this.getConfig().token,
+        }
+      ];
+    }
+
+    getConfig() {
+      throw new Error('not implemented');
+    }
+
+    async getRawPools() {
+      const cacheKey = `getRawFarms-v10-${this.getName()}`;
+
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
+      }
+
+      const allBondsAddresses = await Utils.multiCall([...Array(50).keys()].map(id => ({
+        bonds: new Web3EthContract(REEDEM_HELPER, this.getConfig().redeemHelper).methods.bonds(id),
+      })), this.getChain());
+
+      const addresses = allBondsAddresses.filter(i => i.bonds).map(i => i.bonds);
+
+      const allBonds = await Utils.multiCall(addresses.map(address => {
+        const contract = new Web3EthContract(BOND_ABI, address);
+
+        return {
+          address: address,
+          adjustment: contract.methods.adjustment(),
+          principle: contract.methods.principle(),
+          isLiquidityBond: contract.methods.isLiquidityBond(),
+          terms: contract.methods.terms(),
+          treasury: contract.methods.treasury(),
+          bondPriceInUSD: contract.methods.bondPriceInUSD(),
+        };
+      }), this.getChain());
+
+      const lps = await Utils.multiCallIndexBy('address', _.uniq(allBonds.filter(i => i.principle && !i.principle.startsWith('0x0000000000000')).map(i => i.principle)).map(tokenAddress => {
+        const contract = new Web3EthContract(LP_TOKEN_ABI, tokenAddress);
+
+        return {
+          address: tokenAddress.toLowerCase(),
+          token0: contract.methods.token0(),
+          token1: contract.methods.token1(),
+        };
+      }), this.getChain());
+
+      const bonds = allBonds.filter(bond => bond.principle).map(bond => {
+        let result = {
+          bondAddress: bond.address,
+          reserveAddress: bond.principle,
+          principle: bond.principle,
+          adjustment: Utils.convertToNamedAbiOutput(BOND_ABI, 'adjustment', bond.adjustment),
+          isLiquidityBond: bond.isLiquidityBond,
+          terms: Utils.convertToNamedAbiOutput(BOND_ABI, 'terms', bond.terms),
+          treasury: bond.treasury,
+          bondPriceInUSD: bond.bondPriceInUSD,
+          rewardToken: this.getConfig().token,
+        };
+
+        if (bond.isLiquidityBond === true) {
+          result.lp = true;
+        } else if (lps[bond.principle.toLowerCase()] && (lps[bond.principle.toLowerCase()].token0 || lps[bond.principle.toLowerCase()].token0)) {
+          result.lp = true;
+        }
+
+        return result
+      });
+
+      await this.cacheManager.set(cacheKey, bonds, {ttl: 60 * 30});
+
+      return bonds;
+    }
+
+    async getFarms(refresh = false) {
+      const cacheKey = `getFarms-v11-${this.getName()}`;
+
+      if (!refresh) {
+        const cache = await this.cacheManager.get(cacheKey);
+        if (cache) {
+          return cache;
+        }
+      }
+
+      const [bonds, pools] = await Promise.all([
+        this.getRawPools(),
+        this.getRawStakes(),
+      ]);
+
+      const treasuryBalances = await Utils.multiCallIndexBy('address', bonds.filter(bond => bond.reserveAddress && bond.treasury).map(bond => ({
+        address: bond.reserveAddress.toLowerCase(),
+        balanceOf: new Web3EthContract(erc20Abi, bond.reserveAddress).methods.balanceOf(bond.treasury),
+      })));
+
+      const result1 = bonds.map(bond => {
+        let tokenSymbol;
+
+        let isLp = bond.lp === true;
+        tokenSymbol = this.tokenCollector.getSymbolByAddress(bond.reserveAddress);
+        if (!tokenSymbol) {
+          tokenSymbol = this.liquidityTokenCollector.getSymbolNames(bond.reserveAddress);
+          if (tokenSymbol) {
+            isLp = true;
+          }
+        }
+
+        const bondName = bond.name ? bond.name.replace(/\s+\w*lp$/i, '').trim() : 'unknown';
+
+        let hash = crypto.createHash('md5')
+          .update(bond.bondAddress.toLowerCase())
+          .digest('hex');
+
+        const item = {
+          id: `${this.getName()}_bond_${hash}`,
+          name: `Bond ${(tokenSymbol || bondName).toUpperCase()}`,
+          token: (tokenSymbol || bondName).toLowerCase(),
+          provider: this.getName(),
+          raw: Object.freeze(bond),
+          has_details: false,
+          chain: this.getChain(),
+          extra: {},
+          flags: ['bond'],
+          notes: [],
+        };
+
+        if (bond.terms && bond.terms['vestingTerm'] > 0) {
+          const vestingDays = _.round(bond.terms['vestingTerm'] * Utils.getChainSecondsPerBlock(this.getChain()) / 86400, 1);
+          item.notes.push(`Vesting Term ${vestingDays} Days`);
+        }
+
+        const tokenByAddress = this.tokenCollector.getTokenByAddress(bond.rewardToken);
+        if (tokenByAddress) {
+          item.earn = [tokenByAddress];
+          item.earns = item.earn.map(t => t.symbol.toLowerCase());
+        }
+
+        item.extra.transactionToken = bond.reserveAddress;
+        item.extra.transactionAddress = bond.bondAddress;
+
+        if (isLp) {
+          item.extra.lpAddress = item.extra.transactionToken;
+
+          const platform = this.farmPlatformResolver.findMainPlatformNameForTokenAddress(item.extra.lpAddress);
+          if (platform) {
+            item.platform = platform;
+          }
+        }
+
+        let treasuryBalance = treasuryBalances[item.extra.transactionToken.toLowerCase()];
+        if (treasuryBalance && treasuryBalance.balanceOf > 0) {
+          item.tvl = {
+            amount: (treasuryBalance.balanceOf / 10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
+          };
+
+          const price = this.priceOracle.getAddressPrice(item.extra.transactionToken);
+          if (price) {
+            item.tvl.usd = item.tvl.amount * price;
+          }
+        }
+
+        if (bond.bondPriceInUSD > 0 && bond.terms && bond.terms['vestingTerm'] > 0) {
+          const price = this.priceOracle.getAddressPrice(bond.rewardToken);
+          if (price) {
+            const percent = ((100 / (bond.bondPriceInUSD / 1e18)) * price) - 100;
+            const vestingDays = bond.terms['vestingTerm'] * Utils.getChainSecondsPerBlock(this.getChain()) / 86400;
+            const dailyRoi = _.round(percent / vestingDays, 2);
+
+            if (Math.abs(dailyRoi) < 15) {
+              item.notes.push(`Daily ROI ${dailyRoi}%`);
+            }
+          }
+        }
+
+        const link = this.getFarmLink(item);
+        if (link) {
+          item.link = link;
+        }
+
+        return Object.freeze(item);
+      });
+
+      const result2 = pools.map(stake => {
+        let tokenSymbol = this.tokenCollector.getSymbolByAddress(stake.underlying) || 'unknown';
+
+        let hash = crypto.createHash('md5')
+          .update(stake.token.toLowerCase())
+          .digest('hex');
+
+        const item = {
+          id: `${this.getName()}_stake_${hash}`,
+          name: tokenSymbol.toUpperCase(),
+          token: tokenSymbol.toLowerCase(),
+          provider: this.getName(),
+          raw: Object.freeze(stake),
+          has_details: false,
+          chain: this.getChain(),
+          extra: {},
+          flags: ['bond'],
+          compound: true
+        };
+
+        const tokenByAddress = this.tokenCollector.getTokenByAddress(stake.underlying);
+
+        if (tokenByAddress) {
+          item.extra.transactionToken = tokenByAddress.address;
+
+          item.earn = [tokenByAddress];
+          item.earns = item.earn.map(t => t.symbol.toLowerCase());
+        }
+
+        const link = this.getFarmLink(item);
+        if (link) {
+          item.link = link;
+        }
+
+        return Object.freeze(item);
+      });
+
+      const result = [...result1, ...result2];
+
+      await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
+
+      console.log(`${this.getName()} updated`);
+
+      return result;
+    }
+
+
+    async getYields(address) {
+      const addressFarms = await this.getAddressFarms(address);
+      if (addressFarms.length === 0) {
+        return [];
+      }
+
+      return await this.getYieldsInner(address, addressFarms);
+    }
+
+    async getAddressFarms(address) {
+      const cacheKey = `getAddressFarms-v1-${this.getName()}-${address}`;
+
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
+      }
+
+      const bondCallsPromise = (await this.getFarms())
+        .filter(farm => farm.id.includes('_bond_'))
+        .map(farm => {
+          const vault = new Web3EthContract(BOND_ABI, farm.raw.bondAddress);
+
+          return {
+            bondInfo: vault.methods.bondInfo(address),
+            id: farm.id.toString()
+          };
+        });
+
+      const stakedCallsPromise = (await this.getFarms())
+        .filter(farm => farm.id.includes('_stake_'))
+        .map(farm => {
+          const vault = new Web3EthContract(erc20Abi, farm.raw.token);
+
+          return {
+            balanceOf: vault.methods.balanceOf(address),
+            id: farm.id.toString()
+          };
+        });
+
+      const [bondCalls, stakedCalls] = await Promise.all([
+        Utils.multiCall(bondCallsPromise, this.getChain()),
+        Utils.multiCall(stakedCallsPromise, this.getChain()),
+      ]);
+
+      const result1 = bondCalls
+        .filter(v => new BigNumber(v?.bondInfo[0] || 0).isGreaterThan(Utils.DUST_FILTER))
+        .map(v => v.id);
+
+      const result2 = stakedCalls
+        .filter(v => new BigNumber(v?.balanceOf || 0).isGreaterThan(Utils.DUST_FILTER))
+        .map(v => v.id);
+
+      const result = [...result1, ...result2];
+
+      await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
+
+      return result;
+    }
+
+    async getYieldsInner(address, ids) {
+      if (ids.length === 0) {
+        return [];
+      }
+
+      const farms = await this.getFarms();
+
+      const vaultCalls = ids
+        .filter(id => id.includes('_bond_'))
+        .map(id => {
+          const farm = farms.find(f => f.id === id);
+
+          const vault = new Web3EthContract(BOND_ABI, farm.raw.bondAddress);
+
+          return {
+            bondInfo: vault.methods.bondInfo(address),
+            pendingPayout: vault.methods.pendingPayoutFor(address),
+            id: farm.id.toString()
+          };
+        });
+
+      const stakeCalls = ids
+        .filter(id => id.includes('_stake_'))
+        .map(id => {
+          const farm = farms.find(f => f.id === id);
+
+          const vault = new Web3EthContract(erc20Abi, farm.raw.token);
+
+          return {
+            balanceOf: vault.methods.balanceOf(address),
+            id: farm.id.toString()
+          };
+        });
+
+      const [calls, stakes] = await Promise.all([
+        Utils.multiCall(vaultCalls, this.getChain()),
+        Utils.multiCall(stakeCalls, this.getChain()),
+      ]);
+
+      const resultFarms1 = calls
+        .filter(v => new BigNumber(v.bondInfo[0] || 0).isGreaterThan(Utils.DUST_FILTER))
+        .map(call => {
+          const farm = farms.find(f => f.id === call.id);
+
+          let amount = call.bondInfo[0] || 0;
+          let rewards = call.pendingPayout || 0;
+
+          amount -= rewards;
+
+          const result = {};
+
+          let decimals = this.tokenCollector.getDecimals(farm.raw.rewardToken);
+          let symbol = this.tokenCollector.getSymbolByAddress(farm.raw.rewardToken) || '?';
+
+          result.deposit = {
+            symbol: symbol,
+            amount: amount / (10 ** decimals)
+          };
+
+          const price = this.priceOracle.getAddressPrice(farm.raw.rewardToken)
+          if (price) {
+            result.deposit.usd = result.deposit.amount * price;
+          }
+
+          if (rewards > 0) {
+            const reward = {
+              symbol: symbol,
+              amount: rewards / (10 ** decimals)
+            };
+
+            if (price) {
+              reward.usd = reward.amount * price;
+            }
+
+            result.rewards = [reward];
+          }
+
+          result.farm = farm;
+
+          return Object.freeze(result);
+        });
+
+      const resultFarms2 = stakes
+        .filter(v => new BigNumber(v.balanceOf || 0).isGreaterThan(Utils.DUST_FILTER))
+        .map(call => {
+          const farm = farms.find(f => f.id === call.id);
+
+          let amount = call.balanceOf || 0;
+
+          const result = {};
+
+          result.deposit = {
+            symbol: this.tokenCollector.getSymbolByAddress(farm.raw.underlying) || '?',
+            amount: amount / (10 ** this.tokenCollector.getDecimals(farm.raw.underlying))
+          };
+
+          const price = this.priceOracle.getAddressPrice(farm.raw.underlying);
+
+          if (price) {
+            result.deposit.usd = result.deposit.amount * price;
+          }
+
+          result.farm = farm;
+
+          return Object.freeze(result);
+        });
+
+      return Object.freeze([...resultFarms1, ...resultFarms2]);
+    }
+
+    async getTransactions(address, id) {
+      const farm = (await this.getFarms()).find(f => f.id === id);
+      if (!farm) {
+        return {};
+      }
+
+      if (farm.extra.transactionAddress && farm.extra.transactionToken) {
+        return Utils.getTransactions(
+          farm.extra.transactionAddress,
+          farm.extra.transactionToken,
+          address
+        );
+      }
+
+      return [];
+    }
+
+    async getDetails(address, id) {
+      const farm = (await this.getFarms()).find(f => f.id === id);
+      if (!farm) {
+        return {};
+      }
+
+      const [yieldFarms, transactions] = await Promise.all([
+        this.getYieldsInner(address, [farm.id]),
+        this.getTransactions(address, id)
+      ]);
+
+      const result = {};
+
+      let lpTokens = [];
+      if (yieldFarms[0]) {
+        result.farm = yieldFarms[0];
+        lpTokens = this.priceOracle.getLpSplits(farm, yieldFarms[0]);
+      }
+
+      if (transactions && transactions.length > 0) {
+        result.transactions = transactions;
+      }
+
+      if (lpTokens && lpTokens.length > 0) {
+        result.lpTokens = lpTokens;
+      }
+
+      return result;
+    }
+
+    getFarmLink(farm) {
+      throw new Error('not implemented');
     }
 
     getName() {

@@ -268,8 +268,6 @@ module.exports = class CronosPriceOracle {
         };
       });
 
-    console.log("cronos: lp address update", lpAddress.length, v.length);
-
     const vaultCalls = await Utils.multiCall(v, 'cronos');
 
     const ercs = {};
@@ -484,6 +482,12 @@ module.exports = class CronosPriceOracle {
         router: '0x145677FC4d9b8F19B5D56d1820c48e0443049a30', // mmfinance
         address: '0x97749c9B61F878a880DfE312d2594AE07AEd7656',
         symbol: 'mmf',
+        decimals: 18,
+      },
+      {
+        router: '0x145677FC4d9b8F19B5D56d1820c48e0443049a30', // mmfinance
+        address: '0x50c0C5bda591bc7e89A342A3eD672FB59b3C46a7',
+        symbol: 'mmo',
         decimals: 18,
       },
       {

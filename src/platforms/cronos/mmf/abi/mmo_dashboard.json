@@ -1,0 +1,553 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "MMF",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MMO",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "VaultMMFToMMF",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "WCRO",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "calculateProfit",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "profit",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "profitInBNB",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "infoOfPool",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "balance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "principal",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "available",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tvl",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "utilized",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "liquidity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pBASE",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pMMO",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "depositedAt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "feeDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "feePercentage",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct PoolConstant.PoolInfoBSC",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "mmfPoolIds",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "perfExemptions",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      }
+    ],
+    "name": "poolTypeOf",
+    "outputs": [
+      {
+        "internalType": "enum PoolConstant.PoolTypes",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "poolTypes",
+    "outputs": [
+      {
+        "internalType": "enum PoolConstant.PoolTypes",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "pools",
+        "type": "address[]"
+      }
+    ],
+    "name": "poolsOf",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "pool",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "balance",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "principal",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "available",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tvl",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "utilized",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "liquidity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pBASE",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pMMO",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "depositedAt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "feeDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "feePercentage",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct PoolConstant.PoolInfoBSC[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "pools",
+        "type": "address[]"
+      }
+    ],
+    "name": "portfolioOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "deposits",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceCalculator",
+    "outputs": [
+      {
+        "internalType": "contract PriceCalculatorCronos",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "profitOfPool",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "profit",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "mmo",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "pid",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMmfPoolId",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "exemption",
+        "type": "bool"
+      }
+    ],
+    "name": "setPerfExemption",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "internalType": "enum PoolConstant.PoolTypes",
+        "name": "poolType",
+        "type": "uint8"
+      }
+    ],
+    "name": "setPoolType",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      }
+    ],
+    "name": "tvlOfPool",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "tvl",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      }
+    ],
+    "name": "utilizationOfPool",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "liquidity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "utilized",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

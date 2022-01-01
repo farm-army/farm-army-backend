@@ -331,8 +331,6 @@ module.exports = class FantomPriceOracle {
         };
       });
 
-    console.log("fantom: lp address update", lpAddress.length, v.length);
-
     const vaultCalls = await Utils.multiCall(v, 'fantom');
 
     const ercs = {};

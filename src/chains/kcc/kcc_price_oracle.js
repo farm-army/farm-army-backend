@@ -230,8 +230,6 @@ module.exports = class KccPriceOracle {
         };
       });
 
-    console.log("kcc: lp address update", lpAddress.length, v.length);
-
     const vaultCalls = await Utils.multiCall(v, 'kcc');
 
     const ercs = {};

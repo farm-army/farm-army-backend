@@ -7,6 +7,7 @@ const timeout = require('connect-timeout');
 
 module.exports = class Http {
   constructor(
+    config,
     priceOracle,
     platforms,
     platformsPolygon,
@@ -68,6 +69,7 @@ module.exports = class Http {
     cronosTokenInfo,
     cronosAddressTransactions    
   ) {
+    this.config = config;
     this.crossPlatforms = crossPlatforms;
 
     this.chains = {};
@@ -163,13 +165,25 @@ module.exports = class Http {
     this.app = express();
   }
 
-  start(port = 3000) {
-    this.app.use(timeout('25s'));
+  start() {
+    this.app.use(timeout('40s'));
 
     this.routes();
 
-    this.app.listen(port, "127.0.0.1", () => {
-      console.log(`Listening at http://127.0.0.1:${port} @env:(${process.env.NODE_ENV ? process.env.NODE_ENV : 'n/a'})`);
+    let port = 3000;
+    if (process.argv[2]) {
+      port = process.argv[2]
+    } else if(this.config['WEBSERVER_PORT']) {
+      port = this.config['WEBSERVER_PORT']
+    }
+
+    let hostname = '127.0.0.1';
+    if (this.config['WEBSERVER_HOSTNAME']) {
+      hostname = this.config['WEBSERVER_HOSTNAME']
+    }
+
+    this.app.listen(port, hostname, () => {
+      console.log(`Listening at http://${hostname}:${port} @env:(${process.env.NODE_ENV ? process.env.NODE_ENV : 'n/a'})`);
     });
   }
 
@@ -203,10 +217,17 @@ module.exports = class Http {
     });
 
     app.get("/:chain/token/:address", async (req, res) => {
+      let timer = -performance.now();
       const {chain, address} = req.params;
+
+      if (!this.chains[chain]) {
+        console.error(`${chain}: ${new Date().toISOString()}: token error invalid chain ${address} - ${(timer / 1000).toFixed(3)} sec`);
+        res.status(400).json({message: 'invalid chain'});
+        return;
+      }
+
       const tokenInfo = this.chains[chain].tokenInfo;
 
-      let timer = -performance.now();
       res.json(await tokenInfo.getTokenInfo(address));
       timer += performance.now();
       console.log(`${chain}: ${new Date().toISOString()}: token ${address} - ${(timer / 1000).toFixed(3)} sec`);

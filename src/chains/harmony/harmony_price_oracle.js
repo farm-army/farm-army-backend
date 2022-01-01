@@ -262,8 +262,6 @@ module.exports = class HarmonyPriceOracle {
         };
       });
 
-    console.log("harmony: lp address update", lpAddress.length, v.length);
-
     const vaultCalls = await Utils.multiCall(v, 'harmony');
 
     const ercs = {};

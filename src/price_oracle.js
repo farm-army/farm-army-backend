@@ -262,8 +262,6 @@ module.exports = class PriceOracle {
         };
       });
 
-    console.log("bsc: lp address update", lpAddress.length, v.length);
-
     const vaultCalls = await Utils.multiCall(v);
 
     const ercs = {};
@@ -606,6 +604,12 @@ module.exports = class PriceOracle {
         address: '0x1b219Aca875f8C74c33CFF9fF98f3a9b62fCbff5',
         symbol: 'fins',
         decimals: 18,
+      },
+      {
+        router: '0x10ED43C718714eb63d5aA57B78B54704E256024E', // pancakeswap v2
+        address: '0x19e6BfC1A6e4B042Fb20531244D47E252445df01',
+        symbol: 'tem',
+        decimals: 9,
       },
       /*
       {

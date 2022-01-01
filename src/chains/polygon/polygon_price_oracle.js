@@ -280,8 +280,6 @@ module.exports = class PolygonPriceOracle {
         };
       });
 
-    console.log("polygon: lp address update", lpAddress.length, v.length);
-
     const vaultCalls = await Utils.multiCall(v, 'polygon');
 
     const ercs = {};
