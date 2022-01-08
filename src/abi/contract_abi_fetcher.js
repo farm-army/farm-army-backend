@@ -55,6 +55,11 @@ module.exports = class ContractAbiFetcher {
       return;
     }
 
+    if (!parse.result) {
+      console.log(`abi-fetch-error-${chain}`, url);
+      return;
+    }
+
     const abi = JSON.parse(parse.result);
     await this.cacheManager.set(cacheKey, abi, {ttl: 60 * 60 * 24 * 7})
 

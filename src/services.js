@@ -172,6 +172,8 @@ const Yieldparrot = require("./platforms/bsc/yieldparrot/yieldparrot");
 const Alpha = require("./platforms/bsc/alpha/alpha");
 const Honeyfarm = require("./platforms/bsc/honeyfarm/honeyfarm");
 const Rabbit = require("./platforms/bsc/rabbit/rabbit");
+const RabbitDecorator = require("./platforms/bsc/rabbit/rabbit_decorator");
+const RabbitDao = require("./platforms/bsc/rabbit/rabbit_dao");
 const Qubit = require("./platforms/bsc/qubit/qubit");
 const Cream = require("./platforms/bsc/cream/cream");
 const Venus = require("./platforms/bsc/venus/venus");
@@ -199,6 +201,7 @@ const Templar = require("./platforms/bsc/templar/templar");
 const Nemesis = require("./platforms/bsc/nemesis/nemesis");
 const Hunnydao = require("./platforms/bsc/hunnydao/hunnydao");
 const Jade = require("./platforms/bsc/jade/jade");
+const Unus = require("./platforms/bsc/unus/unus");
 
 const Pwault = require("./platforms/polygon/pwault/pwault");
 const Polycat = require("./platforms/polygon/polycat/polycat");
@@ -237,6 +240,7 @@ const Paave = require("./platforms/polygon/paave/paave");
 const Pfulcrum = require("./platforms/polygon/pfulcrum/pfulcrum");
 const Market = require("./platforms/polygon/market/market");
 const MarketPool = require("./platforms/polygon/market/market_pool");
+const Patlantis = require("./platforms/polygon/patlantis/patlantis");
 
 const Spookyswap = require("./platforms/fantom/spookyswap/spookyswap");
 const Spiritswap = require("./platforms/fantom/spiritswap/spiritswap");
@@ -292,6 +296,7 @@ const Openswap2 = require("./platforms/harmony/openswap/openswap2");
 const Tranquil = require("./platforms/harmony/tranquil/tranquil");
 const Hautofarm = require("./platforms/harmony/hautofarm/hautofarm");
 const Euphoria = require("./platforms/harmony/euphoria/euphoria");
+const Hhundred = require("./platforms/harmony/hhundred/hhundred");
 
 const Ubeswap = require("./platforms/celo/ubeswap/ubeswap");
 const Mobius = require("./platforms/celo/mobius/mobius");
@@ -378,6 +383,7 @@ let templar;
 let nemesis;
 let hunnydao;
 let jade;
+let unus;
 
 let pwault;
 let polycat;
@@ -416,6 +422,7 @@ let paave;
 let pfulcrum;
 let psynapse;
 let market;
+let patlantis;
 
 let spookyswap;
 let spiritswap;
@@ -467,7 +474,8 @@ let defikingdoms;
 let tranquil;
 let hsynapse;
 let hautofarm;
-let euphoria
+let euphoria;
+let hhundred;
 
 let ubeswap;
 let mobius;
@@ -876,6 +884,7 @@ module.exports = {
           this.getNemesis(),
           this.getHunnydao(),
           this.getJade(),
+          this.getUnus(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -923,6 +932,7 @@ module.exports = {
         this.getPfulcrum(),
         this.getPSynapse(),
         this.getMarket(),
+        this.getPatlantis(),
       ],
       this.getCache(),
       this.getPolygonPriceOracle(),
@@ -1057,6 +1067,7 @@ module.exports = {
         this.getHSynapse(),
         this.getHautofarm(),
         this.getEuphoria(),
+        this.getHhundred(),
       ],
       this.getCache(),
       this.getHarmonyPriceOracle(),
@@ -1633,6 +1644,20 @@ module.exports = {
     ));
   },
 
+  getPatlantis() {
+    if (patlantis) {
+      return patlantis;
+    }
+
+    return (patlantis = new Patlantis(
+      this.getPolygonPriceOracle(),
+      this.getPolygonTokenCollector(),
+      this.getPolygonCacheManager(),
+      this.getPolygonLiquidityTokenCollector(),
+      this.getPolygonFarmPlatformResolver(),
+    ));
+  },
+
   getMarket() {
     if (market) {
       return market;
@@ -1722,6 +1747,20 @@ module.exports = {
     }
 
     return (jade = new Jade(
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getCacheManager(),
+      this.getLiquidityTokenCollector(),
+      this.getFarmPlatformResolver(),
+    ));
+  },
+
+  getUnus() {
+    if (unus) {
+      return unus;
+    }
+
+    return (unus = new Unus(
       this.getPriceOracle(),
       this.getTokenCollector(),
       this.getCacheManager(),
@@ -2597,13 +2636,23 @@ module.exports = {
       return rabbit;
     }
 
-    return (rabbit = new Rabbit(
+    const rabbit1 = new Rabbit(
       this.getPriceOracle(),
       this.getTokenCollector(),
       this.getCacheManager(),
       this.getLiquidityTokenCollector(),
       this.getFarmPlatformResolver(),
-    ));
+    );
+
+    const rabbitDao = new RabbitDao(
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getCacheManager(),
+      this.getLiquidityTokenCollector(),
+      this.getFarmPlatformResolver(),
+    );
+
+    return (rabbit = new RabbitDecorator(rabbit1, rabbitDao));
   },
 
   getQubit() {
@@ -2673,6 +2722,20 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomLiquidityTokenCollector(),
       this.getFantomFarmPlatformResolver(),
+    ));
+  },
+
+  getHhundred() {
+    if (hhundred) {
+      return hhundred;
+    }
+
+    return (hhundred = new Hhundred(
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyCacheManager(),
+      this.getHarmonyLiquidityTokenCollector(),
+      this.getHarmonyFarmPlatformResolver(),
     ));
   },
 

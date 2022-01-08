@@ -183,5 +183,15 @@
     "symbol": "jade",
     "address": "0x7ad7242A99F21aa543F9650A56D141C57e4F6081",
     "decimals": 9
+  },
+  {
+    "symbol": "udo",
+    "address": "0xb91ec4f9d7d12a1ac145a7ae3b78afb45856c9c8",
+    "decimals": 9
+  },
+  {
+    "symbol": "rs",
+    "address": "0xC25b7244e192D531495C400c64ea914A77E730A2",
+    "decimals": 9
   }
 ]

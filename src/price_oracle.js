@@ -73,6 +73,7 @@ module.exports = class PriceOracle {
     const bPrices = await Promise.allSettled([
       this.getCoingeckoPrices(),
       this.getBeefyPrices(),
+      this.updateParaswapPrices(),
       this.updateCoinGeckoPrices(),
     ])
 
@@ -700,6 +701,42 @@ module.exports = class PriceOracle {
     });
 
     return prices;
+  }
+
+  async updateParaswapPrices() {
+    const tokens = [
+      {
+        source: '0xC25b7244e192D531495C400c64ea914A77E730A2', // RS
+        srcDecimals: 9,
+        target: '0x95a1199EBA84ac5f19546519e287d43D2F0E1b41', // Rabbit
+        targetDecimals: 18,
+      }
+    ];
+
+    const items = [];
+
+    for (const token of tokens) {
+      const params = new URLSearchParams({
+        network: 56,
+        side: 'SELL',
+        srcToken: token.source,
+        srcDecimals: token.srcDecimals || 18,
+        amount: (10 ** (token.srcDecimals || 18)),
+        destToken: token.target,
+        destDecimals: token.targetDecimals || 18,
+      });
+
+      const result = await Utils.requestJsonGetRetry('https://apiv5.paraswap.io/prices?' + params.toString());
+      if (result?.priceRoute?.destUSD && result?.priceRoute?.destUSD > 0) {
+        items.push({
+          address: token.source,
+          price: parseFloat(result.priceRoute.destUSD),
+          source: 'paraswap',
+        });
+      }
+    }
+
+    return items;
   }
 
   getLpSplits(farm, yieldFarm) {

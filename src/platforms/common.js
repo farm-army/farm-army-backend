@@ -1018,8 +1018,12 @@ module.exports = {
         }
 
         // 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE
-        if (this.getChain() === 'polygon' && info.underlying && info.underlying.toLowerCase().includes('eeeeeeeeeeeeeeeeeeeeeeeeeeeeee') && tokenName && tokenName.toLowerCase().includes('matic')) {
-          info.underlying = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
+        if (this.getChain() === 'polygon') {
+          if (info.underlying && info.underlying.toLowerCase().includes('eeeeeeeeeeeeeeeeeeeeeeeeeeeeee') && tokenName && tokenName.toLowerCase().includes('matic')) {
+            info.underlying = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
+          } else if (!info.underlying && tokenName?.toLowerCase().includes('matic')) {
+            info.underlying = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
+          }
         }
 
         if (this.getChain() === 'fantom') {
@@ -2098,7 +2102,7 @@ module.exports = {
           item.link = link;
         }
 
-        return Object.freeze(item);
+        return item;
       });
 
       const result2 = pools.map(stake => {
@@ -2135,10 +2139,14 @@ module.exports = {
           item.link = link;
         }
 
-        return Object.freeze(item);
+        return item;
       });
 
       const result = [...result1, ...result2];
+
+      if (typeof this.onFarmsBuild !== "undefined") {
+        await this.onFarmsBuild(result)
+      }
 
       await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
 
@@ -2221,11 +2229,17 @@ module.exports = {
 
           const vault = new Web3EthContract(BOND_ABI, farm.raw.bondAddress);
 
-          return {
+          let call = {
             bondInfo: vault.methods.bondInfo(address),
             pendingPayout: vault.methods.pendingPayoutFor(address),
             id: farm.id.toString()
           };
+
+          if (this.getConfig().usePercentVestedFor === true) {
+            call.percentVestedFor = vault.methods.percentVestedFor(address);
+          }
+
+          return call;
         });
 
       const stakeCalls = ids
@@ -2254,7 +2268,12 @@ module.exports = {
           let amount = call.bondInfo[0] || 0;
           let rewards = call.pendingPayout || 0;
 
-          amount -= rewards;
+          if (call.percentVestedFor && call.percentVestedFor && (call.percentVestedFor / 1e6) > 0) {
+            const ml = 100 / (call.percentVestedFor / 1e6);
+            amount = call.pendingPayout * ml;
+          } else {
+            amount -= rewards;
+          }
 
           const result = {};
 

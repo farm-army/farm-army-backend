@@ -28,7 +28,7 @@ module.exports = class tarot {
 
     const cacheItem = await this.cacheManager.get(cacheKey)
     if (cacheItem) {
-      //return cacheItem;
+      return cacheItem;
     }
 
     const allLendingPoolsLengthResult = await Utils.multiCall([{
@@ -75,9 +75,15 @@ module.exports = class tarot {
       "mode": "cors"
     });
 
-    const subgraphs = subgraphResponse
-      ? JSON.parse(subgraphResponse)?.data?.lendingPools || []
-      : [];
+    let subgraphs = [];
+
+    try {
+      subgraphs = subgraphResponse
+        ? JSON.parse(subgraphResponse)?.data?.lendingPools || []
+        : [];
+    } catch (e) {
+      console.log('tarot: subgraphs error', e.message)
+    }
 
     result.forEach(i => {
       const item = subgraphs.find(x => x.id.toLowerCase() === i.address.toLowerCase());
@@ -196,9 +202,14 @@ module.exports = class tarot {
       "mode": "cors"
     }, 15);
 
-    const result = subgraphResponse
-      ? JSON.parse(subgraphResponse)?.data?.user || []
-      : [];
+    let result = {};
+    try {
+      result = subgraphResponse
+        ? JSON.parse(subgraphResponse)?.data?.user || []
+        : [];
+    } catch (e) {
+      console.log('tarot address fetch error: ', address, e.message)
+    }
 
     await this.cacheManager.set(cacheKey, result, {ttl: 60 * 15})
 

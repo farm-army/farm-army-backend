@@ -697,7 +697,7 @@ module.exports = {
       return undefined;
     }
 
-    if (yieldObject.percent !== undefined && Math.abs(yieldObject.percent) <= 0) {
+    if (yieldObject.percent !== undefined && Math.abs(yieldObject.percent) <= 0.005) {
       return undefined;
     }
 
