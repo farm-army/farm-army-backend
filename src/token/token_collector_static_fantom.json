@@ -3,5 +3,20 @@
     "symbol": "eleusdc",
     "address": "0x8a7B7678f4bf86146C6b8565884fF158a47043eF",
     "decimals": 6
+  },
+  {
+    "symbol": "credit",
+    "address": "0x77128DFdD0ac859B33F44050c6fa272F34872B5E",
+    "decimals": 18
+  },
+  {
+    "symbol": "lux",
+    "address": "0x6671E20b83Ba463F270c8c75dAe57e3Cc246cB2b",
+    "decimals": 9
+  },
+  {
+    "symbol": "angle",
+    "address": "0x3b9e3b5c616A1A038fDc190758Bbe9BAB6C7A857",
+    "decimals": 18
   }
 ]

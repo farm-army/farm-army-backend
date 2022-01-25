@@ -384,10 +384,13 @@ module.exports = class mmo {
       return cache;
     }
 
+    let result = await this.cacheManager.get(cacheKey + '-long');
     const response = await Utils.requestJsonGet('https://madmeerkat.io/api/vault');
+    if (response?.vaultData) {
+      result = response.vaultData;
+      await this.cacheManager.set(cacheKey + '-long', result, {ttl: 60 * 60 * 6});
+    }
 
-    const result = response?.vaultData || [];
-    
     await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30});
 
     return Object.freeze(result);

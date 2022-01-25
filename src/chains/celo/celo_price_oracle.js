@@ -372,12 +372,16 @@ module.exports = class CeloPriceOracle {
           const reserveUsd = (c.reserve0 / (10 ** token0.decimals)) * token0Price;
           token1Price = reserveUsd / (c.reserve1 / (10 ** token1.decimals));
 
-          console.log("celo: Missing price 'token1' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          if (Utils.isDevMode()) {
+            console.log("celo: Missing price 'token1' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          }
         } else if (token1Price && !token0Price) {
           const reserveUsd = (c.reserve1 / (10 ** token1.decimals)) * token1Price;
           token0Price = reserveUsd / (c.reserve0 / (10 ** token0.decimals));
 
-          console.log("celo: Missing price 'token0' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          if (Utils.isDevMode()) {
+            console.log("celo: Missing price 'token0' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          }
         }
       }
 

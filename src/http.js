@@ -17,6 +17,7 @@ module.exports = class Http {
     platformsCelo,
     platformsMoonriver,
     platformsCronos,
+    platformsMoonbeam,
     crossPlatforms,
     balances,
     addressTransactions,
@@ -67,7 +68,13 @@ module.exports = class Http {
     cronosTokenCollector,
     cronosBalances,
     cronosTokenInfo,
-    cronosAddressTransactions    
+    cronosAddressTransactions,
+    moonbeamPriceOracle,
+    moonbeamLiquidityTokenCollector,
+    moonbeamTokenCollector,
+    moonbeamBalances,
+    moonbeamTokenInfo,
+    moonbeamAddressTransactions    
   ) {
     this.config = config;
     this.crossPlatforms = crossPlatforms;
@@ -159,6 +166,17 @@ module.exports = class Http {
       balances: cronosBalances,
       tokenInfo: cronosTokenInfo,
       addressTransactions: cronosAddressTransactions,
+      autoFarm: {}, // not supported
+    }
+    
+    this.chains.moonbeam = {
+      platforms: platformsMoonbeam,
+      priceOracle: moonbeamPriceOracle,
+      liquidityTokenCollector: moonbeamLiquidityTokenCollector,
+      tokenCollector: moonbeamTokenCollector,
+      balances: moonbeamBalances,
+      tokenInfo: moonbeamTokenInfo,
+      addressTransactions: moonbeamAddressTransactions,
       autoFarm: {}, // not supported
     }
     

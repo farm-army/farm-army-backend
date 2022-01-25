@@ -45,6 +45,8 @@ let fantomDb;
 let fantomFarmPlatformResolver;
 let fantomFarmAuto;
 let fantomFarmFetcher;
+let fantomAdditionalTokenInfo;
+let polygonAdditionalTokenInfo;
 
 let kccPriceOracle;
 let kccTokenCollector;
@@ -106,6 +108,18 @@ let cronosFarmPlatformResolver;
 let cronosAddressTransactions;
 let cronosFarmFetcher;
 
+let moonbeamPriceOracle;
+let moonbeamTokenCollector;
+let moonbeamPriceCollector;
+let moonbeamLiquidityTokenCollector;
+let moonbeamCacheManager;
+let moonbeamBalances;
+let moonbeamTokenInfo;
+let moonbeamDb;
+let moonbeamFarmPlatformResolver;
+let moonbeamAddressTransactions;
+let moonbeamFarmFetcher;
+
 let priceFetcher;
 
 const Cache = require("timed-cache");
@@ -136,7 +150,11 @@ const PriceFetcher = require("./chains/bsc/bsc_price_fetcher");
 const CeloPriceOracle = require("./chains/celo/celo_price_oracle");
 const MoonriverPriceOracle = require("./chains/moonriver/moonriver_price_oracle");
 const CronosPriceOracle = require("./chains/cronos/cronos_price_oracle");
+const MoonbeamPriceOracle = require("./chains/moonbeam/moonbeam_price_oracle");
 const CrossPlatforms = require("./platforms/cross_platforms");
+
+const FantomAdditionalTokenInfo = require("./chains/fantom/fantom_additional_token_info");
+const PolygonAdditionalTokenInfo = require("./chains/polygon/polygon_additional_token_info");
 
 const FarmAuto = require("./farm/farm_auto");
 
@@ -161,6 +179,9 @@ const Panther = require("./platforms/bsc/panther/panther");
 const Jetswap = require("./platforms/bsc/jetswap/jetswap");
 const Warden = require("./platforms/bsc/warden/warden");
 const Biswap = require("./platforms/bsc/biswap/biswap");
+const BiswapAuto = require("./platforms/bsc/biswap/biswap_auto");
+const BiswapDecorator = require("./platforms/bsc/biswap/biswap_decorator");
+
 const Evodefi = require("./platforms/bsc/evodefi/evodefi");
 const Eleven = require("./platforms/bsc/eleven/eleven");
 const Coinswap = require("./platforms/bsc/coinswap/coinswap");
@@ -241,6 +262,7 @@ const Pfulcrum = require("./platforms/polygon/pfulcrum/pfulcrum");
 const Market = require("./platforms/polygon/market/market");
 const MarketPool = require("./platforms/polygon/market/market_pool");
 const Patlantis = require("./platforms/polygon/patlantis/patlantis");
+const Uniswap = require("./platforms/polygon/uniswap/uniswap");
 
 const Spookyswap = require("./platforms/fantom/spookyswap/spookyswap");
 const Spiritswap = require("./platforms/fantom/spiritswap/spiritswap");
@@ -272,6 +294,16 @@ const Scream = require("./platforms/fantom/scream/scream");
 const Hectordao = require("./platforms/fantom/hectordao/hectordao");
 const Fantohm = require("./platforms/fantom/fantohm/fantohm");
 const Hundred = require("./platforms/fantom/hundred/hundred");
+const Revenant = require("./platforms/fantom/revenant/revenant");
+const RevenantMarket = require("./platforms/fantom/revenant/revenant_market");
+const RevenantFarm = require("./platforms/fantom/revenant/revenant_farm");
+const Soulswap = require("./platforms/fantom/soulswap/soulswap");
+const Luxor = require("./platforms/fantom/luxor/luxor");
+const Knightswap = require("./platforms/fantom/knightswap/knightswap");
+const Fyearn = require("./platforms/fantom/fyearn/fyearn");
+const Fmarket = require("./platforms/fantom/fmarket/fmarket");
+const Oxdao = require("./platforms/fantom/oxdao/oxdao");
+const Fsushi = require("./platforms/fantom/fsushi/fsushi");
 
 const Kuswap = require("./platforms/kcc/kuswap/kuswap");
 const Kudex = require("./platforms/kcc/kudex/kudex");
@@ -297,6 +329,7 @@ const Tranquil = require("./platforms/harmony/tranquil/tranquil");
 const Hautofarm = require("./platforms/harmony/hautofarm/hautofarm");
 const Euphoria = require("./platforms/harmony/euphoria/euphoria");
 const Hhundred = require("./platforms/harmony/hhundred/hhundred");
+const Lootswap = require("./platforms/harmony/lootswap/lootswap");
 
 const Ubeswap = require("./platforms/celo/ubeswap/ubeswap");
 const Mobius = require("./platforms/celo/mobius/mobius");
@@ -317,6 +350,8 @@ const Msushi = require("./platforms/moonriver/msushi/msushi");
 const Mtemplar = require("./platforms/moonriver/mtemplar/mtemplar");
 
 const Vvs = require("./platforms/cronos/vvs/vvs");
+const VvsDecorator = require("./platforms/cronos/vvs/vvs_decorator");
+const VvsAuto = require("./platforms/cronos/vvs/vvs_auto");
 const Cronaswap = require("./platforms/cronos/cronaswap/cronaswap");
 const Crodex = require("./platforms/cronos/crodex/crodex");
 const Crokafe = require("./platforms/cronos/crokafe/crokafe");
@@ -327,6 +362,9 @@ const CrannexMasterchef = require("./platforms/cronos/crannex/crannex_masterchef
 const Mmf = require("./platforms/cronos/mmf/mmf");
 const Mmo = require("./platforms/cronos/mmf/mmo");
 const Tectonic = require("./platforms/cronos/tectonic/tectonic");
+
+const Stellaswap = require("./platforms/moonbeam/stellaswap/stellaswap");
+const Solarflare = require("./platforms/moonbeam/solarflare/solarflare");
 
 let pancake;
 let swamp;
@@ -423,6 +461,7 @@ let pfulcrum;
 let psynapse;
 let market;
 let patlantis;
+let uniswap;
 
 let spookyswap;
 let spiritswap;
@@ -455,6 +494,14 @@ let fsynapse;
 let hectordao;
 let fantohm;
 let hundred;
+let soulswap;
+let revenant;
+let luxor;
+let knightswap;
+let fyearn;
+let fmarket;
+let oxdao;
+let fsushi;
 
 let kuswap;
 let kudex;
@@ -476,6 +523,7 @@ let hsynapse;
 let hautofarm;
 let euphoria;
 let hhundred;
+let lootswap;
 
 let ubeswap;
 let mobius;
@@ -510,6 +558,9 @@ let mmf;
 let tectonic;
 let mmo;
 
+let stellaswap;
+let solarflare;
+
 let polygonPlatform;
 let fantomPlatform;
 let kccPlatform;
@@ -517,6 +568,7 @@ let harmonyPlatform;
 let celoPlatform;
 let moonriverPlatform;
 let cronosPlatform;
+let moonbeamPlatform;
 
 let crossPlatforms;
 
@@ -559,6 +611,7 @@ module.exports = {
       this.getFarmPlatformResolver(),
       this.getPolygonFarmPlatformResolver(),
       this.getFantomFarmPlatformResolver(),
+      this.getFantomAdditionalTokenInfo(),
       this.getKccPlatforms(),
       this.getKccPriceOracle(),
       this.getKccFarmPlatformResolver(),
@@ -573,7 +626,10 @@ module.exports = {
       this.getMoonriverFarmPlatformResolver(),
       this.getCronosPlatforms(),
       this.getCronosPriceOracle(),
-      this.getCronosFarmPlatformResolver(),      
+      this.getCronosFarmPlatformResolver(),
+      this.getMoonbeamPlatforms(),
+      this.getMoonbeamPriceOracle(),
+      this.getMoonbeamFarmPlatformResolver(),
     ));
   },
 
@@ -731,6 +787,20 @@ module.exports = {
     ));
   },
   
+  getMoonbeamPriceOracle() {
+    if (moonbeamPriceOracle) {
+      return moonbeamPriceOracle;
+    }
+
+    return (moonbeamPriceOracle = new MoonbeamPriceOracle(
+      this.getMoonbeamTokenCollector(),
+      this.getMoonbeamLiquidityTokenCollector(),
+      this.getMoonbeamPriceCollector(),
+      this.getMoonbeamCacheManager(),
+      this.getPriceFetcher(),
+    ));
+  },
+  
   getPriceFetcher() {
     if (priceFetcher) {
       return priceFetcher;
@@ -818,6 +888,16 @@ module.exports = {
 
     return (cronosFarmPlatformResolver = new FarmPlatformResolver(
       this.getCronosCacheManager(),
+    ));
+  },
+
+  getMoonbeamFarmPlatformResolver() {
+    if (moonbeamFarmPlatformResolver) {
+      return moonbeamFarmPlatformResolver;
+    }
+
+    return (moonbeamFarmPlatformResolver = new FarmPlatformResolver(
+      this.getMoonbeamCacheManager(),
     ));
   },
   
@@ -933,6 +1013,7 @@ module.exports = {
         this.getPSynapse(),
         this.getMarket(),
         this.getPatlantis(),
+        this.getUniswap(),
       ],
       this.getCache(),
       this.getPolygonPriceOracle(),
@@ -976,6 +1057,14 @@ module.exports = {
         this.getHectordao(),
         this.getFantohm(),
         this.getHundred(),
+        this.getRevenant(),
+        this.getSoulswap(),
+        this.getLuxor(),
+        this.getKnightswap(),
+        this.getFyearn(),
+        this.getFmarket(),
+        this.getOxdao(),
+        this.getFsushi(),
       ],
       this.getCache(),
       this.getFantomPriceOracle(),
@@ -1023,7 +1112,23 @@ module.exports = {
       this.getMoonriverTokenCollector(),
     ));
   },
-  
+
+  getMoonbeamPlatforms() {
+    if (moonbeamPlatform) {
+      return moonbeamPlatform;
+    }
+
+    return (moonbeamPlatform = new Platforms(
+      [
+        this.getStellaswap(),
+        this.getSolarflare(),
+      ],
+      this.getCache(),
+      this.getMoonbeamPriceOracle(),
+      this.getMoonbeamTokenCollector(),
+    ));
+  },
+
   getCronosPlatforms() {
     if (cronosPlatform) {
       return cronosPlatform;
@@ -1068,6 +1173,7 @@ module.exports = {
         this.getHautofarm(),
         this.getEuphoria(),
         this.getHhundred(),
+        this.getLootswap(),
       ],
       this.getCache(),
       this.getHarmonyPriceOracle(),
@@ -1110,6 +1216,7 @@ module.exports = {
         this.getCeloPlatforms(),
         this.getKccPlatforms(),
         this.getMoonriverPlatforms(),
+        this.getMoonbeamPlatforms(),
       ],
     ));
   },
@@ -1484,6 +1591,20 @@ module.exports = {
     ));
   },
 
+  getFsushi() {
+    if (fsushi) {
+      return fsushi;
+    }
+
+    return (fsushi = new Fsushi(
+      this.getFantomCacheManager(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomFarmFetcher(),
+      this.getFantomCacheManager(),
+    ));
+  },
+
   getHsushi() {
     if (hsushi) {
       return hsushi;
@@ -1670,8 +1791,11 @@ module.exports = {
         this.getPolygonCacheManager(),
         this.getPolygonLiquidityTokenCollector(),
         this.getPolygonFarmPlatformResolver(),
+        this.getPolygonAdditionalTokenInfo(),
         5,
-        '0x5BeB233453d3573490383884Bd4B9CbA0663218a'
+        '0x5BeB233453d3573490383884Bd4B9CbA0663218a',
+        'polygon',
+        'market',
       ),
       new MarketPool(
         this.getPolygonPriceOracle(),
@@ -1679,8 +1803,105 @@ module.exports = {
         this.getPolygonCacheManager(),
         this.getPolygonLiquidityTokenCollector(),
         this.getPolygonFarmPlatformResolver(),
+        this.getPolygonAdditionalTokenInfo(),
         3,
-        '0x296233b4f2FEf1Ce7977340cEb3cec4CbE3ada42'
+        '0x296233b4f2FEf1Ce7977340cEb3cec4CbE3ada42',
+        'polygon',
+        'market',
+      ),
+    ));
+  },
+
+  getFmarket() {
+    if (fmarket) {
+      return fmarket;
+    }
+
+    // https://fantom.market.xyz/api/getAllPools
+    return (fmarket = new Fmarket(
+      new MarketPool(
+        this.getFantomPriceOracle(),
+        this.getFantomTokenCollector(),
+        this.getFantomCacheManager(),
+        this.getFantomLiquidityTokenCollector(),
+        this.getFantomFarmPlatformResolver(),
+        this.getFantomAdditionalTokenInfo(),
+        0,
+        '0x4D261478F0a17F0035Fdc3B98724ECaEC1C974B8',
+        'fantom',
+        'fmarket',
+      ),
+      new MarketPool(
+        this.getFantomPriceOracle(),
+        this.getFantomTokenCollector(),
+        this.getFantomCacheManager(),
+        this.getFantomLiquidityTokenCollector(),
+        this.getFantomFarmPlatformResolver(),
+        this.getFantomAdditionalTokenInfo(),
+        2,
+        '0x3f16B195069eeb489D12243F57E20fBBf4A916EC',
+        'fantom',
+        'fmarket',
+      ),
+      new MarketPool(
+        this.getFantomPriceOracle(),
+        this.getFantomTokenCollector(),
+        this.getFantomCacheManager(),
+        this.getFantomLiquidityTokenCollector(),
+        this.getFantomFarmPlatformResolver(),
+        this.getFantomAdditionalTokenInfo(),
+        3,
+        '0xe778b28b450cBEC40Ce4db67F049E3e62be84FD6',
+        'fantom',
+        'fmarket',
+      ),
+      new MarketPool(
+        this.getFantomPriceOracle(),
+        this.getFantomTokenCollector(),
+        this.getFantomCacheManager(),
+        this.getFantomLiquidityTokenCollector(),
+        this.getFantomFarmPlatformResolver(),
+        this.getFantomAdditionalTokenInfo(),
+        4,
+        '0xB117fB27518F3c85A6Ea54509BBC9e104b4b3F0c',
+        'fantom',
+        'fmarket',
+      ),
+      new MarketPool(
+        this.getFantomPriceOracle(),
+        this.getFantomTokenCollector(),
+        this.getFantomCacheManager(),
+        this.getFantomLiquidityTokenCollector(),
+        this.getFantomFarmPlatformResolver(),
+        this.getFantomAdditionalTokenInfo(),
+        5,
+        '0x718f883605209e9eD50D8c73d735a5E9AE8DfE4b',
+        'fantom',
+        'fmarket',
+      ),
+      new MarketPool(
+        this.getFantomPriceOracle(),
+        this.getFantomTokenCollector(),
+        this.getFantomCacheManager(),
+        this.getFantomLiquidityTokenCollector(),
+        this.getFantomFarmPlatformResolver(),
+        this.getFantomAdditionalTokenInfo(),
+        6,
+        '0xD2FA932784F2dAE4DDF6eCd3a5578Fa9a95De559',
+        'fantom',
+        'fmarket',
+      ),
+      new MarketPool(
+        this.getFantomPriceOracle(),
+        this.getFantomTokenCollector(),
+        this.getFantomCacheManager(),
+        this.getFantomLiquidityTokenCollector(),
+        this.getFantomFarmPlatformResolver(),
+        this.getFantomAdditionalTokenInfo(),
+        8,
+        '0x4aaEDb7e2F5C5470A89e7B9aFc583072322D7f6a',
+        'fantom',
+        'fmarket',
       ),
     ));
   },
@@ -2513,12 +2734,24 @@ module.exports = {
       return biswap;
     }
 
-    return (biswap = new Biswap(
+    const biswapAuto = new BiswapAuto(
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getCacheManager(),
+      this.getContractAbiFetcher(),
+    );
+
+    const masterchef = new Biswap(
       this.getCacheManager(),
       this.getPriceOracle(),
       this.getTokenCollector(),
       this.getFarmFetcher(),
       this.getCacheManager(),
+    );
+
+    return (biswap = new BiswapDecorator(
+      masterchef,
+      biswapAuto,
     ));
   },
 
@@ -2739,6 +2972,60 @@ module.exports = {
     ));
   },
 
+  getLootswap() {
+    if (lootswap) {
+      return lootswap;
+    }
+
+    return (lootswap = new Lootswap(
+      this.getHarmonyCacheManager(),
+      this.getHarmonyPriceOracle(),
+      this.getHarmonyTokenCollector(),
+      this.getHarmonyFarmFetcher(),
+      this.getHarmonyCacheManager(),
+    ));
+  },
+
+  getRevenant() {
+    if (revenant) {
+      return revenant;
+    }
+
+    const farm = new RevenantFarm(
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomCacheManager(),
+      this.getFantomLiquidityTokenCollector(),
+      this.getFantomFarmPlatformResolver(),
+    );
+
+    const market = new RevenantMarket(
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomCacheManager(),
+      this.getFantomLiquidityTokenCollector(),
+    );
+
+    return (revenant = new Revenant(
+      farm,
+      market,
+    ));
+  },
+
+  getSoulswap() {
+    if (soulswap) {
+      return soulswap;
+    }
+
+    return (soulswap = new Soulswap(
+      this.getFantomCacheManager(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomFarmFetcher(),
+      this.getFantomCacheManager(),
+    ));
+  },
+
   getHectordao() {
     if (hectordao) {
       return hectordao;
@@ -2750,6 +3037,47 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomLiquidityTokenCollector(),
       this.getFantomFarmPlatformResolver(),
+    ));
+  },
+
+  getLuxor() {
+    if (luxor) {
+      return luxor;
+    }
+
+    return (luxor = new Luxor(
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomCacheManager(),
+      this.getFantomLiquidityTokenCollector(),
+      this.getFantomFarmPlatformResolver(),
+    ));
+  },
+
+  getKnightswap() {
+    if (knightswap) {
+      return knightswap;
+    }
+
+    return (knightswap = new Knightswap(
+      this.getFantomCacheManager(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomFarmFetcher(),
+      this.getFantomCacheManager(),
+    ));
+  },
+
+  getFyearn() {
+    if (fyearn) {
+      return fyearn;
+    }
+
+    return (fyearn = new Fyearn(
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomCacheManager(),
+      this.getFantomLiquidityTokenCollector(),
     ));
   },
 
@@ -2810,6 +3138,20 @@ module.exports = {
     }
 
     return (morpheus = new Morpheus(
+      this.getFantomCacheManager(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomFarmFetcher(),
+      this.getFantomCacheManager(),
+    ));
+  },
+
+  getOxdao() {
+    if (oxdao) {
+      return oxdao;
+    }
+
+    return (oxdao = new Oxdao(
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
@@ -3373,12 +3715,24 @@ module.exports = {
       return vvs;
     }
 
-    return (vvs = new Vvs(
+    const masterchef = new Vvs(
       this.getCronosCacheManager(),
       this.getCronosPriceOracle(),
       this.getCronosTokenCollector(),
       this.getCronosFarmFetcher(),
       this.getCronosCacheManager(),
+    );
+
+    const auto = new VvsAuto(
+      this.getCronosPriceOracle(),
+      this.getCronosTokenCollector(),
+      this.getCronosCacheManager(),
+      this.getContractAbiFetcher(),
+    );
+
+    return (vvs = new VvsDecorator(
+      masterchef,
+      auto
     ));
   },
 
@@ -3419,6 +3773,34 @@ module.exports = {
       this.getCronosCacheManager(),
       this.getCronosLiquidityTokenCollector(),
       this.getCronosFarmPlatformResolver(),
+    ));
+  },
+
+  getStellaswap() {
+    if (stellaswap) {
+      return stellaswap;
+    }
+
+    return (stellaswap = new Stellaswap(
+      this.getMoonbeamCacheManager(),
+      this.getMoonbeamPriceOracle(),
+      this.getMoonbeamTokenCollector(),
+      this.getMoonbeamFarmFetcher(),
+      this.getMoonbeamCacheManager(),
+    ));
+  },
+
+  getSolarflare() {
+    if (solarflare) {
+      return solarflare;
+    }
+
+    return (solarflare = new Solarflare(
+      this.getMoonbeamCacheManager(),
+      this.getMoonbeamPriceOracle(),
+      this.getMoonbeamTokenCollector(),
+      this.getMoonbeamFarmFetcher(),
+      this.getMoonbeamCacheManager(),
     ));
   },
 
@@ -3513,6 +3895,18 @@ module.exports = {
       this.getCeloCacheManager(),
       this.getCeloPriceOracle(),
       this.getCeloTokenCollector(),
+    ));
+  },
+
+  getUniswap() {
+    if (uniswap) {
+      return uniswap;
+    }
+
+    return (uniswap = new Uniswap(
+      this.getPolygonCacheManager(),
+      this.getPolygonPriceOracle(),
+      this.getPolygonTokenCollector(),
     ));
   },
 
@@ -3644,6 +4038,21 @@ module.exports = {
     ));
   },
 
+  getMoonbeamAddressTransactions() {
+    if (moonbeamAddressTransactions) {
+      return moonbeamAddressTransactions;
+    }
+
+    return (moonbeamAddressTransactions = new AddressTransactions(
+      this.getMoonbeamPlatforms(),
+      this.getUserCacheManager(),
+      this.getBscscanRequest(),
+      this.getMoonbeamLiquidityTokenCollector(),
+      this.getMoonbeamTokenCollector(),
+      this.getMoonbeamPriceCollector(),
+    ));
+  },
+
   getLiquidityTokenCollector() {
     if (liquidityTokenCollector) {
       return liquidityTokenCollector;
@@ -3721,6 +4130,16 @@ module.exports = {
 
     return (cronosLiquidityTokenCollector = new LiquidityTokenCollector(
       this.getCronosCacheManager(),
+    ));
+  },
+
+  getMoonbeamLiquidityTokenCollector() {
+    if (moonbeamLiquidityTokenCollector) {
+      return moonbeamLiquidityTokenCollector;
+    }
+
+    return (moonbeamLiquidityTokenCollector = new LiquidityTokenCollector(
+      this.getMoonbeamCacheManager(),
     ));
   },
   
@@ -3986,6 +4405,39 @@ module.exports = {
 
     return cronosCacheManager = diskCache;
   },
+
+  getMoonbeamCacheManager() {
+    if (moonbeamCacheManager) {
+      return moonbeamCacheManager;
+    }
+
+    const cacheDir = path.resolve(__dirname, '../var/cache_moonbeam')
+
+    const diskCache = cacheManagerInstance.caching({
+      ignoreCacheErrors: true,
+      store: fsStore,
+      options: {
+        path: cacheDir,
+        ttl: 60 * 60 * 24 * 30,
+        subdirs: true,
+        zip: false,
+      }
+    });
+
+    const fn = diskCache.get;
+
+    diskCache.get = async (...args) => {
+      try {
+        return await fn(...args);
+      } catch (e) {
+        console.error('error fetching cache: ', JSON.stringify(args))
+      }
+
+      return undefined
+    }
+
+    return moonbeamCacheManager = diskCache;
+  },
   
   getUserCacheManager() {
     if (cacheManager) {
@@ -4131,6 +4583,20 @@ module.exports = {
       'cronos'
     ));
   },
+
+  getMoonbeamBalances() {
+    if (moonbeamBalances) {
+      return moonbeamBalances;
+    }
+
+    return (moonbeamBalances = new Balances(
+      this.getMoonbeamCacheManager(),
+      this.getMoonbeamPriceOracle(),
+      this.getMoonbeamTokenCollector(),
+      this.getMoonbeamLiquidityTokenCollector(),
+      'moonbeam'
+    ));
+  },
   
   getTokenCollector() {
     if (tokenCollector) {
@@ -4195,6 +4661,14 @@ module.exports = {
 
     return (cronosTokenCollector = new TokenCollector(this.getCronosCacheManager(), 'cronos'));
   },
+
+  getMoonbeamTokenCollector() {
+    if (moonbeamTokenCollector) {
+      return moonbeamTokenCollector;
+    }
+
+    return (moonbeamTokenCollector = new TokenCollector(this.getMoonbeamCacheManager(), 'Moonbeam'));
+  },
   
   getPriceCollector() {
     if (priceCollector) {
@@ -4258,6 +4732,14 @@ module.exports = {
     }
 
     return (cronosPriceCollector = new PriceCollector(this.getCronosCacheManager()));
+  },
+
+  getMoonbeamPriceCollector() {
+    if (moonbeamPriceCollector) {
+      return moonbeamPriceCollector;
+    }
+
+    return (moonbeamPriceCollector = new PriceCollector(this.getMoonbeamCacheManager()));
   },
   
   getDb() {
@@ -4371,6 +4853,20 @@ module.exports = {
       this.getCronosLiquidityTokenCollector(),
     ));
   },
+
+  getMoonbeamDb() {
+    if (moonbeamDb) {
+      return moonbeamDb;
+    }
+
+    return (moonbeamDb = new Db(
+      this.getDatabase(),
+      this.getMoonbeamPriceOracle(),
+      this.getMoonbeamPlatforms(),
+      this.getMoonbeamPriceCollector(),
+      this.getMoonbeamLiquidityTokenCollector(),
+    ));
+  },
     
   getHttp() {
     if (http) {
@@ -4388,6 +4884,7 @@ module.exports = {
       this.getCeloPlatforms(),
       this.getMoonriverPlatforms(),
       this.getCronosPlatforms(),
+      this.getMoonbeamPlatforms(),
       this.getCrossPlatforms(),
       this.getBalances(),
       this.getAddressTransactions(),
@@ -4438,7 +4935,14 @@ module.exports = {
       this.getCronosTokenCollector(),
       this.getCronosBalances(),
       this.getCronosTokenInfo(),
-      this.getCronosAddressTransactions(),      
+      this.getCronosAddressTransactions(),
+
+      this.getMoonbeamPriceOracle(),
+      this.getMoonbeamLiquidityTokenCollector(),
+      this.getMoonbeamTokenCollector(),
+      this.getMoonbeamBalances(),
+      this.getMoonbeamTokenInfo(),
+      this.getMoonbeamAddressTransactions(),
     ));
   },
 
@@ -4527,6 +5031,17 @@ module.exports = {
     return (cronosFarmFetcher = new FarmFetcher(
       this.getContractAbiFetcher(),
       this.getCronosTokenCollector(),
+    ));
+  },
+
+  getMoonbeamFarmFetcher() {
+    if (moonbeamFarmFetcher) {
+      return moonbeamFarmFetcher;
+    }
+
+    return (moonbeamFarmFetcher = new FarmFetcher(
+      this.getContractAbiFetcher(),
+      this.getMoonbeamTokenCollector(),
     ));
   },
   
@@ -4652,7 +5167,50 @@ module.exports = {
       this.getCronosDb(),
     ));
   },
-  
+
+  getMoonbeamTokenInfo() {
+    if (moonbeamTokenInfo) {
+      return moonbeamTokenInfo;
+    }
+
+    return (moonbeamTokenInfo = new TokenInfo(
+      this.getMoonbeamCacheManager(),
+      this.getMoonbeamTokenCollector(),
+      this.getMoonbeamLiquidityTokenCollector(),
+      this.getMoonbeamPriceCollector(),
+      this.getMoonbeamDb(),
+    ));
+  },
+
+  getFantomAdditionalTokenInfo() {
+    if (fantomAdditionalTokenInfo) {
+      return fantomAdditionalTokenInfo;
+    }
+
+    return (fantomAdditionalTokenInfo = new FantomAdditionalTokenInfo(
+      this.getFantomCacheManager(),
+      this.getFantomTokenCollector(),
+      this.getFantomLiquidityTokenCollector(),
+      this.getFantomPriceCollector(),
+      this.getFantomPriceOracle(),
+      this.getFbeefy(),
+    ));
+  },
+
+  getPolygonAdditionalTokenInfo() {
+    if (polygonAdditionalTokenInfo) {
+      return polygonAdditionalTokenInfo;
+    }
+
+    return (polygonAdditionalTokenInfo = new PolygonAdditionalTokenInfo(
+      this.getPolygonCacheManager(),
+      this.getPolygonTokenCollector(),
+      this.getPolygonLiquidityTokenCollector(),
+      this.getPolygonPriceCollector(),
+      this.getPolygonPriceOracle(),
+    ));
+  },
+
   getBscscanRequest() {
     if (bscscanRequest) {
       return bscscanRequest;

@@ -28,6 +28,9 @@ void async function main() {
     case 'cronos':
       console.log(JSON.stringify(await services.getCronosFarmFetcher().fetchForMasterChef(process.argv[2], process.argv[3])));
       break;
+    case 'moonbeam':
+      console.log(JSON.stringify(await services.getMoonbeamFarmFetcher().fetchForMasterChef(process.argv[2], process.argv[3])));
+      break;
     case 'bsc':
     default:
       console.log(JSON.stringify(await services.getFarmFetcher().fetchForMasterChef(process.argv[2], process.argv[3])));

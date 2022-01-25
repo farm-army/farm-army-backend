@@ -14,9 +14,10 @@ async function farmUpdater(forceUpdate = true) {
     Promise.all(services.getCeloPlatforms().getFunctionAwaits('getFarms', [forceUpdate])),
     Promise.all(services.getMoonriverPlatforms().getFunctionAwaits('getFarms', [forceUpdate])),
     Promise.all(services.getCronosPlatforms().getFunctionAwaits('getFarms', [forceUpdate])),
-  ])).forEach(p => {
+    Promise.all(services.getMoonbeamPlatforms().getFunctionAwaits('getFarms', [forceUpdate])),
+  ])).forEach((p, index) => {
     if (p.status !== 'fulfilled') {
-      console.error('farmUpdater error', p.reason)
+      console.error('farmUpdater error', index, p.reason)
     }
   });
 }
@@ -31,9 +32,10 @@ async function priceUpdater() {
     services.getCronjobs().celoCronInterval(),
     services.getCronjobs().moonriverCronInterval(),
     services.getCronjobs().cronosCronInterval(),
-  ])).forEach(p => {
+    services.getCronjobs().moonbeamCronInterval(),
+  ])).forEach((p, index) => {
     if (p.status !== 'fulfilled') {
-      console.error('priceUpdater error', p.reason)
+      console.error('priceUpdater error', index, p.reason)
     }
   });
 }
@@ -76,9 +78,13 @@ async function collectHistoricalData() {
     services.getCronosDb().updateFarmPrices(),
     services.getCronosDb().updateAddressMaps(),
     services.getCronosDb().updateLpInfoMaps(),
-  ])).forEach(p => {
+
+    services.getMoonbeamDb().updateFarmPrices(),
+    services.getMoonbeamDb().updateAddressMaps(),
+    services.getMoonbeamDb().updateLpInfoMaps(),
+  ])).forEach((p, index) => {
     if (p.status !== 'fulfilled') {
-      console.error('farm update interval error', p.reason)
+      console.error('farm update interval error', index, p.reason)
     }
   });
 }

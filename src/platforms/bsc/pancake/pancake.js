@@ -538,7 +538,7 @@ module.exports = class pancake {
       return cache;
     }
 
-    const body = await Utils.requestGet("https://raw.githubusercontent.com/pancakeswap/pancake-frontend/develop/src/config/constants/pools.ts");
+    const body = (await Utils.requestGet("https://raw.githubusercontent.com/pancakeswap/pancake-frontend/develop/src/config/constants/pools.ts")) || '';
 
     let blockNumber = await Utils.getWeb3('bsc').eth.getBlockNumber();
 

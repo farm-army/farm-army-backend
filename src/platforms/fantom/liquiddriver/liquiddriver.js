@@ -4,7 +4,7 @@ const MasterChefAbi = require('./abi/masterchef.json');
 const PancakePlatformFork = require("../../common").PancakePlatformFork;
 
 module.exports = class liquiddriver extends PancakePlatformFork {
-  static MASTER_ADDRESS = "0x742474dAE70Fa2AB063aB786b1fBe5704e861a0c"
+  static MASTER_ADDRESS = "0x6e2ad6527901c9664f016466b8da1357a004db0f"
 
   constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
     super(cache, priceOracle);
@@ -25,7 +25,9 @@ module.exports = class liquiddriver extends PancakePlatformFork {
       return cache;
     }
 
-    const foo = (await this.farmCollector.fetchForMasterChef(this.getMasterChefAddress(), this.getChain())).filter(f => f.isFinished !== true);
+    const foo = (await this.farmCollector.fetchForMasterChef(this.getMasterChefAddress(), this.getChain(), {
+      abi: await this.getMasterChefAbi()
+    })).filter(f => f.isFinished !== true);
 
     const reformat = foo.map(f => {
       f.lpAddresses = f.lpAddress

@@ -31,7 +31,7 @@ module.exports = class kukafe_compound {
       return cache;
     }
 
-    const files = await Utils.getJavascriptFiles('https://kukafe.finance/');
+    const files = await Utils.getJavascriptFiles('https://ku.kafe.finance/');
 
     const pools = [];
     Object.values(files).forEach(body => {
@@ -158,7 +158,7 @@ module.exports = class kukafe_compound {
         provider: 'kukafe',
         raw: Object.freeze(farm),
         has_details: true,
-        link: 'https://kukafe.finance/#/espresso',
+        link: 'https://ku.kafe.finance/#/espresso',
         extra: {},
         chain: this.getChain(),
         compound: true,

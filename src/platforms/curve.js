@@ -243,5 +243,34 @@ module.exports = {
     });
 
     return fin;
-  }
+  },
+
+  async getPoolPricesViaHttp(chain, priceOracle, lpTokenCollector) {
+    const result = await Utils.requestJsonGet('https://api.curve.fi/api/getFactoryV2Pools-' + chain);
+
+    (result?.data?.poolData || []).forEach(item => {
+      if (!item.totalSupply || !item.usdTotal || !item.address) {
+        return;
+      }
+
+      const totalSupply = item.totalSupply / 1e18;
+      const usdTotal = item.usdTotal;
+
+      const price = usdTotal / totalSupply;
+
+      priceOracle.updatePrice(item.address.toLowerCase(), price);
+
+      if (item.coins) {
+        const tokens = item.coins.map(c => {
+          return {
+            address: c.address.toLowerCase(),
+            symbol: c.symbol.toLowerCase().replaceAll('+', '-'),
+            amount: (c.poolBalance / (10 ** c.decimals)) / totalSupply
+          };
+        });
+
+        lpTokenCollector.add(item.address.toLowerCase(), tokens);
+      }
+    });
+  },
 }

@@ -211,7 +211,7 @@ module.exports = class beefy {
         };
 
         let price = this.priceOracle.findPrice(vaultElement.tokenAddress, farm.oracleId.toLowerCase());
-        if (!price && lpPrices[farm.id]) {
+        if (!price && lpPrices && lpPrices[farm.id]) {
           price = lpPrices[farm.id];
         }
 

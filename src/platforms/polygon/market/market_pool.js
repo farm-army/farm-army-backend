@@ -5,14 +5,16 @@ const TokenAbi = require("./abi/token.json");
 const LendAbi = require("./abi/lend.json");
 const Web3EthContract = require("web3-eth-contract");
 const _ = require("lodash");
-const LendBorrowPlatform = require("../../common").LendBorrowPlatform;
+const LendBorrowPlatform2 = require("../../common").LendBorrowPlatform2;
 
-module.exports = class market_pool extends LendBorrowPlatform {
-  constructor(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver, pool, address) {
-    super(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver);
+module.exports = class market_pool extends LendBorrowPlatform2 {
+  constructor(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver, additionalTokenInfo, pool, address, chain, name) {
+    super(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver, additionalTokenInfo);
 
     this.pool = pool;
     this.address = address;
+    this.chain = chain;
+    this.name = name;
   }
 
   async getTokens() {
@@ -37,11 +39,11 @@ module.exports = class market_pool extends LendBorrowPlatform {
   }
 
   getName() {
-    return `market_pool${this.pool}`;
+    return `${this.name}_pool${this.pool}`;
   }
 
   getChain() {
-    return 'polygon';
+    return this.chain;
   }
 
   getTokenAbi() {
@@ -57,7 +59,7 @@ module.exports = class market_pool extends LendBorrowPlatform {
   }
 
   getFarmLink(farm) {
-    return `https://polygon.market.xyz/pool/${this.pool}`;
+    return `https://${this.getChain()}.market.xyz/pool/${this.pool}`;
   }
 
   getFarmEarns(farm) {
@@ -66,7 +68,7 @@ module.exports = class market_pool extends LendBorrowPlatform {
 
   async onFarmsBuild(farms) {
     farms.forEach(farm => {
-      farm.provider = 'market';
+      farm.provider = this.name
     });
   }
 }

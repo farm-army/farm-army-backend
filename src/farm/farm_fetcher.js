@@ -208,7 +208,14 @@ module.exports = class FarmFetcher {
       masterInfoCall.rewardToken = web3EthContract1.methods[rewardTokenFunctionName]();
     }
 
-    let blockNumber = await Utils.getWeb3(chain).eth.getBlockNumber();
+    let blockNumber = undefined;
+
+    try {
+      blockNumber = await Utils.getWeb3(chain).eth.getBlockNumber();
+    } catch (e) {
+      console.log('retry fetchForMasterChefWithMeta getting blocknumber', chain)
+      blockNumber = await Utils.getWeb3(chain).eth.getBlockNumber();
+    }
 
     // multiplier
     if (multiplierFunctionName) {

@@ -46,7 +46,13 @@ module.exports = class balancer {
       "mode": "cors"
     });
 
-    const pools = content ? JSON.parse(content)?.data?.pools : [];
+    let pools = [];
+    try {
+      const parse = JSON.parse(content);
+      pools = parse?.data?.pools ? parse.data.pools : [];
+    } catch (e) {
+      console.log('error balancer-polygon-v2', e.message)
+    }
 
     await this.cacheManager.set(cacheKey, pools, {ttl: 60 * 30});
 

@@ -42,6 +42,12 @@ module.exports = class ContractAbiFetcher {
       case 'moonriver':
         url = `https:/blockscout.moonriver.moonbeam.network/api?module=contract&action=getabi&address=${address}`;
         break;
+      case 'moonbeam':
+        url = `https://blockscout.moonbeam.network/api?module=contract&action=getabi&address=${address}`;
+        break;
+      case 'cronos':
+        url = `https://cronos.crypto.org/explorer/api?module=contract&action=getabi&address=${address}`;
+        break;
       default:
         throw new Error('Invalid chain');
     }

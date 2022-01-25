@@ -23,7 +23,7 @@ module.exports = class bakery {
   }
 
   async getRawPools() {
-    const cacheKey = `${this.getName}-getRawPools-v1`
+    const cacheKey = `${this.getName()}-getRawPools-v1`
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -150,9 +150,6 @@ module.exports = class bakery {
 
       if (!name && farm.name) {
         name = farm.name;
-      } else {
-        // tokens are uppercase
-        name = name.toUpperCase();
       }
 
       if (!name) {
@@ -161,7 +158,7 @@ module.exports = class bakery {
 
       const item = {
         id: `bakery_${farm.id.toLowerCase()}`,
-        name: name,
+        name: name.toUpperCase(),
         token: name.toLowerCase(),
         provider: "bakery",
         raw: Object.freeze(farm),

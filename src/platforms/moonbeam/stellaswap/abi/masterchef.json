@@ -1,0 +1,1105 @@
+[
+  {
+    "type": "constructor",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_stella",
+        "internalType": "contract IStellaERC20"
+      },
+      {
+        "type": "uint256",
+        "name": "_stellaPerBlock",
+        "internalType": "uint256"
+      },
+      {
+        "type": "address",
+        "name": "_teamAddress",
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "_treasuryAddress",
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "_investorAddress",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "_teamPercent",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "_treasuryPercent",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "_investorPercent",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "AllocPointsUpdated",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "caller",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "previousAmount",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "newAmount",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Deposit",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "user",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "pid",
+        "internalType": "uint256",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "EmergencyWithdraw",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "user",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "pid",
+        "internalType": "uint256",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "EmissionRateUpdated",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "caller",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "previousAmount",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "newAmount",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "MetaTxnsDisabled",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "caller",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "MetaTxnsEnabled",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "caller",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OperatorTransferred",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "previousOperator",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "newOperator",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferred",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "previousOwner",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "newOwner",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RewardLockedUp",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "user",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "pid",
+        "internalType": "uint256",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "amountLockedUp",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "SetInvestorAddress",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "oldAddress",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "newAddress",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "SetInvestorPercent",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "oldPercent",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "newPercent",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "SetTeamAddress",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "oldAddress",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "newAddress",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "SetTeamPercent",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "oldPercent",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "newPercent",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "SetTreasuryAddress",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "oldAddress",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "newAddress",
+        "internalType": "address",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "SetTreasuryPercent",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "oldPercent",
+        "internalType": "uint256",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "newPercent",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Withdraw",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "user",
+        "internalType": "address",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "pid",
+        "internalType": "uint256",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint16",
+        "name": "",
+        "internalType": "uint16"
+      }
+    ],
+    "name": "MAXIMUM_DEPOSIT_FEE_RATE",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "MAXIMUM_HARVEST_INTERVAL",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "add",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_allocPoint",
+        "internalType": "uint256"
+      },
+      {
+        "type": "address",
+        "name": "_lpToken",
+        "internalType": "contract IERC20"
+      },
+      {
+        "type": "uint16",
+        "name": "_depositFeeBP",
+        "internalType": "uint16"
+      },
+      {
+        "type": "uint256",
+        "name": "_harvestInterval",
+        "internalType": "uint256"
+      },
+      {
+        "type": "bool",
+        "name": "_withUpdate",
+        "internalType": "bool"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "name": "canHarvest",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      },
+      {
+        "type": "address",
+        "name": "_user",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "deposit",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "_amount",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "disableMetaTxns",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "emergencyWithdraw",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "enableMetaTxns",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "pure",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "getMultiplier",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_from",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "_to",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "harvestMany",
+    "inputs": [
+      {
+        "type": "uint256[]",
+        "name": "_pids",
+        "internalType": "uint256[]"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
+    "name": "investorAddress",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "investorPercent",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "name": "isTrustedForwarder",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "forwarder",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "massUpdatePools",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "name": "metaTxnsEnabled",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
+    "name": "operator",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
+    "name": "owner",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "pendingStella",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      },
+      {
+        "type": "address",
+        "name": "_user",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "lpToken",
+        "internalType": "contract IERC20"
+      },
+      {
+        "type": "uint256",
+        "name": "allocPoint",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "lastRewardBlock",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "accStellaPerShare",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint16",
+        "name": "depositFeeBP",
+        "internalType": "uint16"
+      },
+      {
+        "type": "uint256",
+        "name": "harvestInterval",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "totalLp",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "poolInfo",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "poolLength",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "renounceOwnership",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "set",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "_allocPoint",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint16",
+        "name": "_depositFeeBP",
+        "internalType": "uint16"
+      },
+      {
+        "type": "uint256",
+        "name": "_harvestInterval",
+        "internalType": "uint256"
+      },
+      {
+        "type": "bool",
+        "name": "_withUpdate",
+        "internalType": "bool"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setInvestorAddress",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_investorAddress",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setInvestorPercent",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_newInvestorPercent",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setTeamAddress",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_teamAddress",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setTeamPercent",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_newTeamPercent",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setTreasuryAddr",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_treasuryAddress",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setTreasuryPercent",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_newTreasuryPercent",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "startBlock",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "startFarming",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "contract IStellaERC20"
+      }
+    ],
+    "name": "stella",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "stellaPerBlock",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
+    "name": "teamAddress",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "teamPercent",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "totalAllocPoint",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "totalLockedUpRewards",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "totalStellaInPools",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "transferOperator",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "newOperator",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "transferOwnership",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "newOwner",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
+    "name": "treasuryAddress",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "treasuryPercent",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "updateAllocPoint",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "_allocPoint",
+        "internalType": "uint256"
+      },
+      {
+        "type": "bool",
+        "name": "_withUpdate",
+        "internalType": "bool"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "updateEmissionRate",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_stellaPerBlock",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "updatePool",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "rewardDebt",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "rewardLockedUp",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "nextHarvestUntil",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "userInfo",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      },
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "withdraw",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "_pid",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "_amount",
+        "internalType": "uint256"
+      }
+    ]
+  }
+]

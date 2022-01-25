@@ -81,7 +81,7 @@ module.exports = class swamp extends PancakePlatformFork {
       vaults.push(vault);
     })
 
-    await this.cacheManager.set(cacheKey, vaults, {ttl: 60 * 20});
+    await this.cacheManager.set(cacheKey, vaults, {ttl: 60 * 60});
 
     return vaults;
   }

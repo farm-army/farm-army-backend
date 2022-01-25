@@ -148,6 +148,7 @@ module.exports = class HarmonyPriceOracle {
       'matic-network': ['0x6e7be5b9b4c9953434cd83950d61408f1ccc3bee'],
       'terra-luna': ['0x95ce547d730519a90def30d647f37d9e5359b6ae'],
       'synapse-2': ['0xe55e19fb4f2d85af758950957714292dac1e25b2'],
+      'mimatic': ['0x3f56e0c36d275367b8c502090edf38289b3dea0d'],
     };
 
     tokens.forEach(token => {
@@ -378,12 +379,16 @@ module.exports = class HarmonyPriceOracle {
           const reserveUsd = (c.reserve0 / (10 ** token0.decimals)) * token0Price;
           token1Price = reserveUsd / (c.reserve1 / (10 ** token1.decimals));
 
-          console.log("harmony: Missing price 'token1' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          if (Utils.isDevMode()) {
+            console.log("harmony: Missing price 'token1' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          }
         } else if (token1Price && !token0Price) {
           const reserveUsd = (c.reserve1 / (10 ** token1.decimals)) * token1Price;
           token0Price = reserveUsd / (c.reserve0 / (10 ** token0.decimals));
 
-          console.log("harmony: Missing price 'token0' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          if (Utils.isDevMode()) {
+            console.log("harmony: Missing price 'token0' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          }
         }
       }
 
@@ -446,6 +451,18 @@ module.exports = class HarmonyPriceOracle {
         router: '0x2F99992024DCC51324BA4956bB1c510F36FA54F5', // openswapv2
         address: '0x01a4b054110d57069c1658afbc46730529a3e326',
         symbol: 'openx',
+        decimals: 18,
+      },
+      {
+        router: '0xf012702a5f0e54015362cBCA26a26fc90AA832a3', // viper
+        address: '0x892d81221484f690c0a97d3dd18b9144a3ecdfb7',
+        symbol: 'magic',
+        decimals: 18,
+      },
+      {
+        router: '0x6d9eF21E7b93CF0C45847d586E1b9eFCaaB76009', // lootswap
+        address: '0xbda99c8695986b45a0dd3979cc6f3974d9753d30',
+        symbol: 'loot',
         decimals: 18,
       },
     ];

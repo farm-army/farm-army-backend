@@ -57,7 +57,7 @@ module.exports = class valuedefi {
   async getCouncilVerified() {
     const json = await Utils.requestJsonGet("https://api.vswap.fi/api/faas/get-stats?whitelistedBy=ALL");
 
-    return (json.data || []).filter(
+    return (json?.data || []).filter(
       v => v.verifiedBy && v.verifiedBy.length > 0
     );
   }

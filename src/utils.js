@@ -27,6 +27,7 @@ const MULTI_CALL_CONTRACT = {
   celo: '0xfEEaa3989087F2c9eB4e920D57Df0A3F83486414',
   moonriver: '0x814C1C56815D52b58d7254424c15307e7363E016',
   cronos: '0xd1AE3C177E13ac82E667eeEdE2609C98c69FF684',
+  moonbeam: '0x814C1C56815D52b58d7254424c15307e7363E016',
 }
 
 // @TODO: move it to somewhere else
@@ -107,6 +108,11 @@ const HOSTS_CRONOS = Object.freeze([
   // 'http://cronos.blockmove.eu:8545',
   // 'https://rpc.crodex.app',
   ...((CONFIG['CRONOS_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
+]);
+
+const HOSTS_MOONBEAM = Object.freeze([
+  'https://rpc.api.moonbeam.network',
+  ...((CONFIG['MOONBEAM_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
 ]);
 
 const WEB3_PROXIES = (CONFIG['WEB3_PROXIES'] || '').split(',').map(i => i.trim()).filter(i => i);
@@ -392,6 +398,41 @@ HOSTS_CRONOS.forEach(url => {
 
 const ENDPOINTS_CRONOS = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_CRONOS));
 
+const ENDPOINTS_MULTICALL_MOONBEAM = {};
+const ENDPOINTS_RPC_WRAPPER_MOONBEAM = {};
+
+HOSTS_MOONBEAM.forEach(url => {
+  [undefined, ...WEB3_PROXIES].forEach((proxy, index) => {
+    ENDPOINTS_MULTICALL_MOONBEAM[url + '_' + index] = new MulticallProvider(
+      new providers.StaticJsonRpcProvider({
+        url: url,
+        timeout: 10000,
+      }),
+      {
+        contract: MULTI_CALL_CONTRACT.moonbeam,
+        batchSize: 50,
+        timeWindow: 50,
+      }
+    );
+
+    const options = {
+      keepAlive: true,
+      timeout: 10000,
+    };
+
+    if (proxy) {
+      options.agent = {
+        'http': new HttpsProxyAgent(proxy),
+        'https': new HttpsProxyAgent(proxy),
+      };
+    }
+
+    ENDPOINTS_RPC_WRAPPER_MOONBEAM[url + '_' + index] = new Web3(new Web3.providers.HttpProvider(url, options));
+  });
+});
+
+const ENDPOINTS_MOONBEAM = Object.freeze(Object.keys(ENDPOINTS_MULTICALL_MOONBEAM));
+
 module.exports = {
   PRICES: {},
   BITQUERY_TRANSACTIONS: fs.readFileSync(
@@ -421,6 +462,8 @@ module.exports = {
         return ENDPOINTS_RPC_WRAPPER_MOONRIVER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_MOONRIVER))[0]];
       case 'cronos':
         return ENDPOINTS_RPC_WRAPPER_CRONOS[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_CRONOS))[0]];
+      case 'moonbeam':
+        return ENDPOINTS_RPC_WRAPPER_MOONBEAM[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER_MOONBEAM))[0]];
       case 'bsc':
       default:
         return ENDPOINTS_RPC_WRAPPER[_.shuffle(Object.keys(ENDPOINTS_RPC_WRAPPER))[0]];
@@ -456,6 +499,9 @@ module.exports = {
         break;
       case 'cronos':
         selectedEndpoints = ENDPOINTS_CRONOS.slice();
+        break;
+      case 'moonbeam':
+        selectedEndpoints = ENDPOINTS_MOONBEAM.slice();
         break;
       case 'bsc':
       default:
@@ -515,6 +561,8 @@ module.exports = {
               web3 = ENDPOINTS_RPC_WRAPPER_MOONRIVER[endpointInner]
             } else if (chain === 'cronos') {
               web3 = ENDPOINTS_RPC_WRAPPER_CRONOS[endpointInner]
+            } else if (chain === 'moonbeam') {
+              web3 = ENDPOINTS_RPC_WRAPPER_MOONBEAM[endpointInner]
             } else {
               web3 = ENDPOINTS_RPC_WRAPPER[endpointInner]
             }
@@ -606,6 +654,9 @@ module.exports = {
       case 'cronos':
         selectedEndpoints = ENDPOINTS_CRONOS.slice();
         break;
+      case 'moonbeam':
+        selectedEndpoints = ENDPOINTS_MOONBEAM.slice();
+        break;
       case 'bsc':
       default:
         selectedEndpoints = ENDPOINTS.slice();
@@ -634,6 +685,8 @@ module.exports = {
         options = ENDPOINTS_MULTICALL_MOONRIVER[endpoints[0]];
       } else if (chain === 'cronos') {
         options = ENDPOINTS_MULTICALL_CRONOS[endpoints[0]];
+      } else if (chain === 'moonbeam') {
+        options = ENDPOINTS_MULTICALL_MOONBEAM[endpoints[0]];
       } else {
         options = ENDPOINTS_MULTICALL[endpoints[0]];
       }
@@ -800,6 +853,9 @@ module.exports = {
     } else if (chain === 'cronos') {
       host = 'cronos.crypto.org/explorer';
       apiKey = module.exports.CONFIG['CRONOSSCAN_API_KEY'];
+    } else if (chain === 'moonbeam') {
+      host = 'blockscout.moonbeam.network';
+      apiKey = module.exports.CONFIG['MOONBEAMSCAN_API_KEY'];
     } else {
       host = 'api.bscscan.com';
       apiKey = module.exports.CONFIG['BSCSCAN_API_KEY'];
@@ -1053,6 +1109,25 @@ module.exports = {
     return module.exports.requestJsonGet(url, timeout);
   },
 
+  requestJsonGetRetryProxy: async (url, timeout = 25) => {
+    const response = await module.exports.requestJsonGet(url, timeout);
+    if (response) {
+      return response;
+    }
+
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+    await delay(2000);
+
+    console.log('retry: ', url)
+
+    const response2 = module.exports.requestJsonGet(url, timeout);
+    if (response2) {
+      return response2;
+    }
+
+    return module.exports.requestJsonGet(url, timeout, true);
+  },
+
   requestGet: async (url, timeout = 25) => {
     const controller = new AbortController();
     setTimeout(() => controller.abort(), timeout * 1000);
@@ -1167,6 +1242,8 @@ module.exports = {
         return 13;
       case 'cronos':
         return 5.5;
+      case 'moonbeam':
+        return 12.2;
       case 'bsc':
         return 3;
     }
@@ -1214,5 +1291,9 @@ module.exports = {
     });
 
     return result;
+  },
+
+  isDevMode() {
+    return (process.env.NODE_ENV || 'dev') !== 'production'
   }
 };

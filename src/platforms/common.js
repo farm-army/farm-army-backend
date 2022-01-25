@@ -1280,6 +1280,332 @@ module.exports = {
     }
   },
 
+  LendBorrowPlatform2: class LendBorrowPlatform2 {
+    constructor(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, farmPlatformResolver, additionalTokenInfo) {
+      this.priceOracle = priceOracle;
+      this.tokenCollector = tokenCollector;
+      this.cacheManager = cacheManager;
+      this.liquidityTokenCollector = liquidityTokenCollector;
+      this.farmPlatformResolver = farmPlatformResolver;
+      this.additionalTokenInfo = additionalTokenInfo;
+    }
+
+    async getFarms(refresh) {
+      const cacheKey = `getFarms-${this.getName()}-v5`;
+
+      if (!refresh) {
+        const cache = await this.cacheManager.get(cacheKey);
+        if (cache) {
+          return cache;
+        }
+      }
+
+      const config = _.merge({
+        cashMethod: 'getCash',
+        exchangeRateMethod: 'exchangeRate',
+        underlyingMethod: 'underlying',
+        symbol: 'symbol',
+      }, this.getConfig());
+
+      let rawFarms = await this.getTokens();
+
+      let tvlCalls = rawFarms.map(token => {
+        const contract = new Web3EthContract(this.getTokenAbi(), token.address);
+
+        return {
+          address: token.address.toLowerCase(),
+          tvl: contract.methods[config.cashMethod](),
+          exchangeRate: contract.methods[config.exchangeRateMethod](),
+          underlying: contract.methods[config.underlyingMethod](),
+          symbol: contract.methods[config.symbol](),
+        };
+      });
+
+      const tvl = await Utils.multiCallIndexBy('address', tvlCalls, this.getChain());
+
+      const farms = [];
+
+      rawFarms.forEach(token => {
+        const info = tvl[token.address.toLowerCase()];
+        if (!info) {
+          return;
+        }
+
+        // nativ chain token
+        let tokenName = token.name;
+
+        if (!tokenName && info.symbol) {
+          tokenName = info.symbol;
+        }
+
+        if (this.getChain() === 'bsc') {
+          if (!info.underlying && tokenName?.toLowerCase().includes('bnb')) {
+            info.underlying = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+          } else if (info?.underlying?.toLowerCase().includes('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb') && tokenName?.toLowerCase().includes('bnb')) {
+            // 0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+            info.underlying = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+          }
+        }
+
+        // 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE
+        if (this.getChain() === 'polygon') {
+          if (info.underlying && info.underlying.toLowerCase().includes('eeeeeeeeeeeeeeeeeeeeeeeeeeeeee') && tokenName && tokenName.toLowerCase().includes('matic')) {
+            info.underlying = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
+          } else if (!info.underlying && tokenName?.toLowerCase().includes('matic')) {
+            info.underlying = '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270'
+          }
+        }
+
+        if (this.getChain() === 'fantom') {
+          if (info.underlying && info.underlying.toLowerCase().includes('eeeeeeeeeeeeeeeeeeeeeeeeeeeeee')) {
+            info.underlying = '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83'
+          } else if (!info.underlying && tokenName?.toLowerCase().includes('ftm')) {
+            info.underlying = '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83'
+          }
+        }
+
+        if (this.getChain() === 'harmony' && !info.underlying && tokenName?.toLowerCase().includes('one')) {
+          info.underlying = '0xcf664087a5bb0237a0bad6742852ec6c8d69a27a'
+        }
+
+        if (this.getChain() === 'cronos' && !info.underlying && tokenName?.toLowerCase().includes('cro')) {
+          info.underlying = '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23'
+        }
+
+        if (!info.underlying) {
+          console.log(`${this.getName()}: missing underlying ${JSON.stringify(info)}`)
+          return;
+        }
+
+        let symbol = this.additionalTokenInfo.getSymbol(info.underlying);
+        let isLiquidityPool = this.additionalTokenInfo.isLiquidityPool(info.underlying);
+
+        if (!symbol && tokenName) {
+          symbol = tokenName;
+        }
+
+        if (!symbol) {
+          symbol = '?';
+        }
+
+        const item = {
+          id: `${this.getName()}_${token.address.toLowerCase()}`,
+          name: symbol.toUpperCase(),
+          token: symbol.toLowerCase(),
+          raw: Object.freeze(_.merge(token, {
+            exchangeRate: info.exchangeRate,
+            underlying: info.underlying,
+          })),
+          provider: this.getName(),
+          has_details: false,
+          extra: {},
+          chain: this.getChain(),
+          flags: ['lend', 'borrow'],
+        };
+
+        item.extra.transactionToken = info.underlying;
+        item.extra.transactionAddress = token.address;
+
+        if (isLiquidityPool) {
+          item.extra.lpAddress = item.extra.transactionToken;
+
+          const platform = this.farmPlatformResolver.findMainPlatformNameForTokenAddress(item.extra.lpAddress);
+          if (platform) {
+            item.platform = platform;
+          }
+        }
+
+        if (info && info.tvl) {
+          item.tvl = {
+            amount: info.tvl / (10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
+          };
+
+          const addressPrice = this.additionalTokenInfo.getPrice(item.extra.transactionToken);
+          if (addressPrice) {
+            item.tvl.usd = item.tvl.amount * addressPrice;
+          }
+        }
+
+        const link = this.getFarmLink(item);
+        if (link) {
+          item.link = link;
+        }
+
+        const farmEarns = this.getFarmEarns(item);
+        if (farmEarns && farmEarns.length > 0) {
+          item.earns = farmEarns;
+        }
+
+        farms.push(item);
+      });
+
+      if (typeof this.onFarmsBuild !== "undefined") {
+        await this.onFarmsBuild(farms)
+      }
+
+      await this.cacheManager.set(cacheKey, farms, {ttl: 60 * 30});
+
+      console.log(`${this.getName()} updated`);
+
+      return farms;
+    }
+
+    async getAddressFarms(address) {
+      const cacheKey = `getAddressFarms-v1-${this.getName()}-${address}`;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
+      }
+
+      const config = _.merge({
+        balanceOfMethod: 'balanceOf',
+        borrowBalanceOfMethod: 'borrowBalanceOf',
+      }, this.getConfig());
+
+      let calls = Object.values(await this.getFarms()).map(farm => {
+        const contract = new Web3EthContract(this.getTokenAbi(), farm.raw.address);
+
+        return {
+          id: farm.id,
+          balanceOf: contract.methods[config.balanceOfMethod](address),
+          borrowBalanceOf: contract.methods[config.borrowBalanceOfMethod](address),
+        };
+      });
+
+      const result = (await Utils.multiCall(calls, this.getChain()))
+        .filter(c => c.balanceOf > 0 || c.borrowBalanceOf > 0)
+        .map(c => c.id);
+
+      await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
+
+      return result;
+    }
+
+    async getYields(address) {
+      const addressFarms = await this.getAddressFarms(address);
+      if (addressFarms.length === 0) {
+        return [];
+      }
+
+      return await this.getYieldsInner(address, addressFarms);
+    }
+
+    async getYieldsInner(address, farmIds) {
+      if (farmIds.length === 0) {
+        return [];
+      }
+
+      const config = _.merge({
+        balanceOfMethod: 'balanceOf',
+        borrowBalanceOfMethod: 'borrowBalanceOf',
+      }, this.getConfig());
+
+      const farms = await this.getFarms();
+
+      const callsPromises = await Utils.multiCall(farmIds.map(id => {
+        const farm = farms.find(f => f.id === id);
+        const contract = new Web3EthContract(this.getTokenAbi(), farm.raw.address);
+
+        return {
+          id: farm.id,
+          balanceOf: contract.methods[config.balanceOfMethod](address),
+          borrowBalanceOf: contract.methods[config.borrowBalanceOfMethod](address),
+        };
+      }), this.getChain());
+
+      const result = (await Utils.multiCall(callsPromises, this.getChain()))
+        .filter(c => c.balanceOf > 0 || c.borrowBalanceOf > 0)
+
+      const results = [];
+
+      result.forEach(call => {
+        const farm = farms.find(f => f.id === call.id);
+
+        if (call.balanceOf > 0) {
+          const result = {
+            farm: farm
+          };
+
+          const exchangeRate = farm.raw.exchangeRate ? farm.raw.exchangeRate / 1e18 : 1;
+
+          result.deposit = {
+            symbol: '?',
+            amount: (call.balanceOf / (10 ** this.tokenCollector.getDecimals(farm.extra.transactionToken))) * exchangeRate, // value in borrowToken token
+          };
+
+          const price = this.additionalTokenInfo.getPrice(farm.extra.transactionToken);
+          if (price) {
+            result.deposit.usd = result.deposit.amount * price;
+          }
+
+          const isDust = 'usd' in result.deposit && result.deposit.usd < 0.02;
+          if (!isDust) {
+            results.push(Object.freeze(result));
+          }
+        }
+
+        if (call.borrowBalanceOf > 0) {
+          const result = {
+            farm: farm
+          };
+
+          result.deposit = {
+            symbol: '?',
+            amount: call.borrowBalanceOf / (10 ** this.tokenCollector.getDecimals(farm.extra.transactionToken)) * -1, // value in borrowToken token
+          };
+
+          const price = this.additionalTokenInfo.getPrice(farm.extra.transactionToken); // bnb or busd
+          if (price) {
+            result.deposit.usd = result.deposit.amount * price;
+          }
+
+          const isDust = 'usd' in result.deposit && Math.abs(result.deposit.usd) < 0.02;
+          if (!isDust) {
+            results.push(Object.freeze(result));
+          }
+        }
+      })
+
+      return results;
+    }
+
+    getName() {
+      throw new Error('not implemented');
+    }
+
+    getChain() {
+      throw new Error('not implemented');
+    }
+
+    getTokenAbi() {
+      throw new Error('not implemented');
+    }
+
+    async getTokens() {
+      throw new Error('not implemented');
+    }
+
+    /**
+     * cashMethod: 'getCash',
+     * exchangeRateMethod: 'exchangeRate',
+     * underlyingMethod: 'underlying',
+     * balanceOfMethod: 'balanceOf',
+     * borrowBalanceOfMethod: 'borrowBalanceOf',
+     * symbol: 'symbol',
+     */
+    getConfig() {
+      throw new Error('not implemented');
+    }
+
+    getFarmLink(farm) {
+      throw new Error('not implemented');
+    }
+
+    getFarmEarns(farm) {
+      throw new Error('not implemented');
+    }
+  },
+
   AaveFork: class AaveFork {
     constructor(cacheManager, priceOracle, tokenCollector) {
       this.cacheManager = cacheManager;
@@ -1921,12 +2247,25 @@ module.exports = {
     }
 
     async getRawStakes() {
-      return [
-        {
+      const items = [];
+
+      if (this.getConfig().sToken) {
+        items.push({
           token: this.getConfig().sToken,
           underlying: this.getConfig().token,
-        }
-      ];
+        });
+      }
+
+      if (this.getConfig().sTokens) {
+        this.getConfig().sTokens.forEach(i => {
+          items.push({
+            token: i,
+            underlying: this.getConfig().token,
+          });
+        })
+      }
+
+      return items;
     }
 
     getConfig() {
@@ -2201,7 +2540,7 @@ module.exports = {
       ]);
 
       const result1 = bondCalls
-        .filter(v => new BigNumber(v?.bondInfo[0] || 0).isGreaterThan(Utils.DUST_FILTER))
+        .filter(v => v?.bondInfo && new BigNumber(v?.bondInfo[0] || 0).isGreaterThan(Utils.DUST_FILTER))
         .map(v => v.id);
 
       const result2 = stakedCalls
@@ -2308,9 +2647,10 @@ module.exports = {
           return Object.freeze(result);
         });
 
-      const resultFarms2 = stakes
+      const resultFarms2 = [];
+      stakes
         .filter(v => new BigNumber(v.balanceOf || 0).isGreaterThan(Utils.DUST_FILTER))
-        .map(call => {
+        .forEach(call => {
           const farm = farms.find(f => f.id === call.id);
 
           let amount = call.balanceOf || 0;
@@ -2326,11 +2666,15 @@ module.exports = {
 
           if (price) {
             result.deposit.usd = result.deposit.amount * price;
+
+            if (result.deposit.usd < 0.01) {
+              return;
+            }
           }
 
           result.farm = farm;
 
-          return Object.freeze(result);
+          resultFarms2.push(Object.freeze(result));
         });
 
       return Object.freeze([...resultFarms1, ...resultFarms2]);
@@ -2393,6 +2737,272 @@ module.exports = {
 
     getChain() {
       throw new Error('not implemented');
+    }
+  },
+
+  AutoCompoundStakeVaults: class AutoCompoundStakeVaults {
+    constructor(priceOracle, tokenCollector, cacheManager, contractAbiFetcher) {
+      this.priceOracle = priceOracle;
+      this.tokenCollector = tokenCollector;
+      this.cacheManager = cacheManager;
+      this.contractAbiFetcher = contractAbiFetcher;
+    }
+
+    async getAddressFarms(address) {
+      const cacheKey = `${this.getName()}_auto_getAddressFarms_${address}`;
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
+      }
+
+      const results = [];
+
+      for (const farm of await this.getFarms()) {
+        results.push({
+          userInfo: new Web3EthContract(await this.getAddressAbi(farm.raw.contract), farm.raw.contract).methods.userInfo(address),
+          id: farm.id
+        })
+      }
+
+      const result = (await Utils.multiCall(results, this.getChain()))
+        .filter(v => v.userInfo && new BigNumber(v.userInfo[0] || 0).isGreaterThan(0))
+        .map(v => v.id);
+
+      await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
+
+      return result;
+    }
+
+    async getFarms(refresh = false) {
+      const cacheKey = `${this.getName()}_auto_getFarms`;
+
+      if (!refresh) {
+        const cache = await this.cacheManager.get(cacheKey);
+        if (cache) {
+          return cache;
+        }
+      }
+
+      const farms = await this.getRawFarms();
+
+      const calls = [];
+      for (const farm of farms) {
+        const contract = new Web3EthContract(await this.getAddressAbi(farm.contract), farm.contract);
+
+        calls.push({
+          totalShares: contract.methods.totalShares(),
+          pricePerFullShare: contract.methods.getPricePerFullShare(),
+          address: farm.contract.toLowerCase(),
+        })
+      }
+
+      const infos = await Utils.multiCallIndexBy('address', calls, this.getChain());
+
+      const result = [];
+
+      farms.forEach(farm => {
+        const symbol = this.tokenCollector.getSymbolByAddress(farm.token) || 'unknown';
+
+        const item = {
+          id: `${this.getName()}_auto_${farm.contract.toLowerCase()}`,
+          name: `Auto ${symbol.toUpperCase()}`,
+          token: symbol.toLowerCase(),
+          raw: Object.freeze(farm),
+          provider: this.getName(),
+          has_details: true,
+          extra: {
+            transactionToken: farm.token,
+            transactionAddress: farm.contract,
+          },
+          compound: true,
+          chain: this.getChain(),
+        };
+
+        const link = this.getFarmLink(farm);
+        if (link) {
+          item.link = link;
+        }
+
+        const info = infos[farm.contract.toLowerCase()];
+        if (info) {
+          if (info.pricePerFullShare) {
+            item.extra.pricePerFullShare = info.pricePerFullShare / 1e18;
+          }
+
+          if (info.totalShares) {
+            item.tvl = {
+              amount: info.totalShares * (item.extra.pricePerFullShare || 1) / (10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
+            };
+
+            const price = this.priceOracle.findPrice(item.extra.transactionToken);
+            if (price) {
+              item.tvl.usd = item.tvl.amount * price;
+            }
+          }
+        }
+
+        result.push(item);
+      });
+
+      if (typeof this.onFarmsBuild !== "undefined") {
+        await this.onFarmsBuild(result)
+      }
+
+      const finalResult = result.map(r => Object.freeze(r))
+
+      console.log(`${this.getName()} updated`);
+
+      await this.cacheManager.set(cacheKey, finalResult, {ttl: 60 * 30});
+
+      return finalResult;
+    }
+
+    async getYields(address) {
+      const addressFarms = await this.getAddressFarms(address);
+      if (addressFarms.length === 0) {
+        return [];
+      }
+
+      return await this.getYieldsInner(address, addressFarms);
+    }
+
+    async getYieldsInner(address, ids) {
+      if (ids.length === 0) {
+        return [];
+      }
+
+      const farms = await this.getFarms();
+
+      const callsPromises = [];
+
+      for (const id of ids) {
+        const farm = farms.find(f => f.id === id);
+
+        if (!farm) {
+          continue;
+        }
+
+        callsPromises.push({
+          userInfo: new Web3EthContract(await this.getAddressAbi(farm.raw.contract), farm.raw.contract).methods.userInfo(address),
+          id: farm.id
+        });
+      }
+
+      const calls = await Utils.multiCall(callsPromises, this.getChain());
+
+      const resultFarms = calls
+        .filter(c => c.userInfo && c.userInfo[0] && new BigNumber(c.userInfo[0]).isGreaterThan(0))
+        .map(call => {
+          const farm = farms.find(f => f.id === call.id);
+
+          const result = {};
+
+          const decimals = 10 ** this.tokenCollector.getDecimals(farm.extra.transactionToken);
+
+          const amount = call.userInfo[0] * (farm.extra.pricePerFullShare || 1);
+          result.deposit = {
+            symbol: farm.symbol,
+            amount: amount / decimals
+          };
+
+          let price = this.priceOracle.getAddressPrice(farm.extra.transactionToken);
+          if (price) {
+            result.deposit.usd = result.deposit.amount * price;
+          }
+
+          result.farm = farm;
+
+          return result;
+        });
+
+      return Object.freeze(resultFarms);
+    }
+
+    async getTransactions(address, id) {
+      const farm = (await this.getFarms()).find(f => f.id === id);
+      if (!farm) {
+        return {};
+      }
+
+      if (farm.extra.transactionAddress && farm.extra.transactionToken) {
+        return Utils.getTransactions(
+          farm.extra.transactionAddress,
+          farm.extra.transactionToken,
+          address
+        );
+      }
+
+      return [];
+    }
+
+    async getDetails(address, id) {
+      const farm = (await this.getFarms()).find(f => f.id === id);
+      if (!farm) {
+        return {};
+      }
+
+      const [yieldFarms, transactions] = await Promise.all([
+        this.getYieldsInner(address, [farm.id]),
+        this.getTransactions(address, id)
+      ]);
+
+      const result = {};
+
+      let lpTokens = [];
+      if (yieldFarms[0]) {
+        result.farm = yieldFarms[0];
+        lpTokens = this.priceOracle.getLpSplits(farm, yieldFarms[0]);
+      }
+
+      if (transactions && transactions.length > 0) {
+        result.transactions = transactions;
+      }
+
+      if (lpTokens && lpTokens.length > 0) {
+        result.lpTokens = lpTokens;
+      }
+
+      const yieldDetails = Utils.findYieldForDetails(result);
+      if (yieldDetails) {
+        result.yield = yieldDetails;
+      }
+
+      return result;
+    }
+
+    getFarmLink(farm) {
+      throw new Error('not implemented');
+    }
+
+    getName() {
+      throw new Error('not implemented');
+    }
+
+    getChain() {
+      throw new Error('not implemented');
+    }
+
+    async getRawFarms() {
+      throw new Error('not implemented');
+    }
+
+    async getAddressAbi(contract) {
+      const cacheKey = `${this.getChain()}_${this.getName()}_${contract.toLowerCase()}_contract`;
+
+      const cache = await this.cacheManager.get(cacheKey);
+      if (cache) {
+        return cache;
+      }
+
+      const abi = await this.contractAbiFetcher.getAbiForContractAddress(contract, this.getChain());
+
+      if (abi) {
+        await this.cacheManager.set(cacheKey, abi, {ttl: 60 * 60 * 24 * 5});
+      } else {
+        await this.cacheManager.set(cacheKey, abi, {ttl: 60 * 60 * 10});
+      }
+
+      return abi || [];
     }
   }
 };

@@ -1,7 +1,35 @@
 const _ = require("lodash");
 
 module.exports = class Cronjobs {
-  constructor(platforms, priceOracle, polygonPlatforms, polygonPriceOracle, fantomPlatforms, fantomPriceOracle, farmPlatformResolver, polygonFarmPlatformResolver, fantomFarmPlatformResolver, kccPlatforms, kccPriceOracle, kccFarmPlatformResolver, harmonyPlatforms, harmonyPriceOracle, harmonyFarmPlatformResolver, celoPlatforms, celoPriceOracle, celoFarmPlatformResolver, moonriverPlatforms, moonriverPriceOracle, moonriverFarmPlatformResolver, cronosPlatforms, cronosPriceOracle, cronosFarmPlatformResolver) {
+  constructor(platforms,
+              priceOracle,
+              polygonPlatforms,
+              polygonPriceOracle,
+              fantomPlatforms,
+              fantomPriceOracle,
+              farmPlatformResolver,
+              polygonFarmPlatformResolver,
+              fantomFarmPlatformResolver,
+              fantomAdditionalTokenInfo,
+              kccPlatforms,
+              kccPriceOracle,
+              kccFarmPlatformResolver,
+              harmonyPlatforms,
+              harmonyPriceOracle,
+              harmonyFarmPlatformResolver,
+              celoPlatforms,
+              celoPriceOracle,
+              celoFarmPlatformResolver,
+              moonriverPlatforms,
+              moonriverPriceOracle,
+              moonriverFarmPlatformResolver,
+              cronosPlatforms,
+              cronosPriceOracle,
+              cronosFarmPlatformResolver,
+              moonbeamPlatforms,
+              moonbeamPriceOracle,
+              moonbeamFarmPlatformResolver
+  ) {
     this.platforms = platforms;
     this.priceOracle = priceOracle;
     this.farmPlatformResolver = farmPlatformResolver;
@@ -13,6 +41,7 @@ module.exports = class Cronjobs {
     this.fantomPlatforms = fantomPlatforms;
     this.fantomPriceOracle = fantomPriceOracle;
     this.fantomFarmPlatformResolver = fantomFarmPlatformResolver;
+    this.fantomAdditionalTokenInfo = fantomAdditionalTokenInfo;
 
     this.kccPlatforms = kccPlatforms;
     this.kccPriceOracle = kccPriceOracle;
@@ -33,6 +62,10 @@ module.exports = class Cronjobs {
     this.cronosPlatforms = cronosPlatforms;
     this.cronosPriceOracle = cronosPriceOracle;
     this.cronosFarmPlatformResolver = cronosFarmPlatformResolver;
+
+    this.moonbeamPlatforms = moonbeamPlatforms;
+    this.moonbeamPriceOracle = moonbeamPriceOracle;
+    this.moonbeamFarmPlatformResolver = moonbeamFarmPlatformResolver;
   }
 
   async cronInterval() {
@@ -69,6 +102,7 @@ module.exports = class Cronjobs {
     }));
 
     await this.fantomPriceOracle.onFetchDone();
+    await this.fantomAdditionalTokenInfo.update();
   }
 
   async kccCronInterval() {
@@ -130,7 +164,19 @@ module.exports = class Cronjobs {
 
     await this.cronosPriceOracle.onFetchDone();
   }
-  
+
+  async moonbeamCronInterval() {
+    await this.moonbeamPriceOracle.updateTokens();
+
+    const lps = (await Promise.all(this.moonbeamPlatforms.getFunctionAwaits('getLbAddresses'))).flat();
+    const addresses = _.uniqWith(lps, (a, b) => a.toLowerCase() === b.toLowerCase());
+    await Promise.allSettled(_.chunk(addresses, 75).map(chunk => {
+      return this.moonbeamPriceOracle.fetch(chunk);
+    }));
+
+    await this.moonbeamPriceOracle.onFetchDone();
+  }
+
   async cronPlatforms() {
     Promise.allSettled([
       this.farmPlatformResolver.buildPlatformList((await Promise.all(this.platforms.getFunctionAwaits('getFarms'))).flat()),
@@ -140,7 +186,8 @@ module.exports = class Cronjobs {
       this.harmonyFarmPlatformResolver.buildPlatformList((await Promise.all(this.harmonyPlatforms.getFunctionAwaits('getFarms'))).flat()),
       this.celoFarmPlatformResolver.buildPlatformList((await Promise.all(this.celoPlatforms.getFunctionAwaits('getFarms'))).flat()),
       this.moonriverFarmPlatformResolver.buildPlatformList((await Promise.all(this.moonriverPlatforms.getFunctionAwaits('getFarms'))).flat()),
-      this.cronosFarmPlatformResolver.buildPlatformList((await Promise.all(this.cronosPlatforms.getFunctionAwaits('getFarms'))).flat()),      
+      this.cronosFarmPlatformResolver.buildPlatformList((await Promise.all(this.cronosPlatforms.getFunctionAwaits('getFarms'))).flat()),
+      this.moonbeamFarmPlatformResolver.buildPlatformList((await Promise.all(this.moonbeamPlatforms.getFunctionAwaits('getFarms'))).flat()),
     ]);
   }
 }

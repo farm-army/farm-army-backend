@@ -30,7 +30,7 @@ module.exports = class reaper {
       rows.push(...AstParser.createJsonFromObjectExpression(f, keys => keys.includes('strategy') && keys.includes('vault')));
     });
 
-    const result = rows.filter(pool => pool.vault.address && pool.strategy.address)
+    const result = rows.filter(pool => pool.vault.address && pool.strategy.address && pool.lpToken.address === 'string')
 
     await this.cacheManager.set(cacheKey, result, {ttl: 60 * 30})
 
@@ -63,6 +63,10 @@ module.exports = class reaper {
 
     const farms = [];
     pools.forEach(pool => {
+      if (typeof pool?.lpToken?.address !== 'string') {
+        return;
+      }
+
       const name = pool.name
         .replace('Crypt', '')
         .trim()

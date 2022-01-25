@@ -3,6 +3,8 @@ const _ = require("lodash");
 const BigNumber = require("bignumber.js");
 const request = require("async-request");
 const Utils = require("../../utils");
+const Curve = require("../../platforms/curve");
+const Fyearn = require("../../platforms/fantom/fyearn/fyearn");
 const Web3EthContract = require("web3-eth-contract");
 
 const UniswapRouter = require("../../abi/uniswap_router.json");
@@ -81,9 +83,15 @@ module.exports = class FantomPriceOracle {
       "mode": "cors"
     });
 
-    const result = JSON.parse(foo);
+    let result = {};
 
-    result.data.tokens.forEach(t => {
+    try {
+      result = JSON.parse(foo);
+    } catch (e) {
+      console.log('sushiswap/fantom-exchange error', e.message)
+    }
+
+    (result?.data?.tokens || []).forEach(t => {
       this.tokenCollector.add({
         symbol: t.symbol,
         address: t.id,
@@ -187,7 +195,12 @@ module.exports = class FantomPriceOracle {
           this.priceCollector.addForSymbol(item.symbol, item.price)
         }
       })
-    })
+    });
+
+    await Promise.all([
+      Curve.getPoolPricesViaHttp('fantom', this, this.lpTokenCollector),
+      Fyearn.updateTokenPrices(this),
+    ]);
 
     this.priceCollector.save();
 
@@ -204,7 +217,7 @@ module.exports = class FantomPriceOracle {
           this.priceCollector.addForSymbol(item.symbol, item.price);
         }
       })
-    })
+    });
 
     await this.tokenCollector.save();
   }
@@ -231,6 +244,8 @@ module.exports = class FantomPriceOracle {
       'magic-internet-money': '0x82f0B8B456c1A451378467398982d4834b6829c1',
       'renbtc': '0xDBf31dF14B66535aF65AaC99C32e9eA844e14501',
       'synapse-2': '0xe55e19fb4f2d85af758950957714292dac1e25b2',
+      'true-usd': '0x9879aBDea01a879644185341F7aF7d8343556B7a',
+      'ageur': '0x02a2b736F9150d36C0919F3aCEE8BA2A92FBBb40',
     };
 
     (tokens || []).forEach(token => {
@@ -447,12 +462,16 @@ module.exports = class FantomPriceOracle {
           const reserveUsd = (c.reserve0 / (10 ** token0.decimals)) * token0Price;
           token1Price = reserveUsd / (c.reserve1 / (10 ** token1.decimals));
 
-          console.log("fantom: Missing price 'token1' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          if (Utils.isDevMode()) {
+            console.log("fantom: Missing price 'token1' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          }
         } else if (token1Price && !token0Price) {
           const reserveUsd = (c.reserve1 / (10 ** token1.decimals)) * token1Price;
           token0Price = reserveUsd / (c.reserve0 / (10 ** token0.decimals));
 
-          console.log("fantom: Missing price 'token0' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          if (Utils.isDevMode()) {
+            console.log("fantom: Missing price 'token0' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          }
         }
       }
 
@@ -497,6 +516,12 @@ module.exports = class FantomPriceOracle {
         router: '0xf491e7b69e4244ad4002bc14e878a34207e38c29', // spookyswap
         address: '0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE',
         symbol: 'boo',
+        decimals: 18,
+      },
+      {
+        router: '0xf491e7b69e4244ad4002bc14e878a34207e38c29', // spookyswap
+        address: '0x77128DFdD0ac859B33F44050c6fa272F34872B5E',
+        symbol: 'credit',
         decimals: 18,
       },
       {
@@ -551,6 +576,24 @@ module.exports = class FantomPriceOracle {
         router: '0x16327e3fbdaca3bcf7e38f5af2599d2ddc33ae52', // spiritswap
         address: '0x7c10108d4b7f4bd659ee57a53b30df928244b354',
         symbol: 'pear',
+        decimals: 18,
+      },
+      {
+        router: '0x6b3d631B87FE27aF29efeC61d2ab8CE4d621cCBF', // soulswap
+        address: '0xe2fb177009ff39f52c0134e8007fa0e4baacbd07',
+        symbol: 'soul',
+        decimals: 18,
+      },
+      {
+        router: '0x6b3d631B87FE27aF29efeC61d2ab8CE4d621cCBF', // soulswap
+        address: '0x6671E20b83Ba463F270c8c75dAe57e3Cc246cB2b',
+        symbol: 'lux',
+        decimals: 9,
+      },
+      {
+        router: '0x045312C737a6b7a115906Be0aD0ef53A6AA38106', // DarkKnightRouter
+        address: '0x6cc0e0aedbbd3c35283e38668d959f6eb3034856',
+        symbol: 'dknight',
         decimals: 18,
       },
     ];

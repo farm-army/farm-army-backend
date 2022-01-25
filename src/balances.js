@@ -146,6 +146,14 @@ module.exports = class Balances {
         };
 
         nativePrice = this.priceOracle.findPrice('0x98878B06940aE243284CA214f92Bb71a2b032B8A');
+      } else if (this.chain === 'moonbeam') {
+        item = {
+          token: '0xAcc15dC74880C9944775448304B263D191c6077F',
+          symbol: 'glmr',
+          amount: nativeBalance / 1e18
+        };
+
+        nativePrice = this.priceOracle.findPrice('0xAcc15dC74880C9944775448304B263D191c6077F');
       } else if (this.chain === 'cronos') {
         item = {
           token: '0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23',

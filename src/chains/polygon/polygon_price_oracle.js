@@ -64,7 +64,7 @@ module.exports = class PolygonPriceOracle {
   }
 
   async updateTokensSushiSwap() {
-    const foo = await fetch("https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange", {
+    const foo = await Utils.request('POST', "https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange", {
       "credentials": "omit",
       "headers": {
         "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0",
@@ -77,11 +77,15 @@ module.exports = class PolygonPriceOracle {
       },
       "referrer": "https://analytics-polygon.sushi.com/",
       "body": "{\"operationName\":\"tokens\",\"variables\":{},\"query\":\"fragment TokenFields on Token {\\n  id\\n  name\\n  symbol\\n  derivedETH\\n  volumeUSD\\n decimals\\n  __typename\\n}\\n\\nquery tokens {\\n  tokens(first: 100, orderBy: volumeUSD, orderDirection: desc) {\\n    ...TokenFields\\n    __typename\\n  }\\n}\\n\"}",
-      "method": "POST",
       "mode": "cors"
     });
 
-    const result = await foo.json();
+    let result = {}
+    try {
+      result = JSON.parse(foo);
+    } catch (e) {
+      console.log('error sushiswap/matic-exchange', e.methods)
+    }
 
     (result?.data?.tokens || []).forEach(t => {
       this.tokenCollector.add({
@@ -111,7 +115,12 @@ module.exports = class PolygonPriceOracle {
         "mode": "cors"
       });
 
-    const result = JSON.parse(foo);
+    let result = {}
+    try {
+      result = JSON.parse(foo);
+    } catch (e) {
+      console.log('error sameepsi/quickswap06', e.methods)
+    }
 
     result.data.tokens.forEach(t => {
       this.tokenCollector.add({
@@ -396,12 +405,16 @@ module.exports = class PolygonPriceOracle {
           const reserveUsd = (c.reserve0 / (10 ** token0.decimals)) * token0Price;
           token1Price = reserveUsd / (c.reserve1 / (10 ** token1.decimals));
 
-          console.log("polygon: Missing price 'token1' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          if (Utils.isDevMode()) {
+            console.log("polygon: Missing price 'token1' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          }
         } else if (token1Price && !token0Price) {
           const reserveUsd = (c.reserve1 / (10 ** token1.decimals)) * token1Price;
           token0Price = reserveUsd / (c.reserve0 / (10 ** token0.decimals));
 
-          console.log("polygon: Missing price 'token0' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          if (Utils.isDevMode()) {
+            console.log("polygon: Missing price 'token0' guessed:", token0.symbol.toLowerCase(), token0Price, token1.symbol.toLowerCase(), token1Price);
+          }
         }
       }
 

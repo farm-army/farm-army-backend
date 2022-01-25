@@ -64,7 +64,7 @@ module.exports = class kukafe extends PancakePlatformFork {
   }
 
   getFarmLink(farm) {
-    return 'https://kukafe.finance/#/';
+    return 'https://ku.kafe.finance/#/';
   }
 
   getFarmEarns(farm) {
