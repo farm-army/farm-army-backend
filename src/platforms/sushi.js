@@ -8,8 +8,8 @@ const PancakePlatformFork = require("./common").PancakePlatformFork;
 const _ = require("lodash");
 
 module.exports = class sushi extends PancakePlatformFork {
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
-    super(cache, priceOracle);
+  constructor(cache, priceOracle, tokenCollector, liquidityTokenCollector, farmCollector, cacheManager) {
+    super(cache, priceOracle, tokenCollector, liquidityTokenCollector);
 
     this.cache = cache;
     this.priceOracle = priceOracle;

@@ -122,7 +122,7 @@ module.exports = class PolygonPriceOracle {
       console.log('error sameepsi/quickswap06', e.methods)
     }
 
-    result.data.tokens.forEach(t => {
+    (result?.data?.tokens || []).forEach(t => {
       this.tokenCollector.add({
         symbol: t.symbol,
         address: t.id,

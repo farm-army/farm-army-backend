@@ -9,10 +9,11 @@ const AstParser = require("../../../utils/ast_parser");
 const _ = require("lodash");
 
 module.exports = class beefy {
-  constructor(cacheManager, priceOracle, tokenCollector) {
+  constructor(cacheManager, priceOracle, tokenCollector, liquidityTokenCollector) {
     this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
+    this.liquidityTokenCollector = liquidityTokenCollector;
   }
 
   async getLbAddresses() {
@@ -227,7 +228,19 @@ module.exports = class beefy {
       }
 
       if (farm.depositsPaused === true) {
-        item.flags = ['deprecated'];
+        if (!item.flags) {
+          item.flags = [];
+        }
+
+        item.flags.push('deprecated');
+      }
+
+      if (item?.extra?.transactionToken && this.liquidityTokenCollector.isStable(item.extra.transactionToken)) {
+        if (!item.flags) {
+          item.flags = [];
+        }
+
+        item.flags.push('stable');
       }
 
       farms.push(Object.freeze(item));

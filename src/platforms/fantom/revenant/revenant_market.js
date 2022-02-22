@@ -4,15 +4,17 @@ const BigNumber = require("bignumber.js");
 const Web3EthContract = require("web3-eth-contract");
 const CREDITUM_ABI = require("./abi/creditum.json");
 const ERC20Abi = require("../../../abi/erc20.json");
+const AstParser = require("../../../utils/ast_parser");
 
 module.exports = class revenant_market {
   static ADDRESS = '0x04D2C91A8BDf61b11A526ABea2e2d8d778d4A534'
 
-  constructor(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector) {
+  constructor(priceOracle, tokenCollector, cacheManager, liquidityTokenCollector, additionalTokenInfo) {
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
     this.cacheManager = cacheManager;
     this.liquidityTokenCollector = liquidityTokenCollector;
+    this.additionalTokenInfo = additionalTokenInfo;
   }
 
   async getRawFarms() {
@@ -23,16 +25,19 @@ module.exports = class revenant_market {
       return cache;
     }
 
-    const foo = {
-      wftm: "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83",
-      usdc: "0x04068da6c83afcfa0e13ba15a6696662335d5b75",
-      dai: "0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e",
-      eth: "0x74b23882a30290451A17c44f4F05243b6b58C76d",
-      btc: "0x321162Cd933E2Be498Cd2267a90534A804051b11",
-      yvdai: "0x637eC617c86D24E421328e6CAEa1d92114892439",
-      yvusdc: "0xEF0210eB96c7EB36AF8ed1c20306462764935607",
-      yvwftm: "0x0DEC85e74A92c52b7F708c4B10207D9560CEFaf0"
-    };
+    const files = await Utils.getJavascriptFiles('https://revenant.finance/creditum');
+
+    const foo = {};
+    Object.values(files).forEach(f => {
+      const jsonFromObjectExpression = AstParser.createJsonFromObjectExpression(f, keys => keys.includes('wftm') && keys.includes('yvusdc') && keys.includes('usdc'));
+      (jsonFromObjectExpression || []).forEach(i => {
+        if (i.wftm && typeof i.wftm === 'string' && i.wftm.startsWith('0x')) {
+          for (const [key, value] of Object.entries(i)) {
+            foo[key] = value;
+          }
+        }
+      });
+    });
 
     const decimals = await Utils.multiCallIndexBy('token', Object.values(foo).map(address => ({
       token: address.toLowerCase(),
@@ -54,7 +59,7 @@ module.exports = class revenant_market {
       result.push(item);
     }
 
-    await this.cacheManager.set(result, Object.freeze(result), {ttl: 60 * 60})
+    await this.cacheManager.set(cacheKey, Object.freeze(result), {ttl: 60 * 60})
 
     return Object.freeze(result);
   }
@@ -110,7 +115,7 @@ module.exports = class revenant_market {
         provider: this.getName(),
         has_details: true,
         raw: Object.freeze(farm),
-        link: `https://revenant.finance/creditum/cusd/yvusdc/${farm.symbol}`,
+        link: `https://revenant.finance/creditum/cusd/${farm.symbol}`,
         extra: {},
         chain: this.getChain(),
       };
@@ -140,6 +145,32 @@ module.exports = class revenant_market {
         const price = this.priceOracle.findPrice(item.extra.transactionToken);
         if (price) {
           item.tvl.usd = item.tvl.amount * price;
+        }
+      }
+
+
+      const apy = this.additionalTokenInfo.getYieldAsApy(item.extra.transactionToken);
+      if (apy) {
+        if (!item.yield) {
+          item.yield = {};
+        }
+
+        item.yield.apy = apy;
+      }
+
+      const flags = this.additionalTokenInfo.getFlags(item.extra.transactionToken);
+      if (flags && flags.length > 0) {
+        if (!item.flags) {
+          item.flags = [];
+        }
+
+        item.flags.push(...flags);
+      }
+
+      if (!item.platform) {
+        const platform = this.additionalTokenInfo.getPlatform(item.extra.transactionToken);
+        if (platform) {
+          item.platform = platform;
         }
       }
 

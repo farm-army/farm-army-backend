@@ -34,7 +34,7 @@ module.exports = class AddressTransactions {
     } else if (chain === 'moonriver') {
       host = 'blockscout.moonriver.moonbeam.network';
     } else if (chain === 'cronos') {
-      host = 'cronos.crypto.org/explorer';
+      host = 'api.cronoscan.com';
     } else {
       host = 'api.bscscan.com';
     }

@@ -6,8 +6,8 @@ const PancakePlatformFork = require("../../common").PancakePlatformFork;
 module.exports = class farmersonly_farm extends PancakePlatformFork {
   static MASTER_ADDRESS = "0x15e04418d328c39ba747690f6dae9bbf548cd358"
 
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
-    super(cache, priceOracle);
+  constructor(cache, priceOracle, tokenCollector, liquidityTokenCollector, farmCollector, cacheManager) {
+    super(cache, priceOracle, tokenCollector, liquidityTokenCollector);
 
     this.cache = cache;
     this.priceOracle = priceOracle;

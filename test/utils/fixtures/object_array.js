@@ -44,6 +44,10 @@ const foo = [
       earnContractAddress: r.masterLory,
       masterchefPid: 43
     },
+    number: {
+      25: "0x1d94447C8f4fC0bEB2da20BEdCccD30d50FA7211",
+      338: "test"
+    },
     farms: [
       {
         earnedToken: "LORY",

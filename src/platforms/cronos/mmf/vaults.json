@@ -1,0 +1,703 @@
+[
+  {
+    "pid": 0,
+    "name": "MMF",
+    "type": "Single",
+    "earn": "MMO + MMF",
+    "lpAddresses": "0xbA452A1c0875D33a440259B1ea4DcA8f5d86D9Ae",
+    "token": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "farmToken": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "quoteToken": {
+      "decimals": 18,
+      "symbol": "WCRO",
+      "name": "Wrapped CRO",
+      "chainId": 25,
+      "address": "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
+      "projectLink": "https://crypto.org/"
+    },
+    "vaultAddress": "0x443ec402BeC44dA7138a54413b6e09037Cf9CF41",
+    "calculator": "0xa2B417088D63400d211A4D5EB3C4C5363f834764",
+    "dashboard": "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B",
+    "masterChef": "0x6bE34986Fdd1A91e4634eb6b9F8017439b7b5EDc",
+    "masterChefOutput": "meerkatPerBlock",
+    "swap": "MM.Finance",
+    "singleStake": true,
+    "deprecated": false,
+    "boostRate": 1,
+    "pricePath": [
+      {
+        "decimals": 18,
+        "symbol": "MMF",
+        "name": "Mad Meerkat Finance Token",
+        "chainId": 25,
+        "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+        "projectLink": "https://mm.finance/"
+      },
+      {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "chainId": 25,
+        "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+        "projectLink": "https://www.circle.com/en/usdc"
+      }
+    ]
+  },
+  {
+    "pid": 0,
+    "name": "VVS",
+    "type": "Single",
+    "earn": "MMO + MMF",
+    "lpAddresses": "0xbf62c67eA509E86F07c8c69d0286C0636C50270b",
+    "token": {
+      "decimals": 18,
+      "symbol": "VVS",
+      "name": "VVS Token",
+      "chainId": 25,
+      "address": "0x2D03bECE6747ADC00E1a131BBA1469C15fD11e03",
+      "projectLink": "https://vvs.finance/"
+    },
+    "farmToken": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "quoteToken": {
+      "decimals": 18,
+      "symbol": "WCRO",
+      "name": "Wrapped CRO",
+      "chainId": 25,
+      "address": "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
+      "projectLink": "https://crypto.org/"
+    },
+    "vaultAddress": "0xe4bc967855Eb076fA971a40c0Aa4B16Ba206aec2",
+    "calculator": "0xa2B417088D63400d211A4D5EB3C4C5363f834764",
+    "dashboard": "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B",
+    "masterChef": "0xDccd6455AE04b03d785F12196B492b18129564bc",
+    "masterChefOutput": "vvsPerBlock",
+    "swap": "VVS",
+    "singleStake": true,
+    "maximizer": true,
+    "deprecated": false,
+    "boostRate": 1,
+    "pricePath": [
+      {
+        "decimals": 18,
+        "symbol": "MMF",
+        "name": "Mad Meerkat Finance Token",
+        "chainId": 25,
+        "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+        "projectLink": "https://mm.finance/"
+      },
+      {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "chainId": 25,
+        "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+        "projectLink": "https://www.circle.com/en/usdc"
+      }
+    ]
+  },
+  {
+    "pid": 10,
+    "name": "MMO-CRO",
+    "type": "LP",
+    "earn": "MMO + MMF",
+    "lpAddresses": "0xf0b5074dbf73c96d766c9a48726cee7a6074d436",
+    "token": {
+      "decimals": 18,
+      "symbol": "MMO",
+      "name": "Mad Meerkat Optimizer",
+      "chainId": 25,
+      "address": "0x50c0C5bda591bc7e89A342A3eD672FB59b3C46a7",
+      "projectLink": "https://vaults.mm.finance/"
+    },
+    "farmToken": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "quoteToken": {
+      "decimals": 18,
+      "symbol": "WCRO",
+      "name": "Wrapped CRO",
+      "chainId": 25,
+      "address": "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
+      "projectLink": "https://crypto.org/"
+    },
+    "vaultAddress": "0x34375b4c4094eCaAb494E22DFFe1f88f1D5143af",
+    "calculator": "0xa2B417088D63400d211A4D5EB3C4C5363f834764",
+    "dashboard": "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B",
+    "masterChef": "0x6bE34986Fdd1A91e4634eb6b9F8017439b7b5EDc",
+    "masterChefOutput": "meerkatPerBlock",
+    "swap": "MM.Finance",
+    "deprecated": false,
+    "boostRate": 1,
+    "maximizer": true,
+    "pricePath": [
+      {
+        "decimals": 18,
+        "symbol": "MMF",
+        "name": "Mad Meerkat Finance Token",
+        "chainId": 25,
+        "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+        "projectLink": "https://mm.finance/"
+      },
+      {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "chainId": 25,
+        "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+        "projectLink": "https://www.circle.com/en/usdc"
+      }
+    ],
+    "sumOfYield": true
+  },
+  {
+    "pid": 1,
+    "name": "MMF-CRO",
+    "type": "LP",
+    "earn": "MMO + MMF",
+    "lpAddresses": "0xbA452A1c0875D33a440259B1ea4DcA8f5d86D9Ae",
+    "token": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "farmToken": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "quoteToken": {
+      "decimals": 18,
+      "symbol": "WCRO",
+      "name": "Wrapped CRO",
+      "chainId": 25,
+      "address": "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
+      "projectLink": "https://crypto.org/"
+    },
+    "vaultAddress": "0xB130a35acD62eb4604c6Ba6479D660D97a0A5aBE",
+    "calculator": "0xa2B417088D63400d211A4D5EB3C4C5363f834764",
+    "dashboard": "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B",
+    "masterChef": "0x6bE34986Fdd1A91e4634eb6b9F8017439b7b5EDc",
+    "masterChefOutput": "meerkatPerBlock",
+    "swap": "MM.Finance",
+    "deprecated": false,
+    "boostRate": 1,
+    "maximizer": true,
+    "pricePath": [
+      {
+        "decimals": 18,
+        "symbol": "MMF",
+        "name": "Mad Meerkat Finance Token",
+        "chainId": 25,
+        "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+        "projectLink": "https://mm.finance/"
+      },
+      {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "chainId": 25,
+        "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+        "projectLink": "https://www.circle.com/en/usdc"
+      }
+    ],
+    "sumOfYield": true
+  },
+  {
+    "pid": 7,
+    "name": "MMF-USDC",
+    "type": "LP",
+    "earn": "MMO + MMF",
+    "lpAddresses": "0x722f19bd9A1E5bA97b3020c6028c279d27E4293C",
+    "token": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "farmToken": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "quoteToken": {
+      "decimals": 6,
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "chainId": 25,
+      "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+      "projectLink": "https://www.circle.com/en/usdc"
+    },
+    "vaultAddress": "0x08d7EBb6fd9dC10EA21a6AA788693aB763616951",
+    "calculator": "0xa2B417088D63400d211A4D5EB3C4C5363f834764",
+    "dashboard": "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B",
+    "masterChef": "0x6bE34986Fdd1A91e4634eb6b9F8017439b7b5EDc",
+    "masterChefOutput": "meerkatPerBlock",
+    "swap": "MM.Finance",
+    "deprecated": false,
+    "boostRate": 1,
+    "maximizer": true,
+    "pricePath": [
+      {
+        "decimals": 18,
+        "symbol": "MMF",
+        "name": "Mad Meerkat Finance Token",
+        "chainId": 25,
+        "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+        "projectLink": "https://mm.finance/"
+      },
+      {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "chainId": 25,
+        "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+        "projectLink": "https://www.circle.com/en/usdc"
+      }
+    ],
+    "sumOfYield": true
+  },
+  {
+    "pid": 9,
+    "name": "MMF-USDT",
+    "type": "LP",
+    "earn": "MMO + MMF",
+    "lpAddresses": "0x5801d37e04ab1f266c35a277e06c9d3afa1c9ca2",
+    "token": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "farmToken": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "quoteToken": {
+      "decimals": 6,
+      "symbol": "USDT",
+      "name": "Tether USD",
+      "chainId": 25,
+      "address": "0x66e428c3f67a68878562e79A0234c1F83c208770",
+      "projectLink": "https://tether.to/"
+    },
+    "vaultAddress": "0xe2ca90FC315356DecF71133Ba5938153596433f3",
+    "calculator": "0xa2B417088D63400d211A4D5EB3C4C5363f834764",
+    "dashboard": "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B",
+    "masterChef": "0x6bE34986Fdd1A91e4634eb6b9F8017439b7b5EDc",
+    "masterChefOutput": "meerkatPerBlock",
+    "swap": "MM.Finance",
+    "deprecated": false,
+    "boostRate": 1,
+    "maximizer": true,
+    "pricePath": [
+      {
+        "decimals": 18,
+        "symbol": "MMF",
+        "name": "Mad Meerkat Finance Token",
+        "chainId": 25,
+        "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+        "projectLink": "https://mm.finance/"
+      },
+      {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "chainId": 25,
+        "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+        "projectLink": "https://www.circle.com/en/usdc"
+      }
+    ],
+    "sumOfYield": true
+  },
+  {
+    "pid": 4,
+    "name": "CRO-USDC",
+    "type": "LP",
+    "earn": "MMO + MMF",
+    "lpAddresses": "0xa68466208F1A3Eb21650320D2520ee8eBA5ba623",
+    "token": {
+      "decimals": 18,
+      "symbol": "WCRO",
+      "name": "Wrapped CRO",
+      "chainId": 25,
+      "address": "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
+      "projectLink": "https://crypto.org/"
+    },
+    "farmToken": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "quoteToken": {
+      "decimals": 6,
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "chainId": 25,
+      "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+      "projectLink": "https://www.circle.com/en/usdc"
+    },
+    "vaultAddress": "0xFf89646FE7Ee62EA96050379A7A8c532dD431d10",
+    "calculator": "0xa2B417088D63400d211A4D5EB3C4C5363f834764",
+    "dashboard": "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B",
+    "masterChef": "0x6bE34986Fdd1A91e4634eb6b9F8017439b7b5EDc",
+    "masterChefOutput": "meerkatPerBlock",
+    "swap": "MM.Finance",
+    "deprecated": false,
+    "boostRate": 1,
+    "maximizer": true,
+    "pricePath": [
+      {
+        "decimals": 18,
+        "symbol": "MMF",
+        "name": "Mad Meerkat Finance Token",
+        "chainId": 25,
+        "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+        "projectLink": "https://mm.finance/"
+      },
+      {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "chainId": 25,
+        "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+        "projectLink": "https://www.circle.com/en/usdc"
+      }
+    ]
+  },
+  {
+    "pid": 5,
+    "name": "CRO-USDT",
+    "type": "LP",
+    "earn": "MMO + MMF",
+    "lpAddresses": "0xEB28c926A7Afc75fcC8d6671Acd4c4A298b38419",
+    "token": {
+      "decimals": 18,
+      "symbol": "WCRO",
+      "name": "Wrapped CRO",
+      "chainId": 25,
+      "address": "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
+      "projectLink": "https://crypto.org/"
+    },
+    "farmToken": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "quoteToken": {
+      "decimals": 6,
+      "symbol": "USDT",
+      "name": "Tether USD",
+      "chainId": 25,
+      "address": "0x66e428c3f67a68878562e79A0234c1F83c208770",
+      "projectLink": "https://tether.to/"
+    },
+    "vaultAddress": "0x7A42441f5Cf40cF0fBdA98F494fA2cc500177e86",
+    "calculator": "0xa2B417088D63400d211A4D5EB3C4C5363f834764",
+    "dashboard": "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B",
+    "masterChef": "0x6bE34986Fdd1A91e4634eb6b9F8017439b7b5EDc",
+    "masterChefOutput": "meerkatPerBlock",
+    "swap": "MM.Finance",
+    "deprecated": false,
+    "boostRate": 1,
+    "maximizer": true,
+    "pricePath": [
+      {
+        "decimals": 18,
+        "symbol": "MMF",
+        "name": "Mad Meerkat Finance Token",
+        "chainId": 25,
+        "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+        "projectLink": "https://mm.finance/"
+      },
+      {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "chainId": 25,
+        "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+        "projectLink": "https://www.circle.com/en/usdc"
+      }
+    ]
+  },
+  {
+    "pid": 2,
+    "name": "ETH-CRO",
+    "type": "LP",
+    "earn": "MMO + MMF",
+    "lpAddresses": "0x019d9479606FBDd4aCB16488e0aAE49E4684322b",
+    "token": {
+      "decimals": 18,
+      "symbol": "ETH",
+      "name": "Wrapped Ether",
+      "chainId": 25,
+      "address": "0xe44Fd7fCb2b1581822D0c862B68222998a0c299a",
+      "projectLink": "https://ethereum.org/en/"
+    },
+    "farmToken": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "quoteToken": {
+      "decimals": 18,
+      "symbol": "WCRO",
+      "name": "Wrapped CRO",
+      "chainId": 25,
+      "address": "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
+      "projectLink": "https://crypto.org/"
+    },
+    "vaultAddress": "0x7D35398F35F1dAD6e7a48d6f6E470CB11C77fc46",
+    "calculator": "0xa2B417088D63400d211A4D5EB3C4C5363f834764",
+    "dashboard": "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B",
+    "masterChef": "0x6bE34986Fdd1A91e4634eb6b9F8017439b7b5EDc",
+    "masterChefOutput": "meerkatPerBlock",
+    "swap": "MM.Finance",
+    "deprecated": false,
+    "boostRate": 1,
+    "maximizer": true,
+    "pricePath": [
+      {
+        "decimals": 18,
+        "symbol": "MMF",
+        "name": "Mad Meerkat Finance Token",
+        "chainId": 25,
+        "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+        "projectLink": "https://mm.finance/"
+      },
+      {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "chainId": 25,
+        "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+        "projectLink": "https://www.circle.com/en/usdc"
+      }
+    ]
+  },
+  {
+    "pid": 3,
+    "name": "BTC-CRO",
+    "type": "LP",
+    "earn": "MMO + MMF",
+    "lpAddresses": "0x5383202D48C24aAA19873366168f2Ed558a00ff0",
+    "token": {
+      "decimals": 8,
+      "symbol": "WBTC",
+      "name": "Wrapped BTC",
+      "chainId": 25,
+      "address": "0x062E66477Faf219F25D27dCED647BF57C3107d52",
+      "projectLink": "https://bitcoin.org/en/"
+    },
+    "farmToken": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "quoteToken": {
+      "decimals": 18,
+      "symbol": "WCRO",
+      "name": "Wrapped CRO",
+      "chainId": 25,
+      "address": "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23",
+      "projectLink": "https://crypto.org/"
+    },
+    "vaultAddress": "0xD2B3BDd43Bf5f6f28bD8b12d432afA46a3B20234",
+    "calculator": "0xa2B417088D63400d211A4D5EB3C4C5363f834764",
+    "dashboard": "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B",
+    "masterChef": "0x6bE34986Fdd1A91e4634eb6b9F8017439b7b5EDc",
+    "masterChefOutput": "meerkatPerBlock",
+    "swap": "MM.Finance",
+    "deprecated": false,
+    "boostRate": 1,
+    "maximizer": true,
+    "pricePath": [
+      {
+        "decimals": 18,
+        "symbol": "MMF",
+        "name": "Mad Meerkat Finance Token",
+        "chainId": 25,
+        "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+        "projectLink": "https://mm.finance/"
+      },
+      {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "chainId": 25,
+        "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+        "projectLink": "https://www.circle.com/en/usdc"
+      }
+    ]
+  },
+  {
+    "pid": 8,
+    "name": "WETH-BTC",
+    "type": "LP",
+    "earn": "MMO + MMF",
+    "lpAddresses": "0x0101112C7aDdb2E8197922e9cFa17cbAA935ECCc",
+    "token": {
+      "decimals": 8,
+      "symbol": "WBTC",
+      "name": "Wrapped BTC",
+      "chainId": 25,
+      "address": "0x062E66477Faf219F25D27dCED647BF57C3107d52",
+      "projectLink": "https://bitcoin.org/en/"
+    },
+    "farmToken": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "quoteToken": {
+      "decimals": 18,
+      "symbol": "WETH",
+      "name": "Wrapped Ether",
+      "chainId": 25,
+      "address": "0xe44Fd7fCb2b1581822D0c862B68222998a0c299a",
+      "projectLink": "https://ethereum.org/en/"
+    },
+    "vaultAddress": "0x00Db5925892274F276846F25C7fE81DEc3F3B769",
+    "calculator": "0xa2B417088D63400d211A4D5EB3C4C5363f834764",
+    "dashboard": "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B",
+    "masterChef": "0x6bE34986Fdd1A91e4634eb6b9F8017439b7b5EDc",
+    "masterChefOutput": "meerkatPerBlock",
+    "swap": "MM.Finance",
+    "deprecated": false,
+    "boostRate": 1,
+    "maximizer": true,
+    "pricePath": [
+      {
+        "decimals": 18,
+        "symbol": "MMF",
+        "name": "Mad Meerkat Finance Token",
+        "chainId": 25,
+        "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+        "projectLink": "https://mm.finance/"
+      },
+      {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "chainId": 25,
+        "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+        "projectLink": "https://www.circle.com/en/usdc"
+      }
+    ]
+  },
+  {
+    "pid": 6,
+    "name": "USDT-USDC",
+    "type": "LP",
+    "earn": "MMO + MMF",
+    "lpAddresses": "0x6F186E4BEd830D13DcE638e40bA27Fd6d91BAd0B",
+    "token": {
+      "decimals": 6,
+      "symbol": "USDT",
+      "name": "Tether USD",
+      "chainId": 25,
+      "address": "0x66e428c3f67a68878562e79A0234c1F83c208770",
+      "projectLink": "https://tether.to/"
+    },
+    "farmToken": {
+      "decimals": 18,
+      "symbol": "MMF",
+      "name": "Mad Meerkat Finance Token",
+      "chainId": 25,
+      "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+      "projectLink": "https://mm.finance/"
+    },
+    "quoteToken": {
+      "decimals": 6,
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "chainId": 25,
+      "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+      "projectLink": "https://www.circle.com/en/usdc"
+    },
+    "vaultAddress": "0x55B5540B5C48a27FD17ebe2B9E6a06911f8aa45A",
+    "calculator": "0xa2B417088D63400d211A4D5EB3C4C5363f834764",
+    "dashboard": "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B",
+    "masterChef": "0x6bE34986Fdd1A91e4634eb6b9F8017439b7b5EDc",
+    "masterChefOutput": "meerkatPerBlock",
+    "swap": "MM.Finance",
+    "deprecated": false,
+    "boostRate": 1,
+    "maximizer": true,
+    "pricePath": [
+      {
+        "decimals": 18,
+        "symbol": "MMF",
+        "name": "Mad Meerkat Finance Token",
+        "chainId": 25,
+        "address": "0x97749c9B61F878a880DfE312d2594AE07AEd7656",
+        "projectLink": "https://mm.finance/"
+      },
+      {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "chainId": 25,
+        "address": "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
+        "projectLink": "https://www.circle.com/en/usdc"
+      }
+    ]
+  }
+]

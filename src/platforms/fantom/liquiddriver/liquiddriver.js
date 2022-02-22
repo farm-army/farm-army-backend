@@ -6,8 +6,8 @@ const PancakePlatformFork = require("../../common").PancakePlatformFork;
 module.exports = class liquiddriver extends PancakePlatformFork {
   static MASTER_ADDRESS = "0x6e2ad6527901c9664f016466b8da1357a004db0f"
 
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
-    super(cache, priceOracle);
+  constructor(cache, priceOracle, tokenCollector, liquidityTokenCollector, farmCollector, cacheManager) {
+    super(cache, priceOracle, tokenCollector, liquidityTokenCollector);
 
     this.cache = cache;
     this.priceOracle = priceOracle;

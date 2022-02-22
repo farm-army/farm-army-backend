@@ -96,6 +96,7 @@ module.exports = class fyearn {
 
       item.extra.transactionToken = farm.token;
       item.extra.transactionAddress = farm.address;
+      item.extra.pricePerFullShareToken = farm.address;
 
       // resolve: lp pools
       let symbol = this.tokenCollector.getSymbolByAddress(item.extra.transactionToken);

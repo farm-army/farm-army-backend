@@ -331,7 +331,7 @@ module.exports = class fcurve {
         balanceOf: token.methods.balanceOf(address),
       };
 
-      farm.earn.forEach((r, index) => {
+      (farm.earn || []).forEach((r, index) => {
         newVar['rewards' + index] = token.methods.claimable_reward_write(address, r.address)
       })
 
@@ -372,7 +372,7 @@ module.exports = class fcurve {
 
       const rewards = [];
 
-      farm.earn.forEach((earn, index) => {
+      (farm.earn || []).forEach((earn, index) => {
         let rewardAmount = call['rewards' + index] || 0;
 
         if (new BigNumber(rewardAmount).isGreaterThan(0)) {

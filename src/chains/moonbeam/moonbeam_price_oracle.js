@@ -469,6 +469,12 @@ module.exports = class MoonbeamPriceOracle {
         symbol: 'flare',
         decimals: 18,
       },
+      {
+        router: '0xb5b2444eDF79b00d40f463f79158D1187a0D0c25', // thorus
+        address: '0x735aBE48e8782948a37C7765ECb76b98CdE97B0F',
+        symbol: 'tho',
+        decimals: 18,
+      },
     ];
 
     const calls = tokens.map(t => {

@@ -1,0 +1,87 @@
+[
+  {
+    "name": "wigoswap",
+    "masterChefAddress": "0xa1a938855735c0651a6cfe2e93a32a28a236d0e9",
+    "farmLinkVault": "https://wigoswap.io/farms",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "protofi",
+    "masterChefAddress": "0xa71f52aee8311c22b6329EF7715A5B8aBF1c6588",
+    "farmLinkVault": "https://fantombank.protofi.app/farms",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "soulswap",
+    "masterChefAddress": "0xce6ccbb1edad497b4d53d829df491af70065ab5b",
+    "farmLinkVault": "https://exchange.soulswap.finance/farms",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "morpheus",
+    "masterChefAddress": "0xc7dad2e953Dc7b11474151134737A007049f576E",
+    "farmLinkVault": "https://morpheusswap.app/farms",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "knightswap",
+    "masterChefAddress": "0xb02e3A4B5ebC315137753e24b6Eb6aEF7D602E40",
+    "farmLinkVault": "https://dark.knightswap.financial/farms",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "zoocoin",
+    "masterChefAddress": "0x4135b37B159186455cd691a0421F882F2bD418b9",
+    "farmLinkVault": "https://dex.zoocoin.cash/farms",
+    "main_platform": "zoocoin",
+    "platform": "zoocoin",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "spookyswap",
+    "masterChefAddress": "0x2b2929e785374c651a81a63878ab22742656dcdd",
+    "farmLinkVault": "https://spookyswap.finance/farms",
+    "main_platform": "spookyswap",
+    "platform": "spookyswap",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "paintswap",
+    "masterChefAddress": "0xCb80F529724B9620145230A0C866AC2FACBE4e3D",
+    "farmLinkVault": "https://paintswap.finance/farms",
+    "main_platform": "paintswap",
+    "platform": "paintswap",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "fjetswap",
+    "masterChefAddress": "0x9180583C1ab03587b545629dd60D2be0bf1DF4f2",
+    "farmLinkVault": "https://fantom.jetswap.finance/farms",
+    "main_platform": "fjetswap",
+    "platform": "fjetswap",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "fwaka",
+    "masterChefAddress": "0xaEF349E1736b8A4B1B243A369106293c3a0b9D09",
+    "farmLinkVault": "https://waka.finance/#/farms",
+    "main_platform": "fwaka",
+    "platform": "fwaka",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "oxdao",
+    "masterChefAddress": "0xa7821c3e9fc1bf961e280510c471031120716c3d",
+    "farmLinkVault": "https://www.oxdao.fi",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "fhyperjump",
+    "masterChefAddress": "0x90Df158ff7c31aD1d81ddDb1D8ab9d0eCBCeDa20",
+    "farmLinkVault": "https://ftm.hyperjump.app/farms",
+    "farmFetcherOptions": {
+      "rewardTokenFunctionName": "ori"
+    },
+    "type": "common_master_chef"
+  }
+]

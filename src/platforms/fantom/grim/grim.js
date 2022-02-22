@@ -8,10 +8,11 @@ const VAULT_ABI = require('./abi/vault.json');
 const AstParser = require("../../../utils/ast_parser");
 
 module.exports = class grim {
-  constructor(cacheManager, priceOracle, tokenCollector) {
+  constructor(cacheManager, priceOracle, tokenCollector, liquidityTokenCollector) {
     this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
+    this.liquidityTokenCollector = liquidityTokenCollector;
   }
 
   async getLbAddresses() {
@@ -194,6 +195,14 @@ module.exports = class grim {
         }
 
         item.flags.push('deprecated');
+      }
+
+      if (this.liquidityTokenCollector && item?.extra?.transactionToken && this.liquidityTokenCollector.isStable(item.extra.transactionToken)) {
+        if (!item.flags) {
+          item.flags = [];
+        }
+
+        item.flags.push('stable');
       }
 
       farms.push(Object.freeze(item));

@@ -4,17 +4,6 @@ const {MasterChefWithAutoCompoundAndRewards} = require("../../common");
 const ABI = require("./abi/masterchef_compound.json");
 
 module.exports = class farmersonly_compound extends MasterChefWithAutoCompoundAndRewards {
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver) {
-    super(cache, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver);
-
-    this.cache = cache;
-    this.priceOracle = priceOracle;
-    this.tokenCollector = tokenCollector;
-    this.farmCollector = farmCollector;
-    this.cacheManager = cacheManager;
-    this.farmPlatformResolver = farmPlatformResolver;
-  }
-
   async getMatcherChefMeta() {
     const cacheKey = `${this.getName()}-v3-master-meta`
 

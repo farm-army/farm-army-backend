@@ -1,0 +1,36 @@
+[
+  {
+    "name": "papeswap",
+    "masterChefAddress": "0x54aff400858Dcac39797a81894D9920f16972D1D",
+    "farmLinkVault": "https://app.apeswap.finance/yield/",
+    "type": "common_master_chef",
+    "main_platform": "apeswap",
+    "platform": "apeswap"
+  },
+  {
+    "name": "pwault",
+    "masterChefAddress": "0xC8Bd86E5a132Ac0bf10134e270De06A8Ba317BFe",
+    "farmLinkVault": "https://app.wault.finance/polygon/",
+    "type": "common_master_chef",
+    "main_platform": "wault",
+    "platform": "wault"
+  },
+  {
+    "name": "pcafeswap",
+    "masterChefAddress": "0xca2DeAc853225f5a4dfC809Ae0B7c6e39104fCe5",
+    "farmLinkVault": "https://polygon.cafeswap.finance/farms",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "augury",
+    "masterChefAddress": "0x6ad70613d14c34aa69E1604af91c39e0591a132e",
+    "farmLinkVault": "https://augury.finance/",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "polysage",
+    "masterChefAddress": "0x0451b4893e4a77E7Eec3B25E816ed7FFeA1EBA68",
+    "farmLinkVault": "https://www.polysage.finance/farms",
+    "type": "common_master_chef"
+  }
+]

@@ -114,6 +114,14 @@ module.exports = class reaper {
         }
       }
 
+      if (this.liquidityTokenCollector && item?.extra?.transactionToken && this.liquidityTokenCollector.isStable(item.extra.transactionToken)) {
+        if (!item.flags) {
+          item.flags = [];
+        }
+
+        item.flags.push('stable');
+      }
+
       farms.push(Object.freeze(item));
     });
 

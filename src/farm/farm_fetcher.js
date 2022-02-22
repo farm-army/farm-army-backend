@@ -88,7 +88,11 @@ module.exports = class FarmFetcher {
 
   extractFunctionsFromAbi(abi) {
     const poolInfoFunction = abi.find(f => f.name && f.type === 'function' && f.name && (f.name.toLowerCase().startsWith('poolinfo') || f.name.toLowerCase().startsWith('getpoolinfo')));
-    const poolInfoFunctionName = poolInfoFunction.name;
+    const poolInfoFunctionName = poolInfoFunction?.name;
+
+    if (!poolInfoFunctionName) {
+      console.log('poolInfoFunctionName not found', abi.length)
+    }
 
     let rewardTokenFunctionName = undefined;
     const pendingFunction = abi.find(f => f.name && f.type === 'function' && f.name && f.name.toLowerCase() !== 'pendingowner' && f.name.toLowerCase() !== 'pendingadmin' && f.name.toLowerCase().startsWith('pending'));
@@ -116,6 +120,20 @@ module.exports = class FarmFetcher {
         const stFunction = abi.find(f => f.name && f.type === 'function' && f.name && (f.name.toLowerCase() === 'govtoken' || f.name.toLowerCase() === 'tokenaddress') && f.outputs && f.outputs[0] && f.outputs[0].type === 'address');
         if (stFunction) {
           rewardTokenFunctionName = stFunction.name
+        }
+      }
+
+      // some lower prio function names
+      if (!rewardTokenFunctionName) {
+        const st1 = abi.find(f => f.name && f.type === 'function' && f.name && (/^[\w]{2,8}persec/i.test(f.name)));
+        if (st1 && st1.name.length >= 8) {
+          const result = st1.name.match(/^([\w]{2,8})persec/i);
+          if (result && result[1]) {
+            const st = abi.find(f => f.name && f.type === 'function' && f.name && (f.name.toLowerCase() === result[1].toLowerCase() && f?.outputs[0] && f.outputs[0].type === 'address'));
+            if (st) {
+              rewardTokenFunctionName = st.name
+            }
+          }
         }
       }
     }
@@ -370,16 +388,21 @@ module.exports = class FarmFetcher {
     });
 
     // append reward token
-    if (masterInfo[0].rewardToken) {
-      const token = this.tokenCollector.getTokenByAddress(masterInfo[0].rewardToken.toLowerCase());
+    let rewardToken = masterInfo[0].rewardToken;
+    if (options.rewardToken) {
+      rewardToken = options.rewardToken;
+    }
+
+    if (rewardToken) {
+      const token = this.tokenCollector.getTokenByAddress(rewardToken.toLowerCase());
       if (token) {
-        tokens[masterInfo[0].rewardToken.toLowerCase()] = {
+        tokens[rewardToken.toLowerCase()] = {
           token: token.address,
           symbol: token.symbol,
           decimals: token.decimals,
         };
       } else {
-        tokenAddresses.push(masterInfo[0].rewardToken);
+        tokenAddresses.push(rewardToken);
       }
    }
 
@@ -522,12 +545,12 @@ module.exports = class FarmFetcher {
 
       item.lpSymbol = item.raw.tokens.map(t => t.symbol.toUpperCase()).join('-');
 
-      if (masterInfo[0].rewardToken && tokens[masterInfo[0].rewardToken.toLowerCase()]) {
-        let earnToken = tokens[masterInfo[0].rewardToken.toLowerCase()];
+      if (rewardToken && tokens[rewardToken.toLowerCase()]) {
+        let earnToken = tokens[rewardToken.toLowerCase()];
 
         item.earns = item.raw.earns = [
           {
-            address: masterInfo[0].rewardToken,
+            address: rewardToken,
             symbol: earnToken.symbol,
             decimals: parseInt(earnToken.decimals),
           }

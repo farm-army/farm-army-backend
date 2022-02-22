@@ -8,9 +8,10 @@ const Web3EthContract = require("web3-eth-contract");
 const MASTERCHEF_ABI = require("./abi/masterchef.json");
 
 module.exports = class autofarm {
-  constructor(cacheManager, priceOracle) {
+  constructor(cacheManager, priceOracle, liquidityTokenCollector) {
     this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
+    this.liquidityTokenCollector = liquidityTokenCollector;
   }
 
   async getLbAddresses() {
@@ -156,7 +157,19 @@ module.exports = class autofarm {
       }
 
       if (farm.allowDeposits === false) {
+        if (!item.flags) {
+          item.flags = [];
+        }
+
         item.flags = ['deprecated'];
+      }
+
+      if (item?.extra?.transactionToken && this.liquidityTokenCollector.isStable(item.extra.transactionToken)) {
+        if (!item.flags) {
+          item.flags = [];
+        }
+
+        item.flags.push('stable');
       }
 
       farms.push(Object.freeze(item));

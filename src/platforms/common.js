@@ -19,10 +19,11 @@ const BOND_ABI = require("../abi/ohm/bond.json");
 
 module.exports = {
   PancakePlatformFork: class PancakePlatformFork {
-    constructor(cacheManager, priceOracle, tokenCollector) {
+    constructor(cacheManager, priceOracle, tokenCollector, liquidityTokenCollector) {
       this.cacheManager = cacheManager;
       this.priceOracle = priceOracle;
       this.tokenCollector = tokenCollector;
+      this.liquidityTokenCollector = liquidityTokenCollector;
     }
 
     async getRawFarms() {
@@ -45,12 +46,12 @@ module.exports = {
       throw new Error('not implemented');
     }
 
-    getPendingRewardContractMethod() {
+    async getPendingRewardContractMethod() {
       throw new Error('not implemented');
     }
 
     getSousAbi() {
-      throw new Error('not implemented');
+      return [];
     }
 
     async getMasterChefAbi() {
@@ -82,6 +83,8 @@ module.exports = {
       let farmings = await this.getFarms();
       const masterChefAbi = await this.getMasterChefAbi();
 
+      const pendingRewardContractMethod = await this.getPendingRewardContractMethod();
+
       const vaultCalls = farmings
         .filter(p => p.id.startsWith(`${this.getName()}_farm_`))
         .filter(f => f.raw.lpAddresses && this.getAddress(f.raw.lpAddresses))
@@ -89,7 +92,7 @@ module.exports = {
           const vault = new Web3EthContract(masterChefAbi, this.getMasterChefAddress());
           return {
             userInfo: vault.methods.userInfo(farm.raw.pid, address),
-            pendingReward: this.getPendingRewardContractMethod() ? vault.methods[this.getPendingRewardContractMethod()](farm.raw.pid, address) : '0',
+            pendingReward: pendingRewardContractMethod ? vault.methods[pendingRewardContractMethod](farm.raw.pid, address) : '0',
             id: farm.id.toString()
           };
         });
@@ -265,6 +268,14 @@ module.exports = {
           item.flags.push('deprecated');
         }
 
+        if (this.liquidityTokenCollector && item?.extra?.transactionToken && this.liquidityTokenCollector.isStable(item.extra.transactionToken)) {
+          if (!item.flags) {
+            item.flags = [];
+          }
+
+          item.flags.push('stable');
+        }
+
         return item;
       });
 
@@ -379,6 +390,7 @@ module.exports = {
 
       const farms = await this.getFarms();
       const masterChefAbi = await this.getMasterChefAbi();
+      const pendingRewardContractMethod = await this.getPendingRewardContractMethod();
 
       const farmCalls = addresses
         .filter(address => address.startsWith(`${this.getName()}_farm_`))
@@ -388,7 +400,7 @@ module.exports = {
 
           return {
             userInfo: contract.methods.userInfo(farm.raw.pid, address),
-            pendingReward: this.getPendingRewardContractMethod() ? contract.methods[this.getPendingRewardContractMethod()](farm.raw.pid, address) : '0',
+            pendingReward: pendingRewardContractMethod ? contract.methods[pendingRewardContractMethod](farm.raw.pid, address) : '0',
             id: farm.id.toString()
           };
         });
@@ -592,13 +604,14 @@ module.exports = {
   },
 
   MasterChefWithAutoCompoundAndRewards: class MasterChefWithAutoCompoundAndRewards {
-    constructor(cacheManager2, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver) {
+    constructor(cacheManager2, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver, liquidityTokenCollector) {
       this.cacheManager = cacheManager2;
       this.priceOracle = priceOracle;
       this.tokenCollector = tokenCollector;
       this.farmCollector = farmCollector;
       this.cacheManager = cacheManager;
       this.farmPlatformResolver = farmPlatformResolver;
+      this.liquidityTokenCollector = liquidityTokenCollector;
     }
 
     async getLbAddresses() {
@@ -752,6 +765,14 @@ module.exports = {
           }
 
           item.flags.push('deprecated');
+        }
+
+        if (this.liquidityTokenCollector && item?.extra?.transactionToken && this.liquidityTokenCollector.isStable(item.extra.transactionToken)) {
+          if (!item.flags) {
+            item.flags = [];
+          }
+
+          item.flags.push('stable');
         }
 
         return item;
@@ -1110,6 +1131,14 @@ module.exports = {
           item.earns = farmEarns;
         }
 
+        if (item?.extra?.transactionToken && this.liquidityTokenCollector.isStable(item.extra.transactionToken)) {
+          if (!item.flags) {
+            item.flags = [];
+          }
+
+          item.flags.push('stable');
+        }
+
         farms.push(item);
       });
 
@@ -1415,6 +1444,13 @@ module.exports = {
           }
         }
 
+        if (!item.platform) {
+          const platform = this.additionalTokenInfo.getPlatform(item.extra.transactionToken);
+          if (platform) {
+            item.platform = platform;
+          }
+        }
+
         if (info && info.tvl) {
           item.tvl = {
             amount: info.tvl / (10 ** this.tokenCollector.getDecimals(item.extra.transactionToken))
@@ -1434,6 +1470,32 @@ module.exports = {
         const farmEarns = this.getFarmEarns(item);
         if (farmEarns && farmEarns.length > 0) {
           item.earns = farmEarns;
+        }
+
+        const apy = this.additionalTokenInfo.getYieldAsApy(item.extra.transactionToken);
+        if (apy) {
+          if (!item.yield) {
+            item.yield = {};
+          }
+
+          item.yield.apy = apy;
+        }
+
+        const flags = this.additionalTokenInfo.getFlags(item.extra.transactionToken);
+        if (flags && flags.length > 0) {
+          if (!item.flags) {
+            item.flags = [];
+          }
+
+          item.flags.push(...flags);
+        }
+
+        if (item?.extra?.transactionToken && this.liquidityTokenCollector.isStable(item.extra.transactionToken)) {
+          if (!item.flags) {
+            item.flags = [];
+          }
+
+          item.flags.push('stable');
         }
 
         farms.push(item);
@@ -2047,6 +2109,14 @@ module.exports = {
               apy: Utils.compoundCommon(dailyApr) * 100
             };
           }
+        }
+
+        if (item?.extra?.transactionToken && this.liquidityTokenCollector.isStable(item.extra.transactionToken)) {
+          if (!item.flags) {
+            item.flags = [];
+          }
+
+          item.flags.push('stable');
         }
 
         farms.push(Object.freeze(item));
@@ -2790,7 +2860,7 @@ module.exports = {
         const contract = new Web3EthContract(await this.getAddressAbi(farm.contract), farm.contract);
 
         calls.push({
-          totalShares: contract.methods.totalShares(),
+          totalShares: contract.methods.totalShares ? contract.methods.totalShares() : undefined,
           pricePerFullShare: contract.methods.getPricePerFullShare(),
           address: farm.contract.toLowerCase(),
         })

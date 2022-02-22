@@ -851,7 +851,7 @@ module.exports = {
       host = 'blockscout.moonriver.moonbeam.network';
       apiKey = module.exports.CONFIG['MOONRIVERSCAN_API_KEY'];
     } else if (chain === 'cronos') {
-      host = 'cronos.crypto.org/explorer';
+      host = 'api.cronoscan.com';
       apiKey = module.exports.CONFIG['CRONOSSCAN_API_KEY'];
     } else if (chain === 'moonbeam') {
       host = 'blockscout.moonbeam.network';

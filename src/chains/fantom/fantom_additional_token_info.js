@@ -1,14 +1,16 @@
 'use strict';
 
 module.exports = class FantomAdditionalTokenInfo {
-  constructor(cacheManager, tokenCollector, liquidityTokenCollector, priceCollector, priceOracle, beefy) {
+  constructor(cacheManager, tokenCollector, liquidityTokenCollector, priceCollector, priceOracle, beefy, yearn, robovault) {
     this.cacheManager = cacheManager;
     this.tokenCollector = tokenCollector;
     this.liquidityTokenCollector = liquidityTokenCollector;
     this.priceCollector = priceCollector;
     this.priceOracle = priceOracle;
+    this.robovault = robovault;
 
     this.beefy = beefy;
+    this.yearn = yearn;
     this.tokens = {};
   }
 
@@ -23,37 +25,74 @@ module.exports = class FantomAdditionalTokenInfo {
   }
 
   async update() {
-    const [beefyFarms, beefyLpPrices] = await Promise.all([
+    const [beefyFarms, beefyLpPrices, yearnFarms, robovaultFarms] = await Promise.all([
       this.beefy.getFarms(),
       this.beefy.getLpPrices(),
+      this.yearn.getFarms(),
+      this.robovault.getFarms(),
     ]);
 
-    const result = {};
-    beefyFarms.forEach(item => {
-      if (!item?.extra?.pricePerFullShare || !item?.extra?.transactionToken || !item?.extra?.pricePerFullShareToken) {
-        return;
+    const result = this.tokens;
+
+    const ibTokens = [
+      {
+        label: 'Beefy',
+        items: beefyFarms,
+      },
+      {
+        label: 'yearn',
+        items: yearnFarms,
+      },
+      {
+        label: 'robovault',
+        items: robovaultFarms,
       }
+    ];
 
-      const iToken = item.extra.pricePerFullShareToken.toLowerCase();
+    ibTokens.forEach(ibToken => {
+      const label = ibToken.label;
 
-      let price;
-      if (item?.raw?.oracleId && beefyLpPrices[item.raw.oracleId]) {
-        price = beefyLpPrices[item.raw.oracleId];
-      } else {
-        price = this.priceOracle.findPrice(item.extra.transactionToken);
-      }
+      ibToken.items.forEach(item => {
+        if (!item?.extra?.pricePerFullShare || !item?.extra?.transactionToken || !item?.extra?.pricePerFullShareToken) {
+          return;
+        }
 
-      if (!result[iToken]) {
-        result[iToken] = {};
-      }
+        const iToken = item.extra.pricePerFullShareToken.toLowerCase();
 
-      result[iToken].name = item.name;
-      result[iToken].symbol = item.token;
+        let price;
+        if (item?.raw?.oracleId && beefyLpPrices[item.raw.oracleId]) {
+          price = beefyLpPrices[item.raw.oracleId];
+        } else {
+          price = this.priceOracle.findPrice(item.extra.transactionToken);
+        }
 
-      if (price) {
-        result[iToken].price = item.extra.pricePerFullShare * price;
-      }
-    });
+        if (!result[iToken]) {
+          result[iToken] = {};
+        }
+
+        result[iToken].name = item.name;
+        result[iToken].symbol = item.token;
+
+        if (price) {
+          result[iToken].price = item.extra.pricePerFullShare * price;
+        }
+
+        // filter: interest bearing token
+        if (item?.extra?.pricePerFullShare > 1.0) {
+          result[iToken].platform = label
+
+          if (item.platform && item.platform.toLowerCase() !== label.toLowerCase()) {
+            result[iToken].platform = `${item.platform} (${label})`;
+          }
+
+          result[iToken].flags = ['ibToken'];
+        }
+
+        if (item?.yield?.apy) {
+          result[iToken].apy = item.yield.apy;
+        }
+      });
+    })
 
     this.tokens = result;
 
@@ -65,7 +104,7 @@ module.exports = class FantomAdditionalTokenInfo {
   }
 
   getPrice(address) {
-    const price = this.tokens[address.toLowerCase()]?.price;
+    const price = this.find(address)?.price;
     if (price) {
       return price;
     }
@@ -73,12 +112,24 @@ module.exports = class FantomAdditionalTokenInfo {
     return this.priceOracle.findPrice(address.toLowerCase());
   }
 
+  getYieldAsApy(address) {
+    return this.find(address)?.apy || undefined;
+  }
+
+  getPlatform(address) {
+    return this.find(address)?.platform || undefined;
+  }
+
   getName(address) {
-    return this.tokens[address.toLowerCase()]?.name || undefined;
+    return this.find(address)?.name || undefined;
+  }
+
+  getFlags(address) {
+    return this.find(address)?.flags || [];
   }
 
   getSymbol(address) {
-    const token = this.tokens[address.toLowerCase()]?.symbol;
+    const token = this.find(address)?.symbol;
     if (token) {
       return token;
     }

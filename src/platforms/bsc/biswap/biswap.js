@@ -11,8 +11,8 @@ const POOLCHEF_ABI = require("./abi/poolchef.json");
 module.exports = class biswap extends PancakePlatformFork {
   static MASTER_ADDRESS = "0xDbc1A13490deeF9c3C12b44FE77b503c1B061739"
 
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
-    super(cache, priceOracle);
+  constructor(cache, priceOracle, tokenCollector, liquidityTokenCollector, farmCollector, cacheManager) {
+    super(cache, priceOracle, tokenCollector, liquidityTokenCollector);
 
     this.cache = cache;
     this.priceOracle = priceOracle;

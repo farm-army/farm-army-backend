@@ -280,6 +280,14 @@ module.exports = class alpaca {
           }
         }
 
+        if (item?.extra?.transactionToken && this.liquidityTokenCollector.isStable(item.extra.transactionToken)) {
+          if (!item.flags) {
+            item.flags = [];
+          }
+
+          item.flags.push('stable');
+        }
+
         farms.push(item);
       })
     })

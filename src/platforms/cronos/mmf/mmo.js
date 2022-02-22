@@ -4,16 +4,18 @@ const _ = require("lodash");
 const Utils = require("../../../utils");
 const DASHBOARD_ADDRESS = "0x55f040E3A6e0ff69f5095B3cbF458919C5e02A0B";
 const DASHBOARD_ABI = require(`./abi/mmo_dashboard.json`);
+const VAULTS = require(`./vaults.json`);
 
 module.exports = class mmo {
-  constructor(cacheManager, priceOracle, tokenCollector) {
+  constructor(cacheManager, priceOracle, tokenCollector, liquidityTokenCollector) {
     this.cacheManager = cacheManager;
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector
+    this.liquidityTokenCollector = liquidityTokenCollector
   }
 
   async getLbAddresses() {
-    const response = _.cloneDeep(await this.getFarmsViaHtml());
+    const response = _.cloneDeep((await this.getFarmsViaHtml()) || {});
 
     const lpAddresses = [];
     for (const key of Object.keys(response)) {
@@ -56,14 +58,14 @@ module.exports = class mmo {
 
     const farms = await this.getFarms();
 
-    const poolsOf = await this.getBalancedAddressPoolInfo(address, farms.filter(farm => farm.raw.config.vaultAddress).map(farm => farm.raw.config.vaultAddress))
+    const poolsOf = await this.getBalancedAddressPoolInfo(address, farms.filter(farm => farm.raw.vaultAddress).map(farm => farm.raw.vaultAddress))
 
     await this.cacheManager.set(`getAddressFarms-all-${this.getName()}-${address}`, poolsOf, {ttl: 60 * 5});
 
     const result = poolsOf
       .filter(p => p.balance > 0)
       .map(p =>
-        farms.find(f => f.raw.config.vaultAddress.toLowerCase() === p.pool.toLowerCase()).id
+        farms.find(f => f.raw.vaultAddress.toLowerCase() === p.pool.toLowerCase()).id
       )
 
     await this.cacheManager.set(cacheKey, result, {ttl: 60 * 5});
@@ -81,7 +83,9 @@ module.exports = class mmo {
       }
     }
 
-    const response = _.cloneDeep(await this.getFarmsViaHtml());
+    const response = _.cloneDeep((await this.getFarmsViaHtml()) || {});
+
+    const overall = await this.getOverall();
 
     const farms = [];
 
@@ -92,9 +96,9 @@ module.exports = class mmo {
         continue;
       }
 
-      farm.id = farm.config.vaultAddress;
+      farm.id = farm.vaultAddress;
 
-      let tokenSymbol = farm.config.name.toLowerCase()
+      let tokenSymbol = farm.name.toLowerCase()
         .trim()
         .replace('boost', '')
         .replace('flip', '')
@@ -106,15 +110,15 @@ module.exports = class mmo {
         .replace(/\s/g, '')
         .trim();
 
-      if (farm.config.lpAddresses) {
-        const lpSymbol = this.tokenCollector.getSymbolByAddress(farm.config.lpAddresses);
+      if (farm.lpAddresses) {
+        const lpSymbol = this.tokenCollector.getSymbolByAddress(farm.lpAddresses);
         if (lpSymbol) {
           tokenSymbol = lpSymbol;
         }
       }
 
       const items = {
-        id: `${this.getName()}_${farm.id.toLowerCase()}`,
+        id: `${this.getName()}_${farm.vaultAddress.toLowerCase()}`,
         name: tokenSymbol.toUpperCase(),
         token: tokenSymbol,
         raw: Object.freeze(farm),
@@ -132,18 +136,18 @@ module.exports = class mmo {
 
       // lpAddress
       if (key.match(/([\w]{0,4})-([\w]{0,4})\s*/g)) {
-        items.extra.lpAddress = farm.config.lpAddresses;
+        items.extra.lpAddress = farm.lpAddresses;
       }
 
-      if (farm.config.vaultAddress) {
-        items.extra.transactionAddress = farm.config.vaultAddress;
+      if (farm.vaultAddress) {
+        items.extra.transactionAddress = farm.vaultAddress;
       }
 
-      if (farm.config.lpAddresses) {
-        items.extra.transactionToken = farm.config.lpAddresses;
+      if (farm.lpAddresses) {
+        items.extra.transactionToken = farm.lpAddresses;
       }
 
-      if (farm.vault.tokenPrices.lpPrice) {
+      if (farm?.vault?.tokenPrices?.lpPrice) {
         items.extra.tokenPrice = farm.vault.tokenPrices.lpPrice;
       }
 
@@ -166,9 +170,9 @@ module.exports = class mmo {
         items.notes = finalNotes;
       }
 
-      if (farm.vault?.tvlOfPool) {
+      if (farm.vaultAddress && overall[farm.vaultAddress.toLowerCase()] && overall[farm.vaultAddress.toLowerCase()].tvl) {
         items.tvl = {
-          usd: farm.vault.tvlOfPool
+          usd: overall[farm.vaultAddress.toLowerCase()].tvl
         };
       }
 
@@ -184,8 +188,8 @@ module.exports = class mmo {
       }
       */
 
-      if (farm.config.earn) {
-        const earn = farm.config.earn.toLowerCase().replace(/ /g, '');
+      if (farm.earn) {
+        const earn = farm.earn.toLowerCase().replace(/ /g, '');
         earn.split("+").filter(e => e.match(/^[\w]{1,10}$/g)).forEach(e => {
           const token = e.trim();
           if (!items.earns) {
@@ -194,6 +198,14 @@ module.exports = class mmo {
 
           items.earns.push(token);
         });
+      }
+
+      if (items?.extra?.transactionToken && this.liquidityTokenCollector.isStable(items.extra.transactionToken)) {
+        if (!items.flags) {
+          items.flags = [];
+        }
+
+        items.flags.push('stable');
       }
 
       farms.push(Object.freeze(items));
@@ -246,7 +258,7 @@ module.exports = class mmo {
     if (!poolsOfCalls) {
       const poolsOfAddresses = addressFarms
         .map(farmId => farms.find(f => f.id === farmId))
-        .map(farm => farm.raw.config.vaultAddress);
+        .map(farm => farm.raw.vaultAddress);
 
       poolsOfCalls = await this.getBalancedAddressPoolInfo(address, poolsOfAddresses);
     }
@@ -269,7 +281,7 @@ module.exports = class mmo {
 
       let balance
 
-      let poolsOfElement = poolsOf[farm.raw.config.vaultAddress.toLowerCase()];
+      let poolsOfElement = poolsOf[farm.raw.vaultAddress.toLowerCase()];
       if (poolsOfElement) {
         balance = poolsOfElement.balance.toString();
       }
@@ -341,6 +353,35 @@ module.exports = class mmo {
     return results;
   }
 
+  async getOverall() {
+    const addresses = _.cloneDeep((await this.getFarmsViaHtml()) || {})
+      .map(farm => farm.vaultAddress);
+
+    const calls = await Utils.multiCallRpcIndex([{
+      reference: 'poolsOf',
+      contractAddress: DASHBOARD_ADDRESS,
+      abi: DASHBOARD_ABI,
+      calls: [
+        {
+          reference: "poolsOf",
+          method: "poolsOf",
+          parameters: ['0x0000000000000000000000000000000000000000', addresses]
+        }
+      ]
+    }], this.getChain());
+
+    const poolsOf = {};
+    if (calls?.poolsOf?.poolsOf) {
+      calls.poolsOf.poolsOf.forEach(p => {
+        poolsOf[p.pool.toLowerCase()] = {
+          tvl: p.tvl.toString() / 1e18
+        };
+      })
+    }
+
+    return poolsOf
+  }
+
   async getDetails(address, id) {
     const farm = (await this.getFarms()).find(f => f.id === id);
     if (!farm) {
@@ -377,7 +418,9 @@ module.exports = class mmo {
   }
 
   async getFarmsViaHtml() {
-    const cacheKey = `getFarmsViaHtml-${this.getName()}`;
+    return Object.freeze(VAULTS);
+
+    const cacheKey = `getFarmsViaHtml-v1-${this.getName()}`;
 
     const cache = await this.cacheManager.get(cacheKey);
     if (cache) {

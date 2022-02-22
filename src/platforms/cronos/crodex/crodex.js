@@ -6,7 +6,7 @@ const StakingRewardSingleReward = require("../../common").StakingRewardSingleRew
 
 module.exports = class crodex extends StakingRewardSingleReward {
   async getRawFarms() {
-    const cacheKey = `getRawFarms-v4-html-${this.getName()}`;
+    const cacheKey = `getRawFarms-v3-html-${this.getName()}`;
 
     const cache = await this.cacheManager.get(cacheKey)
     if (cache) {
@@ -25,9 +25,15 @@ module.exports = class crodex extends StakingRewardSingleReward {
         stakingRewardAddress: i.stakingRewardAddress,
       }));
 
-    await this.cacheManager.set(cacheKey, pools, {ttl: 60 * 60 * 5});
+    const cacheKeyLong = `${cacheKey}-long`;
 
-    return pools;
+    if (pools.length > 0) {
+      await this.cacheManager.set(cacheKeyLong, pools, {ttl: 60 * 60 * 5});
+    }
+
+    await this.cacheManager.set(cacheKey, pools, {ttl: 60 * 60});
+
+    return await this.cacheManager.get(cacheKeyLong);
   }
 
   getName() {

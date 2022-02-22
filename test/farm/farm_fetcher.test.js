@@ -140,6 +140,41 @@ describe('#test farm fetcher for masterchef', function () {
     });
   });
 
+  it('test extraction for thor abi fixtures', () => {
+    const abi = JSON.parse(fs.readFileSync(`${__dirname}/fixtures/thor-abi.json`, 'utf8'));
+
+    const farmFetcher = new FarmFetcher({});
+
+    assert.deepStrictEqual(farmFetcher.extractFunctionsFromAbi(abi), {
+      poolInfoFunctionName: "poolInfo",
+      rewardTokenFunctionName: "thorus",
+      multiplierFunctionName: "getMultiplier",
+      tokenPerBlockFunctionName: undefined,
+      tokenPerSecondFunctionName: 'thorusPerSecond',
+      totalAllocPointFunctionName: "totalAllocPoint",
+      poolLengthFunctionName: "poolLength",
+      pendingRewardsFunctionName: "pendingThorus"
+    });
+  });
+
+  it('test extraction for flare abi fixtures', () => {
+    const abi = JSON.parse(fs.readFileSync(`${__dirname}/fixtures/flare-abi.json`, 'utf8'));
+
+    const farmFetcher = new FarmFetcher({});
+
+    const actual1 = farmFetcher.extractFunctionsFromAbi(abi);
+    assert.deepStrictEqual(actual1, {
+      poolInfoFunctionName: "poolInfo",
+      tokenPerSecondFunctionName: "flarePerSec",
+      totalAllocPointFunctionName: "totalAllocPoint",
+      poolLengthFunctionName: "poolLength",
+      pendingRewardsFunctionName: "pendingTokens",
+      rewardTokenFunctionName: 'flare',
+      multiplierFunctionName: undefined,
+      tokenPerBlockFunctionName: undefined,
+    });
+  });
+
   it('test extraction for actions viper-abi', async () => {
     const abi = JSON.parse(fs.readFileSync(`${__dirname}/fixtures/viper-abi.json`, 'utf8'));
 

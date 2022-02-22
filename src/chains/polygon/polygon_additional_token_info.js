@@ -39,7 +39,7 @@ module.exports = class PolygonAdditionalTokenInfo {
   }
 
   getPrice(address) {
-    const price = this.tokens[address.toLowerCase()]?.price;
+    const price = this.find(address)?.price;
     if (price) {
       return price;
     }
@@ -47,12 +47,24 @@ module.exports = class PolygonAdditionalTokenInfo {
     return this.priceOracle.findPrice(address.toLowerCase());
   }
 
+  getYieldAsApy(address) {
+    return this.find(address)?.apy || undefined;
+  }
+
+  getPlatform(address) {
+    return this.find(address)?.platform || undefined;
+  }
+
   getName(address) {
-    return this.tokens[address.toLowerCase()]?.name || undefined;
+    return this.find(address)?.name || undefined;
+  }
+
+  getFlags(address) {
+    return this.find(address)?.flags || [];
   }
 
   getSymbol(address) {
-    const token = this.tokens[address.toLowerCase()]?.symbol;
+    const token = this.find(address)?.symbol;
     if (token) {
       return token;
     }

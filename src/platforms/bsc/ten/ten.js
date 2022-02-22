@@ -3,17 +3,6 @@
 const {MasterChefWithAutoCompoundAndRewards} = require("../../common");
 
 module.exports = class ten extends MasterChefWithAutoCompoundAndRewards {
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver) {
-    super(cache, priceOracle, tokenCollector, farmCollector, cacheManager, farmPlatformResolver);
-
-    this.cache = cache;
-    this.priceOracle = priceOracle;
-    this.tokenCollector = tokenCollector;
-    this.farmCollector = farmCollector;
-    this.cacheManager = cacheManager;
-    this.farmPlatformResolver = farmPlatformResolver;
-  }
-
   getFarmLink() {
     return 'https://app.ten.finance/';
   }

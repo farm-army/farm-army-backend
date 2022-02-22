@@ -86,7 +86,8 @@ module.exports = class pcurve {
         provider: this.getName(),
         has_details: true,
         raw: Object.freeze(farm),
-        extra: {}
+        extra: {},
+        chain: this.getChain(),
       };
 
       item.extra.transactionAddress = farm.gauge;

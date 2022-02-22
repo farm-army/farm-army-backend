@@ -30,7 +30,7 @@ module.exports = class robovault {
 
     const rows = [];
     Object.values(files).forEach(f => {
-      rows.push(...AstParser.createJsonFromObjectExpression(f, keys => keys.includes('earnContractAddress') && keys.includes('earnedTokenAddress')));
+      rows.push(...AstParser.createJsonFromObjectExpression(f, keys => keys.includes('earnContractAddress')));
     });
 
     const response = (await Utils.requestJsonGetRetry('https://api.robo-vault.com/vault')) || [];
@@ -105,8 +105,8 @@ module.exports = class robovault {
 
       return {
         id: pool.id,
-        pricePerFullShare: vault.methods.getPricePerFullShare(),
-        pricePerShare: vault.methods.getPricePerShare(),
+        pricePerShare: vault.methods.pricePerShare(),
+        decimals: vault.methods.decimals(),
       };
     });
 
@@ -151,12 +151,9 @@ module.exports = class robovault {
 
       const vaultElement = vault[farm.id];
 
-      if (vaultElement.pricePerFullShare) {
-        item.extra.pricePerFullShare = vaultElement.pricePerFullShare / 1e6;
-      }
-
       if (vaultElement.pricePerShare) {
-        item.extra.pricePerFullShare = vaultElement.pricePerShare / 1e18;
+        item.extra.pricePerFullShare = vaultElement.pricePerShare / (10 ** (vaultElement.decimals || 18));
+        item.extra.pricePerFullShareToken = farm.earnContractAddress;
       }
 
       item.extra.transactionAddress = farm.earnContractAddress;

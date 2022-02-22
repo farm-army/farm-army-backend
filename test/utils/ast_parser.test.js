@@ -24,6 +24,9 @@ describe('#ast parser utils functions', () => {
     assert.strictEqual(first.farms[0].earnedToken, "LORY");
     assert.strictEqual(first.farms[1].earnedToken, "LORY2");
 
+    assert.strictEqual(first.number[25], '0x1d94447C8f4fC0bEB2da20BEdCccD30d50FA7211');
+    assert.strictEqual(first.number[338], 'test');
+
     const second = result.find(i => i.id === 'WINGS-BNB LP');
 
     assert.strictEqual(second.tokenDecimals, 18);

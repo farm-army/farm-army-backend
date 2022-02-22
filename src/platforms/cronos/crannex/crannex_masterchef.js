@@ -6,8 +6,8 @@ const PancakePlatformFork = require("../../common").PancakePlatformFork;
 module.exports = class crannex_masterchef extends PancakePlatformFork {
   static MASTER_ADDRESS = "0xEF6d860B22cEFe19Ae124b74eb80F0c0eb8201F4"
 
-  constructor(cache, priceOracle, tokenCollector, farmCollector, cacheManager) {
-    super(cache, priceOracle, tokenCollector);
+  constructor(cache, priceOracle, tokenCollector, liquidityTokenCollector, farmCollector, cacheManager) {
+    super(cache, priceOracle, tokenCollector, liquidityTokenCollector);
 
     this.cache = cache;
     this.priceOracle = priceOracle;

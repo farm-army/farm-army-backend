@@ -25,11 +25,12 @@ const sousChefABI = JSON.parse(
 const sousChefCombinedABI = require('./abi/sousChefCombined.json');
 
 module.exports = class pancake {
-  constructor(priceOracle, tokenCollector, farmCollector, cacheManager) {
+  constructor(priceOracle, tokenCollector, farmCollector, cacheManager, liquidityTokenCollector) {
     this.priceOracle = priceOracle;
     this.tokenCollector = tokenCollector;
     this.farmCollector = farmCollector;
     this.cacheManager = cacheManager;
+    this.liquidityTokenCollector = liquidityTokenCollector;
   }
 
   async getLbAddresses() {
@@ -217,6 +218,14 @@ module.exports = class pancake {
 
       if (farm.actions) {
         item.actions = farm.actions;
+      }
+
+      if (item?.extra?.transactionToken && this.liquidityTokenCollector.isStable(item.extra.transactionToken)) {
+        if (!item.flags) {
+          item.flags = [];
+        }
+
+        item.flags.push('stable');
       }
 
       return Object.freeze(item);

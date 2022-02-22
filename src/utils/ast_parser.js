@@ -10,7 +10,15 @@ module.exports = {
     }
 
     node.properties.forEach(property => {
-      if (!property.key.name) {
+      let key = undefined;
+
+      if (property?.key?.name) {
+        key = property.key.name
+      } else if (property?.key?.value) {
+        key = property.key.value
+      }
+
+      if (!key) {
         return;
       }
 
@@ -20,22 +28,22 @@ module.exports = {
       }
 
       if (propertyValue.type === 'Literal') {
-        row[property.key.name] = propertyValue.value;
+        row[key] = propertyValue.value;
       } else if (propertyValue.type === 'ObjectExpression') {
-        row[property.key.name] = module.exports.parseObject(propertyValue);
+        row[key] = module.exports.parseObject(propertyValue);
       } else if (propertyValue.type === 'ArrayExpression') {
-        row[property.key.name] = [];
+        row[key] = [];
 
         propertyValue.elements.forEach(element => {
           if (element.type === 'Literal') {
-            row[property.key.name].push(element.value);
+            row[key].push(element.value);
           } else if (element.type === 'ObjectExpression') {
-            row[property.key.name].push(module.exports.parseObject(element));
+            row[key].push(module.exports.parseObject(element));
           }
         })
       } else if (propertyValue.type === 'UnaryExpression' && propertyValue.operator === '!') {
         if (propertyValue.argument && typeof propertyValue.argument.value !== 'undefined' && ['0', '1'].includes(propertyValue.argument.value.toString())) {
-          row[property.key.name] = eval(`!${propertyValue.argument.value.toString()}`);
+          row[key] = eval(`!${propertyValue.argument.value.toString()}`);
         }
       }
     })

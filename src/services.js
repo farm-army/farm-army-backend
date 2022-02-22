@@ -48,6 +48,8 @@ let fantomFarmFetcher;
 let fantomAdditionalTokenInfo;
 let polygonAdditionalTokenInfo;
 
+let stableCollector;
+
 let kccPriceOracle;
 let kccTokenCollector;
 let kccPriceCollector;
@@ -156,13 +158,22 @@ const CrossPlatforms = require("./platforms/cross_platforms");
 const FantomAdditionalTokenInfo = require("./chains/fantom/fantom_additional_token_info");
 const PolygonAdditionalTokenInfo = require("./chains/polygon/polygon_additional_token_info");
 
+const StableCollector = require("./token/stable_collector");
+const StableCollectorChecker = require("./token/stable_collector_checker");
+
 const FarmAuto = require("./farm/farm_auto");
+
+const CommonMasterChef = require("./platforms/common_master_chef");
+const FantomPlatformsJson = require("./platforms/fantom/platforms.json");
+const MoonbeamPlatformsJson = require("./platforms/moonbeam/platforms.json");
+const PolygonPlatformsJson = require("./platforms/polygon/platforms.json");
+const MoonriverPlatformsJson = require("./platforms/moonriver/platforms.json");
+const KccPlatformsJson = require("./platforms/kcc/platforms.json");
 
 const Pancake = require("./platforms/bsc/pancake/pancake");
 const Swamp = require("./platforms/bsc/swamp/swamp");
 const Blizzard = require("./platforms/bsc/blizzard/blizzard");
 const Hyperjump = require("./platforms/bsc/hyperjump/hyperjump");
-const Slime = require("./platforms/bsc/slime/slime");
 const Apeswap = require("./platforms/bsc/apeswap/apeswap");
 const Goose = require("./platforms/bsc/goose/goose");
 const Cheese = require("./platforms/bsc/cheese/cheese");
@@ -173,14 +184,13 @@ const Pandayield = require("./platforms/bsc/pandayield/pandayield");
 const Wault = require("./platforms/bsc/wault/wault");
 const Cafeswap = require("./platforms/bsc/cafeswap/cafeswap");
 const Belt = require("./platforms/bsc/belt/belt");
-const Kebab = require("./platforms/bsc/kebab/kebab");
-const Polaris = require("./platforms/bsc/polaris/polaris");
 const Panther = require("./platforms/bsc/panther/panther");
 const Jetswap = require("./platforms/bsc/jetswap/jetswap");
 const Warden = require("./platforms/bsc/warden/warden");
 const Biswap = require("./platforms/bsc/biswap/biswap");
 const BiswapAuto = require("./platforms/bsc/biswap/biswap_auto");
 const BiswapDecorator = require("./platforms/bsc/biswap/biswap_decorator");
+const Theanimal = require("./platforms/bsc/theanimal/theanimal");
 
 const Evodefi = require("./platforms/bsc/evodefi/evodefi");
 const Eleven = require("./platforms/bsc/eleven/eleven");
@@ -195,7 +205,6 @@ const Honeyfarm = require("./platforms/bsc/honeyfarm/honeyfarm");
 const Rabbit = require("./platforms/bsc/rabbit/rabbit");
 const RabbitDecorator = require("./platforms/bsc/rabbit/rabbit_decorator");
 const RabbitDao = require("./platforms/bsc/rabbit/rabbit_dao");
-const Qubit = require("./platforms/bsc/qubit/qubit");
 const Cream = require("./platforms/bsc/cream/cream");
 const Venus = require("./platforms/bsc/venus/venus");
 const Fortress = require("./platforms/bsc/fortress/fortress");
@@ -208,8 +217,6 @@ const Acryptos = require("./platforms/bsc/acryptos/acryptos");
 const Pancakebunny = require("./platforms/bsc/pancakebunny/pancakebunny");
 const Autofarm = require("./platforms/bsc/autofarm/autofarm");
 const Jetfuel = require("./platforms/bsc/jetfuel/jetfuel");
-const Valuedefi = require("./platforms/bsc/valuedefi/valuedefi");
-const Jul = require("./platforms/bsc/jul/jul");
 const Ten = require("./platforms/bsc/ten/ten");
 const Autoshark = require("./platforms/bsc/autoshark/autoshark");
 const Mars = require("./platforms/bsc/mars/mars");
@@ -224,11 +231,8 @@ const Hunnydao = require("./platforms/bsc/hunnydao/hunnydao");
 const Jade = require("./platforms/bsc/jade/jade");
 const Unus = require("./platforms/bsc/unus/unus");
 
-const Pwault = require("./platforms/polygon/pwault/pwault");
 const Polycat = require("./platforms/polygon/polycat/polycat");
 const Pjetswap = require("./platforms/polygon/pjetswap/pjetswap");
-const Polyzap = require("./platforms/polygon/polyzap/polyzap");
-const Augury = require("./platforms/polygon/augury/augury");
 const Pswamp = require("./platforms/polygon/pswamp/pswamp");
 const Ppancakebunny = require("./platforms/polygon/ppancakebunny/ppancakebunny");
 const Mai = require("./platforms/polygon/mai/mai");
@@ -239,7 +243,6 @@ const Dinoswap = require("./platforms/polygon/dinoswap/dinoswap");
 const Pbeefy = require("./platforms/polygon/pbeefy/pbeefy");
 const Pautofarm = require("./platforms/polygon/pautofarm/pautofarm");
 const Dfyn = require("./platforms/polygon/dfyn/dfyn");
-const Papeswap = require("./platforms/polygon/papeswap/papeswap");
 const Psushi = require("./platforms/polygon/psushi/psushi");
 const Pcurve = require("./platforms/polygon/pcurve/pcurve");
 const PolycatCompound = require("./platforms/polygon/polycat/polycat_compound");
@@ -248,23 +251,18 @@ const PolycatDecorator = require("./platforms/polygon/polycat/polycat_decorator"
 const Peleven = require("./platforms/polygon/peleven/peleven");
 const Adamant = require("./platforms/polygon/adamant/adamant");
 const Quickswap = require("./platforms/polygon/quickswap/quickswap");
-const Pearzap = require("./platforms/polygon/pearzap/pearzap");
 const PelevenLeverage = require("./platforms/polygon/peleven/peleven_leverage");
 const PelevenDecorator = require("./platforms/polygon/peleven/peleven_decorator");
 const Pcream = require("./platforms/polygon/pcream/pcream");
 const Pfortube = require("./platforms/polygon/pfortube/pfortube");
 const Balancer = require("./platforms/polygon/balancer/balancer");
 const Impermax = require("./platforms/polygon/impermax/impermax");
-const Pcafeswap = require("./platforms/polygon/pcafeswap/pcafeswap");
-const Polysage = require("./platforms/polygon/polysage/polysage");
 const Paave = require("./platforms/polygon/paave/paave");
-const Pfulcrum = require("./platforms/polygon/pfulcrum/pfulcrum");
 const Market = require("./platforms/polygon/market/market");
 const MarketPool = require("./platforms/polygon/market/market_pool");
 const Patlantis = require("./platforms/polygon/patlantis/patlantis");
 const Uniswap = require("./platforms/polygon/uniswap/uniswap");
 
-const Spookyswap = require("./platforms/fantom/spookyswap/spookyswap");
 const Spiritswap = require("./platforms/fantom/spiritswap/spiritswap");
 const Liquiddriver = require("./platforms/fantom/liquiddriver/liquiddriver");
 const Fbeefy = require("./platforms/fantom/fbeefy/fbeefy");
@@ -274,22 +272,15 @@ const Frankenstein = require("./platforms/fantom/frankenstein/frankenstein");
 const Reaper = require("./platforms/fantom/reaper/reaper");
 const Fcream = require("./platforms/fantom/fcream/fcream");
 const Tarot = require("./platforms/fantom/tarot/tarot");
-const Fwaka = require("./platforms/fantom/fwaka/fwaka");
-const Fhyperjump = require("./platforms/fantom/fhyperjump/fhyperjump");
 const Fautofarm = require("./platforms/fantom/fautofarm/fautofarm");
 const SpiritswapLend = require("./platforms/fantom/spiritswap/spiritswap_lend");
 const SpiritswapDecorator = require("./platforms/fantom/spiritswap/spiritswap_decorator");
 const Feleven = require("./platforms/fantom/feleven/feleven");
-const Fjetswap = require("./platforms/fantom/fjetswap/fjetswap");
-const Paintswap = require("./platforms/fantom/paintswap/paintswap");
 const Fswamp = require("./platforms/fantom/fswamp/fswamp");
 const Beethovenx = require("./platforms/fantom/beethovenx/beethovenx");
 const Robovault = require("./platforms/fantom/robovault/robovault");
-const Morpheus = require("./platforms/fantom/morpheus/morpheus");
 const Geist = require("./platforms/fantom/geist/geist");
 const Grim = require("./platforms/fantom/grim/grim");
-const Zoocoin = require("./platforms/fantom/zoocoin/zoocoin");
-const Fpearzap = require("./platforms/fantom/fpearzap/fpearzap");
 const Scream = require("./platforms/fantom/scream/scream");
 const Hectordao = require("./platforms/fantom/hectordao/hectordao");
 const Fantohm = require("./platforms/fantom/fantohm/fantohm");
@@ -297,12 +288,9 @@ const Hundred = require("./platforms/fantom/hundred/hundred");
 const Revenant = require("./platforms/fantom/revenant/revenant");
 const RevenantMarket = require("./platforms/fantom/revenant/revenant_market");
 const RevenantFarm = require("./platforms/fantom/revenant/revenant_farm");
-const Soulswap = require("./platforms/fantom/soulswap/soulswap");
 const Luxor = require("./platforms/fantom/luxor/luxor");
-const Knightswap = require("./platforms/fantom/knightswap/knightswap");
 const Fyearn = require("./platforms/fantom/fyearn/fyearn");
 const Fmarket = require("./platforms/fantom/fmarket/fmarket");
-const Oxdao = require("./platforms/fantom/oxdao/oxdao");
 const Fsushi = require("./platforms/fantom/fsushi/fsushi");
 
 const Kuswap = require("./platforms/kcc/kuswap/kuswap");
@@ -363,14 +351,12 @@ const Mmf = require("./platforms/cronos/mmf/mmf");
 const Mmo = require("./platforms/cronos/mmf/mmo");
 const Tectonic = require("./platforms/cronos/tectonic/tectonic");
 
-const Stellaswap = require("./platforms/moonbeam/stellaswap/stellaswap");
-const Solarflare = require("./platforms/moonbeam/solarflare/solarflare");
+const Mbbeefy = require("./platforms/moonbeam/mbbeefy/mbbeefy");
 
 let pancake;
 let swamp;
 let blizzard;
 let hyperjump;
-let slime;
 let apeswap;
 let goose;
 let cheese;
@@ -381,8 +367,6 @@ let pandayield;
 let wault;
 let cafeswap;
 let belt;
-let kebab;
-let polaris;
 let panther;
 let jetswap;
 let warden;
@@ -398,7 +382,6 @@ let yieldparrot;
 let alpha;
 let honeyfarm;
 let rabbit;
-let qubit;
 let cream;
 let venus;
 let fortress;
@@ -409,8 +392,6 @@ let acryptos;
 let pancakebunny;
 let autofarm;
 let jetfuel;
-let valuedefi;
-let jul;
 let ten;
 let autoshark;
 let mars;
@@ -422,12 +403,10 @@ let nemesis;
 let hunnydao;
 let jade;
 let unus;
+let theanimal;
 
-let pwault;
 let polycat;
 let pjetswap;
-let polyzap;
-let augury;
 let pswamp;
 let ppancakebunny;
 let mai;
@@ -438,7 +417,6 @@ let dinoswap;
 let pbeefy;
 let pautofarm;
 let dfyn;
-let papeswap;
 let psushi;
 let pcurve;
 let polycatCompound;
@@ -447,23 +425,18 @@ let polycatDecorator;
 let peleven;
 let adamant;
 let quickswap;
-let pearzap;
 let pelevenLeverage;
 let pelevenDecorator;
 let pcream;
 let pfortube;
 let balancer;
 let impermax;
-let pcafeswap;
-let polysage;
 let paave;
-let pfulcrum;
 let psynapse;
 let market;
 let patlantis;
 let uniswap;
 
-let spookyswap;
 let spiritswap;
 let spiritswapLend;
 let liquiddriver;
@@ -475,32 +448,22 @@ let reaper;
 let fcream;
 let scream;
 let tarot;
-let fwaka;
-let fhyperjump;
 let fautofarm;
 let spiritswapDecorator;
 let feleven;
-let fjetswap;
-let paintswap;
 let fswamp;
 let beethovenx;
 let robovault;
-let morpheus;
 let geist;
 let grim;
-let zoocoin;
-let fpearzap;
 let fsynapse;
 let hectordao;
 let fantohm;
 let hundred;
-let soulswap;
 let revenant;
 let luxor;
-let knightswap;
 let fyearn;
 let fmarket;
-let oxdao;
 let fsushi;
 
 let kuswap;
@@ -545,7 +508,6 @@ let moonkafeCompound;
 let mbeefy;
 let msushi;
 let mtemplar;
-let romedao;
 
 let vvs;
 let cronaswap;
@@ -558,8 +520,7 @@ let mmf;
 let tectonic;
 let mmo;
 
-let stellaswap;
-let solarflare;
+let mbbeefy;
 
 let polygonPlatform;
 let fantomPlatform;
@@ -914,7 +875,6 @@ module.exports = {
           this.getSwamp(),
           this.getBlizzard(),
           this.getHyperjump(),
-          this.getSlime(),
           this.getApeswap(),
           this.getGoose(),
           this.getCheese(),
@@ -925,8 +885,6 @@ module.exports = {
           this.getWault(),
           this.getCafeswap(),
           this.getBelt(),
-          this.getKebab(),
-          this.getPolaris(),
           this.getPanther(),
           this.getJetswap(),
           this.getWarden(),
@@ -941,7 +899,6 @@ module.exports = {
           this.getAlpha(),
           this.getHoneyfarm(),
           this.getRabbit(),
-          this.getQubit(),
           this.getCream(),
           this.getVenus(),
           this.getFortress(),
@@ -952,8 +909,6 @@ module.exports = {
           this.getPancakebunny(),
           this.getAutofarm(),
           this.getJetfuel(),
-          this.getValuedefi(),
-          this.getJul(),
           this.getTen(),
           this.getAutoshark(),
           this.getMars(),
@@ -965,6 +920,7 @@ module.exports = {
           this.getHunnydao(),
           this.getJade(),
           this.getUnus(),
+          this.getTheanimal(),
         ],
         this.getCache(),
         this.getPriceOracle(),
@@ -978,13 +934,21 @@ module.exports = {
       return polygonPlatform;
     }
 
+    const auto = PolygonPlatformsJson
+      .filter(i => i.type === 'common_master_chef')
+      .map(i => new CommonMasterChef(
+        this.getPolygonCacheManager(),
+        this.getPolygonPriceOracle(),
+        this.getPolygonTokenCollector(),
+        this.getPolygonLiquidityTokenCollector(),
+        this.getPolygonFarmFetcher(),
+        _.merge(_.cloneDeep(i), {'chain': 'polygon'}),
+      ));
+
     return (polygonPlatform = new Platforms(
       [
-        this.getPwault(),
         this.getPolycatDecorator(),
         this.getPjetswap(),
-        this.getPolyzap(),
-        this.getAugury(),
         this.getPswamp(),
         this.getPpancakebunny(),
         this.getMai(),
@@ -995,25 +959,21 @@ module.exports = {
         this.getPbeefy(),
         this.getPautofarm(),
         this.getDfyn(),
-        this.getPapeswap(),
         this.getPsushi(),
         this.getPcurve(),
         this.getPelevenDecorator(),
         this.getAdamant(),
         this.getQuickswap(),
-        this.getPearzap(),
         this.getPcream(),
         this.getPfortube(),
         this.getBalancer(),
         this.getImpermax(),
-        this.getPcafeswap(),
-        this.getPolysage(),
         this.getPaave(),
-        this.getPfulcrum(),
         this.getPSynapse(),
         this.getMarket(),
         this.getPatlantis(),
         this.getUniswap(),
+        ...auto
       ],
       this.getCache(),
       this.getPolygonPriceOracle(),
@@ -1026,9 +986,19 @@ module.exports = {
       return fantomPlatform;
     }
 
+    const auto = FantomPlatformsJson
+      .filter(i => i.type === 'common_master_chef')
+      .map(i => new CommonMasterChef(
+        this.getFantomCacheManager(),
+        this.getFantomPriceOracle(),
+        this.getFantomTokenCollector(),
+        this.getFantomLiquidityTokenCollector(),
+        this.getFantomFarmFetcher(),
+        _.merge(_.cloneDeep(i), {'chain': 'fantom'}),
+      ))
+
     return (fantomPlatform = new Platforms(
       [
-        this.getSpookyswap(),
         this.getSpiritswapDecorator(),
         this.getLiquiddriver(),
         this.getFbeefy(),
@@ -1039,32 +1009,23 @@ module.exports = {
         this.getFcream(),
         this.getScream(),
         this.getTarot(),
-        this.getFwaka(),
-        this.getFhyperjump(),
         this.getFautofarm(),
         this.getFeleven(),
-        this.getFjetswap(),
-        this.getPaintswap(),
         this.getFswamp(),
         this.getBeethovenx(),
         this.getRobovault(),
-        this.getMorpheus(),
         this.getGeist(),
         this.getGrim(),
-        this.getZoocoin(),
-        this.getFpearzap(),
         this.getFSynapse(),
         this.getHectordao(),
         this.getFantohm(),
         this.getHundred(),
         this.getRevenant(),
-        this.getSoulswap(),
         this.getLuxor(),
-        this.getKnightswap(),
         this.getFyearn(),
         this.getFmarket(),
-        this.getOxdao(),
         this.getFsushi(),
+        ...auto
       ],
       this.getCache(),
       this.getFantomPriceOracle(),
@@ -1077,6 +1038,17 @@ module.exports = {
       return kccPlatform;
     }
 
+    const auto = KccPlatformsJson
+      .filter(i => i.type === 'common_master_chef')
+      .map(i => new CommonMasterChef(
+        this.getKccCacheManager(),
+        this.getKccPriceOracle(),
+        this.getKccTokenCollector(),
+        this.getKccLiquidityTokenCollector(),
+        this.getKccFarmFetcher(),
+        _.merge(_.cloneDeep(i), {'chain': 'kcc'}),
+      ));
+
     return (kccPlatform = new Platforms(
       [
         this.getKuswap(),
@@ -1084,6 +1056,7 @@ module.exports = {
         this.getKukafeDecorator(),
         this.getBoneswap(),
         this.getMojito(),
+        ...auto
       ],
       this.getCache(),
       this.getKccPriceOracle(),
@@ -1096,6 +1069,17 @@ module.exports = {
       return moonriverPlatform;
     }
 
+    const auto = MoonriverPlatformsJson
+      .filter(i => i.type === 'common_master_chef')
+      .map(i => new CommonMasterChef(
+        this.getMoonriverCacheManager(),
+        this.getMoonriverPriceOracle(),
+        this.getMoonriverTokenCollector(),
+        this.getMoonriverLiquidityTokenCollector(),
+        this.getMoonriverFarmFetcher(),
+        _.merge(_.cloneDeep(i), {'chain': 'moonriver'}),
+      ));
+
     return (moonriverPlatform = new Platforms(
       [
         this.getMautofarm(),
@@ -1106,6 +1090,7 @@ module.exports = {
         this.getMbeefy(),
         this.getMsushi(),
         this.getMtemplar(),
+        ...auto
       ],
       this.getCache(),
       this.getMoonriverPriceOracle(),
@@ -1118,10 +1103,21 @@ module.exports = {
       return moonbeamPlatform;
     }
 
+    const auto = MoonbeamPlatformsJson
+      .filter(i => i.type === 'common_master_chef')
+      .map(i => new CommonMasterChef(
+        this.getMoonbeamCacheManager(),
+        this.getMoonbeamPriceOracle(),
+        this.getMoonbeamTokenCollector(),
+        this.getMoonbeamLiquidityTokenCollector(),
+        this.getMoonbeamFarmFetcher(),
+        _.merge(_.cloneDeep(i), {'chain': 'moonbeam'}),
+      ));
+
     return (moonbeamPlatform = new Platforms(
       [
-        this.getStellaswap(),
-        this.getSolarflare(),
+        this.getMbbeefy(),
+        ...auto
       ],
       this.getCache(),
       this.getMoonbeamPriceOracle(),
@@ -1231,6 +1227,7 @@ module.exports = {
       this.getTokenCollector(),
       this.getFarmFetcher(),
       this.getCacheManager(),
+      this.getLiquidityTokenCollector(),
     ));
   },
 
@@ -1245,20 +1242,6 @@ module.exports = {
       this.getTokenCollector(),
       this.getFarmFetcher(),
       this.getCacheManager(),
-    ));
-  },
-
-  getPwault() {
-    if (pwault) {
-      return pwault;
-    }
-
-    return (pwault = new Pwault(
-      this.getPolygonCacheManager(),
-      this.getPolygonPriceOracle(),
-      this.getPolygonTokenCollector(),
-      this.getPolygonFarmFetcher(),
-      this.getPolygonCacheManager(),
     ));
   },
 
@@ -1304,62 +1287,6 @@ module.exports = {
     ));
   },
 
-  getFjetswap() {
-    if (fjetswap) {
-      return fjetswap;
-    }
-
-    return (fjetswap = new Fjetswap(
-      this.getFantomCacheManager(),
-      this.getFantomPriceOracle(),
-      this.getFantomTokenCollector(),
-      this.getFantomFarmFetcher(),
-      this.getFantomCacheManager(),
-    ));
-  },
-
-  getPaintswap() {
-    if (paintswap) {
-      return paintswap;
-    }
-
-    return (paintswap = new Paintswap(
-      this.getFantomCacheManager(),
-      this.getFantomPriceOracle(),
-      this.getFantomTokenCollector(),
-      this.getFantomFarmFetcher(),
-      this.getFantomCacheManager(),
-    ));
-  },
-
-  getPolyzap() {
-    if (polyzap) {
-      return polyzap;
-    }
-
-    return (polyzap = new Polyzap(
-      this.getPolygonCacheManager(),
-      this.getPolygonPriceOracle(),
-      this.getPolygonTokenCollector(),
-      this.getPolygonFarmFetcher(),
-      this.getPolygonCacheManager(),
-    ));
-  },
-
-  getPearzap() {
-    if (pearzap) {
-      return pearzap;
-    }
-
-    return (pearzap = new Pearzap(
-      this.getPolygonCacheManager(),
-      this.getPolygonPriceOracle(),
-      this.getPolygonTokenCollector(),
-      this.getPolygonFarmFetcher(),
-      this.getPolygonCacheManager(),
-    ));
-  },
-
   getPolycatCompound() {
     if (polycatCompound) {
       return polycatCompound;
@@ -1384,20 +1311,6 @@ module.exports = {
       this.getPolycat(),
       this.getPolycatCompound(),
       this.getPolycatPaw(),
-    ));
-  },
-
-  getAugury() {
-    if (augury) {
-      return augury;
-    }
-
-    return (augury = new Augury(
-      this.getPolygonCacheManager(),
-      this.getPolygonPriceOracle(),
-      this.getPolygonTokenCollector(),
-      this.getPolygonFarmFetcher(),
-      this.getPolygonCacheManager(),
     ));
   },
 
@@ -1563,20 +1476,6 @@ module.exports = {
     ));
   },
 
-  getPapeswap() {
-    if (papeswap) {
-      return papeswap;
-    }
-
-    return (papeswap = new Papeswap(
-      this.getPolygonCacheManager(),
-      this.getPolygonPriceOracle(),
-      this.getPolygonTokenCollector(),
-      this.getPolygonFarmFetcher(),
-      this.getPolygonCacheManager(),
-    ));
-  },
-
   getPsushi() {
     if (psushi) {
       return psushi;
@@ -1586,6 +1485,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
+      this.getPolygonLiquidityTokenCollector(),
       this.getPolygonFarmFetcher(),
       this.getPolygonCacheManager(),
     ));
@@ -1600,6 +1500,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
+      this.getFantomLiquidityTokenCollector(),
       this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
     ));
@@ -1614,6 +1515,7 @@ module.exports = {
       this.getHarmonyCacheManager(),
       this.getHarmonyPriceOracle(),
       this.getHarmonyTokenCollector(),
+      this.getHarmonyLiquidityTokenCollector(),
       this.getHarmonyFarmFetcher(),
       this.getHarmonyCacheManager(),
     ));
@@ -1663,6 +1565,7 @@ module.exports = {
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
+      this.getPolygonLiquidityTokenCollector(),
     ));
   },
 
@@ -1674,6 +1577,7 @@ module.exports = {
     return (autofarm = new Autofarm(
       this.getCacheManager(),
       this.getPriceOracle(),
+      this.getLiquidityTokenCollector(),
     ));
   },
 
@@ -1685,29 +1589,6 @@ module.exports = {
     return (jetfuel = new Jetfuel(
       this.getCacheManager(),
       this.getPriceOracle(),
-    ));
-  },
-
-  getValuedefi() {
-    if (valuedefi) {
-      return valuedefi;
-    }
-
-    return (valuedefi = new Valuedefi(
-      this.getCacheManager(),
-      this.getPriceOracle(),
-    ));
-  },
-
-  getJul() {
-    if (jul) {
-      return jul;
-    }
-
-    return (jul = new Jul(
-      this.getCacheManager(),
-      this.getPriceOracle(),
-      this.getTokenCollector(),
     ));
   },
 
@@ -1723,6 +1604,7 @@ module.exports = {
       this.getFarmFetcher(),
       this.getCacheManager(),
       this.getFarmPlatformResolver(),
+      this.getLiquidityTokenCollector(),
     ));
   },
 
@@ -1739,6 +1621,7 @@ module.exports = {
         this.getFarmFetcher(),
         this.getCacheManager(),
         this.getFarmPlatformResolver(),
+        this.getLiquidityTokenCollector(),
       ),
       new MarsMasterchef1(
         this.getCacheManager(),
@@ -1747,6 +1630,7 @@ module.exports = {
         this.getFarmFetcher(),
         this.getCacheManager(),
         this.getFarmPlatformResolver(),
+        this.getLiquidityTokenCollector(),
       ),
     ));
   },
@@ -2041,6 +1925,7 @@ module.exports = {
       this.getHarmonyFarmFetcher(),
       this.getHarmonyCacheManager(),
       this.getHarmonyFarmPlatformResolver(),
+      this.getHarmonyLiquidityTokenCollector(),
     ));
   },
 
@@ -2053,6 +1938,7 @@ module.exports = {
       this.getHarmonyCacheManager(),
       this.getHarmonyPriceOracle(),
       this.getHarmonyTokenCollector(),
+      this.getHarmonyLiquidityTokenCollector(),
       this.getHarmonyFarmFetcher(),
       this.getHarmonyCacheManager(),
     ));
@@ -2066,6 +1952,7 @@ module.exports = {
     return (pautofarm = new Pautofarm(
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
+      this.getPolygonLiquidityTokenCollector(),
     ));
   },
 
@@ -2077,6 +1964,7 @@ module.exports = {
     return (hautofarm = new Hautofarm(
       this.getHarmonyCacheManager(),
       this.getHarmonyPriceOracle(),
+      this.getHarmonyLiquidityTokenCollector(),
     ));
   },
 
@@ -2088,6 +1976,7 @@ module.exports = {
     return (fautofarm = new Fautofarm(
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
+      this.getFantomLiquidityTokenCollector(),
     ));
   },
 
@@ -2099,6 +1988,7 @@ module.exports = {
     return (mautofarm = new Mautofarm(
       this.getMoonriverCacheManager(),
       this.getMoonriverPriceOracle(),
+      this.getMoonriverLiquidityTokenCollector(),
     ));
   },
 
@@ -2168,48 +2058,6 @@ module.exports = {
     ));
   },
 
-  getSpookyswap() {
-    if (spookyswap) {
-      return spookyswap;
-    }
-
-    return (spookyswap = new Spookyswap(
-      this.getFantomCacheManager(),
-      this.getFantomPriceOracle(),
-      this.getFantomTokenCollector(),
-      this.getFantomFarmFetcher(),
-      this.getFantomCacheManager(),
-    ));
-  },
-
-  getFwaka() {
-    if (fwaka) {
-      return fwaka;
-    }
-
-    return (fwaka = new Fwaka(
-      this.getFantomCacheManager(),
-      this.getFantomPriceOracle(),
-      this.getFantomTokenCollector(),
-      this.getFantomFarmFetcher(),
-      this.getFantomCacheManager(),
-    ));
-  },
-
-  getFhyperjump() {
-    if (fhyperjump) {
-      return fhyperjump;
-    }
-
-    return (fhyperjump = new Fhyperjump(
-      this.getFantomCacheManager(),
-      this.getFantomPriceOracle(),
-      this.getFantomTokenCollector(),
-      this.getFantomFarmFetcher(),
-      this.getFantomCacheManager(),
-    ));
-  },
-
   getSpiritswap() {
     if (spiritswap) {
       return spiritswap;
@@ -2258,6 +2106,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
+      this.getFantomLiquidityTokenCollector(),
       this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
     ));
@@ -2272,6 +2121,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
+      this.getFantomLiquidityTokenCollector(),
     ));
   },
 
@@ -2284,6 +2134,7 @@ module.exports = {
       this.getCeloCacheManager(),
       this.getCeloPriceOracle(),
       this.getCeloTokenCollector(),
+      this.getCeloLiquidityTokenCollector(),
     ));
   },
 
@@ -2295,6 +2146,7 @@ module.exports = {
     return (cautofarm = new Cautofarm(
       this.getMoonriverCacheManager(),
       this.getMoonriverPriceOracle(),
+      this.getMoonriverLiquidityTokenCollector(),
     ));
   },
 
@@ -2336,6 +2188,7 @@ module.exports = {
       this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
       this.getFantomFarmPlatformResolver(),
+      this.getFantomLiquidityTokenCollector(),
     ));
   },
 
@@ -2351,6 +2204,7 @@ module.exports = {
       this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
       this.getFantomFarmPlatformResolver(),
+      this.getFantomLiquidityTokenCollector(),
     ));
   },
 
@@ -2492,20 +2346,6 @@ module.exports = {
     ));
   },
 
-  getPolaris() {
-    if (polaris) {
-      return polaris;
-    }
-
-    return (polaris = new Polaris(
-      this.getCacheManager(),
-      this.getPriceOracle(),
-      this.getTokenCollector(),
-      this.getFarmFetcher(),
-      this.getCacheManager(),
-    ));
-  },
-
   getBlizzard() {
     if (blizzard) {
       return blizzard;
@@ -2534,20 +2374,6 @@ module.exports = {
     ));
   },
 
-  getSlime() {
-    if (slime) {
-      return slime;
-    }
-
-    return (slime = new Slime(
-      this.getCacheManager(),
-      this.getPriceOracle(),
-      this.getTokenCollector(),
-      this.getFarmFetcher(),
-      this.getCacheManager(),
-    ));
-  },
-
   getApeswap() {
     if (apeswap) {
       return apeswap;
@@ -2568,20 +2394,6 @@ module.exports = {
     }
 
     return (goose = new Goose(
-      this.getCacheManager(),
-      this.getPriceOracle(),
-      this.getTokenCollector(),
-      this.getFarmFetcher(),
-      this.getCacheManager(),
-    ));
-  },
-
-  getKebab() {
-    if (kebab) {
-      return kebab;
-    }
-
-    return (kebab = new Kebab(
       this.getCacheManager(),
       this.getPriceOracle(),
       this.getTokenCollector(),
@@ -2729,6 +2541,20 @@ module.exports = {
     ));
   },
 
+  getTheanimal() {
+    if (theanimal) {
+      return theanimal;
+    }
+
+    return (theanimal = new Theanimal(
+      this.getCacheManager(),
+      this.getPriceOracle(),
+      this.getTokenCollector(),
+      this.getFarmFetcher(),
+      this.getCacheManager(),
+    ));
+  },
+
   getBiswap() {
     if (biswap) {
       return biswap;
@@ -2745,6 +2571,7 @@ module.exports = {
       this.getCacheManager(),
       this.getPriceOracle(),
       this.getTokenCollector(),
+      this.getLiquidityTokenCollector(),
       this.getFarmFetcher(),
       this.getCacheManager(),
     );
@@ -2834,6 +2661,7 @@ module.exports = {
       this.getCacheManager(),
       this.getPriceOracle(),
       this.getTokenCollector(),
+      this.getLiquidityTokenCollector(),
     ));
   },
 
@@ -2886,20 +2714,6 @@ module.exports = {
     );
 
     return (rabbit = new RabbitDecorator(rabbit1, rabbitDao));
-  },
-
-  getQubit() {
-    if (qubit) {
-      return qubit;
-    }
-
-    return (qubit = new Qubit(
-      this.getPriceOracle(),
-      this.getTokenCollector(),
-      this.getCacheManager(),
-      this.getLiquidityTokenCollector(),
-      this.getFarmPlatformResolver(),
-    ));
   },
 
   getCream() {
@@ -3004,25 +2818,12 @@ module.exports = {
       this.getFantomTokenCollector(),
       this.getFantomCacheManager(),
       this.getFantomLiquidityTokenCollector(),
+      this.getFantomAdditionalTokenInfo(),
     );
 
     return (revenant = new Revenant(
       farm,
       market,
-    ));
-  },
-
-  getSoulswap() {
-    if (soulswap) {
-      return soulswap;
-    }
-
-    return (soulswap = new Soulswap(
-      this.getFantomCacheManager(),
-      this.getFantomPriceOracle(),
-      this.getFantomTokenCollector(),
-      this.getFantomFarmFetcher(),
-      this.getFantomCacheManager(),
     ));
   },
 
@@ -3051,20 +2852,6 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomLiquidityTokenCollector(),
       this.getFantomFarmPlatformResolver(),
-    ));
-  },
-
-  getKnightswap() {
-    if (knightswap) {
-      return knightswap;
-    }
-
-    return (knightswap = new Knightswap(
-      this.getFantomCacheManager(),
-      this.getFantomPriceOracle(),
-      this.getFantomTokenCollector(),
-      this.getFantomFarmFetcher(),
-      this.getFantomCacheManager(),
     ));
   },
 
@@ -3132,34 +2919,6 @@ module.exports = {
     ));
   },
 
-  getMorpheus() {
-    if (morpheus) {
-      return morpheus;
-    }
-
-    return (morpheus = new Morpheus(
-      this.getFantomCacheManager(),
-      this.getFantomPriceOracle(),
-      this.getFantomTokenCollector(),
-      this.getFantomFarmFetcher(),
-      this.getFantomCacheManager(),
-    ));
-  },
-
-  getOxdao() {
-    if (oxdao) {
-      return oxdao;
-    }
-
-    return (oxdao = new Oxdao(
-      this.getFantomCacheManager(),
-      this.getFantomPriceOracle(),
-      this.getFantomTokenCollector(),
-      this.getFantomFarmFetcher(),
-      this.getFantomCacheManager(),
-    ));
-  },
-
   getGeist() {
     if (geist) {
       return geist;
@@ -3181,34 +2940,7 @@ module.exports = {
       this.getFantomCacheManager(),
       this.getFantomPriceOracle(),
       this.getFantomTokenCollector(),
-    ));
-  },
-
-  getZoocoin() {
-    if (zoocoin) {
-      return zoocoin;
-    }
-
-    return (zoocoin = new Zoocoin(
-      this.getFantomCacheManager(),
-      this.getFantomPriceOracle(),
-      this.getFantomTokenCollector(),
-      this.getFantomFarmFetcher(),
-      this.getFantomCacheManager(),
-    ));
-  },
-
-  getFpearzap() {
-    if (fpearzap) {
-      return fpearzap;
-    }
-
-    return (fpearzap = new Fpearzap(
-      this.getFantomCacheManager(),
-      this.getFantomPriceOracle(),
-      this.getFantomTokenCollector(),
-      this.getFantomFarmFetcher(),
-      this.getFantomCacheManager(),
+      this.getFantomLiquidityTokenCollector(),
     ));
   },
 
@@ -3255,52 +2987,12 @@ module.exports = {
     ));
   },
 
-  getPcafeswap() {
-    if (pcafeswap) {
-      return pcafeswap;
-    }
-
-    return (pcafeswap = new Pcafeswap(
-      this.getPolygonCacheManager(),
-      this.getPolygonPriceOracle(),
-      this.getPolygonTokenCollector(),
-      this.getPolygonFarmFetcher(),
-      this.getPolygonCacheManager(),
-    ));
-  },
-
-  getPolysage() {
-    if (polysage) {
-      return polysage;
-    }
-
-    return (polysage = new Polysage(
-      this.getPolygonCacheManager(),
-      this.getPolygonPriceOracle(),
-      this.getPolygonTokenCollector(),
-      this.getPolygonFarmFetcher(),
-      this.getPolygonCacheManager(),
-    ));
-  },
-
   getPaave() {
     if (paave) {
       return paave;
     }
 
     return (paave = new Paave(
-      this.getPolygonCacheManager(),
-      this.getPolygonPriceOracle(),
-      this.getPolygonTokenCollector(),
-    ));
-  },
-
-  getPfulcrum() {
-    if (pfulcrum) {
-      return pfulcrum;
-    }
-
-    return (pfulcrum = new Pfulcrum(
       this.getPolygonCacheManager(),
       this.getPolygonPriceOracle(),
       this.getPolygonTokenCollector(),
@@ -3388,6 +3080,7 @@ module.exports = {
       this.getFarmFetcher(),
       this.getCacheManager(),
       this.getFarmPlatformResolver(),
+      this.getLiquidityTokenCollector(),
     ));
   },
 
@@ -3404,6 +3097,7 @@ module.exports = {
         this.getFarmFetcher(),
         this.getCacheManager(),
         this.getFarmPlatformResolver(),
+        this.getLiquidityTokenCollector(),
       ),
       new PlanetLend(
         this.getPriceOracle(),
@@ -3557,6 +3251,7 @@ module.exports = {
     return (crautofarm = new Crautofarm(
       this.getCronosCacheManager(),
       this.getCronosPriceOracle(),
+      this.getCronosLiquidityTokenCollector(),
     ));
   },
 
@@ -3569,6 +3264,7 @@ module.exports = {
       this.getCronosCacheManager(),
       this.getCronosPriceOracle(),
       this.getCronosTokenCollector(),
+      this.getCronosLiquidityTokenCollector(),
     ));
   },
 
@@ -3582,6 +3278,7 @@ module.exports = {
         this.getCronosCacheManager(),
         this.getCronosPriceOracle(),
         this.getCronosTokenCollector(),
+        this.getCronosLiquidityTokenCollector(),
         this.getCronosFarmFetcher(),
         this.getCronosCacheManager(),
       )
@@ -3627,6 +3324,7 @@ module.exports = {
       this.getHarmonyCacheManager(),
       this.getHarmonyPriceOracle(),
       this.getHarmonyTokenCollector(),
+      this.getHarmonyLiquidityTokenCollector(),
     ));
   },
 
@@ -3639,6 +3337,7 @@ module.exports = {
       this.getMoonriverCacheManager(),
       this.getMoonriverPriceOracle(),
       this.getMoonriverTokenCollector(),
+      this.getMoonriverLiquidityTokenCollector(),
     ));
   },
 
@@ -3677,8 +3376,22 @@ module.exports = {
       this.getCeloCacheManager(),
       this.getCeloPriceOracle(),
       this.getCeloTokenCollector(),
+      this.getCeloLiquidityTokenCollector(),
       this.getCeloFarmFetcher(),
       this.getCeloCacheManager(),
+    ));
+  },
+
+  getMbbeefy() {
+    if (mbbeefy) {
+      return mbbeefy;
+    }
+
+    return (mbbeefy = new Mbbeefy(
+      this.getMoonbeamCacheManager(),
+      this.getMoonbeamPriceOracle(),
+      this.getMoonbeamTokenCollector(),
+      this.getMoonbeamLiquidityTokenCollector(),
     ));
   },
 
@@ -3691,6 +3404,7 @@ module.exports = {
       this.getMoonriverCacheManager(),
       this.getMoonriverPriceOracle(),
       this.getMoonriverTokenCollector(),
+      this.getMoonriverLiquidityTokenCollector(),
       this.getMoonriverFarmFetcher(),
       this.getMoonriverCacheManager(),
     ));
@@ -3719,6 +3433,7 @@ module.exports = {
       this.getCronosCacheManager(),
       this.getCronosPriceOracle(),
       this.getCronosTokenCollector(),
+      this.getCronosLiquidityTokenCollector(),
       this.getCronosFarmFetcher(),
       this.getCronosCacheManager(),
     );
@@ -3745,6 +3460,7 @@ module.exports = {
       this.getCronosCacheManager(),
       this.getCronosPriceOracle(),
       this.getCronosTokenCollector(),
+      this.getCronosLiquidityTokenCollector(),
       this.getCronosFarmFetcher(),
       this.getCronosCacheManager(),
     ));
@@ -3759,6 +3475,7 @@ module.exports = {
       this.getCronosCacheManager(),
       this.getCronosPriceOracle(),
       this.getCronosTokenCollector(),
+      this.getCronosLiquidityTokenCollector(),
     ));
   },
 
@@ -3776,34 +3493,6 @@ module.exports = {
     ));
   },
 
-  getStellaswap() {
-    if (stellaswap) {
-      return stellaswap;
-    }
-
-    return (stellaswap = new Stellaswap(
-      this.getMoonbeamCacheManager(),
-      this.getMoonbeamPriceOracle(),
-      this.getMoonbeamTokenCollector(),
-      this.getMoonbeamFarmFetcher(),
-      this.getMoonbeamCacheManager(),
-    ));
-  },
-
-  getSolarflare() {
-    if (solarflare) {
-      return solarflare;
-    }
-
-    return (solarflare = new Solarflare(
-      this.getMoonbeamCacheManager(),
-      this.getMoonbeamPriceOracle(),
-      this.getMoonbeamTokenCollector(),
-      this.getMoonbeamFarmFetcher(),
-      this.getMoonbeamCacheManager(),
-    ));
-  },
-
   getCronaswap() {
     if (cronaswap) {
       return cronaswap;
@@ -3813,6 +3502,7 @@ module.exports = {
       this.getCronosCacheManager(),
       this.getCronosPriceOracle(),
       this.getCronosTokenCollector(),
+      this.getCronosLiquidityTokenCollector(),
       this.getCronosFarmFetcher(),
       this.getCronosCacheManager(),
     ));
@@ -4060,6 +3750,7 @@ module.exports = {
 
     return (liquidityTokenCollector = new LiquidityTokenCollector(
       this.getCacheManager(),
+      new StableCollectorChecker(this.getStableCollector(), 'bsc'),
     ));
   },
 
@@ -4070,6 +3761,7 @@ module.exports = {
 
     return (polygonLiquidityTokenCollector = new LiquidityTokenCollector(
       this.getPolygonCacheManager(),
+      new StableCollectorChecker(this.getStableCollector(), 'polygon'),
     ));
   },
 
@@ -4080,6 +3772,7 @@ module.exports = {
 
     return (fantomLiquidityTokenCollector = new LiquidityTokenCollector(
       this.getFantomCacheManager(),
+      new StableCollectorChecker(this.getStableCollector(), 'fantom'),
     ));
   },
 
@@ -4090,6 +3783,7 @@ module.exports = {
 
     return (kccLiquidityTokenCollector = new LiquidityTokenCollector(
       this.getKccCacheManager(),
+      new StableCollectorChecker(this.getStableCollector(), 'kcc'),
     ));
   },
 
@@ -4100,6 +3794,7 @@ module.exports = {
 
     return (harmonyLiquidityTokenCollector = new LiquidityTokenCollector(
       this.getHarmonyCacheManager(),
+      new StableCollectorChecker(this.getStableCollector(), 'harmony'),
     ));
   },
 
@@ -4110,6 +3805,7 @@ module.exports = {
 
     return (celoLiquidityTokenCollector = new LiquidityTokenCollector(
       this.getCeloCacheManager(),
+      new StableCollectorChecker(this.getStableCollector(), 'celo'),
     ));
   },
 
@@ -4120,6 +3816,7 @@ module.exports = {
 
     return (moonriverLiquidityTokenCollector = new LiquidityTokenCollector(
       this.getMoonriverCacheManager(),
+      new StableCollectorChecker(this.getStableCollector(), 'moonriver'),
     ));
   },
   
@@ -4130,6 +3827,7 @@ module.exports = {
 
     return (cronosLiquidityTokenCollector = new LiquidityTokenCollector(
       this.getCronosCacheManager(),
+      new StableCollectorChecker(this.getStableCollector(), 'cronos'),
     ));
   },
 
@@ -4140,6 +3838,7 @@ module.exports = {
 
     return (moonbeamLiquidityTokenCollector = new LiquidityTokenCollector(
       this.getMoonbeamCacheManager(),
+      new StableCollectorChecker(this.getStableCollector(), 'moonbeam'),
     ));
   },
   
@@ -5053,6 +4752,7 @@ module.exports = {
     return (contractAbiFetcher = new ContractAbiFetcher(
       this.getBscscanRequest(),
       this.getCacheManager(),
+      path.resolve(__dirname, '../var/contracts')
     ));
   },
 
@@ -5194,6 +4894,8 @@ module.exports = {
       this.getFantomPriceCollector(),
       this.getFantomPriceOracle(),
       this.getFbeefy(),
+      this.getFyearn(),
+      this.getRobovault(),
     ));
   },
 
@@ -5211,6 +4913,17 @@ module.exports = {
     ));
   },
 
+  getStableCollector() {
+    if (stableCollector) {
+      return stableCollector;
+    }
+
+    return (stableCollector = new StableCollector(
+      this.getCacheManager(),
+      this.getPriceFetcher(),
+    ));
+  },
+
   getBscscanRequest() {
     if (bscscanRequest) {
       return bscscanRequest;
@@ -5221,6 +4934,7 @@ module.exports = {
       module.exports.CONFIG['POLYGONSCAN_API_KEY'] || '',
       module.exports.CONFIG['FANTOMSCAN_API_KEY'] || '',
       module.exports.CONFIG['CELOSCAN_API_KEY'] || '',
+      module.exports.CONFIG['CRONOSSCAN_API_KEY'] || '',
     ));
   },
 };

@@ -93,6 +93,7 @@ async function collectHistoricalData() {
 setTimeout(async () => {
   console.log('application init started')
   await priceUpdater();
+  await services.getStableCollector().updateStableTokenMap();
 
   console.log("\x1b[32m" + "price init done" + "\x1b[0m");
 
@@ -119,3 +120,7 @@ setTimeout(async () => {
 setInterval(async () => {
   await services.getPelevenLeverage().cachePositions(true)
 }, 1050 * 60 * 16);
+
+setInterval(async () => {
+  await services.getStableCollector().updateStableTokenMap();
+}, 1150 * 60 * 60);

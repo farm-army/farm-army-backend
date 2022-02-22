@@ -1,0 +1,29 @@
+[
+  {
+    "name": "stellaswap",
+    "masterChefAddress": "0xedfb330f5fa216c9d2039b99c8ce9da85ea91c1e",
+    "farmLinkVault": "https://app.stellaswap.com/farm",
+    "main_platform": "stellaswap",
+    "platform": "stellaswap",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "solarflare",
+    "masterChefAddress": "0x995da7dfB96B4dd1e2bd954bE384A1e66cBB4b8c",
+    "farmLinkVault": "https://app.solarflare.io/farm",
+    "main_platform": "solarflare",
+    "platform": "solarflare",
+    "type": "common_master_chef"
+  },
+  {
+    "name": "thorus",
+    "masterChefAddress": "0xeeb84a24e10502d8a5c97b11df381d1550b25b9d",
+    "farmLinkVault": "https://app.thorus.fi/farm",
+    "main_platform": "thorus",
+    "platform": "thorus",
+    "type": "common_master_chef",
+    "farmFetcherOptions": {
+      "rewardToken": "0x735aBE48e8782948a37C7765ECb76b98CdE97B0F"
+    }
+  }
+]

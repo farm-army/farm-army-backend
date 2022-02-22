@@ -272,7 +272,7 @@ module.exports = class dfyn {
         }
 
         // ignore reward dust
-        if (reward.usd && reward.usd < 0.01 && result.deposit <= 0) {
+        if ('usd' in reward && reward.usd <= 0.01 && 'usd' in result?.deposit && result.deposit.usd <= 0.01) {
           return;
         }
 

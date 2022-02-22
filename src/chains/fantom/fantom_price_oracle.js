@@ -171,6 +171,7 @@ module.exports = class FantomPriceOracle {
 
     const bPrices = await Promise.allSettled([
       this.updateTokensSpiritswap(nativePrice),
+      this.updateParaswapPrices(),
       this.updateCoinGeckoPrices(),
     ]);
 
@@ -596,6 +597,12 @@ module.exports = class FantomPriceOracle {
         symbol: 'dknight',
         decimals: 18,
       },
+      {
+        router: '0x5023882f4D1EC10544FCB2066abE9C1645E95AA0', // wigosap
+        address: '0xe992beab6659bff447893641a378fbbf031c5bd6',
+        symbol: 'wigo',
+        decimals: 18,
+      },
     ];
 
     const calls = tokens.map(t => {
@@ -625,6 +632,48 @@ module.exports = class FantomPriceOracle {
     });
 
     return prices;
+  }
+
+  async updateParaswapPrices() {
+    const tokens = [
+      {
+        source: '0x3b9e3b5c616a1a038fdc190758bbe9bab6c7a857', // angel
+        srcDecimals: 18,
+        target: '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', // wftm
+        targetDecimals: 18,
+      },
+      {
+        source: '0xE3a486C1903Ea794eED5d5Fa0C9473c7D7708f40', // cusd
+        srcDecimals: 18,
+        target: '0x04068DA6C83AFCFA0e13ba15A6696662335D5B75', // usdc
+        targetDecimals: 6,
+      }
+    ];
+
+    const items = [];
+
+    for (const token of tokens) {
+      const params = new URLSearchParams({
+        network: 250,
+        side: 'SELL',
+        srcToken: token.source,
+        srcDecimals: token.srcDecimals || 18,
+        amount: (10 ** (token.srcDecimals || 18)),
+        destToken: token.target,
+        destDecimals: token.targetDecimals || 18,
+      });
+
+      const result = await Utils.requestJsonGetRetry('https://apiv5.paraswap.io/prices?' + params.toString());
+      if (result?.priceRoute?.destUSD && result?.priceRoute?.destUSD > 0) {
+        items.push({
+          address: token.source,
+          price: parseFloat(result.priceRoute.destUSD),
+          source: 'paraswap',
+        });
+      }
+    }
+
+    return items;
   }
 
   getLpSplits(farm, yieldFarm) {

@@ -104,6 +104,10 @@ module.exports = class impermax {
 
     const farms = [];
     pools.forEach(pool => {
+      if (!pool.subgraph?.pair?.uniswapV2PairAddress) {
+        return;
+      }
+
       const name = this.liquidityTokenCollector.getSymbolNames(pool.subgraph.pair.uniswapV2PairAddress) || '?';
 
       const item = {

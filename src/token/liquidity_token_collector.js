@@ -1,8 +1,9 @@
 'use strict';
 
 module.exports = class LiquidityTokenCollector {
-  constructor(cacheManager) {
+  constructor(cacheManager, stableCollectorChecker) {
     this.cacheManager = cacheManager;
+    this.stableCollectorChecker = stableCollectorChecker;
     this.tokens = {};
 
     // init data
@@ -19,6 +20,15 @@ module.exports = class LiquidityTokenCollector {
         this.tokens = addresses;
       }
     }, 1)
+  }
+
+  isStable(lpToken) {
+    const lp = this.get(lpToken);
+    if (!lp) {
+      return false;
+    }
+
+    return this.stableCollectorChecker.isAllStables(lp.tokens.map(t => t.address.toLowerCase()));
   }
 
   add(lpToken, tokens) {

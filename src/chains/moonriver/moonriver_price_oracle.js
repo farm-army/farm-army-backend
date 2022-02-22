@@ -144,6 +144,7 @@ module.exports = class MoonriverPriceOracle {
       sushi: ['0xf390830df829cf22c53c8840554b98eafc5dcbc2'],
       moonriver: ['0xf50225a84382c74CbdeA10b0c176f71fc3DE0C4d'],
       'magic-internet-money': ['0x0caE51e1032e8461f4806e26332c030E34De3aDb'],
+      mimatic: ['0xFb2019DfD635a03cfFF624D210AEe6AF2B00fC2C'],
     };
 
     tokens.forEach(token => {
