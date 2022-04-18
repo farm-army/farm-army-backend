@@ -65,7 +65,7 @@ module.exports = class ubeswap {
     const poolAddresses = [];
     addressesaa.forEach(i => {
       const [index, stakingToken, poolAddress, weight] = Object.values(i.pool);
-      if (weight <= 0) {
+      if (weight <= 0 && poolAddress) {
         inactive.push(poolAddress.toLowerCase());
       }
 
