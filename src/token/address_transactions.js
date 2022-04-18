@@ -33,6 +33,8 @@ module.exports = class AddressTransactions {
       host = 'explorer.celo.org';
     } else if (chain === 'moonriver') {
       host = 'blockscout.moonriver.moonbeam.network';
+    } else if (chain === 'moonbeam') {
+      host = 'blockscout.moonbeam.network';
     } else if (chain === 'cronos') {
       host = 'api.cronoscan.com';
     } else {

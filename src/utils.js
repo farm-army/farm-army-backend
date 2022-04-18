@@ -37,6 +37,8 @@ const CONFIG = _.merge(
 );
 
 const HOSTS = Object.freeze([
+  'https://bscrpc.com/',
+
   // Recommend
   'https://bsc-dataseed.binance.org/',
   'https://bsc-dataseed1.defibit.io/',
@@ -95,7 +97,7 @@ const HOSTS_CELO = Object.freeze([
 ]);
 
 const HOSTS_MOONRIVER = Object.freeze([
-  'https://rpc.moonriver.moonbeam.network',
+  'https://rpc.api.moonriver.moonbeam.network',
   'https://moonriver.api.onfinality.io/public',
   ...((CONFIG['MOONRIVER_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
 ]);
@@ -111,6 +113,7 @@ const HOSTS_CRONOS = Object.freeze([
 ]);
 
 const HOSTS_MOONBEAM = Object.freeze([
+  'https://moonbeam.api.onfinality.io/public',
   'https://rpc.api.moonbeam.network',
   ...((CONFIG['MOONBEAM_RPC'] || '').split(',').map(i => i.trim()).filter(i => i)),
 ]);
@@ -128,7 +131,7 @@ HOSTS.forEach(url => {
         timeout: 10000,
       }),
       {
-        contract: MULTI_CALL_CONTRACT.fantom,
+        contract: MULTI_CALL_CONTRACT.bsc,
         batchSize: 50,
         timeWindow: 50,
       }

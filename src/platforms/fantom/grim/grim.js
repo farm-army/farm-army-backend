@@ -189,7 +189,7 @@ module.exports = class grim {
         };
       }
 
-      if (farm.depositsPaused === true) {
+      if (farm.depositsPaused === true || farm.status === 'eol') {
         if (!item.flags) {
           item.flags = [];
         }

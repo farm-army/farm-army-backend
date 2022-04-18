@@ -80,7 +80,7 @@ module.exports = class ubeswap {
     });
 
     xxxxx.forEach(i => {
-      if (!poolAddresses.includes(i.address)) {
+      if (i.address && !poolAddresses.includes(i.address)) {
         poolAddresses.push(i.address);
       }
     });

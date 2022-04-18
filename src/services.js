@@ -292,6 +292,7 @@ const Luxor = require("./platforms/fantom/luxor/luxor");
 const Fyearn = require("./platforms/fantom/fyearn/fyearn");
 const Fmarket = require("./platforms/fantom/fmarket/fmarket");
 const Fsushi = require("./platforms/fantom/fsushi/fsushi");
+const Solidex = require("./platforms/fantom/solidex/solidex");
 
 const Kuswap = require("./platforms/kcc/kuswap/kuswap");
 const Kudex = require("./platforms/kcc/kudex/kudex");
@@ -465,6 +466,7 @@ let luxor;
 let fyearn;
 let fmarket;
 let fsushi;
+let solidex;
 
 let kuswap;
 let kudex;
@@ -1025,6 +1027,7 @@ module.exports = {
         this.getFyearn(),
         this.getFmarket(),
         this.getFsushi(),
+        this.getSolidex(),
         ...auto
       ],
       this.getCache(),
@@ -1503,6 +1506,19 @@ module.exports = {
       this.getFantomLiquidityTokenCollector(),
       this.getFantomFarmFetcher(),
       this.getFantomCacheManager(),
+    ));
+  },
+
+  getSolidex() {
+    if (solidex) {
+      return solidex;
+    }
+
+    return (solidex = new Solidex(
+      this.getFantomCacheManager(),
+      this.getFantomPriceOracle(),
+      this.getFantomTokenCollector(),
+      this.getFantomLiquidityTokenCollector(),
     ));
   },
 
